@@ -40,8 +40,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -448,7 +446,6 @@ public final class Files extends SherlockFragment {
 				
 				populateList(file);
 				
-				fileData = file;
 				listview.setClickable(true);
 				
 				getSherlockActivity().sendBroadcast(new Intent(Putio.CUSTOM_INTENT2));
@@ -504,7 +501,6 @@ public final class Files extends SherlockFragment {
 				fos.write(string.getBytes());
 				fos.close();
 				
-				fileData = file;
 				return file;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -547,6 +543,7 @@ public final class Files extends SherlockFragment {
 						"Go back to the previous folder",
 						R.drawable.arrow_up_float));
 			}
+			fileData = file;
 
 			for (int ii = 0; ii < files.size(); ii++) {
 				adapter.add(files.get(ii));
