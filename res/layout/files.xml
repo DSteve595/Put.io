@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical" >
+
+	<ListView
+		android:id="@+id/fileslist"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@+id/buttonbar"
+		android:choiceMode="multipleChoice"
+		android:fastScrollEnabled="true"
+		android:listSelector="@drawable/putio_clickable_bg"
+		android:paddingLeft="@dimen/padding_small"
+		android:paddingRight="@dimen/padding_medium"
+		android:scrollbarStyle="outsideInset" >
+
+	</ListView>
+
+	<FrameLayout
+		android:id="@+id/buttonbar"
+		style="@style/Putio.ButtonBar"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:layout_alignParentBottom="true" >
+
+		<Button
+			android:id="@+id/button_files_refresh"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@drawable/putio_clickable_bg"
+			android:text="@string/refresh" />
+
+		<ProgressBar
+			android:id="@+id/item_files_refresh"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_gravity="center_horizontal"
+			android:indeterminate="true" >
+		</ProgressBar>
+	</FrameLayout>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_above="@id/buttonbar"
+		android:background="@drawable/divider_horizontal" />
+
+	<include
+		android:id="@+id/loading"
+		layout="@layout/filesloading" />
+
+</RelativeLayout>

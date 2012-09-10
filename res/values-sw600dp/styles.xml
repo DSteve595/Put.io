@@ -1,0 +1,11 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<style name="Putio.ActionBarTabBarStyle" parent="@style/Widget.Sherlock.ActionBar.TabBar">
+		<!-- <item name="android:background">#EEEEEE</item> -->
+	</style>
+
+	<style name="Putio.TabText" parent="@style/Widget.Sherlock.ActionBar.TabText">
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+
+</resources>

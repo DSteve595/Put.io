@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+
+	<LinearLayout
+		android:id="@+id/sloganHolder"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:clipChildren="true"
+		android:orientation="vertical"
+		android:paddingLeft="@dimen/padding_small"
+		android:paddingRight="@dimen/padding_small" >
+
+		<TextView
+			android:id="@+id/text_setup_slogan1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:maxLines="1"
+			android:text="@string/slogan1"
+			android:textSize="36sp" >
+
+		</TextView>
+
+		<TextView
+			android:id="@+id/text_setup_slogan2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			android:maxLines="1"
+			android:paddingLeft="5sp"
+			android:text="@string/slogan2"
+			android:textSize="26sp" >
+
+		</TextView>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/welcomeHolder"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/sloganHolder"
+		android:layout_centerHorizontal="true"
+		android:background="#f5f8fa"
+		android:gravity="center_horizontal"
+		android:paddingBottom="36dp"
+		android:paddingTop="36dp" >
+
+		<TextView
+			android:id="@+id/text_setup_welcome"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/welcome"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textSize="40dp" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/textHolder"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_below="@+id/welcomeHolder"
+		android:background="@color/putio_accent"
+		android:paddingBottom="8dp"
+		android:paddingLeft="@dimen/padding_large"
+		android:paddingRight="@dimen/padding_large"
+		android:paddingTop="8dp" >
+
+		<TextView
+			android:id="@+id/text_setup_intro1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/intro1"
+			android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		<TextView
+			android:id="@+id/text_setup_intro2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingLeft="5sp"
+			android:text="@string/intro2"
+			android:textAppearance="?android:attr/textAppearanceMedium" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="64dp"
+		android:dividerPadding="16dp"
+		android:gravity="center_horizontal"
+		android:orientation="vertical"
+		android:showDividers="middle" >
+
+		<Button
+			android:id="@+id/button_setup_login"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/log_in" />
+
+		<Button
+			android:id="@+id/button_setup_gotosite"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/go_to_site" />
+	</LinearLayout>
+
+</RelativeLayout>

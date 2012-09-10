@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item
+		android:id="@+id/context_rename"
+		android:icon="@android:drawable/ic_menu_edit"
+		android:showAsAction="ifRoom"
+		android:title="Rename"/>
+	<item
+		android:id="@+id/context_delete"
+		android:icon="@android:drawable/ic_menu_delete"
+		android:title="Delete"/>
+
+</menu>

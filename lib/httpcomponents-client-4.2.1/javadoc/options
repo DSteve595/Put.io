@@ -1,0 +1,31 @@
+-classpath
+'/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/target/classes:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient/target/classes:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpmime/target/classes:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient-cache/target/classes:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/fluent-hc/target/classes:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient-osgi/target/classes:/home/oleg/.m2/repository/org/slf4j/slf4j-api/1.5.11/slf4j-api-1.5.11.jar:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient-cache/target/httpclient-cache-4.2.1.jar:/home/oleg/.m2/repository/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1.jar:/home/oleg/.m2/repository/spy/spymemcached/2.6/spymemcached-2.6.jar:/home/oleg/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/fluent-hc/target/fluent-hc-4.2.1.jar:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpmime/target/httpmime-4.2.1.jar:/home/oleg/.m2/repository/net/sf/ehcache/ehcache-core/2.2.0/ehcache-core-2.2.0.jar:/home/oleg/.m2/repository/commons-codec/commons-codec/1.6/commons-codec-1.6.jar:/home/oleg/.m2/repository/org/slf4j/slf4j-jcl/1.5.11/slf4j-jcl-1.5.11.jar:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient/target/httpclient-4.2.1.jar'
+-encoding
+'UTF-8'
+-protected
+-quiet
+-source
+'1.5'
+-sourcepath
+'/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient/src/main/java:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpmime/src/main/java:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/httpclient-cache/src/main/java:/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/fluent-hc/src/main/java'
+-author
+-bottom
+'Copyright &#169; 1999-2012 <a href="http://www.apache.org/">The Apache Software Foundation</a>. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'HttpComponents Client 4.2.1 API'
+-link
+'http://download.oracle.com/javase/1.5.0/docs/api'
+-link
+'http://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs'
+-linkoffline
+'http://download.oracle.com/javase/1.5.0/docs/api' '/home/oleg/src/apache.org/httpcomponents/httpclient-4.2.1-RC/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'HttpComponents Client 4.2.1 API'

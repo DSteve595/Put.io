@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sizePreference="http://schemas.android.com/apk/res/com.stevenschoen.putio" >
+
+    <PreferenceCategory
+        android:summary="Storage"
+        android:title="Storage" >
+        <com.stevenschoen.putio.SizePreference
+            android:defaultValue="5"
+            android:dialogTitle="Cache size"
+            android:key="maxCacheSizeMb"
+            android:persistent="true"
+            android:summary="How much space (in megabytes) to use for directory listings"
+            android:title="Cache size"
+            sizePreference:maxValue="25"
+            sizePreference:minValue="1" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
