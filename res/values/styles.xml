@@ -26,6 +26,7 @@
 		<item name="android:popupMenuStyle">@style/Putio.PopupMenu</item>
 		<item name="android:spinnerStyle">@style/Putio.Spinner</item>
 		<item name="android:listSelector">@drawable/putio_clickable_bg</item>
+		<item name="android:editTextStyle">@style/Putio.EditText</item>
 	</style>
 
 	<style name="Theme.Putio.Dark" parent="Theme.Sherlock">
@@ -112,6 +113,10 @@
 
 	<style name="Putio.Button" parent="@android:style/Widget.Holo.Light.Button">
 		<item name="android:background">@drawable/btn_putio</item>
+	</style>
+
+	<style name="Putio.EditText" parent="@android:style/Widget.EditText">
+		<item name="android:background">@drawable/putio_edittext</item>
 	</style>
 
 </resources>
