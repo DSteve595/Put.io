@@ -1,21 +1,15 @@
 package com.stevenschoen.putio.fragments;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.json.JSONObject;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -209,31 +203,16 @@ public class FileDetails extends SherlockFragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				downloadFile(origFileData.id, getNewFilename(), baseUrl + "files/" + origFileData.id + "/download" + tokenWithStuff);
+				utils.downloadFile(getSherlockActivity(), origFileData.id,
+						getNewFilename(), baseUrl + "files/" + origFileData.id
+								+ "/download" + tokenWithStuff);
 			}
 			
 		});
 		return view;
 	}
 	
-	@TargetApi(11)
-	private void downloadFile(int id, String filename, String url) {
-		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-		request.setDescription("put.io");
-		if (UIUtils.hasHoneycomb()) {
-		    request.allowScanningByMediaScanner();
-		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-		}
-		request.setDestinationInExternalPublicDir(
-				Environment.DIRECTORY_DOWNLOADS,
-				"put.io" + File.separator
-				+ id + File.separator
-				+ filename);
 
-		// get download service and enqueue file
-		DownloadManager manager = (DownloadManager) getSherlockActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-		manager.enqueue(request);
-	}
 	
 	public void updatePercent(int percent) {
 		textPercent.setText(Integer.toString(percent));

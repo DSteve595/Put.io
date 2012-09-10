@@ -1,13 +1,8 @@
 package com.stevenschoen.putio;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -19,9 +14,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.TextView;
@@ -162,6 +160,25 @@ public class PutioFileUtils {
 			e.printStackTrace();
 		}
 		return data;
+	}
+	
+	@TargetApi(11)
+	public void downloadFile(Context context, int id, String filename, String url) {
+		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+		request.setDescription("put.io");
+		if (UIUtils.hasHoneycomb()) {
+		    request.allowScanningByMediaScanner();
+		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+		}
+		request.setDestinationInExternalPublicDir(
+				Environment.DIRECTORY_DOWNLOADS,
+				"put.io" + File.separator
+				+ id + File.separator
+				+ filename);
+
+		// get download service and enqueue file
+		DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+		manager.enqueue(request);
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {
