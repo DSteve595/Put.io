@@ -1,124 +1,101 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/RelativeLayout1"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:fillViewport="true" >
-
-	<RelativeLayout
-		android:id="@+id/RelativeLayout1"
+	android:gravity="center_horizontal"
+	android:orientation="vertical" >
+
+	<LinearLayout
+		android:id="@+id/linearLayout1"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:gravity="center_horizontal"
-		android:orientation="vertical" >
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="64dp"
+		android:orientation="vertical"
+		android:paddingLeft="28dp"
+		android:paddingRight="28dp" >
 
-		<ImageView
-			android:id="@+id/img_fileImage"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
-			android:layout_marginTop="48dp"
-			android:src="@drawable/ic_launcher" />
+		<include
+			android:layout_width="100dp"
+			layout="@layout/filename" />
 
 		<LinearLayout
-			android:layout_width="match_parent"
+			android:id="@+id/createdHolder"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_centerHorizontal="true"
-			android:layout_marginBottom="96dp"
-			android:orientation="vertical"
-			android:paddingLeft="28dp"
-			android:paddingRight="28dp" >
+			android:layout_gravity="center_horizontal"
+			android:orientation="horizontal" >
 
-			<include layout="@layout/filename" />
+			<TextView
+				android:id="@+id/text_fileDetailsCreatedStatic"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/created" >
+			</TextView>
 
-			<LinearLayout
-				android:id="@+id/createdHolder"
+			<TextView
+				android:id="@+id/text_fileDetailsCreatedDate"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:orientation="horizontal" >
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textStyle="bold" />
 
-				<TextView
-					android:id="@+id/text_fileDetailsCreatedStatic"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/created" >
-				</TextView>
-
-				<TextView
-					android:id="@+id/text_fileDetailsCreatedDate"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:textStyle="bold" />
-
-				<TextView
-					android:id="@+id/text_fileDetailsCreatedStaticAt"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/at" >
-				</TextView>
-
-				<TextView
-					android:id="@+id/text_fileDetailsCreatedTime"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:textStyle="bold" />
-			</LinearLayout>
-		</LinearLayout>
-
-		<LinearLayout
-			android:id="@+id/buttonbar"
-			style="?android:attr/buttonBarStyle"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:orientation="horizontal"
-			android:showDividers="middle" >
-
-			<Button
-				android:id="@+id/button_filedetails_cancel"
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_width="0dp"
+			<TextView
+				android:id="@+id/text_fileDetailsCreatedStaticAt"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/cancel" />
+				android:text="@string/at" >
+			</TextView>
 
-			<Button
-				android:id="@+id/button_filedetails_save"
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_width="0dp"
+			<TextView
+				android:id="@+id/text_fileDetailsCreatedTime"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/apply" />
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textStyle="bold" />
 		</LinearLayout>
+	</LinearLayout>
 
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_above="@id/buttonbar"
-			android:background="@drawable/divider_horizontal" />
-
-		<TextView
-			android:id="@+id/text_filedetails_percent"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:text="Large Text"
-			android:textAppearance="?android:attr/textAppearanceLarge" />
+	<LinearLayout
+		android:id="@+id/buttonbar"
+		style="?android:attr/buttonBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:orientation="horizontal"
+		android:showDividers="middle" >
 
 		<Button
-			android:id="@+id/button_filedetails_download"
-			style="?android:attr/buttonStyleSmall"
-			android:layout_width="wrap_content"
+			android:id="@+id/button_filedetails_cancel"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_above="@+id/text_filedetails_percent"
-			android:layout_centerHorizontal="true"
-			android:text="Download" />
-	</RelativeLayout>
+			android:layout_weight="1"
+			android:background="@drawable/putio_clickable_bg"
+			android:text="@string/cancel" />
 
-</ScrollView>
+		<Button
+			android:id="@+id/button_filedetails_save"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/putio_clickable_bg"
+			android:text="@string/apply" />
+	</LinearLayout>
+
+	<View
+		android:id="@+id/view1"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_above="@id/buttonbar"
+		android:background="@drawable/divider_horizontal" />
+
+	<include
+		android:id="@+id/filedetailspreview"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		layout="@layout/filepreview" />
+
+</RelativeLayout>

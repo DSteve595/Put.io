@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="160dp"
+	android:layout_height="140dp"
+	android:paddingLeft="24dp"
+	android:paddingRight="24dp"
+	android:paddingTop="24dp" >
+
+	<ImageView
+		android:id="@+id/imageView1"
+		android:layout_width="wrap_content"
+		android:layout_height="120dp"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:background="@drawable/border"
+		android:padding="8dp"
+		android:scaleType="fitCenter"
+		android:src="@drawable/filepreview" />
+
+	<LinearLayout
+		android:id="@+id/asdf"
+		style="?android:attr/buttonBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/imageView1"
+		android:layout_centerHorizontal="true"
+		android:background="@color/putio_dark"
+		android:showDividers="middle"
+		android:weightSum="2" >
+
+		<Button
+			android:id="@+id/button_filepreview_download"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/putio_clickable_dark_button"
+			android:text="Download" />
+
+		<Button
+			android:id="@+id/button_filepreview_open"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/putio_clickable_dark_button"
+			android:text="Open" />
+	</LinearLayout>
+
+	<View
+		android:id="@+id/View01"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_below="@id/asdf"
+		android:background="@drawable/divider_horizontal" />
+
+</RelativeLayout>

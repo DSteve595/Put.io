@@ -197,7 +197,7 @@ public class FileDetails extends SherlockFragment {
 
 		});
 		
-		Button btnDownload = (Button) view.findViewById(R.id.button_filedetails_download);
+		Button btnDownload = (Button) view.findViewById(R.id.button_filepreview_download);
 		btnDownload.setOnClickListener(new OnClickListener() {
 
 			@Override

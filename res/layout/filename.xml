@@ -3,7 +3,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_gravity="center_horizontal" >
-
+
 	<EditText
 		android:id="@+id/editText_fileName"
 		android:layout_width="wrap_content"
@@ -13,7 +13,6 @@
 		android:hint="File name"
 		android:inputType="textMultiLine|textNoSuggestions"
 		android:maxLines="3" >
-
 	</EditText>
 
 	<Button
