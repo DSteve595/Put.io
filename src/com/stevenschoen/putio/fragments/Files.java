@@ -231,11 +231,15 @@ public final class Files extends SherlockFragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		if (v.getId() == R.id.fileslist) {
-			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			menu.setHeaderTitle(fileData[info.position].name);
-		    MenuInflater inflater = getSherlockActivity().getMenuInflater();
-		    inflater.inflate(R.menu.context, menu);
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		if ((info.id == 0) && (currentFolderId != 0)) {
+			return;
+		} else {
+			if (v.getId() == R.id.fileslist) {
+				menu.setHeaderTitle(fileData[getAdjustedPosition(info.position)].name);
+			    MenuInflater inflater = getSherlockActivity().getMenuInflater();
+			    inflater.inflate(R.menu.context, menu);
+			}
 		}
 	}
 	
@@ -246,7 +250,7 @@ public final class Files extends SherlockFragment {
 		switch (item.getItemId()) {
 			case R.id.context_rename:
 //				editNote(info.id);
-				initRename(info.id);
+				initRename(getAdjustedPosition((int) info.id));
 				return true;
 			case R.id.context_delete:
 //				deleteNote(info.id);
@@ -522,7 +526,7 @@ public final class Files extends SherlockFragment {
 							file[i].name,
 							getString(R.string.size_is)
 									+ " "
-									+ utils.humanReadableByteCount(file[i].size, true),
+									+ PutioFileUtils.humanReadableByteCount(file[i].size, true),
 							iconResource));
 				}
 			}
@@ -541,7 +545,7 @@ public final class Files extends SherlockFragment {
 			if (currentFolderId != 0) {
 				adapter.add(new PutioFileLayout("Up",
 						"Go back to the previous folder",
-						R.drawable.arrow_up_float));
+						R.drawable.ic_back));
 			}
 			fileData = file;
 
@@ -553,6 +557,14 @@ public final class Files extends SherlockFragment {
 			setShowRefreshButton(true);
 			
 			fileLayouts = files;
+		}
+	}
+	
+	private int getAdjustedPosition(int position) {
+		if (currentFolderId == 0) {
+			return position;
+		} else {
+			return position - 1;
 		}
 	}
 	
