@@ -1,6 +1,5 @@
 package com.stevenschoen.putio;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import android.os.Parcelable;
 public class PutioFileData implements Parcelable {
 	public boolean isShared;
 	public String name;
+	public String screenshot;
 	public String createdTime;
 	public int parentId;
 	public boolean hasMp4;
@@ -24,11 +24,12 @@ public class PutioFileData implements Parcelable {
 		super();
 	}
 	
-	public PutioFileData(boolean isShared, String name, String createdTime,
+	public PutioFileData(boolean isShared, String name, String screenshot, String createdTime,
 			int parentId, boolean hasMp4, String contentType, int id, long size) {
 		super();
 		this.isShared = isShared;
 		this.name = name;
+		this.screenshot = screenshot;
 		this.createdTime = createdTime;
 		this.parentId = parentId;
 		this.hasMp4 = hasMp4;
@@ -72,6 +73,7 @@ public class PutioFileData implements Parcelable {
 		// written to the parcel
 		this.isShared = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
 		this.name = in.readString();
+		this.screenshot = in.readString();
 		this.createdTime = in.readString();
 		this.parentId = in.readInt();
 		this.hasMp4 = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
@@ -85,6 +87,7 @@ public class PutioFileData implements Parcelable {
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeValue(this.isShared);
 		out.writeString(this.name);
+		out.writeString(this.screenshot);
 		out.writeString(this.createdTime);
 		out.writeInt(this.parentId);
 		out.writeValue(this.hasMp4);

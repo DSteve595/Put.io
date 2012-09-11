@@ -933,7 +933,7 @@ containing a value of this type.
         public static final int fragment_files=0x7f060062;
         public static final int header=0x7f06005f;
         public static final int homeAsUp=0x7f060006;
-        public static final int imageView1=0x7f060049;
+        public static final int image_filepreview_image=0x7f060049;
         public static final int img_fileIcon=0x7f060036;
         public static final int item_files_refresh=0x7f060050;
         public static final int item_sizeDialog_seekBar=0x7f060060;

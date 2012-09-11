@@ -440,6 +440,7 @@ public final class Files extends SherlockFragment {
 					file[i] = new PutioFileData(
 							obj.getBoolean("is_shared"),
 							obj.getString("name"),
+							obj.getString("screenshot"),
 							obj.getString("created_at"),
 							obj.getInt("parent_id"),
 							utils.stringToBooleanHack(obj.getString("is_mp4_available")),
@@ -492,6 +493,7 @@ public final class Files extends SherlockFragment {
 					file[i] = new PutioFileData(
 							obj.getBoolean("is_shared"),
 							obj.getString("name"),
+							obj.getString("screenshot"),
 							obj.getString("created_at"),
 							obj.getInt("parent_id"),
 							utils.stringToBooleanHack(obj.getString("is_mp4_available")),

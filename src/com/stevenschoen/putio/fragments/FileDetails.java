@@ -1,13 +1,20 @@
 package com.stevenschoen.putio.fragments;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,10 +25,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.nineoldandroids.view.ViewHelper;
+import com.stevenschoen.putio.FlushedInputStream;
 import com.stevenschoen.putio.PutioFileData;
 import com.stevenschoen.putio.PutioFileUtils;
 import com.stevenschoen.putio.R;
@@ -152,6 +163,7 @@ public class FileDetails extends SherlockFragment {
 					newFileData = new PutioFileData(
 							origFileData.isShared,
 							obj.getString("name"),
+							obj.getString("screenshot"),
 							obj.getString("created_at"),
 							obj.getInt("parent_id"),
 							origFileData.hasMp4,
@@ -196,23 +208,63 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				URL url = null;
-				try {
-					url = new URL(baseUrl + "files/" + origFileData.id + "/download" + tokenWithStuff);
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				utils.downloadFile(getSherlockActivity(), origFileData.id,
 						getNewFilename(), baseUrl + "files/" + origFileData.id
 								+ "/download" + tokenWithStuff);
 			}
 			
 		});
+		
+		final ImageView imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
+		
+		class getPreviewTask extends AsyncTask<Void, Void, Bitmap> {
+			@Override
+			protected Bitmap doInBackground(Void... nothing) {
+				URL url = null;
+				try {
+					url = new URL(origFileData.screenshot);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				
+				ByteArrayBuffer baf = null;
+				try {
+					URLConnection connection = url.openConnection();
+					FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
+					baf = new ByteArrayBuffer(100);
+					int current = 0;  
+					while((current = fis.read()) != -1){  
+					    baf.append((byte)current);  
+					}
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				return BitmapFactory.decodeByteArray(baf.toByteArray(), 0, baf.length());
+			}
+			
+			@Override
+			public void onPostExecute (final Bitmap bitmap) {
+				animate(imagePreview).setDuration(250).rotationX(90f);
+				imagePreview.postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						imagePreview.setScaleType(ScaleType.CENTER);
+						imagePreview.setImageBitmap(bitmap);
+						ViewHelper.setRotationX(imagePreview, 270f);
+						animate(imagePreview).setDuration(250).rotationXBy(90f);
+					}
+					
+				}
+				, 500);
+			}
+		}
+		new getPreviewTask().execute();
+		
 		return view;
 	}
-	
-
 	
 	public void updatePercent(int percent) {
 		textPercent.setText(Integer.toString(percent));
