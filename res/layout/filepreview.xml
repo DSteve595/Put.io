@@ -15,7 +15,7 @@
 		android:padding="8dp"
 		android:scaleType="fitCenter"
 		android:src="@drawable/filepreview" />
-
+
 	<LinearLayout
 		android:id="@+id/asdf"
 		style="?android:attr/buttonBarStyle"
@@ -34,7 +34,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:background="@drawable/putio_clickable_dark_button"
-			android:text="Download" />
+			android:text="@string/download" />
 
 		<Button
 			android:id="@+id/button_filepreview_open"
@@ -43,7 +43,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:background="@drawable/putio_clickable_dark_button"
-			android:text="Open" />
+			android:text="@string/open" />
 	</LinearLayout>
 
 	<View

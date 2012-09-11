@@ -32,5 +32,7 @@
 	<string name="apply">Apply</string>
 	<string name="tokenlogin">If, for whatever reason, you\'d like to provide your login token manually, you can do so here.</string>
 	<string name="entertoken">Enter token</string>
+	<string name="download">Download</string>
+	<string name="open">Open</string>
 
 </resources>
