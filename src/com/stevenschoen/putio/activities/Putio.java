@@ -414,10 +414,20 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	@Override
 	public void onBackPressed() {
-		if (filesFragment.currentFolderId == 0) {
-			super.onBackPressed();
+		if (UIUtils.isTablet(this)) {
+			if (filesFragment.currentFolderId == 0) {
+				super.onBackPressed();
+			} else {
+				filesFragment.goBack();
+			}
 		} else {
-			filesFragment.goBack();
+			if (hasWindowFocus()) {
+				if (filesFragment.currentFolderId == 0) {
+					super.onBackPressed();
+				} else {
+					filesFragment.goBack();
+				}
+			}
 		}
 	}
 	
