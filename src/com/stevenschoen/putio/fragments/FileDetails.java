@@ -261,7 +261,9 @@ public class FileDetails extends SherlockFragment {
 				, 500);
 			}
 		}
-		new getPreviewTask().execute();
+		if (!origFileData.screenshot.matches("null")) {
+			new getPreviewTask().execute();
+		}
 		
 		return view;
 	}
