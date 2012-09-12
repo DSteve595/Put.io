@@ -37,6 +37,10 @@ import android.widget.TextView;
 import com.stevenschoen.putio.activities.Putio;
 
 public class PutioFileUtils {
+	public static final int TYPE_AUDIO = 1;
+	public static final int TYPE_VIDEO = -1;
+	public static final String[] streamingMediaTypes = new String[] { "audio", "video" };
+	
 	public final String baseUrl = "https://api.put.io/v2/";
 
 	private String token;
@@ -199,12 +203,20 @@ public class PutioFileUtils {
 		return downloadId;
 	}
 	
-	public void streamVideo(Context context, String url) {
-		Intent videoIntent = new Intent();
-		videoIntent.setAction(Intent.ACTION_VIEW);
-		videoIntent.setDataAndType(Uri.parse(url), "video/*");
+	public void stream(Context context, String url, int type) {
+		Intent streamIntent = new Intent();
+		streamIntent.setAction(Intent.ACTION_VIEW);
+		String typeString;
+		if (type == TYPE_AUDIO) {
+			typeString = "audio";
+		} else if (type == TYPE_VIDEO) {
+			typeString = "video";
+		} else {
+			typeString = "video";
+		}
+		streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
 		
-		context.startActivity(videoIntent);
+		context.startActivity(streamIntent);
 	}
 	
 	public static String resolveRedirect(String url) throws ClientProtocolException, IOException {

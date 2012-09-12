@@ -282,9 +282,11 @@ public class FileDetails extends SherlockFragment {
 			}
 		}
 		
-		if (origFileData.contentType.contains("video")) {
-			btnOpen.setOnClickListener(playVideoListener);
-			btnOpen.setText(getString(R.string.play));
+		for (int i = 0; i < PutioFileUtils.streamingMediaTypes.length; i++) {
+			if (origFileData.contentType.contains(PutioFileUtils.streamingMediaTypes[i])) {
+				btnOpen.setOnClickListener(playVideoListener);
+				btnOpen.setText(getString(R.string.play));
+			}
 		}
 		
 		return view;
@@ -338,7 +340,15 @@ public class FileDetails extends SherlockFragment {
 		@Override
 		public void onPostExecute(String finalUrl) {
 			dialog.dismiss();
-			utils.streamVideo(getSherlockActivity(), finalUrl);
+			int type;
+			if (origFileData.contentType.contains("audio")) {
+				type = PutioFileUtils.TYPE_AUDIO;
+			} else if (origFileData.contentType.contains("video")) {
+				type = PutioFileUtils.TYPE_VIDEO;
+			} else {
+				type = PutioFileUtils.TYPE_VIDEO;
+			}
+			utils.stream(getSherlockActivity(), finalUrl, type);
 		}
 	}
 	
