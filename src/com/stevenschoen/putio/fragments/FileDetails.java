@@ -8,10 +8,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,6 +45,8 @@ public class FileDetails extends SherlockFragment {
 	PutioFileData newFileData;
 	
 	TextView textPercent;
+	
+	Bitmap imagePreviewBitmap;
 	
 	public FileDetails(PutioFileData fileData) {
 		this.origFileData = fileData;
@@ -81,26 +85,27 @@ public class FileDetails extends SherlockFragment {
 	
 	PutioFileUtils utils;
 	private EditText textFileName;
+	private ImageView imagePreview;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
+//		setRetainInstance(true);
 
+		if (origFileData == null) {
+			origFileData = savedInstanceState.getParcelable("origFileData");
+			newFileData = savedInstanceState.getParcelable("newFileData");
+		}
 		sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		token = sharedPrefs.getString("token", null);
 		tokenWithStuff = "?oauth_token=" + token;
 		
-		utils = new PutioFileUtils(token);
+		utils = new PutioFileUtils(token, sharedPrefs);
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if (origFileData == null) {
-			origFileData = savedInstanceState.getParcelable("origFileData");
-			newFileData = savedInstanceState.getParcelable("newFileData");
-		}
 		
 		final View view = inflater.inflate(R.layout.filedetails, container, false);
 		
@@ -145,7 +150,6 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				newFileData.name = textFileName.getText().toString();
 				saveFileToServerAndFinish();
 			}
@@ -215,7 +219,20 @@ public class FileDetails extends SherlockFragment {
 			
 		});
 		
-		final ImageView imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
+		Button btnOpen = (Button) view.findViewById(R.id.button_filepreview_open);
+		OnClickListener playVideoListener = new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+//				utils.streamVideo(getSherlockActivity(), baseUrl + "files/"
+//						+ origFileData.id + "/stream" + tokenWithStuff);
+				new getStreamUrlAndPlay().execute(baseUrl + "files/"
+						+ origFileData.id + "/stream" + tokenWithStuff);
+			}
+			
+		};
+		
+		imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
 		
 		class getPreviewTask extends AsyncTask<Void, Void, Bitmap> {
 			@Override
@@ -246,26 +263,77 @@ public class FileDetails extends SherlockFragment {
 			
 			@Override
 			public void onPostExecute (final Bitmap bitmap) {
-				animate(imagePreview).setDuration(250).rotationX(90f);
-				imagePreview.postDelayed(new Runnable() {
-
-					@Override
-					public void run() {
-						imagePreview.setScaleType(ScaleType.CENTER);
-						imagePreview.setImageBitmap(bitmap);
-						ViewHelper.setRotationX(imagePreview, 270f);
-						animate(imagePreview).setDuration(250).rotationXBy(90f);
-					}
-					
-				}
-				, 500);
+				changeImagePreview(bitmap, true);
+				imagePreviewBitmap = bitmap;
 			}
 		}
 		if (!origFileData.screenshot.matches("null")) {
-			new getPreviewTask().execute();
+			if (savedInstanceState != null && savedInstanceState.containsKey("imagePreviewBitmap")) {
+				imagePreviewBitmap = savedInstanceState.getParcelable("imagePreviewBitmap");
+				changeImagePreview(imagePreviewBitmap, false);
+			} else {
+				new getPreviewTask().execute();
+			}
+		}
+		
+		if (origFileData.contentType.contains("video")) {
+			btnOpen.setOnClickListener(playVideoListener);
+			btnOpen.setText(getString(R.string.play));
 		}
 		
 		return view;
+	}
+	
+	private void changeImagePreview(final Bitmap bitmap, boolean animate) {
+		if (animate) {
+			animate(imagePreview).setDuration(250).rotationX(90f);
+			imagePreview.postDelayed(new Runnable() {
+	
+				@Override
+				public void run() {
+					changeImagePreview(bitmap, false);
+					ViewHelper.setRotationX(imagePreview, 270f);
+					animate(imagePreview).setDuration(250).rotationXBy(90f);
+					imagePreviewBitmap = bitmap;
+				}
+				
+			}
+			, 500);
+		} else {
+			imagePreview.setScaleType(ScaleType.CENTER);
+			imagePreview.setImageBitmap(bitmap);
+		}
+	}
+	
+	class getStreamUrlAndPlay extends AsyncTask<String, Void, String> {
+		ProgressDialog dialog;
+		
+		@Override
+		public void onPreExecute() {
+			dialog = new ProgressDialog(getSherlockActivity());
+			dialog.setTitle(getString(R.string.gettingstreamurltitle));
+			dialog.setMessage(getString(R.string.gettingstreamurlbody));
+			dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				return PutioFileUtils.resolveRedirect(params[0]);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		public void onPostExecute(String finalUrl) {
+			dialog.dismiss();
+			utils.streamVideo(getSherlockActivity(), finalUrl);
+		}
 	}
 	
 	public void updatePercent(int percent) {
@@ -286,6 +354,12 @@ public class FileDetails extends SherlockFragment {
 	public void onSaveInstanceState(Bundle icicle) {
 		icicle.putParcelable("origFileData", origFileData);
 		icicle.putParcelable("newFileData", newFileData);
+		if (imagePreviewBitmap != null) {
+			icicle.putParcelable("imagePreviewBitmap", imagePreviewBitmap);
+		} else {
+		}
+		
+		super.onSaveInstanceState(icicle);
 	}
 	
     @Override

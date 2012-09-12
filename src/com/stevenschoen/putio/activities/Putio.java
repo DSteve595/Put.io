@@ -226,7 +226,7 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	private void init() {
 		String token = sharedPrefs.getString("token", null);
-		utils = new PutioFileUtils(token);
+		utils = new PutioFileUtils(token, sharedPrefs);
 		
 		if (!UIUtils.isTablet(this)) {
 			setupPhoneLayout();

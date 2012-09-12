@@ -1,17 +1,26 @@
 package com.stevenschoen.putio;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
@@ -19,6 +28,7 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -32,9 +42,13 @@ public class PutioFileUtils {
 	private String token;
 	private String tokenWithStuff;
 
-	public PutioFileUtils(String token) {
+	private SharedPreferences sharedPrefs;
+	
+	public PutioFileUtils(String token, SharedPreferences sharedPrefs) {
 		this.token = token;
 		this.tokenWithStuff = "?oauth_token=" + token;
+		
+		this.sharedPrefs = sharedPrefs;
 	}
 
 	public boolean postRename(int id, String newName) {
@@ -163,7 +177,7 @@ public class PutioFileUtils {
 	}
 	
 	@TargetApi(11)
-	public void downloadFile(Context context, int id, String filename, String url) {
+	public long downloadFile(Context context, int id, String filename, String url) {
 		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 		request.setDescription("put.io");
 		if (UIUtils.hasHoneycomb()) {
@@ -178,7 +192,37 @@ public class PutioFileUtils {
 
 		// get download service and enqueue file
 		DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-		manager.enqueue(request);
+		long downloadId = manager.enqueue(request);
+		
+		sharedPrefs.edit().putLong("downloadId" + id, downloadId);
+		
+		return downloadId;
+	}
+	
+	public void streamVideo(Context context, String url) {
+		Intent videoIntent = new Intent();
+		videoIntent.setAction(Intent.ACTION_VIEW);
+		videoIntent.setDataAndType(Uri.parse(url), "video/*");
+		
+		context.startActivity(videoIntent);
+	}
+	
+	public static String resolveRedirect(String url) throws ClientProtocolException, IOException {
+	    HttpParams httpParameters = new BasicHttpParams();
+	    HttpClientParams.setRedirecting(httpParameters, false);
+
+	    HttpClient httpClient = new DefaultHttpClient(httpParameters);      
+	    HttpGet httpget = new HttpGet(url);
+	    HttpContext context = new BasicHttpContext();
+
+	    HttpResponse response = httpClient.execute(httpget, context);
+
+	    // If we didn't get a '302 Found' we aren't being redirected.
+	    if (response.getStatusLine().getStatusCode() != HttpStatus.SC_MOVED_TEMPORARILY)
+	        throw new IOException(response.getStatusLine().toString());
+
+	    org.apache.http.Header[] loc = response.getHeaders("Location");
+	    return loc.length > 0 ? loc[0].getValue() : null;
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {

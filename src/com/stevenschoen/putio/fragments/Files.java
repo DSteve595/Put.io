@@ -120,7 +120,7 @@ public final class Files extends SherlockFragment {
 		token = sharedPrefs.getString("token", null);
 		tokenWithStuff = "?oauth_token=" + token;
 		
-		utils = new PutioFileUtils(token);
+		utils = new PutioFileUtils(token, sharedPrefs);
 	}
 	
 	@TargetApi(11)

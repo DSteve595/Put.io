@@ -1053,31 +1053,34 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0b0009;
         public static final int app_name=0x7f0b000a;
-        public static final int apply=0x7f0b0020;
-        public static final int applychanges=0x7f0b001f;
+        public static final int apply=0x7f0b0021;
+        public static final int applychanges=0x7f0b0020;
         public static final int at=0x7f0b0014;
         public static final int cancel=0x7f0b0016;
         public static final int created=0x7f0b0013;
-        public static final int download=0x7f0b0023;
-        public static final int entertoken=0x7f0b0022;
+        public static final int download=0x7f0b0024;
+        public static final int entertoken=0x7f0b0023;
         public static final int files=0x7f0b000e;
-        public static final int go_to_site=0x7f0b0019;
-        public static final int intro1=0x7f0b001b;
-        public static final int intro2=0x7f0b001c;
+        public static final int gettingstreamurlbody=0x7f0b0027;
+        public static final int gettingstreamurltitle=0x7f0b0026;
+        public static final int go_to_site=0x7f0b001a;
+        public static final int intro1=0x7f0b001c;
+        public static final int intro2=0x7f0b001d;
         public static final int loading=0x7f0b0012;
-        public static final int log_in=0x7f0b001a;
+        public static final int log_in=0x7f0b001b;
         public static final int loginsuccess=0x7f0b0010;
         public static final int menu_settings=0x7f0b000d;
         public static final int no=0x7f0b000c;
-        public static final int open=0x7f0b0024;
+        public static final int open=0x7f0b0025;
+        public static final int play=0x7f0b0018;
         public static final int refresh=0x7f0b0017;
         public static final int save=0x7f0b0015;
         public static final int size_is=0x7f0b0011;
-        public static final int slogan1=0x7f0b001d;
-        public static final int slogan2=0x7f0b001e;
-        public static final int tokenlogin=0x7f0b0021;
+        public static final int slogan1=0x7f0b001e;
+        public static final int slogan2=0x7f0b001f;
+        public static final int tokenlogin=0x7f0b0022;
         public static final int transfers=0x7f0b000f;
-        public static final int welcome=0x7f0b0018;
+        public static final int welcome=0x7f0b0019;
         public static final int yes=0x7f0b000b;
     }
     public static final class style {
