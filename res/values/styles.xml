@@ -100,11 +100,14 @@
 	</declare-styleable>
 
 	<style name="Putio.Dialog" parent="@style/Theme.Sherlock.Light.Dialog">
-		<!-- <item name="android:windowTitleStyle">@style/Putio.DialogWindowTitle</item> -->
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:buttonBarStyle">@style/Putio.ButtonBar</item>
+		<item name="android:editTextStyle">@style/Putio.EditText</item>
 	</style>
 
-	<style name="Putio.DialogWindowTitle" parent="DialogWindowTitle.Sherlock.Light">
-		<item name="android:textAppearance">@style/Putio.MenuTextAppearance</item>
+	<style name="TextAppearance.Putio.DialogWindowTitle" parent="TextAppearance.Sherlock.Light.DialogWindowTitle">
+		<item name="android:textColor">@color/putio_dark_text</item>
+		<item name="android:textSize">26sp</item>
 	</style>
 
 	<style name="Putio.MenuTextAppearance" parent="TextAppearance.Sherlock.Widget.ActionBar.Menu">

@@ -17,9 +17,12 @@ import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -40,6 +44,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -104,6 +109,8 @@ public final class Files extends SherlockFragment {
 	private int buttonBarHeight;
 	
 	PutioFileUtils utils;
+
+	private Typeface robotoLight;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +128,8 @@ public final class Files extends SherlockFragment {
 		tokenWithStuff = "?oauth_token=" + token;
 		
 		utils = new PutioFileUtils(token, sharedPrefs);
+		
+		robotoLight = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Light.ttf");
 	}
 	
 	@TargetApi(11)
@@ -249,12 +258,10 @@ public final class Files extends SherlockFragment {
 				.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.context_rename:
-//				editNote(info.id);
 				initRename(getAdjustedPosition((int) info.id));
 				return true;
 			case R.id.context_delete:
-//				deleteNote(info.id);
-				log("delete");
+				initDelete(getAdjustedPosition((int) info.id));
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -263,8 +270,11 @@ public final class Files extends SherlockFragment {
 	
 	private void initRename(final long id) {
 		final Dialog renameDialog = new Dialog(getSherlockActivity(), R.style.Putio_Dialog);
+		renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		renameDialog.setContentView(R.layout.dialog_rename);
-		renameDialog.setTitle("Rename");
+		TextView textTitle = (TextView) renameDialog.findViewById(R.id.dialog_title);
+		textTitle.setText(getString(R.string.renametitle));
+		textTitle.setTypeface(robotoLight);
 		renameDialog.show();
 		
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
@@ -277,7 +287,6 @@ public final class Files extends SherlockFragment {
 			public void onClick(View v) {
 				textFileName.setText(fileData[(int) id].name);
 			}
-			
 		});
 		
 		textFileName.post(new Runnable() {   
@@ -299,7 +308,6 @@ public final class Files extends SherlockFragment {
 						fileData[(int) id].id, fileData[(int) id].name, textFileName.getText().toString());
 				renameDialog.dismiss();
 			}
-			
 		});
 		
 		Button cancelRename = (Button) renameDialog.findViewById(R.id.button_rename_cancel);
@@ -309,7 +317,34 @@ public final class Files extends SherlockFragment {
 			public void onClick(View arg0) {
 				renameDialog.cancel();
 			}
-			
+		});
+	}
+	
+	private void initDelete(final long id) {
+		final Dialog deleteDialog  = new Dialog(getSherlockActivity(), R.style.Putio_Dialog);
+		deleteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		deleteDialog.setContentView(R.layout.dialog_delete);
+		TextView textTitle = (TextView) deleteDialog.findViewById(R.id.dialog_title);
+		textTitle.setText(getString(R.string.deletetitle));
+		textTitle.setTypeface(robotoLight);
+		deleteDialog.show();
+		
+		Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
+		deleteDelete.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				utils.deleteFile(getSherlockActivity(), fileData[(int) id].id);
+			}
+		});
+		
+		Button cancelDelete = (Button) deleteDialog.findViewById(R.id.button_delete_cancel);
+		cancelDelete.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				deleteDialog.cancel();
+			}
 		});
 	}
 	

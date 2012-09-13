@@ -94,6 +94,52 @@ public class PutioFileUtils {
 			return false;
 		}
 	}
+	
+	public boolean postDelete(Integer... ids) {
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		URI uri;
+		InputStream data = null;
+		try {
+			uri = new URI(baseUrl + "files/delete" + tokenWithStuff);
+			HttpPost method = new HttpPost(uri);
+
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			String idsString = null;
+			for (int i = 0; i < ids.length; i++) {
+				if (i == 0) {
+					idsString = Integer.toString(ids[i]);
+				} else {
+					idsString = idsString + ", " + ids[i];
+				}
+			}
+			nameValuePairs.add(new BasicNameValuePair("file_ids", idsString));
+
+			method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpClient.execute(method);
+			data = response.getEntity().getContent();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		try {
+			JSONObject jsonResponse = new JSONObject(
+					convertStreamToString(data));
+			String responseCode = jsonResponse.getString("status");
+
+			if (responseCode.matches("OK")) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} finally {
+			return false;
+		}
+	}
 
 	public void saveFileToServer(final Context context, final int id,
 			String origName, final String newName) {
@@ -111,11 +157,6 @@ public class PutioFileUtils {
 			}
 		}
 
-		if (hasUpdates) {
-			Intent invalidateListIntent = new Intent(Putio.CUSTOM_INTENT1);
-			context.sendBroadcast(invalidateListIntent);
-		}
-
 		class saveFileTask extends AsyncTask<Boolean[], Void, Boolean> {
 			protected Boolean doInBackground(Boolean[]... updates) {
 				Boolean saved = postRename(id, newName);
@@ -123,6 +164,24 @@ public class PutioFileUtils {
 			}
 		}
 		new saveFileTask().execute(updates);
+		
+		if (hasUpdates) {
+			Intent invalidateListIntent = new Intent(Putio.CUSTOM_INTENT1);
+			context.sendBroadcast(invalidateListIntent);
+		}
+	}
+	
+	public void deleteFile(Context context, final Integer... ids) {
+		class deleteFileTask extends AsyncTask<Void, Void, Boolean> {
+			protected Boolean doInBackground(Void... nothing) {
+				Boolean saved = postDelete(ids);
+				return null;
+			}
+		}
+		new deleteFileTask().execute();
+		
+		Intent invalidateListIntent = new Intent(Putio.CUSTOM_INTENT1);
+		context.sendBroadcast(invalidateListIntent);
 	}
 	
 	public Dialog confirmChangesDialog(Context context, String filename) {
