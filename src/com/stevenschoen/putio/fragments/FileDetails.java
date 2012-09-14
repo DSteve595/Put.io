@@ -213,8 +213,7 @@ public class FileDetails extends SherlockFragment {
 			@Override
 			public void onClick(View arg0) {
 				utils.downloadFile(getSherlockActivity(), origFileData.id,
-						getNewFilename(), baseUrl + "files/" + origFileData.id
-								+ "/download" + tokenWithStuff);
+						getNewFilename());
 			}
 			
 		});
@@ -224,8 +223,6 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-//				utils.streamVideo(getSherlockActivity(), baseUrl + "files/"
-//						+ origFileData.id + "/stream" + tokenWithStuff);
 				String streamOrStreamMp4;
 				if (origFileData.hasMp4) {
 					streamOrStreamMp4 = "/mp4/stream";

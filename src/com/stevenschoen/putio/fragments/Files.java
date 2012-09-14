@@ -17,9 +17,7 @@ import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -257,6 +255,9 @@ public final class Files extends SherlockFragment {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 		switch (item.getItemId()) {
+			case R.id.context_download:
+				initDownload(getAdjustedPosition((int) info.id));
+				return true;
 			case R.id.context_rename:
 				initRename(getAdjustedPosition((int) info.id));
 				return true;
@@ -266,6 +267,12 @@ public final class Files extends SherlockFragment {
 			default:
 				return super.onContextItemSelected(item);
 		}
+	}
+	
+	private void initDownload(final long id) {
+		utils.downloadFile(getSherlockActivity(),
+				fileData[(int) id].id,
+				fileData[(int) id].name);
 	}
 	
 	private void initRename(final long id) {

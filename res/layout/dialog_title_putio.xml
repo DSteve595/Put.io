@@ -3,6 +3,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:fitsSystemWindows="true"
+	android:background="@color/putio_accent_eigth"
 	android:orientation="vertical" >
 
 	<TextView

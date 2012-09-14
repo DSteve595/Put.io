@@ -44,22 +44,22 @@
 		android:orientation="horizontal" >
 
 		<Button
-			android:id="@+id/button_confirm_cancel"
+			android:id="@+id/button_tokenlogin_cancel"
 			style="?android:attr/buttonBarButtonStyle"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:background="@drawable/putio_clickable_bg"
-			android:text="@string/no" />
+			android:text="@string/cancel" />
 
 		<Button
-			android:id="@+id/button_confirm_apply"
+			android:id="@+id/button_tokenlogin_login"
 			style="?android:attr/buttonBarButtonStyle"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:background="@drawable/putio_clickable_bg"
-			android:text="@string/apply" />
+			android:text="@string/log_in" />
 	</LinearLayout>
 
 </RelativeLayout>

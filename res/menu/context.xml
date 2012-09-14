@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<item
+		android:id="@+id/context_download"
+		android:icon="@android:drawable/ic_menu_save"
+		android:showAsAction="ifRoom"
+		android:title="Download"/>
+	<item
 		android:id="@+id/context_rename"
 		android:icon="@android:drawable/ic_menu_edit"
 		android:showAsAction="ifRoom"

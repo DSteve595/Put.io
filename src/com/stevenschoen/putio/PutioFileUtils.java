@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -26,12 +27,14 @@ import org.json.JSONObject;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.stevenschoen.putio.activities.Putio;
@@ -240,25 +243,27 @@ public class PutioFileUtils {
 	}
 	
 	@TargetApi(11)
-	public long downloadFile(Context context, int id, String filename, String url) {
-		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+	public long downloadFile(final Context context, final int id, String filename) {
+		final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getFileDownloadUrl(id)));
 		request.setDescription("put.io");
 		if (UIUtils.hasHoneycomb()) {
 		    request.allowScanningByMediaScanner();
 		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		}
+		
+		String path = "put.io" + File.separator + id + File.separator + filename;
+		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
+		boolean made = file.mkdirs();
+		
 		request.setDestinationInExternalPublicDir(
 				Environment.DIRECTORY_DOWNLOADS,
-				"put.io" + File.separator
-				+ id + File.separator
-				+ filename);
+				path);
 
 		// get download service and enqueue file
 		DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 		long downloadId = manager.enqueue(request);
 		
 		sharedPrefs.edit().putLong("downloadId" + id, downloadId);
-		
 		return downloadId;
 	}
 	
@@ -294,6 +299,20 @@ public class PutioFileUtils {
 
 	    org.apache.http.Header[] loc = response.getHeaders("Location");
 	    return loc.length > 0 ? loc[0].getValue() : null;
+	}
+	
+	public String getFileDownloadUrl(int id) {
+		return baseUrl + "files/" + id + "/download" + tokenWithStuff;
+//		try {
+//			return resolveRedirect(baseUrl + "files/" + id + "/download" + tokenWithStuff);
+//		} catch (ClientProtocolException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {
