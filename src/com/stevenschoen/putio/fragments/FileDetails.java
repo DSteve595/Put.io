@@ -14,12 +14,14 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putio.FlushedInputStream;
 import com.stevenschoen.putio.PutioFileData;
 import com.stevenschoen.putio.PutioFileUtils;
+import com.stevenschoen.putio.PutioOpenFileService;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
 
@@ -219,7 +222,7 @@ public class FileDetails extends SherlockFragment {
 		});
 		
 		Button btnOpen = (Button) view.findViewById(R.id.button_filepreview_open);
-		OnClickListener playVideoListener = new OnClickListener() {
+		OnClickListener playMediaListener = new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -232,7 +235,19 @@ public class FileDetails extends SherlockFragment {
 				new getStreamUrlAndPlay().execute(baseUrl + "files/"
 						+ origFileData.id + streamOrStreamMp4 + tokenWithStuff);
 			}
-			
+		};
+		
+		OnClickListener openFileListener = new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
+						getNewFilename());
+				Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
+				serviceIntent.putExtra("downloadId", downloadId);
+				getSherlockActivity().startService(serviceIntent);
+				Log.d("asdf", "service started");
+			}
 		};
 		
 		imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
@@ -279,11 +294,17 @@ public class FileDetails extends SherlockFragment {
 			}
 		}
 		
+		boolean isMedia = false;
 		for (int i = 0; i < PutioFileUtils.streamingMediaTypes.length; i++) {
 			if (origFileData.contentType.contains(PutioFileUtils.streamingMediaTypes[i])) {
-				btnOpen.setOnClickListener(playVideoListener);
+				isMedia = true;
+				
+				btnOpen.setOnClickListener(playMediaListener);
 				btnOpen.setText(getString(R.string.play));
 			}
+		}
+		if (!isMedia) {
+			btnOpen.setOnClickListener(openFileListener);
 		}
 		
 		return view;

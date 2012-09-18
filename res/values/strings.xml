@@ -36,11 +36,13 @@
 	<string name="entertoken">Enter token</string>
 	<string name="download">Download</string>
 	<string name="open">Open</string>
+	<string name="ok">OK</string>
 	<string name="gettingstreamurltitle">Preparing to stream</string>
 	<string name="gettingstreamurlbody">Just a second…</string>
 	<string name="delete">Delete</string>
 	<string name="renametitle">Rename this file?</string>
 	<string name="deletetitle">Delete this file?</string>
 	<string name="deletebody">You can only get it back by adding it all over again.</string>
+	<string name="downloadfinishedbody">%1$s is done downloading.</string>
 
 </resources>

@@ -107,8 +107,6 @@ public final class Files extends SherlockFragment {
 	private int buttonBarHeight;
 	
 	PutioFileUtils utils;
-
-	private Typeface robotoLight;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -126,8 +124,6 @@ public final class Files extends SherlockFragment {
 		tokenWithStuff = "?oauth_token=" + token;
 		
 		utils = new PutioFileUtils(token, sharedPrefs);
-		
-		robotoLight = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Light.ttf");
 	}
 	
 	@TargetApi(11)
@@ -276,12 +272,7 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void initRename(final long id) {
-		final Dialog renameDialog = new Dialog(getSherlockActivity(), R.style.Putio_Dialog);
-		renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		renameDialog.setContentView(R.layout.dialog_rename);
-		TextView textTitle = (TextView) renameDialog.findViewById(R.id.dialog_title);
-		textTitle.setText(getString(R.string.renametitle));
-		textTitle.setTypeface(robotoLight);
+		final Dialog renameDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
 		renameDialog.show();
 		
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
@@ -328,12 +319,7 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void initDelete(final long id) {
-		final Dialog deleteDialog  = new Dialog(getSherlockActivity(), R.style.Putio_Dialog);
-		deleteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		deleteDialog.setContentView(R.layout.dialog_delete);
-		TextView textTitle = (TextView) deleteDialog.findViewById(R.id.dialog_title);
-		textTitle.setText(getString(R.string.deletetitle));
-		textTitle.setTypeface(robotoLight);
+		final Dialog deleteDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.deletetitle), R.layout.dialog_delete);
 		deleteDialog.show();
 		
 		Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
@@ -342,6 +328,7 @@ public final class Files extends SherlockFragment {
 			@Override
 			public void onClick(View arg0) {
 				utils.deleteFile(getSherlockActivity(), fileData[(int) id].id);
+				deleteDialog.dismiss();
 			}
 		});
 		

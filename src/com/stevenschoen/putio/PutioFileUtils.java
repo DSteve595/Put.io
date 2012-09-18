@@ -31,10 +31,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.stevenschoen.putio.activities.Putio;
@@ -195,6 +197,19 @@ public class PutioFileUtils {
 		
 		TextView text = (TextView) dialog.findViewById(R.id.text_confirmText);
 		text.setText(String.format(context.getString(R.string.applychanges), filename));
+		
+		return dialog;
+	}
+	
+	public Dialog PutioDialog(Context context, String title, int contentViewId) {
+		Typeface robotoLight = Typeface.createFromAsset(context.getAssets(), "Roboto-Light.ttf");
+		
+		Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(contentViewId);
+		TextView textTitle = (TextView) dialog.findViewById(R.id.dialog_title);
+		textTitle.setText(title);
+		textTitle.setTypeface(robotoLight);
 		
 		return dialog;
 	}

@@ -1,13 +1,9 @@
 package com.stevenschoen.putio.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -39,10 +35,6 @@ public class FileDetailsActivity extends SherlockFragmentActivity {
 		}
 		
 		getSupportActionBar().setTitle(fileDetailsFragment.getOldFilename());
-		
-		IntentFilter intentFilter3 = new IntentFilter(
-				Putio.CUSTOM_INTENT3);
-		registerReceiver(fileDownloadUpdateReceiver, intentFilter3);
 	}
 	
 	@Override
@@ -57,18 +49,6 @@ public class FileDetailsActivity extends SherlockFragmentActivity {
 		return (super.onOptionsItemSelected(menuItem));
 	}
 	
-	private BroadcastReceiver fileDownloadUpdateReceiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d("asdf", Integer.toString(intent.getExtras().getInt("id")));
-			Log.d("asdf", Integer.toString(intent.getExtras().getInt("percent")));
-			if (fileDetailsFragment.getFileId() == intent.getExtras().getInt("id")) {
-//				fileDetailsFragment.updatePercent(intent.getExtras().getInt("percent"));
-			}
-		}
-	};
-	
 	@Override
 	protected void onSaveInstanceState (Bundle outState) {
 	    super.onSaveInstanceState(outState);
@@ -77,6 +57,5 @@ public class FileDetailsActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(fileDownloadUpdateReceiver);
 	}
 }
