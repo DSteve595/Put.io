@@ -13,9 +13,6 @@ public final class R {
         public static final int slide_out_left=0x7f040001;
         public static final int slide_out_right=0x7f040002;
     }
-    public static final class array {
-        public static final int spinnerstuff=0x7f0d0000;
-    }
     public static final class attr {
         /**  Specified if we are forcing an action item overflow menu. 
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
@@ -1042,7 +1039,7 @@ containing a value of this type.
         public static final int tablet_transfers=0x7f03002c;
     }
     public static final class menu {
-        public static final int context=0x7f0e0000;
+        public static final int context=0x7f0d0000;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1076,48 +1073,56 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0b0009;
         public static final int app_name=0x7f0b000a;
-        public static final int apply=0x7f0b0022;
-        public static final int applychanges=0x7f0b0021;
-        public static final int at=0x7f0b0014;
-        public static final int cancel=0x7f0b0016;
-        public static final int cantopenbecausefuckyou=0x7f0b0034;
-        public static final int cantopenbecausetype=0x7f0b0035;
-        public static final int created=0x7f0b0013;
-        public static final int delete=0x7f0b002b;
-        public static final int deletebody=0x7f0b002e;
-        public static final int deletetitle=0x7f0b002d;
-        public static final int download=0x7f0b0025;
-        public static final int downloadfinishedbody=0x7f0b0030;
-        public static final int downloadfinishedtitle=0x7f0b002f;
-        public static final int entertoken=0x7f0b0024;
-        public static final int files=0x7f0b000e;
-        public static final int gettingstreamurlbody=0x7f0b002a;
-        public static final int gettingstreamurltitle=0x7f0b0029;
-        public static final int go_to_site=0x7f0b001b;
-        public static final int intro1=0x7f0b001d;
-        public static final int intro2=0x7f0b001e;
-        public static final int loading=0x7f0b0012;
-        public static final int log_in=0x7f0b001c;
-        public static final int loginsuccess=0x7f0b0010;
-        public static final int menu_settings=0x7f0b000d;
+        public static final int apply=0x7f0b0014;
+        public static final int applychanges=0x7f0b0033;
+        public static final int at=0x7f0b002c;
+        public static final int cancel=0x7f0b000e;
+        /**  Errors (for users) 
+         */
+        public static final int cantopenbecausefuckyou=0x7f0b0024;
+        public static final int cantopenbecausetype=0x7f0b0025;
+        public static final int created=0x7f0b002b;
+        public static final int delete=0x7f0b0019;
+        public static final int deletebody=0x7f0b001e;
+        public static final int deletetitle=0x7f0b001d;
+        public static final int download=0x7f0b0015;
+        public static final int downloadfinishedbody=0x7f0b0020;
+        public static final int downloadfinishedtitle=0x7f0b001f;
+        public static final int entertoken=0x7f0b0035;
+        /**  Other stuff 
+         */
+        public static final int files=0x7f0b0026;
+        public static final int gettingstreamurlbody=0x7f0b001b;
+        /**  Dialog text 
+         */
+        public static final int gettingstreamurltitle=0x7f0b001a;
+        public static final int go_to_site=0x7f0b002e;
+        public static final int intro1=0x7f0b002f;
+        public static final int intro2=0x7f0b0030;
+        public static final int loading=0x7f0b002a;
+        public static final int log_in=0x7f0b0013;
+        public static final int loginsuccess=0x7f0b0028;
+        public static final int menu_settings=0x7f0b0012;
         public static final int no=0x7f0b000c;
-        public static final int ok=0x7f0b0028;
-        public static final int open=0x7f0b0027;
-        public static final int play=0x7f0b0019;
-        public static final int redownload=0x7f0b0026;
-        public static final int redownloadfordlbody=0x7f0b0032;
-        public static final int redownloadforopenbody=0x7f0b0033;
-        public static final int redownloadtitle=0x7f0b0031;
-        public static final int refresh=0x7f0b0017;
-        public static final int rename=0x7f0b0018;
-        public static final int renametitle=0x7f0b002c;
-        public static final int save=0x7f0b0015;
-        public static final int size_is=0x7f0b0011;
-        public static final int slogan1=0x7f0b001f;
-        public static final int slogan2=0x7f0b0020;
-        public static final int tokenlogin=0x7f0b0023;
-        public static final int transfers=0x7f0b000f;
-        public static final int welcome=0x7f0b001a;
+        public static final int ok=0x7f0b0018;
+        public static final int open=0x7f0b0017;
+        public static final int play=0x7f0b0011;
+        public static final int redownload=0x7f0b0016;
+        public static final int redownloadfordlbody=0x7f0b0022;
+        public static final int redownloadforopenbody=0x7f0b0023;
+        public static final int redownloadtitle=0x7f0b0021;
+        public static final int refresh=0x7f0b000f;
+        public static final int rename=0x7f0b0010;
+        public static final int renametitle=0x7f0b001c;
+        public static final int save=0x7f0b000d;
+        public static final int size_is=0x7f0b0029;
+        public static final int slogan1=0x7f0b0031;
+        public static final int slogan2=0x7f0b0032;
+        public static final int tokenlogin=0x7f0b0034;
+        public static final int transfers=0x7f0b0027;
+        public static final int welcome=0x7f0b002d;
+        /**  Short commands and responses 
+         */
         public static final int yes=0x7f0b000b;
     }
     public static final class style {

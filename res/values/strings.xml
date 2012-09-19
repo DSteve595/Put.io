@@ -1,9 +1,45 @@
 <resources>
 
-	<string name="app_name">Put.io for Android</string>
+	<string name="app_name">Put.io</string>
+
+	<!-- Short commands and responses -->
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
+	<string name="save">Save</string>
+	<string name="cancel">Cancel</string>
+	<string name="refresh">Refresh</string>
+	<string name="rename">Rename</string>
+	<string name="play">Play</string>
 	<string name="menu_settings">Settings</string>
+	<string name="log_in">Log in</string>
+	<string name="apply">Apply</string>
+	<string name="download">Download</string>
+	<string name="redownload">Re-download</string>
+	<string name="open">Open</string>
+	<string name="ok">OK</string>
+	<string name="delete">Delete</string>
+
+	<!-- Dialog text -->
+	<string name="gettingstreamurltitle">Preparing to stream</string>
+	<string name="gettingstreamurlbody">Just a second…</string>
+	
+	<string name="renametitle">Rename this file?</string>
+	
+	<string name="deletetitle">Delete this file?</string>
+	<string name="deletebody">You can only get it back by adding it all over again.</string>
+	
+	<string name="downloadfinishedtitle">Open file?</string>
+	<string name="downloadfinishedbody">%1$s is done downloading.</string>
+	
+	<string name="redownloadtitle">Re-download file?</string>
+	<string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
+	<string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
+
+	<!-- Errors (for users) -->
+	<string name="cantopenbecausefuckyou">There was an error opening the file.</string>
+	<string name="cantopenbecausetype">None of your apps can open this type of file.</string>
+	
+	<!-- Other stuff -->
 	<string name="files">Your files</string>
 	<string name="transfers">Transfers</string>
 	<string name="loginsuccess">Successfully logged in!</string>
@@ -11,45 +47,14 @@
 	<string name="loading">Loading…</string>
 	<string name="created">Created:</string>
 	<string name="at">at</string>
-	<string name="save">Save</string>
-	<string name="cancel">Cancel</string>
-	<string name="refresh">Refresh</string>
-	<string name="rename">Rename</string>
-	<string name="play">Play</string>
-
-	<string-array name="spinnerstuff">
-		<item>Rename</item>
-		<item>Delete</item>
-		<item>Download</item>
-	</string-array>
-
 	<string name="welcome">Welcome!</string>
 	<string name="go_to_site">Go to site</string>
-	<string name="log_in">Log in</string>
 	<string name="intro1">Put.io is</string>
 	<string name="intro2">a storage service that fetches media files and lets you stream them immediately</string>
 	<string name="slogan1">ONLINE STORAGE</string>
 	<string name="slogan2">RE-IMAGINED</string>
 	<string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
-	<string name="apply">Apply</string>
 	<string name="tokenlogin">If, for whatever reason, you\'d like to provide your login token manually, you can do so here.</string>
 	<string name="entertoken">Enter token</string>
-	<string name="download">Download</string>
-	<string name="redownload">Re-download</string>
-	<string name="open">Open</string>
-	<string name="ok">OK</string>
-	<string name="gettingstreamurltitle">Preparing to stream</string>
-	<string name="gettingstreamurlbody">Just a second…</string>
-	<string name="delete">Delete</string>
-	<string name="renametitle">Rename this file?</string>
-	<string name="deletetitle">Delete this file?</string>
-	<string name="deletebody">You can only get it back by adding it all over again.</string>
-	<string name="downloadfinishedtitle">Open file?</string>
-	<string name="downloadfinishedbody">%1$s is done downloading.</string>
-	<string name="redownloadtitle">Re-download file?</string>
-	<string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
-	<string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
-	<string name="cantopenbecausefuckyou">There was an error opening the file.</string>
-	<string name="cantopenbecausetype">None of your apps can open this type of file.</string>
 
 </resources>
