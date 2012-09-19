@@ -1,15 +1,14 @@
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal" >
 
-        <TextView
-        	android:id="@+id/textView1"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:layout_centerHorizontal="true"
-        	android:layout_centerVertical="true"
-        	android:text="Under construction!"
-        	android:textAppearance="?android:attr/textAppearanceLarge" />
+	<fragment
+		android:id="@+id/fragment_transfers"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		class="com.stevenschoen.putio.fragments.Transfers"
+		tools:layout="@layout/transfers" />
 
-    </RelativeLayout>
+</LinearLayout>

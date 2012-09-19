@@ -10,8 +10,9 @@ package com.actionbarsherlock;
 public final class R {
     public static final class anim {
         public static final int slide_in_left=0x7f040000;
-        public static final int slide_out_left=0x7f040001;
-        public static final int slide_out_right=0x7f040002;
+        public static final int slide_in_right=0x7f040001;
+        public static final int slide_out_left=0x7f040002;
+        public static final int slide_out_right=0x7f040003;
     }
     public static final class attr {
         /**  Specified if we are forcing an action item overflow menu. 
@@ -931,9 +932,9 @@ containing a value of this type.
         public static final int button_undoName=0x7f060056;
         public static final int buttonbar=0x7f060029;
         public static final int buttonbarSeparator=0x7f060028;
-        public static final int context_delete=0x7f060074;
-        public static final int context_download=0x7f060072;
-        public static final int context_rename=0x7f060073;
+        public static final int context_delete=0x7f060075;
+        public static final int context_download=0x7f060073;
+        public static final int context_rename=0x7f060074;
         public static final int createdHolder=0x7f060048;
         public static final int descriptionFrame=0x7f060043;
         public static final int dialog_title=0x7f06003a;
@@ -944,6 +945,7 @@ containing a value of this type.
         public static final int fileslist=0x7f06005c;
         public static final int fragment_details=0x7f060071;
         public static final int fragment_files=0x7f060070;
+        public static final int fragment_transfers=0x7f060072;
         public static final int header=0x7f06006d;
         public static final int homeAsUp=0x7f060006;
         public static final int image_filepreview_image=0x7f060057;
@@ -1036,7 +1038,10 @@ containing a value of this type.
         public static final int sherlock_spinner_item=0x7f030029;
         public static final int sizepreference=0x7f03002a;
         public static final int tablet_files=0x7f03002b;
-        public static final int tablet_transfers=0x7f03002c;
+        public static final int tablet_filesold=0x7f03002c;
+        public static final int tablet_transfers=0x7f03002d;
+        public static final int tablet_transfersold=0x7f03002e;
+        public static final int transfers=0x7f03002f;
     }
     public static final class menu {
         public static final int context=0x7f0d0000;

@@ -26,7 +26,6 @@ import android.widget.Button;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -70,7 +69,7 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	Files filesFragment;
 	FileDetails fileDetailsFragment;
-	SherlockFragment transfersFragment;
+	Transfers transfersFragment;
 	
 	private String titleFiles;
 	private String titleTransfers;
@@ -80,6 +79,7 @@ public class Putio extends SherlockFragmentActivity implements
 	private View tabletTransfersView;
 	private int filesId;
 	private int fileDetailsId;
+	private int transfersId;
 	
 	PutioFileUtils utils;
 	
@@ -280,24 +280,20 @@ public class Putio extends SherlockFragmentActivity implements
 	}
 	
 	private void setupTabletLayout() {
+		// Files
 		tabletFilesView = getLayoutInflater().inflate(R.layout.tablet_files, null);
-		filesId = tabletFilesView.findViewById(R.id.fragment_files).getId();
+		filesId = R.id.fragment_files;
 		fileDetailsId = tabletFilesView.findViewById(R.id.fragment_details).getId();
 		
-		if (savedInstanceState == null) {
-			filesFragment = Files.newInstance();
-			getSupportFragmentManager()
-					.beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_left,
-							R.anim.slide_out_right)
-					.add(filesId, filesFragment)
-					.add(fileDetailsId, new SherlockFragment()).commit();
-		} else {
-			filesFragment = (Files) getSupportFragmentManager().findFragmentById(R.id.fragment_files);
-		}
+		filesFragment = (Files) getSupportFragmentManager().findFragmentById(R.id.fragment_files);
 		
+		// Transfers
 		tabletTransfersView = getLayoutInflater().inflate(R.layout.tablet_transfers, null);
-
+		transfersId = R.id.fragment_transfers;
+		
+		transfersFragment = (Transfers) getSupportFragmentManager().findFragmentById(R.id.fragment_transfers);
+		
+		// Other
 		for (int i = 0; i < 2; i++) {
 			actionBar.addTab(actionBar.newTab()
 					.setText(titles[i])

@@ -4,12 +4,14 @@
 	android:layout_height="fill_parent"
 	android:orientation="horizontal"
 	android:paddingRight="@dimen/padding_large" >
-
-	<FrameLayout
+
+	<fragment
 		android:id="@+id/fragment_files"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_weight=".6" />
+		android:layout_weight=".6"
+		class="com.stevenschoen.putio.fragments.Files"
+		tools:layout="@layout/files" />
 
 	<FrameLayout
 		android:id="@+id/fragment_details"
