@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="vertical" >
+
+	<include layout="@layout/dialog_title_putio" >
+	</include>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" >
+
+		<FrameLayout
+			android:id="@+id/nameHolder"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:paddingBottom="@dimen/padding_medium"
+			android:paddingLeft="@dimen/padding_large"
+			android:paddingRight="@dimen/padding_large"
+			android:paddingTop="@dimen/padding_medium" >
+
+			<TextView
+				android:id="@+id/text_downloadfinished_body"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:text="@string/downloadfinishedbody"
+				android:textAppearance="?android:attr/textAppearanceMedium" />
+		</FrameLayout>
+
+		<View
+			android:id="@+id/buttonbarSeparator"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@+id/nameHolder"
+			android:layout_marginTop="@dimen/padding_large"
+			android:background="@drawable/divider_horizontal" />
+
+		<LinearLayout
+			android:id="@+id/buttonbar"
+			style="?android:attr/buttonBarStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@id/buttonbarSeparator"
+			android:orientation="horizontal" >
+
+			<Button
+				android:id="@+id/button_filefinished_ok"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:background="@drawable/putio_clickable_bg"
+				android:text="@string/ok" />
+
+			<Button
+				android:id="@+id/button_filefinished_open"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:background="@drawable/putio_clickable_bg"
+				android:text="@string/open" />
+		</LinearLayout>
+	</RelativeLayout>
+
+</LinearLayout>

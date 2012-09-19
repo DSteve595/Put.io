@@ -13,6 +13,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +22,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.nineoldandroids.view.ViewHelper;
@@ -179,7 +180,6 @@ public class FileDetails extends SherlockFragment {
 							obj.getLong("size"));
 					return newFileData;
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return null;
@@ -200,7 +200,6 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				if (!UIUtils.isTablet(getActivity())) {
 					getSherlockActivity().finish();
 				} else {
@@ -215,8 +214,35 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				utils.downloadFile(getSherlockActivity(), origFileData.id,
-						getNewFilename());
+				if (PutioFileUtils.idIsDownloaded(getFileId())) {
+					final Dialog downloadDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownloadfordl);
+					downloadDialog.show();
+					
+					Button buttonDownload = (Button) downloadDialog.findViewById(R.id.button_redownloadfordl_download);
+					buttonDownload.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							utils.downloadFile(getSherlockActivity(), origFileData.id,
+									getNewFilename());
+							Toast.makeText(getSherlockActivity(), "Download started.", Toast.LENGTH_SHORT).show();
+							downloadDialog.dismiss();
+						}
+					});
+					
+					Button buttonCancel = (Button) downloadDialog.findViewById(R.id.button_redownloadfordl_cancel);
+					buttonCancel.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							downloadDialog.cancel();
+						}
+					});
+				} else {
+					utils.downloadFile(getSherlockActivity(), origFileData.id,
+							getNewFilename());
+					Toast.makeText(getSherlockActivity(), "Download started.", Toast.LENGTH_SHORT).show();
+				}
 			}
 			
 		});
@@ -241,12 +267,53 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
-						getNewFilename());
-				Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
-				serviceIntent.putExtra("downloadId", downloadId);
-				getSherlockActivity().startService(serviceIntent);
-				Log.d("asdf", "service started");
+				if (PutioFileUtils.idIsDownloaded(getFileId())) {
+					final Dialog openDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownloadforopen);
+					openDialog.show();
+					
+					Button buttonOpen = (Button) openDialog.findViewById(R.id.button_redownloadforopen_open);
+					buttonOpen.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							PutioFileUtils.openDownloadedId(getFileId(), getSherlockActivity());
+							openDialog.dismiss();
+						}
+					});
+					
+					Button buttonRedownload = (Button) openDialog.findViewById(R.id.button_redownloadforopen_download);
+					buttonRedownload.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							PutioFileUtils.deleteId(getFileId());
+							long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
+									getNewFilename());
+							Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
+							serviceIntent.putExtra("downloadId", downloadId);
+							serviceIntent.putExtra("filename", getNewFilename());
+							getSherlockActivity().startService(serviceIntent);
+							Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+							openDialog.dismiss();
+						}
+					});
+					
+					Button buttonCancel = (Button) openDialog.findViewById(R.id.button_redownloadforopen_cancel);
+					buttonCancel.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							openDialog.cancel();
+						}
+					});
+				} else {
+					long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
+							getNewFilename());
+					Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
+					serviceIntent.putExtra("downloadId", downloadId);
+					getSherlockActivity().startService(serviceIntent);
+					Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+				}
 			}
 		};
 		

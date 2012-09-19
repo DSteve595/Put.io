@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
-import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +38,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stevenschoen.putio.activities.Putio;
 
@@ -259,6 +260,10 @@ public class PutioFileUtils {
 	
 	@TargetApi(11)
 	public long downloadFile(final Context context, final int id, String filename) {
+		if (idIsDownloaded(id)) {
+			deleteId(id);
+		}
+		
 		final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getFileDownloadUrl(id)));
 		request.setDescription("put.io");
 		if (UIUtils.hasHoneycomb()) {
@@ -268,7 +273,7 @@ public class PutioFileUtils {
 		
 		String path = "put.io" + File.separator + id + File.separator + filename;
 		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
-		boolean made = file.mkdirs();
+		boolean made = file.getParentFile().mkdirs();
 		
 		request.setDestinationInExternalPublicDir(
 				Environment.DIRECTORY_DOWNLOADS,
@@ -318,16 +323,53 @@ public class PutioFileUtils {
 	
 	public String getFileDownloadUrl(int id) {
 		return baseUrl + "files/" + id + "/download" + tokenWithStuff;
-//		try {
-//			return resolveRedirect(baseUrl + "files/" + id + "/download" + tokenWithStuff);
-//		} catch (ClientProtocolException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
+	}
+	
+	public static boolean idIsDownloaded(int id) {
+		String path = Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
+				+ File.separator + "put.io" + File.separator + id;
+		File file = new File(path);
+		if (file.exists()) {
+			if (file.list().length > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	public static void deleteId(int id) {
+		String path = Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
+				+ File.separator + "put.io" + File.separator + id;
+		File file = new File(path);
+		Log.d("asdf", file.getAbsolutePath());
+		try {
+			FileUtils.deleteDirectory(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void openDownloadedId(int id, Context context) {
+		if (idIsDownloaded(id)) {
+			String path = Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
+					+ File.separator + "put.io" + File.separator + id;
+			String filePath = new File(path).listFiles()[0].getAbsolutePath();
+			
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
+			try {
+				context.startActivity(intent);
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(context, "None of your apps can open this type of file.", Toast.LENGTH_LONG).show();
+			}
+		} else {
+			Toast.makeText(context, "The file could not be found. Was it deleted?", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {

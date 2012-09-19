@@ -35,6 +35,7 @@
 	<string name="tokenlogin">If, for whatever reason, you\'d like to provide your login token manually, you can do so here.</string>
 	<string name="entertoken">Enter token</string>
 	<string name="download">Download</string>
+	<string name="redownload">Re-download</string>
 	<string name="open">Open</string>
 	<string name="ok">OK</string>
 	<string name="gettingstreamurltitle">Preparing to stream</string>
@@ -43,6 +44,12 @@
 	<string name="renametitle">Rename this file?</string>
 	<string name="deletetitle">Delete this file?</string>
 	<string name="deletebody">You can only get it back by adding it all over again.</string>
+	<string name="downloadfinishedtitle">Open file?</string>
 	<string name="downloadfinishedbody">%1$s is done downloading.</string>
+	<string name="redownloadtitle">Re-download file?</string>
+	<string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
+	<string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
+	<string name="cantopenbecausefuckyou">There was an error opening the file.</string>
+	<string name="cantopenbecausetype">None of your apps can open this type of file.</string>
 
 </resources>

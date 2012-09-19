@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -42,7 +40,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -365,8 +362,6 @@ public final class Files extends SherlockFragment {
 
 				@Override
 				public void onAnimationStart(Animator animation) {
-					// TODO Auto-generated method stub
-					
 				}
 
 				@Override
@@ -383,14 +378,10 @@ public final class Files extends SherlockFragment {
 
 				@Override
 				public void onAnimationCancel(Animator animation) {
-					// TODO Auto-generated method stub
-					
 				}
 
 				@Override
 				public void onAnimationRepeat(Animator animation) {
-					// TODO Auto-generated method stub
-					
 				}
 				
 			});
@@ -407,8 +398,6 @@ public final class Files extends SherlockFragment {
 
 				@Override
 				public void onAnimationStart(Animator animation) {
-					// TODO Auto-generated method stub
-					
 				}
 
 				@Override
@@ -423,14 +412,10 @@ public final class Files extends SherlockFragment {
 
 				@Override
 				public void onAnimationCancel(Animator animation) {
-					// TODO Auto-generated method stub
-					
 				}
 
 				@Override
 				public void onAnimationRepeat(Animator animation) {
-					// TODO Auto-generated method stub
-					
 				}
 			});
 		}
@@ -460,6 +445,13 @@ public final class Files extends SherlockFragment {
                 
                 array = json.getJSONArray("files");
                 newId = json.getJSONObject("parent").getInt("id");
+				if (currentFolderId != 0) {
+					try {
+						parentParentId = json.getJSONObject("parent").getInt("parent_id");
+					} catch (JSONException e) {
+						parentParentId = 0;
+					}
+				}
                 origId = newId;
 				PutioFileData[] file = new PutioFileData[array.length()];
 				
@@ -531,11 +523,16 @@ public final class Files extends SherlockFragment {
 							obj.getLong("size"));
 				}
 				
-				File output = new File(getSherlockActivity().getCacheDir(), currentFolderId + ".json");
-				FileOutputStream fos = FileUtils.openOutputStream(output);
-				fos.write(string.getBytes());
-				fos.close();
+				try {
+					File output = new File(getSherlockActivity().getCacheDir(), newId + ".json");
+					FileOutputStream fos = FileUtils.openOutputStream(output);
+					fos.write(string.getBytes());
+					fos.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
+//				GAYANDROIDPROGRAMMINGUMADBROSTEVENUGAY
 				return file;
 			} catch (Exception e) {
 				e.printStackTrace();

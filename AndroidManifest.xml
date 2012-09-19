@@ -32,6 +32,8 @@
 		</activity>
 		<activity android:name=".activities.Preferences" >
 		</activity>
+		<activity android:name=".activities.FileFinished" android:theme="@style/Putio.Dialog">
+		</activity>
 
 		<service android:name=".PutioOpenFileService" >
 		</service>

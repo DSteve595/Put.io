@@ -1,8 +1,5 @@
 package com.stevenschoen.putio;
 
-import java.io.FileNotFoundException;
-
-import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -12,15 +9,15 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
-import android.widget.Toast;
 
+import com.stevenschoen.putio.activities.FileFinished;
 import com.stevenschoen.putio.activities.Putio;
 
 public class PutioOpenFileService extends Service {
 	DownloadManager downloadManager;
 	String Download_ID = "DOWNLOAD_ID";
 	long downloadId;
+	String filename;
 	
 	PutioFileUtils utils;
 	
@@ -38,6 +35,7 @@ public class PutioOpenFileService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		downloadId = intent.getExtras().getLong("downloadId");
+		filename = intent.getExtras().getString("filename");
 		
 		IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
 		registerReceiver(downloadReceiver, intentFilter);
@@ -64,15 +62,12 @@ public class PutioOpenFileService extends Service {
 
 				if (status == DownloadManager.STATUS_SUCCESSFUL) {
 					ParcelFileDescriptor file;
-					try {
-						file = downloadManager.openDownloadedFile(downloadId);
-						Dialog doneDialog = utils.PutioDialog(PutioOpenFileService.this, "Download finished!", R.layout.dialog_downloadfinished);
-						doneDialog.show();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-						Toast.makeText(getApplicationContext(),
-								e.toString(), Toast.LENGTH_LONG).show();
-					}
+//					file = downloadManager.openDownloadedFile(downloadId);
+					Intent finishedIntent = new Intent(PutioOpenFileService.this, FileFinished.class);
+					finishedIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					finishedIntent.putExtra("downloadId", downloadId);
+					finishedIntent.putExtra("filename", filename);
+					startActivity(finishedIntent);
 				} else if (status == DownloadManager.STATUS_FAILED) {
 					
 				} else if (status == DownloadManager.STATUS_PAUSED) {

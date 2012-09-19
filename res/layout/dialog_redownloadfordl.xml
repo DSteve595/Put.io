@@ -12,7 +12,6 @@
 
 		<FrameLayout
 			android:id="@+id/nameHolder"
-			android:layout_centerHorizontal="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentTop="true"
@@ -20,14 +19,11 @@
 			android:paddingLeft="@dimen/padding_large"
 			android:paddingRight="@dimen/padding_large"
 			android:paddingTop="@dimen/padding_medium" >
-
+
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:text="@string/downloadfinishedbody"
-				android:textAppearance="?android:attr/textAppearanceMedium" />
-
+				android:text="@string/redownloadfordlbody" />
 		</FrameLayout>
 
 		<View
@@ -48,22 +44,23 @@
 			android:orientation="horizontal" >
 
 			<Button
-				android:id="@+id/button_downloadfinished_ok"
+				android:id="@+id/button_redownloadfordl_cancel"
 				style="?android:attr/buttonBarButtonStyle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/ok" />
-
+				android:text="@string/cancel" />
+
 			<Button
-				android:id="@+id/button_downloadfinished_open"
+				android:id="@+id/button_redownloadfordl_download"
 				style="?android:attr/buttonBarButtonStyle"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/open" />
+				android:text="@string/redownload" />
+
 		</LinearLayout>
 	</RelativeLayout>
 
