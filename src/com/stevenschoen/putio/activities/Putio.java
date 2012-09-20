@@ -287,6 +287,10 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		filesFragment = (Files) getSupportFragmentManager().findFragmentById(R.id.fragment_files);
 		
+		if (getSupportFragmentManager().findFragmentById(R.id.fragment_details) != null) {
+			fileDetailsFragment = (FileDetails) getSupportFragmentManager().findFragmentById(R.id.fragment_details);
+		}
+		
 		// Transfers
 		tabletTransfersView = getLayoutInflater().inflate(R.layout.tablet_transfers, null);
 		transfersId = R.id.fragment_transfers;
