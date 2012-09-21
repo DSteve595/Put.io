@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
@@ -29,7 +30,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.stevenschoen.putio.R;
-import com.stevenschoen.putio.activities.Putio;
 
 public class Setup extends SherlockActivity {
 	public SharedPreferences sharedPrefs;
@@ -51,17 +51,8 @@ public class Setup extends SherlockActivity {
 		Typeface robotoLight = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
 		Typeface robotoBold = Typeface.createFromAsset(this.getAssets(), "Roboto-Bold.ttf");
 		
-		TextView welcomeText = (TextView) findViewById(R.id.text_setup_welcome);
-		welcomeText.setTypeface(robotoLight);
-		
 		TextView introText1 = (TextView) findViewById(R.id.text_setup_intro1);
 		introText1.setTypeface(robotoLight);
-		
-		TextView sloganText1 = (TextView) findViewById(R.id.text_setup_slogan1);
-		sloganText1.setTypeface(robotoThin);
-		
-		TextView sloganText2 = (TextView) findViewById(R.id.text_setup_slogan2);
-		sloganText2.setTypeface(robotoBold);
 		
 		webDialog = new Dialog(this, R.style.Putio_Dialog);
 		webDialog.setCanceledOnTouchOutside(false);
@@ -75,18 +66,27 @@ public class Setup extends SherlockActivity {
 			public void onClick(View v) {
 				webDialog.show();
 			}
-			
+		});
+		
+		Button goToSiteButton = (Button) findViewById(R.id.button_setup_gotosite);
+		goToSiteButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent goToSiteIntent = new Intent(Intent.ACTION_VIEW);
+				goToSiteIntent.setData(Uri.parse("http://put.io/"));
+				startActivity(goToSiteIntent);
+			}
 		});
 		
 		Button cancelLogin = (Button) webDialog.findViewById(R.id.button_login_cancel);
 		cancelLogin.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View arg0) {
 				loginWebView.loadUrl(loginUrl);
 				webDialog.cancel();
 			}
-			
 		});
 		
 		loginWebView = (WebView) webDialog.findViewById(R.id.webview_login);
@@ -113,7 +113,6 @@ public class Setup extends SherlockActivity {
 				final String finalUrl = new String(
 						"https://api.put.io/v2/oauth2/access_token?client_id=83&client_secret=6xf3yaxu62uj1cjbzfvz&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
 								+ code);
-//				Log.d("asdf", finalUrl);
 				saveTokenFromWeb(finalUrl);
 			}
 		}
@@ -167,7 +166,6 @@ public class Setup extends SherlockActivity {
 			json = new JSONObject(convertStreamToString(getJsonData(url)));
 			token = json.getString("access_token");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

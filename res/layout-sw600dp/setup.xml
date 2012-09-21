@@ -1,11 +1,44 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/RelativeLayout1"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:padding="@dimen/padding_large" >
+	android:layout_height="match_parent" >
 
-	<include
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		layout="@layout/setupbox" />
+    <LinearLayout
+    	android:id="@+id/buttonbar"
+    	style="?android:attr/buttonBarStyle"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:background="@color/putio_dark"
+    	android:orientation="horizontal" >
 
-</LinearLayout>
+    	<Button
+    		android:id="@+id/button_setup_gotosite"
+    		style="?android:attr/buttonBarButtonStyle"
+    		android:layout_width="0dp"
+    		android:layout_height="wrap_content"
+    		android:layout_weight="1"
+    		android:background="@drawable/putio_clickable_bg"
+    		android:text="@string/go_to_site" />
+
+    	<Button
+    		android:id="@+id/button_setup_login"
+    		style="?android:attr/buttonBarButtonStyle"
+    		android:layout_width="0dp"
+    		android:layout_height="wrap_content"
+    		android:layout_weight="1"
+    		android:background="@drawable/putio_clickable_bg"
+    		android:text="@string/log_in" />
+    </LinearLayout>
+
+    <include
+    	android:id="@+id/include1"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_centerVertical="true"
+    	android:layout_marginLeft="80dp"
+    	android:layout_marginRight="80dp"
+    	android:layout_weight="1"
+    	layout="@layout/setupbox" />
+
+</RelativeLayout>

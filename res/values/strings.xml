@@ -49,8 +49,8 @@
 	<string name="at">at</string>
 	<string name="welcome">Welcome!</string>
 	<string name="go_to_site">Go to site</string>
-	<string name="intro1">Put.io is</string>
-	<string name="intro2">a storage service that fetches media files and lets you stream them immediately</string>
+	<string name="intro1">A different kind of online storage</string>
+	<string name="intro2">Put.io works like any other storage service. Except, it can also retrieve and put files into your personal, private online space.</string>
 	<string name="slogan1">ONLINE STORAGE</string>
 	<string name="slogan2">RE-IMAGINED</string>
 	<string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
