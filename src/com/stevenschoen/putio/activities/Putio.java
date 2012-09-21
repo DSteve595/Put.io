@@ -190,7 +190,6 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
-			
 			this.fm = fm;
 		}
 
@@ -205,6 +204,10 @@ public class Putio extends SherlockFragmentActivity implements
 				return transfersFragment;
 			}
 			return null;
+		}
+
+		private String makeFragmentName(int viewId, int index) {
+			return "android:switcher:" + viewId + ":" + index;
 		}
 
 		@Override
@@ -248,6 +251,10 @@ public class Putio extends SherlockFragmentActivity implements
 		// of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
+		
+		
+		String filesFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
+		filesFragment = (Files) getSupportFragmentManager().findFragmentByTag(filesFragmentName);
 		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -388,9 +395,7 @@ public class Putio extends SherlockFragmentActivity implements
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-//			if (!UIUtils.isTablet(context)) {
-				filesFragment.invalidateList();
-//			}
+			filesFragment.invalidateList();
 		}
 	};
 	
@@ -415,14 +420,14 @@ public class Putio extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed() {
 		if (UIUtils.isTablet(this)) {
-			if (filesFragment.currentFolderId == 0) {
+			if (filesFragment.getCurrentFolderId() == 0) {
 				super.onBackPressed();
 			} else {
 				filesFragment.goBack();
 			}
 		} else {
 			if (hasWindowFocus()) {
-				if (filesFragment.currentFolderId == 0) {
+				if (filesFragment.getCurrentFolderId() == 0) {
 					super.onBackPressed();
 				} else {
 					filesFragment.goBack();
@@ -445,11 +450,8 @@ public class Putio extends SherlockFragmentActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
-//			Log.d("asdf", "ok");
 			init();
 		} else {
-//			Log.d("asdf", "not ok, closing");
-//			Log.d("asdf", Integer.toString(resultCode));
 			finish();
 		}
 	}

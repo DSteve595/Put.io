@@ -523,13 +523,15 @@ public final class Files extends SherlockFragment {
 							obj.getLong("size"));
 				}
 				
-				try {
-					File output = new File(getSherlockActivity().getCacheDir(), newId + ".json");
-					FileOutputStream fos = FileUtils.openOutputStream(output);
-					fos.write(string.getBytes());
-					fos.close();
-				} catch (Exception e) {
-					e.printStackTrace();
+				if (isAdded()) {
+					try {
+						File output = new File(getSherlockActivity().getCacheDir(), newId + ".json");
+						FileOutputStream fos = FileUtils.openOutputStream(output);
+						fos.write(string.getBytes());
+						fos.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+				}
 				}
 				
 //				GAYANDROIDPROGRAMMINGUMADBROSTEVENUGAY
@@ -598,6 +600,10 @@ public final class Files extends SherlockFragment {
 	
 	public PutioFileData getFileAtId(int id) {
 		return fileData[id];
+	}
+	
+	public int getCurrentFolderId() {
+		return currentFolderId;
 	}
 	
     public void setActivateOnItemClick(boolean activateOnItemClick) {
