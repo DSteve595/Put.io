@@ -1,4 +1,4 @@
-package com.stevenschoen.putio.activities.setup;
+package com.stevenschoen.putio.activities;
 
 import java.io.InputStream;
 import java.net.URI;

@@ -39,7 +39,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putio.FlushedInputStream;
 import com.stevenschoen.putio.PutioFileData;
-import com.stevenschoen.putio.PutioFileUtils;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.PutioOpenFileService;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
@@ -87,7 +87,7 @@ public class FileDetails extends SherlockFragment {
 	private TextView textFileCreatedDate;
 	private TextView textFileCreatedTime;
 	
-	PutioFileUtils utils;
+	PutioUtils utils;
 	private EditText textFileName;
 	private ImageView imagePreview;
 
@@ -105,7 +105,7 @@ public class FileDetails extends SherlockFragment {
 		token = sharedPrefs.getString("token", null);
 		tokenWithStuff = "?oauth_token=" + token;
 		
-		utils = new PutioFileUtils(token, sharedPrefs);
+		utils = new PutioUtils(token, sharedPrefs);
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,7 +136,7 @@ public class FileDetails extends SherlockFragment {
 	        }
 	    });
 		
-		String[] created = PutioFileData.separateIsoTime(origFileData.createdTime);
+		String[] created = PutioUtils.separateIsoTime(origFileData.createdTime);
 		TextView textFileCreatedCreated = (TextView) view.findViewById(R.id.text_fileDetailsCreatedStatic);
 		textFileCreatedCreated.setText(getString(R.string.created) + " ");
 		
@@ -186,7 +186,7 @@ public class FileDetails extends SherlockFragment {
 			}
 			
 			public void onPostExecute(final PutioFileData file) {
-				String[] created = PutioFileData.separateIsoTime(file.createdTime);
+				String[] created = PutioUtils.separateIsoTime(file.createdTime);
 				if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
 					textFileCreatedDate.setText(created[0]);
 					textFileCreatedTime.setText(created[1]);
@@ -214,7 +214,7 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				if (PutioFileUtils.idIsDownloaded(getFileId())) {
+				if (PutioUtils.idIsDownloaded(getFileId())) {
 					final Dialog downloadDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownloadfordl);
 					downloadDialog.show();
 					
@@ -267,7 +267,7 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				if (PutioFileUtils.idIsDownloaded(getFileId())) {
+				if (PutioUtils.idIsDownloaded(getFileId())) {
 					final Dialog openDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownloadforopen);
 					openDialog.show();
 					
@@ -276,7 +276,7 @@ public class FileDetails extends SherlockFragment {
 
 						@Override
 						public void onClick(View v) {
-							PutioFileUtils.openDownloadedId(getFileId(), getSherlockActivity());
+							PutioUtils.openDownloadedId(getFileId(), getSherlockActivity());
 							openDialog.dismiss();
 						}
 					});
@@ -286,7 +286,7 @@ public class FileDetails extends SherlockFragment {
 
 						@Override
 						public void onClick(View v) {
-							PutioFileUtils.deleteId(getFileId());
+							PutioUtils.deleteId(getFileId());
 							long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
 									getNewFilename());
 							Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
@@ -362,8 +362,8 @@ public class FileDetails extends SherlockFragment {
 		}
 		
 		boolean isMedia = false;
-		for (int i = 0; i < PutioFileUtils.streamingMediaTypes.length; i++) {
-			if (origFileData.contentType.contains(PutioFileUtils.streamingMediaTypes[i])) {
+		for (int i = 0; i < PutioUtils.streamingMediaTypes.length; i++) {
+			if (origFileData.contentType.contains(PutioUtils.streamingMediaTypes[i])) {
 				isMedia = true;
 				
 				btnOpen.setOnClickListener(playMediaListener);
@@ -413,7 +413,7 @@ public class FileDetails extends SherlockFragment {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				return PutioFileUtils.resolveRedirect(params[0]);
+				return PutioUtils.resolveRedirect(params[0]);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -427,11 +427,11 @@ public class FileDetails extends SherlockFragment {
 			dialog.dismiss();
 			int type;
 			if (origFileData.contentType.contains("audio")) {
-				type = PutioFileUtils.TYPE_AUDIO;
+				type = PutioUtils.TYPE_AUDIO;
 			} else if (origFileData.contentType.contains("video")) {
-				type = PutioFileUtils.TYPE_VIDEO;
+				type = PutioUtils.TYPE_VIDEO;
 			} else {
-				type = PutioFileUtils.TYPE_VIDEO;
+				type = PutioUtils.TYPE_VIDEO;
 			}
 			utils.stream(getSherlockActivity(), finalUrl, type);
 		}

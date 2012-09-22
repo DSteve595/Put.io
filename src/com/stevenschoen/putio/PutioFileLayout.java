@@ -21,7 +21,6 @@ public class PutioFileLayout implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -50,8 +49,8 @@ public class PutioFileLayout implements Parcelable {
 			return new PutioFileLayout(in);
 		}
 
-		public PutioFileData[] newArray(int size) {
-			return new PutioFileData[size];
+		public PutioFileLayout[] newArray(int size) {
+			return new PutioFileLayout[size];
 		}
 	};
 }

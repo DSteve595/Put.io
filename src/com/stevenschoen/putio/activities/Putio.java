@@ -29,10 +29,9 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.stevenschoen.putio.PutioFileUtils;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
-import com.stevenschoen.putio.activities.setup.Setup;
 import com.stevenschoen.putio.fragments.FileDetails;
 import com.stevenschoen.putio.fragments.Files;
 import com.stevenschoen.putio.fragments.Transfers;
@@ -81,7 +80,7 @@ public class Putio extends SherlockFragmentActivity implements
 	private int fileDetailsId;
 	private int transfersId;
 	
-	PutioFileUtils utils;
+	PutioUtils utils;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -229,7 +228,7 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	private void init() {
 		String token = sharedPrefs.getString("token", null);
-		utils = new PutioFileUtils(token, sharedPrefs);
+		utils = new PutioUtils(token, sharedPrefs);
 		
 		if (!UIUtils.isTablet(this)) {
 			setupPhoneLayout();

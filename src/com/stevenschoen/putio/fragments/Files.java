@@ -48,7 +48,7 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.stevenschoen.putio.FilesAdapter;
 import com.stevenschoen.putio.PutioFileData;
 import com.stevenschoen.putio.PutioFileLayout;
-import com.stevenschoen.putio.PutioFileUtils;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
 import com.stevenschoen.putio.activities.FileDetailsActivity;
@@ -103,7 +103,7 @@ public final class Files extends SherlockFragment {
 	private View buttonBar;
 	private int buttonBarHeight;
 	
-	PutioFileUtils utils;
+	PutioUtils utils;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +120,7 @@ public final class Files extends SherlockFragment {
 		token = sharedPrefs.getString("token", null);
 		tokenWithStuff = "?oauth_token=" + token;
 		
-		utils = new PutioFileUtils(token, sharedPrefs);
+		utils = new PutioUtils(token, sharedPrefs);
 	}
 	
 	@TargetApi(11)
@@ -556,7 +556,7 @@ public final class Files extends SherlockFragment {
 							file[i].name,
 							getString(R.string.size_is)
 									+ " "
-									+ PutioFileUtils.humanReadableByteCount(file[i].size, true),
+									+ PutioUtils.humanReadableByteCount(file[i].size, true),
 							iconResource));
 				}
 			}

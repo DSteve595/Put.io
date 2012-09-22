@@ -23,9 +23,10 @@ public class PutioFileData implements Parcelable {
 	public PutioFileData() {
 		super();
 	}
-	
-	public PutioFileData(boolean isShared, String name, String screenshot, String createdTime,
-			int parentId, boolean hasMp4, String contentType, int id, long size) {
+
+	public PutioFileData(boolean isShared, String name, String screenshot,
+			String createdTime, int parentId, boolean hasMp4,
+			String contentType, int id, long size) {
 		super();
 		this.isShared = isShared;
 		this.name = name;
@@ -59,7 +60,6 @@ public class PutioFileData implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
@@ -106,8 +106,4 @@ public class PutioFileData implements Parcelable {
 			return new PutioFileData[size];
 		}
 	};
-	
-	public static String[] separateIsoTime(String isoTime) {
-		return isoTime.split("T");
-	}
 }

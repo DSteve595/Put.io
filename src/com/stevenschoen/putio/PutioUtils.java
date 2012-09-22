@@ -42,7 +42,7 @@ import android.widget.Toast;
 
 import com.stevenschoen.putio.activities.Putio;
 
-public class PutioFileUtils {
+public class PutioUtils {
 	public static final int TYPE_AUDIO = 1;
 	public static final int TYPE_VIDEO = -1;
 	public static final String[] streamingMediaTypes = new String[] { "audio", "video" };
@@ -54,7 +54,7 @@ public class PutioFileUtils {
 
 	private SharedPreferences sharedPrefs;
 	
-	public PutioFileUtils(String token, SharedPreferences sharedPrefs) {
+	public PutioUtils(String token, SharedPreferences sharedPrefs) {
 		this.token = token;
 		this.tokenWithStuff = "?oauth_token=" + token;
 		
@@ -390,4 +390,8 @@ public class PutioFileUtils {
 		}
 		return false;
 	};
+	
+	public static String[] separateIsoTime(String isoTime) {
+		return isoTime.split("T");
+	}
 }

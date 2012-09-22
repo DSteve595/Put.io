@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal"
+	android:paddingRight="@dimen/padding_large" >
+
+	<fragment
+		android:id="@+id/fragment_files"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight=".45"
+		class="com.stevenschoen.putio.fragments.Files"
+		tools:layout="@layout/files" />
+
+	<FrameLayout
+		android:id="@+id/fragment_details"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight=".55" />
+
+</LinearLayout>

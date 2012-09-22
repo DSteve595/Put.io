@@ -24,9 +24,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.setup.Login" >
-		</activity>
-		<activity android:name=".activities.setup.Setup" >
+		<activity android:name=".activities.Setup" >
 		</activity>
 		<activity android:name=".activities.FileDetailsActivity" >
 		</activity>
@@ -36,6 +34,8 @@
 		</activity>
 
 		<service android:name=".PutioOpenFileService" >
+		</service>
+		<service android:name=".PutioTransfersService" >
 		</service>
 	</application>
 

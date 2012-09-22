@@ -1037,10 +1037,8 @@ containing a value of this type.
         public static final int sherlock_spinner_item=0x7f030029;
         public static final int sizepreference=0x7f03002a;
         public static final int tablet_files=0x7f03002b;
-        public static final int tablet_filesold=0x7f03002c;
-        public static final int tablet_transfers=0x7f03002d;
-        public static final int tablet_transfersold=0x7f03002e;
-        public static final int transfers=0x7f03002f;
+        public static final int tablet_transfers=0x7f03002c;
+        public static final int transfers=0x7f03002d;
     }
     public static final class menu {
         public static final int context=0x7f0d0000;
