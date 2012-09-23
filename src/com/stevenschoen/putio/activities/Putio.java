@@ -162,7 +162,10 @@ public class Putio extends SherlockFragmentActivity implements
 		super.onSaveInstanceState(outState);
 		
 		if (UIUtils.isTablet(this)) {
-			outState.putInt("currentTab", actionBar.getSelectedTab().getPosition());
+			try {
+				outState.putInt("currentTab", actionBar.getSelectedTab().getPosition());
+			} catch (NullPointerException e) {
+			}
 		}
 	}
 	
