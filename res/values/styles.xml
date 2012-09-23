@@ -119,7 +119,7 @@
 	</style>
 
 	<style name="Putio.EditText" parent="@android:style/Widget.EditText">
-		<item name="android:background">@drawable/putio_edittext</item>
+		<item name="android:background">@drawable/edit_text_putio</item>
 	</style>
 
 </resources>
