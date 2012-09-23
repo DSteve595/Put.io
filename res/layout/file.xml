@@ -1,6 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content"
-	android:layout_height="64dp" >
+    android:layout_width="wrap_content"
+    android:layout_height="64dp"
+    android:paddingLeft="@dimen/padding_small"
+    android:paddingRight="@dimen/padding_small" >
 
 	<ImageView
 		android:id="@+id/img_fileIcon"
@@ -28,19 +30,12 @@
 			android:text="File name"
 			android:textAppearance="?android:attr/textAppearanceMedium" />
 
-		<FrameLayout
-			android:id="@+id/descriptionFrame"
-			android:layout_width="match_parent"
+		<TextView
+			android:id="@+id/text_fileListDesc"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="12dp"
-			android:layout_marginRight="30dp" >
-
-			<TextView
-				android:id="@+id/text_fileListDesc"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="File description" />
-		</FrameLayout>
+			android:text="File description" />
 	</LinearLayout>
 
 </RelativeLayout>

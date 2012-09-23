@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,12 +26,15 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.stevenschoen.putio.PutioTransferData;
+import com.stevenschoen.putio.PutioTransfersService;
 import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
@@ -65,6 +71,7 @@ public class Putio extends SherlockFragmentActivity implements
 	public static final String CUSTOM_INTENT1 = "com.stevenschoen.putio.invalidatelist";
 	public static final String CUSTOM_INTENT2 = "com.stevenschoen.putio.checkcachesize";
 	public static final String CUSTOM_INTENT3 = "com.stevenschoen.putio.filedownloadupdate";
+	public static final String CUSTOM_INTENT4 = "com.stevenschoen.putio.transfersupdate";
 	
 	Files filesFragment;
 	FileDetails fileDetailsFragment;
@@ -114,12 +121,15 @@ public class Putio extends SherlockFragmentActivity implements
 				Putio.CUSTOM_INTENT2);
 		IntentFilter intentFilter3 = new IntentFilter(
 				Putio.CUSTOM_INTENT3);
+		IntentFilter intentFilter4 = new IntentFilter(
+				Putio.CUSTOM_INTENT4);
 		
 		registerReceiver(invalidateReceiver, intentFilter1);
 		registerReceiver(checkCacheSizeReceiver, intentFilter2);
 		if (UIUtils.isTablet(this)) {
 			registerReceiver(fileDownloadUpdateReceiver, intentFilter3);
 		}
+		registerReceiver(transfersUpdateReceiver, intentFilter4);
 		
 		sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -150,10 +160,25 @@ public class Putio extends SherlockFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		
+		if (UIUtils.isTablet(this)) {
+			outState.putInt("currentTab", actionBar.getSelectedTab().getPosition());
+		}
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem buttonAdd = menu.add("Add new files");
+		buttonAdd.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		buttonAdd.setIcon(android.R.drawable.ic_menu_add);
+		buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			
+			public boolean onMenuItemClick(MenuItem item) {
+				Toast.makeText(Putio.this, "Coming soon!", Toast.LENGTH_SHORT).show();
+				return false;
+			}
+		});
+		
 		MenuItem buttonSettings = menu.add("Settings");
 		buttonSettings.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		buttonSettings.setIcon(android.R.drawable.ic_menu_preferences);
@@ -230,6 +255,11 @@ public class Putio extends SherlockFragmentActivity implements
 		String token = sharedPrefs.getString("token", null);
 		utils = new PutioUtils(token, sharedPrefs);
 		
+		transfersServiceIntent = new Intent(this, PutioTransfersService.class);
+		if (!isTransfersServiceRunning()) {
+			startService(transfersServiceIntent);
+		}
+		
 		if (!UIUtils.isTablet(this)) {
 			setupPhoneLayout();
 		} else {
@@ -254,6 +284,8 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		String filesFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
 		filesFragment = (Files) getSupportFragmentManager().findFragmentByTag(filesFragmentName);
+		String transfersFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 1);
+		transfersFragment = (Transfers) getSupportFragmentManager().findFragmentByTag(transfersFragmentName);
 		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -308,6 +340,10 @@ public class Putio extends SherlockFragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(titles[i])
 					.setTabListener(this));
+		}
+		
+		if (savedInstanceState != null) {
+			actionBar.setSelectedNavigationItem(savedInstanceState.getInt("currentTab"));
 		}
 	}
 	
@@ -416,6 +452,22 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 	};
 	
+	private BroadcastReceiver transfersUpdateReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Parcelable[] transferParcelables = intent.getExtras().getParcelableArray("transfers");
+
+			PutioTransferData[] transfers = new PutioTransferData[transferParcelables.length];
+			for (int i = 0; i < transferParcelables.length; i++) {
+				transfers[i] = (PutioTransferData) transferParcelables[i];
+			}
+			transfersFragment.updateTransfers(transfers);
+		}
+	};
+	
+	private Intent transfersServiceIntent;
+	
 	@Override
 	public void onBackPressed() {
 		if (UIUtils.isTablet(this)) {
@@ -443,6 +495,8 @@ public class Putio extends SherlockFragmentActivity implements
 		if (UIUtils.isTablet(this)) {
 			unregisterReceiver(fileDownloadUpdateReceiver);
 		}
+		unregisterReceiver(transfersUpdateReceiver);
+		stopService(transfersServiceIntent);
 	}
 
 	@Override
@@ -453,6 +507,26 @@ public class Putio extends SherlockFragmentActivity implements
 		} else {
 			finish();
 		}
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		if (!hasFocus && isTransfersServiceRunning()) {
+			stopService(transfersServiceIntent);
+		} else if (hasFocus && !isTransfersServiceRunning()) {
+			startService(transfersServiceIntent);
+		}
+		super.onWindowFocusChanged(hasFocus);
+	}
+	
+	private boolean isTransfersServiceRunning() {
+	    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+	        if ("com.stevenschoen.putio.PutioTransfersService".equals(service.service.getClassName())) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 
 	public void checkCacheSize() {

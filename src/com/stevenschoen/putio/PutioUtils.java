@@ -223,7 +223,8 @@ public class PutioUtils {
 		}
 	}
 	
-	public InputStream getListJsonData(String url, int id) {
+	public InputStream getFilesListJsonData(int id) {
+		String url = baseUrl + "files/list" + tokenWithStuff;
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
 		InputStream data = null;
@@ -303,6 +304,23 @@ public class PutioUtils {
 		context.startActivity(streamIntent);
 	}
 	
+	public InputStream getTransfersListJsonData() {
+		String url = baseUrl + "transfers/list" + tokenWithStuff;
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		URI uri;
+		InputStream data = null;
+		try {
+			uri = new URI(url);
+			HttpGet method = new HttpGet(uri);
+			
+			HttpResponse response = httpClient.execute(method);
+			data = response.getEntity().getContent();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
 	public static String resolveRedirect(String url) throws ClientProtocolException, IOException {
 	    HttpParams httpParameters = new BasicHttpParams();
 	    HttpClientParams.setRedirecting(httpParameters, false);
@@ -380,6 +398,17 @@ public class PutioUtils {
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
 				+ (si ? "" : "i");
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+	
+	public static String[] humanReadableByteCountArray(long bytes, boolean si) {
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit)
+			return new String[] { Long.toString(bytes), "B" };
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
+				+ (si ? "" : "i");
+		String one = String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+		return one.split(" ");
 	}
 	
 	public Boolean stringToBooleanHack(String value) {

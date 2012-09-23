@@ -1,23 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-	<TextView
-		android:id="@+id/textView2"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_centerVertical="true"
-		android:text="Under construction"
-		android:textAppearance="?android:attr/textAppearanceLarge" />
+    <ListView
+        android:id="@+id/transferslist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="multipleChoice"
+        android:listSelector="@drawable/putio_clickable_bg" >
+    </ListView>
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/textView2"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="4dp"
-		android:text="(hey, it&apos;s only an alpha!)"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/divider_horizontal" />
+
+    <include
+        android:id="@+id/loading"
+        layout="@layout/transfersloading" />
 
 </RelativeLayout>

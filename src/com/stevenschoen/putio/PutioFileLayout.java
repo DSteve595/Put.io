@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class PutioFileLayout implements Parcelable {
 	public String name;
 	public String description;
-	public int icon;
+	public int iconRes;
 
 	public PutioFileLayout() {
 		super();
@@ -16,7 +16,7 @@ public class PutioFileLayout implements Parcelable {
 		super();
 		this.name = name;
 		this.description = description;
-		this.icon = icon;
+		this.iconRes = icon;
 	}
 
 	@Override
@@ -34,14 +34,14 @@ public class PutioFileLayout implements Parcelable {
 		// written to the parcel
 		this.name = in.readString();
 		this.description = in.readString();
-		this.icon = in.readInt();
+		this.iconRes = in.readInt();
 	}
 	
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeString(this.name);
 		out.writeString(this.description);
-		out.writeInt(this.icon);
+		out.writeInt(this.iconRes);
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

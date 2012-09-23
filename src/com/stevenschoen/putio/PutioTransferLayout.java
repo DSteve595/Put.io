@@ -8,17 +8,19 @@ public class PutioTransferLayout implements Parcelable {
 	public long downSpeed;
 	public long upSpeed;
 	public int percentDone;
+	public String status;
 
 	public PutioTransferLayout() {
 		super();
 	}
 
-	public PutioTransferLayout(String name, long downSpeed, long upSpeed, int percentDone) {
+	public PutioTransferLayout(String name, long downSpeed, long upSpeed, int percentDone, String status) {
 		super();
 		this.name = name;
 		this.downSpeed = downSpeed;
 		this.upSpeed = upSpeed;
 		this.percentDone = percentDone;
+		this.status = status;
 	}
 
 	@Override
@@ -38,6 +40,7 @@ public class PutioTransferLayout implements Parcelable {
 		this.downSpeed = in.readLong();
 		this.upSpeed = in.readLong();
 		this.percentDone = in.readInt();
+		this.status = in.readString();
 	}
 	
 	@Override
@@ -46,6 +49,7 @@ public class PutioTransferLayout implements Parcelable {
 		out.writeLong(this.downSpeed);
 		out.writeLong(this.upSpeed);
 		out.writeInt(this.percentDone);
+		out.writeString(this.status);
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

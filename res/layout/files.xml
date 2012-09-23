@@ -2,18 +2,16 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="vertical" >
-
+
 	<ListView
-		android:id="@+id/fileslist"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_above="@+id/buttonbar"
-		android:choiceMode="multipleChoice"
-		android:fastScrollEnabled="true"
-		android:listSelector="@drawable/putio_clickable_bg"
-		android:paddingLeft="@dimen/padding_small"
-		android:paddingRight="@dimen/padding_medium"
-		android:scrollbarStyle="outsideInset" >
+	    android:id="@+id/fileslist"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_above="@+id/buttonbar"
+	    android:choiceMode="multipleChoice"
+	    android:fastScrollEnabled="true"
+	    android:listSelector="@drawable/putio_clickable_bg"
+	    android:scrollbarStyle="outsideInset" >
 
 	</ListView>
 

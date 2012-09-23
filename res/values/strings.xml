@@ -38,6 +38,7 @@
 	<!-- Errors (for users) -->
 	<string name="cantopenbecausefuckyou">There was an error opening the file.</string>
 	<string name="cantopenbecausetype">None of your apps can open this type of file.</string>
+	<string name="transferfailed">This transfer failed to download.</string>
 	
 	<!-- Other stuff -->
 	<string name="files">Your files</string>

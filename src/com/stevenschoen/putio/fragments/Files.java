@@ -81,9 +81,11 @@ public final class Files extends SherlockFragment {
 	SharedPreferences sharedPrefs;
 	
 	public final String baseUrl = "https://api.put.io/v2/";
+	
 	private FilesAdapter adapter;
 	private ArrayList<PutioFileLayout> fileLayouts = new ArrayList<PutioFileLayout>();
 	private PutioFileLayout dummyFile = new PutioFileLayout("Loading...", "Your files will appear shortly.", R.drawable.ic_launcher);
+	private ListView listview;
 	
 	private PutioFileData[] fileData;
 	private int origId;
@@ -95,7 +97,6 @@ public final class Files extends SherlockFragment {
 	public int currentFolderId;
 	private int parentParentId;
 
-	private ListView listview;
 	private int mActivatedPosition = ListView.INVALID_POSITION;
 
 	private Button buttonRefresh;
@@ -489,8 +490,7 @@ public final class Files extends SherlockFragment {
 			JSONArray array;
 			
 			try {
-				InputStream is = utils.getListJsonData(baseUrl + "files/list"
-						+ tokenWithStuff, currentFolderId);
+				InputStream is = utils.getFilesListJsonData(currentFolderId);
 
 				String string = utils.convertStreamToString(is);
 				json = new JSONObject(string);

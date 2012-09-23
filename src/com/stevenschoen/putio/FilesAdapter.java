@@ -71,7 +71,7 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 		PutioFileLayout file = data.get(position);
 		holder.textName.setText(file.name);
 		holder.textDescription.setText(file.description);
-		holder.imgIcon.setImageResource(file.icon);
+		holder.imgIcon.setImageResource(file.iconRes);
 
 		return row;
 	}
