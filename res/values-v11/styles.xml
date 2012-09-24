@@ -1,0 +1,13 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Putio.ButtonBar" parent="@android:style/Widget">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:divider">?android:attr/dividerVertical</item>
+        <item name="android:showDividers">middle</item>
+    </style>
+
+    <style name="Putio.ButtonBar.Button" parent="@android:style/Widget">
+        <item name="android:background">@drawable/putio_clickable_bg</item>
+    </style>
+
+</resources>

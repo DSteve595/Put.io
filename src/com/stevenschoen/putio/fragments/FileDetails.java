@@ -94,7 +94,6 @@ public class FileDetails extends SherlockFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setRetainInstance(true);
 
 		if (origFileData == null) {
 			origFileData = savedInstanceState.getParcelable("origFileData");
@@ -399,15 +398,14 @@ public class FileDetails extends SherlockFragment {
 	}
 	
 	class getStreamUrlAndPlay extends AsyncTask<String, Void, String> {
-		ProgressDialog dialog;
+		Dialog gettingStreamDialog;
 		
 		@Override
 		public void onPreExecute() {
-			dialog = new ProgressDialog(getSherlockActivity());
-			dialog.setTitle(getString(R.string.gettingstreamurltitle));
-			dialog.setMessage(getString(R.string.gettingstreamurlbody));
-			dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dialog.show();
+			gettingStreamDialog = utils.PutioDialog(getSherlockActivity(),
+					getString(R.string.gettingstreamurltitle),
+					R.layout.dialog_gettingstream);
+			gettingStreamDialog.show();
 		}
 
 		@Override
@@ -424,7 +422,7 @@ public class FileDetails extends SherlockFragment {
 		
 		@Override
 		public void onPostExecute(String finalUrl) {
-			dialog.dismiss();
+			gettingStreamDialog.dismiss();
 			int type;
 			if (origFileData.contentType.contains("audio")) {
 				type = PutioUtils.TYPE_AUDIO;

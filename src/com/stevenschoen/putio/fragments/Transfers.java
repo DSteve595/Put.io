@@ -53,13 +53,16 @@ public final class Transfers extends SherlockFragment {
 		}
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("transfersData")) {
-			Parcelable[] transferParcelables = savedInstanceState.getParcelableArray("transfersData");
-
-			PutioTransferData[] transfers = new PutioTransferData[transferParcelables.length];
-			for (int i = 0; i < transferParcelables.length; i++) {
-				transfers[i] = (PutioTransferData) transferParcelables[i];
+			try {
+				Parcelable[] transferParcelables = savedInstanceState.getParcelableArray("transfersData");
+	
+				PutioTransferData[] transfers = new PutioTransferData[transferParcelables.length];
+				for (int i = 0; i < transferParcelables.length; i++) {
+					transfers[i] = (PutioTransferData) transferParcelables[i];
+				}
+				updateTransfers(transfers);
+			} catch (NullPointerException e) {
 			}
-			updateTransfers(transfers);
 		}
 		return view;
 	}

@@ -36,7 +36,7 @@
 
 		<LinearLayout
 			android:id="@+id/buttonbar"
-			style="?android:attr/buttonBarStyle"
+			style="@style/Putio.ButtonBar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
@@ -45,7 +45,7 @@
 
 			<Button
 				android:id="@+id/button_redownloadforopen_cancel"
-				style="?android:attr/buttonBarButtonStyle"
+				style="@style/Putio.ButtonBar.Button"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
@@ -54,7 +54,7 @@
 
 			<Button
 				android:id="@+id/button_redownloadforopen_download"
-				style="?android:attr/buttonBarButtonStyle"
+				style="@style/Putio.ButtonBar.Button"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
@@ -64,7 +64,7 @@
 
 			<Button
 				android:id="@+id/button_redownloadforopen_open"
-				style="?android:attr/buttonBarButtonStyle"
+				style="@style/Putio.ButtonBar.Button"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"

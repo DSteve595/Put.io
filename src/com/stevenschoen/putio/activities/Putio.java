@@ -1,6 +1,7 @@
 package com.stevenschoen.putio.activities;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 
@@ -26,6 +27,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -104,8 +106,8 @@ public class Putio extends SherlockFragmentActivity implements
 			actionBar.setDisplayShowTitleEnabled(false);
 		}
 		
-		titleFiles = getString(R.string.files).toUpperCase();
-		titleTransfers = getString(R.string.transfers).toUpperCase();
+		titleFiles = getString(R.string.files).toUpperCase(Locale.US);
+		titleTransfers = getString(R.string.transfers).toUpperCase(Locale.US);
 		titles = new String[] {titleFiles, titleTransfers};
 		
 		if (!sharedPrefs.getBoolean("loggedIn", false)) {
@@ -130,9 +132,6 @@ public class Putio extends SherlockFragmentActivity implements
 			registerReceiver(fileDownloadUpdateReceiver, intentFilter3);
 		}
 		registerReceiver(transfersUpdateReceiver, intentFilter4);
-		
-		sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
 	}
 
 	@Override
@@ -177,7 +176,8 @@ public class Putio extends SherlockFragmentActivity implements
 		buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			
 			public boolean onMenuItemClick(MenuItem item) {
-				Toast.makeText(Putio.this, "Coming soon!", Toast.LENGTH_SHORT).show();
+				Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class);
+				startActivity(addTransferActivityIntent);
 				return false;
 			}
 		});
@@ -499,7 +499,9 @@ public class Putio extends SherlockFragmentActivity implements
 			unregisterReceiver(fileDownloadUpdateReceiver);
 		}
 		unregisterReceiver(transfersUpdateReceiver);
-		stopService(transfersServiceIntent);
+		if (isTransfersServiceRunning()) {
+			stopService(transfersServiceIntent);
+		}
 	}
 
 	@Override

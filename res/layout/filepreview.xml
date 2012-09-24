@@ -17,7 +17,7 @@
 
 	<LinearLayout
 		android:id="@+id/asdf"
-		style="?android:attr/buttonBarStyle"
+		style="@style/Putio.ButtonBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/image_filepreview_image"
@@ -28,7 +28,7 @@
 
 		<Button
 			android:id="@+id/button_filepreview_download"
-			style="?android:attr/buttonBarButtonStyle"
+			style="@style/Putio.ButtonBar.Button"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
@@ -37,7 +37,7 @@
 
 		<Button
 			android:id="@+id/button_filepreview_open"
-			style="?android:attr/buttonBarButtonStyle"
+			style="@style/Putio.ButtonBar.Button"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"

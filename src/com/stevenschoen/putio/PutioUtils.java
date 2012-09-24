@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
@@ -61,7 +62,7 @@ public class PutioUtils {
 		this.sharedPrefs = sharedPrefs;
 	}
 
-	public boolean postRename(int id, String newName) {
+	private boolean postRename(int id, String newName) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
 		InputStream data = null;
@@ -93,7 +94,6 @@ public class PutioUtils {
 				return false;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -101,7 +101,7 @@ public class PutioUtils {
 		}
 	}
 	
-	public boolean postDelete(Integer... ids) {
+	private boolean postDelete(Integer... ids) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
 		InputStream data = null;
@@ -139,7 +139,43 @@ public class PutioUtils {
 				return false;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} finally {
+			return false;
+		}
+	}
+	
+	private boolean postAddTransfer(String urls) {
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		URI uri;
+		InputStream data = null;
+		try {
+			uri = new URI(baseUrl + "transfers/add" + tokenWithStuff);
+			HttpPost method = new HttpPost(uri);
+
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("url", urls));
+
+			method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpClient.execute(method);
+			data = response.getEntity().getContent();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		try {
+			JSONObject jsonResponse = new JSONObject(
+					convertStreamToString(data));
+			String responseCode = jsonResponse.getString("status");
+
+			if (responseCode.matches("OK")) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -188,6 +224,16 @@ public class PutioUtils {
 		
 		Intent invalidateListIntent = new Intent(Putio.CUSTOM_INTENT1);
 		context.sendBroadcast(invalidateListIntent);
+	}
+	
+	public void addTransfers(final String urls) {
+		class addTransferTask extends AsyncTask<Void, Void, Boolean> {
+			protected Boolean doInBackground(Void... nothing) {
+				Boolean saved = postAddTransfer(urls);
+				return null;
+			}
+		}
+		new addTransferTask().execute();
 	}
 	
 	public Dialog confirmChangesDialog(Context context, String filename) {
@@ -397,7 +443,7 @@ public class PutioUtils {
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
 				+ (si ? "" : "i");
-		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+		return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 	
 	public static String[] humanReadableByteCountArray(long bytes, boolean si) {
@@ -407,7 +453,7 @@ public class PutioUtils {
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
 				+ (si ? "" : "i");
-		String one = String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+		String one = String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
 		return one.split(" ");
 	}
 	
