@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
 import com.stevenschoen.putio.activities.FileFinished;
 import com.stevenschoen.putio.activities.Putio;
@@ -34,8 +35,8 @@ public class PutioOpenFileService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		downloadId = intent.getExtras().getLong("downloadId");
-		filename = intent.getExtras().getString("filename");
+		this.downloadId = intent.getExtras().getLong("downloadId");
+		this.filename = intent.getExtras().getString("filename");
 		
 		IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
 		registerReceiver(downloadReceiver, intentFilter);
@@ -61,7 +62,7 @@ public class PutioOpenFileService extends Service {
 				int reason = cursor.getInt(columnReason);
 
 				if (status == DownloadManager.STATUS_SUCCESSFUL) {
-					ParcelFileDescriptor file;
+//					ParcelFileDescriptor file;
 //					file = downloadManager.openDownloadedFile(downloadId);
 					Intent finishedIntent = new Intent(PutioOpenFileService.this, FileFinished.class);
 					finishedIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

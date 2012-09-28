@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +39,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putio.FlushedInputStream;
 import com.stevenschoen.putio.PutioFileData;
-import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.PutioOpenFileService;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
 
@@ -310,6 +310,7 @@ public class FileDetails extends SherlockFragment {
 							getNewFilename());
 					Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
 					serviceIntent.putExtra("downloadId", downloadId);
+					serviceIntent.putExtra("filename", getNewFilename());
 					getSherlockActivity().startService(serviceIntent);
 					Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
 				}

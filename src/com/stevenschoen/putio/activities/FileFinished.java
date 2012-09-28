@@ -4,11 +4,10 @@ import java.io.FileNotFoundException;
 
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
 
@@ -45,12 +45,8 @@ public class FileFinished extends SherlockActivity {
 				long downloadId = getIntent().getExtras().getLong("downloadId");
 				if (UIUtils.hasHoneycomb()) {
 					Uri uri = downloadManager.getUriForDownloadedFile(downloadId);
-					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-					try {
-						startActivity(intent);
-					} catch (ActivityNotFoundException e) {
-						Toast.makeText(FileFinished.this, getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
-					}
+					Log.d("asdf", uri.getPath());
+					PutioUtils.openDownloadedUri(uri, FileFinished.this);
 					
 				} else {
 					try {

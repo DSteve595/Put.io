@@ -38,9 +38,11 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stevenschoen.putio.activities.FileFinished;
 import com.stevenschoen.putio.activities.Putio;
 
 public class PutioUtils {
@@ -418,22 +420,33 @@ public class PutioUtils {
 		}
 	}
 	
+	private static void open(Uri uri, Context context) {
+		String typename = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+		String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typename);
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setDataAndType(uri, type);
+		try {
+			context.startActivity(intent);
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
+		}
+	}
+	
 	public static void openDownloadedId(int id, Context context) {
 		if (idIsDownloaded(id)) {
 			String path = Environment.getExternalStoragePublicDirectory(
 					Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
 					+ File.separator + "put.io" + File.separator + id;
-			String filePath = new File(path).listFiles()[0].getAbsolutePath();
-			
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
-			try {
-				context.startActivity(intent);
-			} catch (ActivityNotFoundException e) {
-				Toast.makeText(context, "None of your apps can open this type of file.", Toast.LENGTH_LONG).show();
-			}
+			File file = new File(path).listFiles()[0];
+			Uri uri = Uri.fromFile(file);
+			open(uri, context);
 		} else {
 			Toast.makeText(context, "The file could not be found. Was it deleted?", Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	public static void openDownloadedUri(Uri uri, Context context) {
+		open(uri, context);
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {

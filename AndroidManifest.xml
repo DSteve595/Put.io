@@ -43,7 +43,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:mimeType="application/x-bittorrent" />
                 <data
                     scheme="http"
                     android:mimeType="application/x-bittorrent" />
@@ -65,7 +64,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:mimeType="application/x-bittorrent" />
                 <data
                     scheme="file"
                     android:mimeType="application/x-bittorrent" />
