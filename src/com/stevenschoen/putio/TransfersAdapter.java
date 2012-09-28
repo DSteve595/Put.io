@@ -104,7 +104,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.textPercent.setText(percentString + "%");
 			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_lightgreen));
 			ViewHelper.setPivotX(holder.greenBar, 0);
-			ViewHelper.setScaleX(holder.greenBar, 1f);
+			ViewHelper.setScaleX(holder.greenBar, (float) data.get(position).percentDone / 100);
 			holder.textPercent.setTextColor(Color.BLACK);
 		}
 

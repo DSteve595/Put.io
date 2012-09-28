@@ -27,6 +27,7 @@
         <item name="android:spinnerStyle">@style/Putio.Spinner</item>
         <item name="android:listSelector">@drawable/putio_clickable_bg</item>
         <item name="android:editTextStyle">@style/Putio.EditText</item>
+        <item name="android:checkboxStyle">@style/Putio.CheckBox</item>
     </style>
 
     <style name="Theme.Putio.Dark" parent="Theme.Sherlock">
@@ -98,7 +99,7 @@
 
     <style name="Putio.ButtonBar.Button" parent="@android:style/Widget">
         <item name="android:background">@drawable/putio_clickable_bg</item>
-]                <item name="android:gravity">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
     </style>
@@ -112,6 +113,10 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:buttonBarStyle">@style/Putio.ButtonBar</item>
         <item name="android:editTextStyle">@style/Putio.EditText</item>
+    </style>
+
+    <style name="Putio.CheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/btn_check_putio</item>
     </style>
 
     <style name="TextAppearance.Putio.DialogWindowTitle" parent="TextAppearance.Sherlock.Light.DialogWindowTitle">
