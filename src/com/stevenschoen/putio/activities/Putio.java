@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.apache.commons.io.FileUtils;
 
 import android.app.ActivityManager;
+import android.app.SearchManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -24,11 +25,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -117,6 +117,8 @@ public class Putio extends SherlockFragmentActivity implements
 			init();
 		}
 		
+		handleIntent(getIntent());
+		
 		IntentFilter intentFilter1 = new IntentFilter(
 				Putio.CUSTOM_INTENT1);
 		IntentFilter intentFilter2 = new IntentFilter(
@@ -133,17 +135,32 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 		registerReceiver(transfersUpdateReceiver, intentFilter4);
 	}
-
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		handleIntent(intent);
+	}
+	
+	private void handleIntent(Intent intent) {
+        if (intent.getAction().matches(Intent.ACTION_SEARCH) && sharedPrefs.getBoolean("loggedIn", false)) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.d("asdf", query);
+            filesFragment.initSearch(query);
+        }
+	}
+	
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction fragmentTransaction) {
 	}
-
+	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction fragmentTransaction) {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		if (!UIUtils.isTablet(this)) {
-			mViewPager.setCurrentItem(tab.getPosition());
+			if (mViewPager.getCurrentItem() != tab.getPosition()) {
+				mViewPager.setCurrentItem(tab.getPosition());
+			}
 		} else {
 			switch (tab.getPosition()) {
 				case 0: setContentView(tabletFilesView); break;

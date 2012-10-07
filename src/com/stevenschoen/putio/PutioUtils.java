@@ -3,7 +3,10 @@ package com.stevenschoen.putio;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -292,6 +295,22 @@ public class PutioUtils {
 		return data;
 	}
 	
+	public InputStream getFilesSearchJsonData(String query) throws UnsupportedEncodingException {
+		String url = baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1" + tokenWithStuff;
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		URI uri;
+		InputStream data = null;
+		try {
+			uri = new URI(url);
+			HttpGet method = new HttpGet(uri);
+			HttpResponse response = httpClient.execute(method);
+			data = response.getEntity().getContent();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
 	public InputStream getFileJsonData(String url) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
@@ -412,7 +431,6 @@ public class PutioUtils {
 				Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
 				+ File.separator + "put.io" + File.separator + id;
 		File file = new File(path);
-		Log.d("asdf", file.getAbsolutePath());
 		try {
 			FileUtils.deleteDirectory(file);
 		} catch (IOException e) {

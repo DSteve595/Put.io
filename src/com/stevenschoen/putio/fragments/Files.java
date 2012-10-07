@@ -29,7 +29,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -43,6 +42,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.stevenschoen.putio.FilesAdapter;
@@ -86,15 +87,18 @@ public final class Files extends SherlockFragment {
 	private ArrayList<PutioFileLayout> fileLayouts = new ArrayList<PutioFileLayout>();
 	private PutioFileLayout dummyFile = new PutioFileLayout("Loading...", "Your files will appear shortly.", R.drawable.ic_launcher);
 	private ListView listview;
+	View emptyView;
 	
 	private PutioFileData[] fileData;
 	private int origId;
 	
 	updateFilesTask update = new updateFilesTask();
+	searchFilesTask search = new searchFilesTask();
 	private String token;
 	private String tokenWithStuff;
 	
 	public int currentFolderId;
+	public boolean isSearch;
 	private int parentParentId;
 
 	private int mActivatedPosition = ListView.INVALID_POSITION;
@@ -129,6 +133,7 @@ public final class Files extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.files, container, false);
+		setHasOptionsMenu(true);
 		
 		listview = (ListView) view.findViewById(R.id.fileslist);
 		
@@ -150,6 +155,8 @@ public final class Files extends SherlockFragment {
 			public void onItemClick(AdapterView<?> a, View view, int position,
 					long id) {
 				mCallbacks.onSomethingSelected();
+				
+				isSearch = false;
 
 				int adjustedPosition;
 
@@ -185,6 +192,8 @@ public final class Files extends SherlockFragment {
 				}
 			}
 		});
+		
+		emptyView = view.findViewById(R.id.fileslistempty);
 		
 		buttonRefresh = (Button) view.findViewById(R.id.button_files_refresh);
 		buttonRefresh.setOnClickListener(new OnClickListener() {
@@ -245,7 +254,7 @@ public final class Files extends SherlockFragment {
 	}
 	
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(android.view.MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 		switch (item.getItemId()) {
@@ -297,7 +306,7 @@ public final class Files extends SherlockFragment {
 		
 		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
 		saveRename.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View arg0) {
 				utils.saveFileToServer(getSherlockActivity(),
@@ -322,7 +331,7 @@ public final class Files extends SherlockFragment {
 		
 		Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
 		deleteDelete.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View arg0) {
 				utils.deleteFile(getSherlockActivity(), fileData[(int) id].id);
@@ -332,7 +341,7 @@ public final class Files extends SherlockFragment {
 		
 		Button cancelDelete = (Button) deleteDialog.findViewById(R.id.button_delete_cancel);
 		cancelDelete.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View arg0) {
 				deleteDialog.cancel();
@@ -348,11 +357,19 @@ public final class Files extends SherlockFragment {
 	}
 	
 	public void invalidateList() {
-		if (update.getStatus() == AsyncTask.Status.RUNNING) {
-			update.cancel(true);
+		if (isSearch) {
+			if (search.getStatus() == AsyncTask.Status.RUNNING) {
+				search.cancel(true);
+			}
+			search = new searchFilesTask();
+			search.execute();
+		} else {
+			if (update.getStatus() == AsyncTask.Status.RUNNING) {
+				update.cancel(true);
+			}
+			update = new updateFilesTask();
+			update.execute();
 		}
-		update = new updateFilesTask();
-		update.execute();
 		setShowRefreshButton(false);
 	}
 	
@@ -422,20 +439,91 @@ public final class Files extends SherlockFragment {
 		}
 	}
 	
+	@Override
+	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		
+		com.actionbarsherlock.view.MenuItem buttonSearch = menu.add("Search");
+		buttonSearch.setIcon(android.R.drawable.ic_menu_search);
+		buttonSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		buttonSearch.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				getSherlockActivity().onSearchRequested();
+				return false;
+			}
+		});
+	}
+	
+	public void initSearch(String query) {
+		new searchFilesTask().execute(query);
+	}
+	
+	private void populateList(final PutioFileData[] file, int newId, int origIdBefore) {
+		emptyView.setVisibility(View.GONE);
+		int index = listview.getFirstVisiblePosition();
+		View v = listview.getChildAt(0);
+		int top = (v == null) ? 0 : v.getTop();
+		adapter.clear();
+		
+		if (currentFolderId != 0 || isSearch) {
+			adapter.add(new PutioFileLayout("Up",
+					"Go back to the previous folder",
+					R.drawable.ic_back));
+		}
+		
+		if (file.length == 0) {
+			emptyView.setVisibility(View.VISIBLE);
+			
+			return;
+		}
+		
+		emptyView.setVisibility(View.GONE);
+		
+		final ArrayList<PutioFileLayout> files = new ArrayList<PutioFileLayout>();
+		
+		for (int i = 0; i < file.length; i++) {
+			int iconResource = PutioFileData.icons[file[i].contentTypeIndex];
+			
+			if (isAdded()) {
+				files.add(new PutioFileLayout(
+						file[i].name,
+						getString(R.string.size_is)
+								+ " "
+								+ PutioUtils.humanReadableByteCount(file[i].size, true),
+						iconResource));
+			}
+		}
+		
+		try {
+			if (newId != origIdBefore) {
+				for (int i = 0; i < listview.getCount(); i++) {
+					listview.setItemChecked(i, false);
+				}
+			}
+		} catch (NullPointerException e) {
+		}
+		
+		fileData = file;
+		
+		for (int ii = 0; ii < files.size(); ii++) {
+			adapter.add(files.get(ii));
+		}
+		listview.setSelectionFromTop(index, top);
+		
+		setShowRefreshButton(true);
+		
+		fileLayouts = files;
+	}
+	
 	class updateFilesTask extends AsyncTask<Void, Void, PutioFileData[]> {
-		private int index;
-		private View v;
-		private int top;
 		private int newId;
 		private int origIdBefore = origId;
-
+		
 		public void onPreExecute() {
 			JSONObject json;
 			JSONArray array;
-			
-			index = listview.getFirstVisiblePosition();
-			v = listview.getChildAt(0);
-			top = (v == null) ? 0 : v.getTop();
 			
 			try {
 				File input = new File(getSherlockActivity().getCacheDir(), currentFolderId + ".json");
@@ -458,9 +546,9 @@ public final class Files extends SherlockFragment {
 				
 				for (int i = 0; i < array.length(); i++) {
 					JSONObject obj = array.getJSONObject(i);
-
+					
 					file[i] = new PutioFileData(
-							obj.getBoolean("is_shared"),
+							utils.stringToBooleanHack(obj.getString("is_shared")),
 							obj.getString("name"),
 							obj.getString("screenshot"),
 							obj.getString("created_at"),
@@ -471,7 +559,7 @@ public final class Files extends SherlockFragment {
 							obj.getLong("size"));
 				}
 				
-				populateList(file);
+				populateList(file, newId, origIdBefore);
 				
 				listview.setClickable(true);
 				
@@ -491,7 +579,7 @@ public final class Files extends SherlockFragment {
 			
 			try {
 				InputStream is = utils.getFilesListJsonData(currentFolderId);
-
+				
 				String string = utils.convertStreamToString(is);
 				json = new JSONObject(string);
 				
@@ -502,7 +590,7 @@ public final class Files extends SherlockFragment {
 						parentParentId = 0;
 					}
 				}
-
+				
 				array = json.getJSONArray("files");
 				newId = json.getJSONObject("parent").getInt("id");
 				origId = newId;
@@ -512,7 +600,7 @@ public final class Files extends SherlockFragment {
 					JSONObject obj = array.getJSONObject(i);
 
 					file[i] = new PutioFileData(
-							obj.getBoolean("is_shared"),
+							utils.stringToBooleanHack(obj.getString("is_shared")),
 							obj.getString("name"),
 							obj.getString("screenshot"),
 							obj.getString("created_at"),
@@ -531,10 +619,9 @@ public final class Files extends SherlockFragment {
 						fos.close();
 					} catch (Exception e) {
 						e.printStackTrace();
-				}
+					}
 				}
 				
-//				GAYANDROIDPROGRAMMINGUMADBROSTEVENUGAY
 				return file;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -543,50 +630,64 @@ public final class Files extends SherlockFragment {
 		}
 
 		public void onPostExecute(final PutioFileData[] file) {
-			populateList(file);
+			populateList(file, newId, origIdBefore);
+		}
+	}
+	
+	class searchFilesTask extends AsyncTask<String, Void, PutioFileData[]> {
+		
+		public void onPreExecute() {
+			isSearch = true;
+			adapter.clear();
+			currentFolderId = -1;
 		}
 		
-		private void populateList(final PutioFileData[] file) {
-			final ArrayList<PutioFileLayout> files = new ArrayList<PutioFileLayout>();
-			for (int i = 0; i < file.length; i++) {
-				int iconResource = PutioFileData.icons[file[i].contentTypeIndex];
+		protected PutioFileData[] doInBackground(String... query) {
+			JSONObject json;
+			JSONArray array;
+			
+			try {
+				InputStream is = utils.getFilesSearchJsonData(query[0]);
 
-				if (isAdded()) {
-					files.add(new PutioFileLayout(
-							file[i].name,
-							getString(R.string.size_is)
-									+ " "
-									+ PutioUtils.humanReadableByteCount(file[i].size, true),
-							iconResource));
-				}
-			}
-			
-			index = listview.getFirstVisiblePosition();
-			v = listview.getChildAt(0);
-			top = (v == null) ? 0 : v.getTop();
-			
-			if (newId != origIdBefore) {
-				for (int i = 0; i < listview.getCount(); i++) {
-					listview.setItemChecked(i, false);
-				}
-			}
-			
-			adapter.clear();
-			if (currentFolderId != 0) {
-				adapter.add(new PutioFileLayout("Up",
-						"Go back to the previous folder",
-						R.drawable.ic_back));
-			}
-			fileData = file;
+				String string = utils.convertStreamToString(is);
+				json = new JSONObject(string);
 
-			for (int ii = 0; ii < files.size(); ii++) {
-				adapter.add(files.get(ii));
+				array = json.getJSONArray("files");
+				PutioFileData[] file = new PutioFileData[array.length()];
+				
+				for (int i = 0; i < array.length(); i++) {
+					JSONObject obj = array.getJSONObject(i);
+					
+					boolean isShared = false;
+					try {
+						isShared = utils.stringToBooleanHack(obj.getString("is_shared"));
+					} catch (JSONException e) {
+					}
+					boolean isMp4Available = false;
+					try {
+						isMp4Available = utils.stringToBooleanHack(obj.getString("is_mp4_available"));
+					} catch (JSONException e) {
+					}
+					file[i] = new PutioFileData(
+							isShared,
+							obj.getString("name"),
+							obj.getString("screenshot"),
+							obj.getString("created_at"),
+							obj.getInt("parent_id"),
+							isMp4Available,
+							obj.getString("content_type"),
+							obj.getInt("id"),
+							obj.getLong("size"));
+				}
+				return file;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			listview.setSelectionFromTop(index, top);
-			
-			setShowRefreshButton(true);
-			
-			fileLayouts = files;
+			return null;
+		}
+		
+		public void onPostExecute(PutioFileData[] file) {
+			populateList(file, -1, -2);
 		}
 	}
 	
@@ -623,7 +724,12 @@ public final class Files extends SherlockFragment {
     }
 	
 	public void goBack() {
-		currentFolderId = parentParentId;
+		if (isSearch) {
+			isSearch = false;
+			currentFolderId = 0;
+		} else {
+			currentFolderId = parentParentId;
+		}
 		invalidateList();
 	}
 

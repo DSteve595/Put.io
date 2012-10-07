@@ -1,18 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <ListView
         android:id="@+id/fileslist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/buttonbar"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="49dp"
         android:choiceMode="multipleChoice"
         android:fastScrollEnabled="true"
         android:listSelector="@drawable/putio_clickable_bg"
         android:scrollbarStyle="outsideInset" >
     </ListView>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@id/fileslist"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
+        layout="@layout/empty" />
 
     <FrameLayout
         android:id="@+id/buttonbar"

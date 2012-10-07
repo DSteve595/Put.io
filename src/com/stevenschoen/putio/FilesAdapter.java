@@ -40,28 +40,6 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 			holder.textName = (TextView) row.findViewById(R.id.text_fileListName);
 			holder.textDescription = (TextView) row.findViewById(R.id.text_fileListDesc);
 			holder.imgIcon = (ImageView) row.findViewById(R.id.img_fileIcon);
-//			holder.spinner = (Spinner) row.findViewById(R.id.item_fileSpinner);
-//			
-//			ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-//			        R.array.spinnerstuff, android.R.layout.simple_spinner_item);
-//			// Specify the layout to use when the list of choices appears
-//			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//			// Apply the adapter to the spinner
-//			holder.spinner.setAdapter(adapter);
-//			
-//			holder.spinner
-//					.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//						public void onItemSelected(AdapterView<?> parent, View view, int spnPosition, long id) {
-//							Log.d("asdf", "selected spinner #" + spnPosition + " and choice " + id);
-//						}
-//
-//						@Override
-//						public void onNothingSelected(AdapterView<?> parent) {
-//							// TODO Auto-generated method stub
-//							
-//						}
-//					});
 
 			row.setTag(holder);
 		} else {

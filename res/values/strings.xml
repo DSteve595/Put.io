@@ -57,9 +57,10 @@
     <string name="tokenlogin">If, for whatever reason, you\'d like to provide your login token manually, you can do so here.</string>
     <string name="entertoken">Enter token</string>
     <string name="pasteurls">Paste URLs here</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_swipe">Swipe</string>
     <string name="torrentadded">Torrent added to transfers!</string>
     <string name="extractwhenfinished">Extract when finished</string>
+    <string name="searchyourfiles">Search your files</string>
+    <string name="nofilesfound">No files were found.</string>
 
 </resources>
