@@ -106,6 +106,7 @@ public class PutioUtils {
 		}
 	}
 	
+	@SuppressWarnings("finally")
 	private boolean postDelete(Integer... ids) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
@@ -151,6 +152,7 @@ public class PutioUtils {
 		}
 	}
 	
+	@SuppressWarnings("finally")
 	private boolean postAddTransfer(String urls) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
@@ -163,6 +165,39 @@ public class PutioUtils {
 			nameValuePairs.add(new BasicNameValuePair("url", urls));
 
 			method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpClient.execute(method);
+			data = response.getEntity().getContent();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		try {
+			JSONObject jsonResponse = new JSONObject(
+					convertStreamToString(data));
+			String responseCode = jsonResponse.getString("status");
+
+			if (responseCode.matches("OK")) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("finally")
+	private boolean postConvert(int id) {
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		URI uri;
+		InputStream data = null;
+		try {
+			uri = new URI(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
+			HttpPost method = new HttpPost(uri);
 			HttpResponse response = httpClient.execute(method);
 			data = response.getEntity().getContent();
 		} catch (Exception e) {
@@ -239,6 +274,19 @@ public class PutioUtils {
 			}
 		}
 		new addTransferTask().execute();
+	}
+	
+	public void convertToMp4(int id) {
+		class convertToMp4 extends AsyncTask<Integer, Void, Void> {
+			
+			@Override
+			protected Void doInBackground(Integer... id) {
+				postConvert(id[0]);
+				return null;
+			}
+		}
+		
+		new convertToMp4().execute(id);
 	}
 	
 	public Dialog confirmChangesDialog(Context context, String filename) {
@@ -373,6 +421,23 @@ public class PutioUtils {
 	
 	public InputStream getTransfersListJsonData() {
 		String url = baseUrl + "transfers/list" + tokenWithStuff;
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		URI uri;
+		InputStream data = null;
+		try {
+			uri = new URI(url);
+			HttpGet method = new HttpGet(uri);
+			
+			HttpResponse response = httpClient.execute(method);
+			data = response.getEntity().getContent();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	public InputStream getMp4JsonData(int id) {
+		String url = baseUrl + "files/" + id + "/mp4" + tokenWithStuff;
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
 		InputStream data = null;

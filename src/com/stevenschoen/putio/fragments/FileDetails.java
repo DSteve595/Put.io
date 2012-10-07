@@ -48,6 +48,12 @@ public class FileDetails extends SherlockFragment {
 	PutioFileData origFileData;
 	PutioFileData newFileData;
 	
+	String MP4_NOT_AVAILABLE = "NOT_AVAILABLE";
+	String MP4_AVAILABLE = "COMPLETED";
+	String MP4_IN_QUEUE = "IN_QUEUE";
+	String MP4_CONVERTING = "CONVERTING";
+	String mp4Status;
+	
 	TextView textPercent;
 	
 	Bitmap imagePreviewBitmap;
@@ -374,7 +380,75 @@ public class FileDetails extends SherlockFragment {
 			btnOpen.setOnClickListener(openFileListener);
 		}
 		
+		final Button buttonConvert = (Button) view.findViewById(R.id.button_filepreview_convert);
+		buttonConvert.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				utils.convertToMp4(getFileId());
+			}
+		});
+		
+		if (newFileData.contentType.contains("video")) {
+			if (newFileData.hasMp4) {
+				setBarGraphics(MP4_AVAILABLE, buttonConvert,
+						view.findViewById(R.id.holder_filepreview_available),
+						view.findViewById(R.id.holder_filepreview_converting));
+			} else {
+				setBarGraphics(MP4_NOT_AVAILABLE, buttonConvert,
+						view.findViewById(R.id.holder_filepreview_available),
+						view.findViewById(R.id.holder_filepreview_converting));
+			}
+			
+			class updateMp4Task extends AsyncTask<Void, Void, Void> {
+				@Override
+				protected Void doInBackground(Void... nothing) {
+					JSONObject obj;
+					try {					
+						InputStream is = utils.getMp4JsonData(getFileId());
+						String string = utils.convertStreamToString(is);
+						obj = new JSONObject(string).getJSONObject("mp4");
+						mp4Status = obj.getString("status");
+						
+						return null;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+				
+				@Override
+				public void onPostExecute(Void nothing) {
+					setBarGraphics(mp4Status, buttonConvert,
+							view.findViewById(R.id.holder_filepreview_available),
+							view.findViewById(R.id.holder_filepreview_converting));
+				}
+			}
+			new updateMp4Task().execute();
+		}
+		
 		return view;
+	}
+	
+	private void setBarGraphics(String status, View convertButton, View available, View converting) {
+		if (status.matches(MP4_AVAILABLE)) {
+			convertButton.setVisibility(View.INVISIBLE);
+			available.setVisibility(View.VISIBLE);
+			converting.setVisibility(View.INVISIBLE);
+		} else if (status.matches(MP4_CONVERTING)) {
+			convertButton.setVisibility(View.INVISIBLE);
+			available.setVisibility(View.INVISIBLE);
+			converting.setVisibility(View.VISIBLE);
+		} else if (status.matches(MP4_IN_QUEUE)) {
+			convertButton.setVisibility(View.INVISIBLE);
+			available.setVisibility(View.INVISIBLE);
+			converting.setVisibility(View.VISIBLE);
+		} else if (status.matches(MP4_NOT_AVAILABLE)) {
+			convertButton.setVisibility(View.VISIBLE);
+			available.setVisibility(View.INVISIBLE);
+			converting.setVisibility(View.INVISIBLE);
+		}
+		Log.d("asdf", status);
 	}
 	
 	private void changeImagePreview(final Bitmap bitmap, boolean animate) {

@@ -144,7 +144,6 @@ public class Putio extends SherlockFragmentActivity implements
 	private void handleIntent(Intent intent) {
         if (intent.getAction().matches(Intent.ACTION_SEARCH) && sharedPrefs.getBoolean("loggedIn", false)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("asdf", query);
             filesFragment.initSearch(query);
         }
 	}
@@ -187,9 +186,9 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem buttonAdd = menu.add("Add new files");
-		buttonAdd.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		buttonAdd.setIcon(android.R.drawable.ic_menu_add);
+		getSupportMenuInflater().inflate(R.menu.putio, menu);
+		
+		MenuItem buttonAdd = menu.findItem(R.id.menu_addtransfers);
 		buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			
 			public boolean onMenuItemClick(MenuItem item) {
@@ -199,9 +198,7 @@ public class Putio extends SherlockFragmentActivity implements
 			}
 		});
 		
-		MenuItem buttonSettings = menu.add("Settings");
-		buttonSettings.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		buttonSettings.setIcon(android.R.drawable.ic_menu_preferences);
+		MenuItem buttonSettings = menu.findItem(R.id.menu_settings);
 		buttonSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			
 			public boolean onMenuItemClick(MenuItem item) {
@@ -211,9 +208,7 @@ public class Putio extends SherlockFragmentActivity implements
 			}
 		});
 		
-		MenuItem buttonLogout = menu.add("Log out");
-		buttonLogout.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		buttonLogout.setIcon(android.R.drawable.ic_menu_preferences);
+		MenuItem buttonLogout = menu.findItem(R.id.menu_logout);
 		buttonLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			
 			public boolean onMenuItemClick(MenuItem item) {

@@ -443,11 +443,11 @@ public final class Files extends SherlockFragment {
 	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		
-		com.actionbarsherlock.view.MenuItem buttonSearch = menu.add("Search");
-		buttonSearch.setIcon(android.R.drawable.ic_menu_search);
-		buttonSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		inflater.inflate(R.menu.search, menu);
+		
+		com.actionbarsherlock.view.MenuItem buttonSearch = menu.findItem(R.id.menu_search);
 		buttonSearch.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
+			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				getSherlockActivity().onSearchRequested();

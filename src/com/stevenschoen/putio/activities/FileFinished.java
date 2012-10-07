@@ -45,7 +45,6 @@ public class FileFinished extends SherlockActivity {
 				long downloadId = getIntent().getExtras().getLong("downloadId");
 				if (UIUtils.hasHoneycomb()) {
 					Uri uri = downloadManager.getUriForDownloadedFile(downloadId);
-					Log.d("asdf", uri.getPath());
 					PutioUtils.openDownloadedUri(uri, FileFinished.this);
 					
 				} else {

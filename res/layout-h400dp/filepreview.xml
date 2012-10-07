@@ -50,8 +50,8 @@
         android:id="@+id/filepreview_convert"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:layout_alignBottom="@id/image_filepreview_image"
-        android:visibility="invisible" >
+        android:layout_below="@id/asdf"
+        android:visibility="visible" >
 
         <Button
             android:id="@+id/button_filepreview_convert"
@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@color/putio_dark"
+            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="invisible" >
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@color/putio_dark"
+            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="invisible" >
