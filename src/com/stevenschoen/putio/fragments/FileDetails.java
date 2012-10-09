@@ -21,7 +21,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,7 +115,16 @@ public class FileDetails extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		final View view = inflater.inflate(R.layout.filedetails, container, false);
+		int fileDetailsLayoutId = R.layout.filedetails;
+		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
+			
+			fileDetailsLayoutId = R.layout.filedetailsgbhori;
+		} else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
+			fileDetailsLayoutId = R.layout.filedetailsgbvert;
+		} else if (!UIUtils.hasHoneycomb()) {
+			fileDetailsLayoutId = R.layout.filedetailsgbvert;
+		}
+		final View view = inflater.inflate(fileDetailsLayoutId, container, false);
 		
 		textFileName = (EditText) view.findViewById(R.id.editText_fileName);
 		textFileName.setText(origFileData.name);
@@ -292,13 +300,7 @@ public class FileDetails extends SherlockFragment {
 						@Override
 						public void onClick(View v) {
 							PutioUtils.deleteId(getFileId());
-							long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
-									getNewFilename());
-							Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
-							serviceIntent.putExtra("downloadId", downloadId);
-							serviceIntent.putExtra("filename", getNewFilename());
-							getSherlockActivity().startService(serviceIntent);
-							Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+							downloadFileCompat();
 							openDialog.dismiss();
 						}
 					});
@@ -312,13 +314,7 @@ public class FileDetails extends SherlockFragment {
 						}
 					});
 				} else {
-					long downloadId = utils.downloadFile(getSherlockActivity(), origFileData.id,
-							getNewFilename());
-					Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
-					serviceIntent.putExtra("downloadId", downloadId);
-					serviceIntent.putExtra("filename", getNewFilename());
-					getSherlockActivity().startService(serviceIntent);
-					Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+					downloadFileCompat();
 				}
 			}
 		};
@@ -430,6 +426,56 @@ public class FileDetails extends SherlockFragment {
 		return view;
 	}
 	
+	private void downloadFileCompat() {
+		class downloadFileTaskCompat extends AsyncTask<Void, Void, Long> {
+			private Dialog dialog;
+
+			@Override
+			protected void onPreExecute() {
+				if (!UIUtils.hasICS()) {
+					dialog = utils.PutioDialog(getSherlockActivity(), "Preparing to download", R.layout.dialog_loading);
+					dialog.setCanceledOnTouchOutside(false);
+					dialog.show();
+				}
+			}
+			
+			@Override
+			protected Long doInBackground(Void... params) {
+				long dlId;
+				if (UIUtils.hasICS()) {
+					dlId = utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename());
+					return dlId;
+				} else {
+					try {
+						dlId = utils.downloadFileWithUrl(getSherlockActivity(),
+								origFileData.id, getNewFilename(),
+								utils.resolveRedirect(utils.getFileDownloadUrl(origFileData.id)));
+						return dlId;
+					} catch (ClientProtocolException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				return null;
+			}
+			
+			@Override
+			protected void onPostExecute(Long dlId) {
+				if (!UIUtils.hasICS()) {
+					dialog.dismiss();
+				}
+				
+				Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
+				serviceIntent.putExtra("downloadId", dlId);
+				serviceIntent.putExtra("filename", getNewFilename());
+				getSherlockActivity().startService(serviceIntent);
+				Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+			}
+		}
+		new downloadFileTaskCompat().execute();
+	}
+	
 	private void setBarGraphics(String status, View convertButton, View available, View converting) {
 		if (status.matches(MP4_AVAILABLE)) {
 			convertButton.setVisibility(View.INVISIBLE);
@@ -448,7 +494,6 @@ public class FileDetails extends SherlockFragment {
 			available.setVisibility(View.INVISIBLE);
 			converting.setVisibility(View.INVISIBLE);
 		}
-		Log.d("asdf", status);
 	}
 	
 	private void changeImagePreview(final Bitmap bitmap, boolean animate) {
@@ -479,7 +524,7 @@ public class FileDetails extends SherlockFragment {
 		public void onPreExecute() {
 			gettingStreamDialog = utils.PutioDialog(getSherlockActivity(),
 					getString(R.string.gettingstreamurltitle),
-					R.layout.dialog_gettingstream);
+					R.layout.dialog_loading);
 			gettingStreamDialog.show();
 		}
 

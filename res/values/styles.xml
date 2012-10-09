@@ -111,6 +111,7 @@
 
     <style name="Putio.Dialog" parent="@style/Theme.Sherlock.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:buttonBarStyle">@style/Putio.ButtonBar</item>
         <item name="android:editTextStyle">@style/Putio.EditText</item>
     </style>

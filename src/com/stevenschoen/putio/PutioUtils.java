@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -39,13 +38,11 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.stevenschoen.putio.activities.FileFinished;
 import com.stevenschoen.putio.activities.Putio;
 
 public class PutioUtils {
@@ -380,23 +377,50 @@ public class PutioUtils {
 			deleteId(id);
 		}
 		
-		final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getFileDownloadUrl(id)));
-		request.setDescription("put.io");
-		if (UIUtils.hasHoneycomb()) {
-		    request.allowScanningByMediaScanner();
-		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-		}
+		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getFileDownloadUrl(id)));
 		
 		String path = "put.io" + File.separator + id + File.separator + filename;
 		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
 		boolean made = file.getParentFile().mkdirs();
 		
+		request.setDescription("put.io");
+		if (UIUtils.hasHoneycomb()) {
+		    request.allowScanningByMediaScanner();
+		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+		}
 		request.setDestinationInExternalPublicDir(
 				Environment.DIRECTORY_DOWNLOADS,
 				path);
 
-		// get download service and enqueue file
-		DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+		long downloadId = manager.enqueue(request);
+		
+		sharedPrefs.edit().putLong("downloadId" + id, downloadId);
+		return downloadId;
+	}
+	
+	@TargetApi(11)
+	public long downloadFileWithUrl(final Context context, final int id, String filename, String url) {
+		if (idIsDownloaded(id)) {
+			deleteId(id);
+		}
+		
+		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url.replace("https://", "http://")));
+		
+		String path = "put.io" + File.separator + id + File.separator + filename;
+		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
+		boolean made = file.getParentFile().mkdirs();
+		
+		request.setDescription("put.io");
+		if (UIUtils.hasHoneycomb()) {
+		    request.allowScanningByMediaScanner();
+		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+		}
+		request.setDestinationInExternalPublicDir(
+				Environment.DIRECTORY_DOWNLOADS,
+				path);
+
 		long downloadId = manager.enqueue(request);
 		
 		sharedPrefs.edit().putLong("downloadId" + id, downloadId);
@@ -564,5 +588,16 @@ public class PutioUtils {
 	
 	public static String[] separateIsoTime(String isoTime) {
 		return isoTime.split("T");
+	}
+	
+	public static float dpFromPx(Context context, float px)
+	{
+	    return px / context.getResources().getDisplayMetrics().density;
+	}
+
+
+	public static float pxFromDp(Context context, float dp)
+	{
+	    return dp * context.getResources().getDisplayMetrics().density;
 	}
 }

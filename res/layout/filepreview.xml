@@ -2,9 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
     android:layout_height="140dp"
+    android:paddingBottom="16dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:paddingTop="24dp" >
+    android:paddingTop="16dp" >
 
     <ImageView
         android:id="@+id/image_filepreview_image"

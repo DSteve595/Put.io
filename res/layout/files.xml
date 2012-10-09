@@ -13,7 +13,7 @@
         android:listSelector="@drawable/putio_clickable_bg"
         android:scrollbarStyle="outsideInset" >
     </ListView>
-
+
     <include
         android:layout_width="match_parent"
         android:layout_height="64dp"
