@@ -319,6 +319,20 @@ public class FileDetails extends SherlockFragment {
 			}
 		};
 		
+		final View filePreviewBox = view.findViewById(R.id.filedetailspreview);
+		filePreviewBox.post(new Runnable() {
+
+			@Override
+			public void run() {
+				if (PutioUtils.dpFromPx(getSherlockActivity(), filePreviewBox.getWidth()) > 460) {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) PutioUtils.pxFromDp(getSherlockActivity(), 460),
+							filePreviewBox.getHeight());
+					params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+					filePreviewBox.setLayoutParams(params);
+				}
+			}
+		});
+		
 		imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
 		
 		class getPreviewTask extends AsyncTask<Void, Void, Bitmap> {
@@ -449,7 +463,7 @@ public class FileDetails extends SherlockFragment {
 					try {
 						dlId = utils.downloadFileWithUrl(getSherlockActivity(),
 								origFileData.id, getNewFilename(),
-								utils.resolveRedirect(utils.getFileDownloadUrl(origFileData.id)));
+								PutioUtils.resolveRedirect(utils.getFileDownloadUrl(origFileData.id)));
 						return dlId;
 					} catch (ClientProtocolException e) {
 						e.printStackTrace();

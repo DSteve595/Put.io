@@ -6,9 +6,9 @@ import java.util.Locale;
 import org.apache.commons.io.FileUtils;
 
 import android.app.ActivityManager;
-import android.app.SearchManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,7 +45,7 @@ import com.stevenschoen.putio.fragments.Files;
 import com.stevenschoen.putio.fragments.Transfers;
 
 public class Putio extends SherlockFragmentActivity implements
-		ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks {
+		ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -117,7 +117,9 @@ public class Putio extends SherlockFragmentActivity implements
 			init();
 		}
 		
-		handleIntent(getIntent());
+		if (getIntent() != null) {
+			handleIntent(getIntent());
+		}
 		
 		IntentFilter intentFilter1 = new IntentFilter(
 				Putio.CUSTOM_INTENT1);
@@ -142,10 +144,12 @@ public class Putio extends SherlockFragmentActivity implements
 	}
 	
 	private void handleIntent(Intent intent) {
-        if (intent.getAction().matches(Intent.ACTION_SEARCH) && sharedPrefs.getBoolean("loggedIn", false)) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            filesFragment.initSearch(query);
-        }
+		if (intent.getAction() != null) {
+	        if (intent.getAction().matches(Intent.ACTION_SEARCH) && sharedPrefs.getBoolean("loggedIn", false)) {
+	            String query = intent.getStringExtra(SearchManager.QUERY);
+	            filesFragment.initSearch(query);
+	        }
+		}
 	}
 	
 	@Override
@@ -362,6 +366,11 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 	}
 	
+	public void showFilesAndHighlightFile(int parentId, int id) {
+		actionBar.setSelectedNavigationItem(0);
+		filesFragment.highlightFile(parentId, id);
+	}
+	
 	@Override
 	public void onFileSelected(int id) {
 		fileDetailsFragment = new FileDetails(filesFragment.getFileAtId(id));
@@ -390,6 +399,11 @@ public class Putio extends SherlockFragmentActivity implements
 	@Override
 	public void onFDFinished() {
 		removeFD(R.anim.slide_out_left);
+	}
+	
+	@Override
+	public void onTransferSelected(int parentId, int id) {
+		showFilesAndHighlightFile(parentId, id);
 	}
 	
 	private void removeFD(int exitAnim) {

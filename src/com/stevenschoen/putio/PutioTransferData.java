@@ -16,6 +16,7 @@ public class PutioTransferData implements Parcelable {
 	public int percentDone;
 	public String status;
 	public String statusMessage;
+	public int saveParentId;
 	
 	public PutioTransferData() {
 		super();
@@ -24,7 +25,7 @@ public class PutioTransferData implements Parcelable {
 	public PutioTransferData(int id, int fileId, long size, String name,
 			String estimatedTime, String createdTime, boolean extract,
 			long downSpeed, long upSpeed, int percentDone, String status,
-			String statusMessage) {
+			String statusMessage, int saveParentId) {
 		super();
 		this.id = id;
 		this.fileId = fileId;
@@ -38,6 +39,7 @@ public class PutioTransferData implements Parcelable {
 		this.percentDone = percentDone;
 		this.status = status;
 		this.statusMessage = statusMessage;
+		this.saveParentId = saveParentId;
 	}
 	
 	@Override
@@ -65,6 +67,7 @@ public class PutioTransferData implements Parcelable {
 		this.percentDone = in.readInt();
 		this.status = in.readString();
 		this.statusMessage = in.readString();
+		this.saveParentId = in.readInt();
 	}
 
 	@Override
@@ -81,6 +84,7 @@ public class PutioTransferData implements Parcelable {
 		out.writeInt(this.percentDone);
 		out.writeString(this.status);
 		out.writeString(this.statusMessage);
+		out.writeInt(this.saveParentId);
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

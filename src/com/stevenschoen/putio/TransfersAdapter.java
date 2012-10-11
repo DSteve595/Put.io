@@ -84,6 +84,17 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			ViewHelper.setPivotX(holder.greenBar, 0);
 			ViewHelper.setScaleX(holder.greenBar, 1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
+		} else if (data.get(position).status.matches("SEEDING")) {
+			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
+			holder.imgStatusIcon.setVisibility(View.VISIBLE);
+			holder.statusLoading.setVisibility(View.INVISIBLE);
+			holder.textMessage.setVisibility(View.GONE);
+			holder.speedHolder.setVisibility(View.VISIBLE);
+			holder.textPercent.setText(percentString + "%");
+			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_lightgreen));
+			ViewHelper.setPivotX(holder.greenBar, 0);
+			ViewHelper.setScaleX(holder.greenBar, 1f);
+			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
 		} else if (data.get(position).status.matches("ERROR")) {
 			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_failed);
 			holder.imgStatusIcon.setVisibility(View.VISIBLE);

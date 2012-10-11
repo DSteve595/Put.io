@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -357,6 +359,10 @@ public final class Files extends SherlockFragment {
 	}
 	
 	public void invalidateList() {
+		invalidateList(0);
+	}
+	
+	public void invalidateList(int highlightId) {
 		if (isSearch) {
 			if (search.getStatus() == AsyncTask.Status.RUNNING) {
 				search.cancel(true);
@@ -368,7 +374,7 @@ public final class Files extends SherlockFragment {
 				update.cancel(true);
 			}
 			update = new updateFilesTask();
-			update.execute();
+			update.execute(highlightId);
 		}
 		setShowRefreshButton(false);
 	}
@@ -461,6 +467,10 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void populateList(final PutioFileData[] file, int newId, int origIdBefore) {
+		populateList(file, newId, origIdBefore, 0);
+	}
+	
+	private void populateList(final PutioFileData[] file, int newId, int origIdBefore, int highlightId) {
 		emptyView.setVisibility(View.GONE);
 		int index = listview.getFirstVisiblePosition();
 		View v = listview.getChildAt(0);
@@ -469,11 +479,11 @@ public final class Files extends SherlockFragment {
 		
 		if (currentFolderId != 0 || isSearch) {
 			adapter.add(new PutioFileLayout("Up",
-					"Go back to the previous folder",
+					"Go back to the previous folder",	
 					R.drawable.ic_back));
 		}
 		
-		if (file.length == 0) {
+		if (file == null) {
 			emptyView.setVisibility(View.VISIBLE);
 			
 			return;
@@ -515,9 +525,30 @@ public final class Files extends SherlockFragment {
 		setShowRefreshButton(true);
 		
 		fileLayouts = files;
+		
+		if (highlightId != 0) {
+			boolean highlight = false;
+			int highlightPos = 0;
+			
+			for (int i = 0; i < fileData.length; i++) {
+				if (fileData[i].id == highlightId && !fileData[i].contentType.matches("directory")) {
+					highlight = true;
+					highlightPos = i;
+				}
+			}
+			
+			if (highlight) {
+				listview.requestFocus();
+				listview.setSelection(highlightPos);
+			}
+		} else {
+		}
+		
 	}
 	
-	class updateFilesTask extends AsyncTask<Void, Void, PutioFileData[]> {
+	class updateFilesTask extends AsyncTask<Integer, Void, PutioFileData[]> {
+		private int highlightId;
+		
 		private int newId;
 		private int origIdBefore = origId;
 		
@@ -573,7 +604,12 @@ public final class Files extends SherlockFragment {
 			}
 		}
 		
-		protected PutioFileData[] doInBackground(Void... nothing) {
+		@Override
+		protected PutioFileData[] doInBackground(Integer... highlightId) {
+			if (highlightId != null) {
+				this.highlightId = highlightId[0];
+			}
+			
 			JSONObject json;
 			JSONArray array;
 			
@@ -630,7 +666,7 @@ public final class Files extends SherlockFragment {
 		}
 
 		public void onPostExecute(final PutioFileData[] file) {
-			populateList(file, newId, origIdBefore);
+			populateList(file, newId, origIdBefore, highlightId);
 		}
 	}
 	
@@ -699,6 +735,14 @@ public final class Files extends SherlockFragment {
 		}
 	}
 	
+	private boolean isInSubfolder() {
+		if (currentFolderId == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	public PutioFileData getFileAtId(int id) {
 		return fileData[id];
 	}
@@ -732,7 +776,12 @@ public final class Files extends SherlockFragment {
 		}
 		invalidateList();
 	}
-
+	
+	public void highlightFile(int parentId, int id) {
+		currentFolderId = parentId;
+		invalidateList(id);
+	}
+	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);

@@ -2,11 +2,15 @@ package com.stevenschoen.putio.fragments;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -30,6 +34,19 @@ public final class Transfers extends SherlockFragment {
 		return fragment;
 	}
 	
+    public interface Callbacks {
+
+        public void onTransferSelected(int parentId, int id);
+    }
+
+    private static Callbacks sDummyCallbacks = new Callbacks() {
+        @Override
+        public void onTransferSelected(int parentId, int id) {
+        }
+    };
+	
+    private Callbacks mCallbacks = sDummyCallbacks;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,11 +68,21 @@ public final class Transfers extends SherlockFragment {
 		if (UIUtils.isTablet(getSherlockActivity())) {
 			listview.setVerticalFadingEdgeEnabled(true);
 		}
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			
+			@Override
+			public void onItemClick(AdapterView<?> a, View view, int position,
+					long id) {
+				if (transfersData[position].status.matches("COMPLETED") || transfersData[position].status.matches("SEEDING")) {
+					mCallbacks.onTransferSelected(transfersData[position].saveParentId, transfersData[position].fileId);
+				}
+			}
+		});
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("transfersData")) {
 			try {
 				Parcelable[] transferParcelables = savedInstanceState.getParcelableArray("transfersData");
-	
+				
 				PutioTransferData[] transfers = new PutioTransferData[transferParcelables.length];
 				for (int i = 0; i < transferParcelables.length; i++) {
 					transfers[i] = (PutioTransferData) transferParcelables[i];
@@ -66,6 +93,20 @@ public final class Transfers extends SherlockFragment {
 		}
 		return view;
 	}
+	
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+    	mCallbacks = (Callbacks) activity;
+    }
+    
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        
+        mCallbacks = sDummyCallbacks;
+    }
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

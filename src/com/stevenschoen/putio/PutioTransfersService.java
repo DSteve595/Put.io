@@ -82,6 +82,11 @@ public class PutioTransfersService extends Service {
 						fileId = obj.getInt("file_id");
 					} catch (JSONException e) {
 					}
+					int saveParentId = 0;
+					try {
+						saveParentId = obj.getInt("save_parent_id");
+					} catch (JSONException e) {
+					}
 					file[i] = new PutioTransferData(
 							obj.getInt("id"),
 							fileId,
@@ -94,7 +99,8 @@ public class PutioTransfersService extends Service {
 							obj.getLong("up_speed"),
 							obj.getInt("percent_done"),
 							obj.getString("status"),
-							obj.getString("status_message"));
+							obj.getString("status_message"),
+							saveParentId);
 				}
 				Intent transfersUpdateIntent = new Intent(Putio.CUSTOM_INTENT4);
 				transfersUpdateIntent.putExtra("transfers", file);

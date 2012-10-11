@@ -2,9 +2,9 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:layout_gravity="center_horizontal"
     android:orientation="vertical" >
-
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
@@ -91,7 +91,7 @@
         android:layout_height="1dp"
         android:layout_above="@id/buttonbar"
         android:background="@drawable/divider_horizontal" />
-
+
     <include
         android:id="@+id/filedetailspreview"
         android:layout_width="wrap_content"

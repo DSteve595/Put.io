@@ -21,6 +21,7 @@ public final class Preferences extends SherlockPreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		
 		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		addPreferencesFromResource(R.xml.preferences);
 
@@ -40,7 +41,7 @@ public final class Preferences extends SherlockPreferenceActivity implements
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			Intent homeIntent = new Intent(getApplicationContext(), Putio.class);
+			Intent homeIntent = new Intent(this, Putio.class);
 			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(homeIntent);
 			return true;
