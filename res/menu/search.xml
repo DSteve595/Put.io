@@ -3,9 +3,11 @@
 
     <item
         android:id="@+id/menu_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
+        android:hint="@string/searchyourfiles"
+        android:background="@drawable/putio_clickable_bg"
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
-        android:title="Search"/>
+        android:title="@string/search"/>
 
 </menu>

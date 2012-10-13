@@ -1304,66 +1304,67 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0b0009;
         public static final int add=0x7f0b0016;
-        public static final int addtransferstitle=0x7f0b002c;
+        public static final int addtransferstitle=0x7f0b002d;
         public static final int app_name=0x7f0b000f;
         public static final int apply=0x7f0b001c;
-        public static final int applychanges=0x7f0b003e;
-        public static final int at=0x7f0b0037;
+        public static final int applychanges=0x7f0b003f;
+        public static final int at=0x7f0b0038;
         public static final int cancel=0x7f0b0013;
         /**  Errors (for users) 
          */
-        public static final int cantopenbecausefuckyou=0x7f0b002d;
-        public static final int cantopenbecausetype=0x7f0b002e;
-        public static final int created=0x7f0b0036;
+        public static final int cantopenbecausefuckyou=0x7f0b002e;
+        public static final int cantopenbecausetype=0x7f0b002f;
+        public static final int created=0x7f0b0037;
         public static final int delete=0x7f0b0021;
-        public static final int deletebody=0x7f0b0026;
-        public static final int deletetitle=0x7f0b0025;
+        public static final int deletebody=0x7f0b0027;
+        public static final int deletetitle=0x7f0b0026;
         public static final int download=0x7f0b001d;
-        public static final int downloadfinishedbody=0x7f0b0028;
-        public static final int downloadfinishedtitle=0x7f0b0027;
-        public static final int entertoken=0x7f0b0040;
-        public static final int extractwhenfinished=0x7f0b0044;
+        public static final int downloadfinishedbody=0x7f0b0029;
+        public static final int downloadfinishedtitle=0x7f0b0028;
+        public static final int entertoken=0x7f0b0041;
+        public static final int extractwhenfinished=0x7f0b0045;
         /**  Other stuff 
          */
-        public static final int files=0x7f0b0031;
-        public static final int gettingstreamurlbody=0x7f0b0023;
+        public static final int files=0x7f0b0032;
+        public static final int gettingstreamurlbody=0x7f0b0024;
         /**  Dialog text 
          */
-        public static final int gettingstreamurltitle=0x7f0b0022;
-        public static final int gotosite=0x7f0b0039;
-        public static final int intro1=0x7f0b003a;
-        public static final int intro2=0x7f0b003b;
-        public static final int loading=0x7f0b0035;
+        public static final int gettingstreamurltitle=0x7f0b0023;
+        public static final int gotosite=0x7f0b003a;
+        public static final int intro1=0x7f0b003b;
+        public static final int intro2=0x7f0b003c;
+        public static final int loading=0x7f0b0036;
         public static final int log_in=0x7f0b001b;
-        public static final int loginsuccess=0x7f0b0033;
+        public static final int loginsuccess=0x7f0b0034;
         public static final int menu_addtransfers=0x7f0b0018;
         public static final int menu_logout=0x7f0b001a;
         public static final int menu_settings=0x7f0b0019;
         public static final int no=0x7f0b0011;
-        public static final int nofilesfound=0x7f0b0046;
-        public static final int nothingenteredtofetch=0x7f0b0030;
+        public static final int nofilesfound=0x7f0b0047;
+        public static final int nothingenteredtofetch=0x7f0b0031;
         public static final int ok=0x7f0b0020;
         public static final int open=0x7f0b001f;
-        public static final int pasteurls=0x7f0b0041;
+        public static final int pasteurls=0x7f0b0042;
         public static final int play=0x7f0b0017;
         public static final int redownload=0x7f0b001e;
-        public static final int redownloadfordlbody=0x7f0b002a;
-        public static final int redownloadforopenbody=0x7f0b002b;
-        public static final int redownloadtitle=0x7f0b0029;
+        public static final int redownloadfordlbody=0x7f0b002b;
+        public static final int redownloadforopenbody=0x7f0b002c;
+        public static final int redownloadtitle=0x7f0b002a;
         public static final int refresh=0x7f0b0014;
         public static final int rename=0x7f0b0015;
-        public static final int renametitle=0x7f0b0024;
+        public static final int renametitle=0x7f0b0025;
         public static final int save=0x7f0b0012;
-        public static final int searchyourfiles=0x7f0b0045;
-        public static final int size_is=0x7f0b0034;
-        public static final int slogan1=0x7f0b003c;
-        public static final int slogan2=0x7f0b003d;
-        public static final int title_activity_swipe=0x7f0b0042;
-        public static final int tokenlogin=0x7f0b003f;
-        public static final int torrentadded=0x7f0b0043;
-        public static final int transferfailed=0x7f0b002f;
-        public static final int transfers=0x7f0b0032;
-        public static final int welcome=0x7f0b0038;
+        public static final int search=0x7f0b0022;
+        public static final int searchyourfiles=0x7f0b0046;
+        public static final int size_is=0x7f0b0035;
+        public static final int slogan1=0x7f0b003d;
+        public static final int slogan2=0x7f0b003e;
+        public static final int title_activity_swipe=0x7f0b0043;
+        public static final int tokenlogin=0x7f0b0040;
+        public static final int torrentadded=0x7f0b0044;
+        public static final int transferfailed=0x7f0b0030;
+        public static final int transfers=0x7f0b0033;
+        public static final int welcome=0x7f0b0039;
         /**  Short commands and responses 
          */
         public static final int yes=0x7f0b0010;
@@ -1371,30 +1372,31 @@ containing a value of this type.
     public static final class style {
         public static final int DialogWindowTitle_Sherlock=0x7f0c0036;
         public static final int DialogWindowTitle_Sherlock_Light=0x7f0c0037;
-        public static final int PagerTitleStrip=0x7f0c006f;
+        public static final int PagerTitleStrip=0x7f0c0070;
         public static final int Putio_ActionBar=0x7f0c005b;
         /**  <item name="android:background">#EEEEEE</item> 
          */
-        public static final int Putio_ActionBarTabBarStyle=0x7f0c0064;
-        public static final int Putio_ActionBarTabStyle=0x7f0c0063;
-        public static final int Putio_Button=0x7f0c006c;
-        public static final int Putio_ButtonBar=0x7f0c0066;
-        public static final int Putio_ButtonBar_Button=0x7f0c0067;
-        public static final int Putio_CheckBox=0x7f0c0069;
-        public static final int Putio_Dialog=0x7f0c0068;
+        public static final int Putio_ActionBarTabBarStyle=0x7f0c0065;
+        public static final int Putio_ActionBarTabStyle=0x7f0c0064;
+        public static final int Putio_ActionButton=0x7f0c005c;
+        public static final int Putio_Button=0x7f0c006d;
+        public static final int Putio_ButtonBar=0x7f0c0067;
+        public static final int Putio_ButtonBar_Button=0x7f0c0068;
+        public static final int Putio_CheckBox=0x7f0c006a;
+        public static final int Putio_Dialog=0x7f0c0069;
         /**  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int Putio_DropDownItem=0x7f0c0061;
-        public static final int Putio_DropDownListView=0x7f0c005d;
-        public static final int Putio_DropDownNav=0x7f0c005f;
-        public static final int Putio_EditText=0x7f0c006d;
-        public static final int Putio_MenuTextAppearance=0x7f0c006b;
-        public static final int Putio_PopupMenu=0x7f0c005c;
-        public static final int Putio_Spinner=0x7f0c0065;
+        public static final int Putio_DropDownItem=0x7f0c0062;
+        public static final int Putio_DropDownListView=0x7f0c005e;
+        public static final int Putio_DropDownNav=0x7f0c0060;
+        public static final int Putio_EditText=0x7f0c006e;
+        public static final int Putio_MenuTextAppearance=0x7f0c006c;
+        public static final int Putio_PopupMenu=0x7f0c005d;
+        public static final int Putio_Spinner=0x7f0c0066;
         /**  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int Putio_SpinnerItem=0x7f0c0062;
-        public static final int Putio_TabText=0x7f0c005e;
+        public static final int Putio_SpinnerItem=0x7f0c0063;
+        public static final int Putio_TabText=0x7f0c005f;
         public static final int Sherlock___TextAppearance_Small=0x7f0c004a;
         public static final int Sherlock___Theme=0x7f0c004e;
         public static final int Sherlock___Theme_DarkActionBar=0x7f0c0050;
@@ -1407,7 +1409,7 @@ containing a value of this type.
         public static final int Sherlock___Widget_Holo_ListView=0x7f0c0026;
         public static final int Sherlock___Widget_Holo_Spinner=0x7f0c0023;
         public static final int Sherlock___Widget_SearchAutoCompleteTextView=0x7f0c0033;
-        public static final int TextAppearance_Putio_DialogWindowTitle=0x7f0c006a;
+        public static final int TextAppearance_Putio_DialogWindowTitle=0x7f0c006b;
         public static final int TextAppearance_Sherlock_DialogWindowTitle=0x7f0c0048;
         public static final int TextAppearance_Sherlock_Light_DialogWindowTitle=0x7f0c0049;
         public static final int TextAppearance_Sherlock_Light_Small=0x7f0c004c;
@@ -1433,7 +1435,7 @@ containing a value of this type.
         public static final int Theme_Putio_Dark=0x7f0c005a;
         /**  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int Theme_Putio_widget=0x7f0c0060;
+        public static final int Theme_Putio_widget=0x7f0c0061;
         public static final int Theme_Sherlock=0x7f0c0052;
         public static final int Theme_Sherlock_Dialog=0x7f0c0057;
         public static final int Theme_Sherlock_Light=0x7f0c0053;
@@ -1488,7 +1490,7 @@ containing a value of this type.
         public static final int Widget_Sherlock_SearchAutoCompleteTextView=0x7f0c0034;
         public static final int Widget_Sherlock_Spinner_DropDown_ActionBar=0x7f0c0024;
         public static final int Widget_Sherlock_TextView_SpinnerItem=0x7f0c0032;
-        public static final int activatedBackgroundIndicator=0x7f0c006e;
+        public static final int activatedBackgroundIndicator=0x7f0c006f;
     }
     public static final class xml {
         public static final int preferences=0x7f050000;

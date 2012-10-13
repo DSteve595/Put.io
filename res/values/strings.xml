@@ -21,6 +21,7 @@
     <string name="open">Open</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
+    <string name="search">Search</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Preparing to stream</string>

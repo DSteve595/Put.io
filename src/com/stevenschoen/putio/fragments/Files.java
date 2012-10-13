@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -46,6 +48,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.actionbarsherlock.widget.SearchView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.stevenschoen.putio.FilesAdapter;
@@ -452,14 +455,10 @@ public final class Files extends SherlockFragment {
 		inflater.inflate(R.menu.search, menu);
 		
 		com.actionbarsherlock.view.MenuItem buttonSearch = menu.findItem(R.id.menu_search);
-		buttonSearch.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				getSherlockActivity().onSearchRequested();
-				return false;
-			}
-		});
+		SearchManager searchManager = (SearchManager) getSherlockActivity().getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) buttonSearch.getActionView();
+		searchView.setIconifiedByDefault(true);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getSherlockActivity().getComponentName()));
 	}
 	
 	public void initSearch(String query) {

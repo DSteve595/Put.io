@@ -28,16 +28,25 @@
         <item name="android:listSelector">@drawable/putio_clickable_bg</item>
         <item name="android:editTextStyle">@style/Putio.EditText</item>
         <item name="android:checkboxStyle">@style/Putio.CheckBox</item>
+        <item name="android:actionButtonStyle">@style/Putio.ActionButton</item>
+        <item name="actionButtonStyle">@style/Putio.ActionButton</item>
     </style>
 
     <style name="Theme.Putio.Dark" parent="Theme.Sherlock">
         <item name="android:dropDownListViewStyle">@style/Putio.DropDownListView</item>
         <item name="dropDownListViewStyle">@style/Putio.DropDownListView</item>
+        <item name="android:actionButtonStyle">@style/Putio.ActionButton</item>
+        <item name="actionButtonStyle">@style/Putio.ActionButton</item>
+        <item name="searchViewTextField">@drawable/edit_text_search_putio</item>
     </style>
 
     <style name="Putio.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="android:windowNoTitle">true</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Putio.ActionButton" parent="Widget.Sherlock.ActionButton">
+        <item name="android:background">@drawable/putio_clickable_bg</item>
     </style>
 
     <style name="Putio.PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">
