@@ -236,8 +236,7 @@ public class FileDetails extends SherlockFragment {
 
 						@Override
 						public void onClick(View v) {
-							downloadFileCompat();
-							Toast.makeText(getSherlockActivity(), "Download started.", Toast.LENGTH_SHORT).show();
+							utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename(), false);
 							downloadDialog.dismiss();
 						}
 					});
@@ -251,8 +250,7 @@ public class FileDetails extends SherlockFragment {
 						}
 					});
 				} else {
-downloadFileCompat();
-					Toast.makeText(getSherlockActivity(), "Download started.", Toast.LENGTH_SHORT).show();
+					utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename(), false);
 				}
 			}
 			
@@ -298,7 +296,7 @@ downloadFileCompat();
 						@Override
 						public void onClick(View v) {
 							PutioUtils.deleteId(getFileId());
-							downloadFileCompat();
+							utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename(), true);
 							openDialog.dismiss();
 						}
 					});
@@ -312,7 +310,7 @@ downloadFileCompat();
 						}
 					});
 				} else {
-					downloadFileCompat();
+					utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename(), true);
 				}
 			}
 		};
@@ -436,58 +434,6 @@ downloadFileCompat();
 		}
 		
 		return view;
-	}
-	
-	private void downloadFileCompat() {
-		class downloadFileTaskCompat extends AsyncTask<Void, Integer, Long> {
-			private boolean resolveRedirect = false;
-			private Dialog dialog;
-			
-			@Override
-			protected Long doInBackground(Void... params) {
-				long dlId;
-				if (UIUtils.hasHoneycomb()) {
-					dlId = utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename());
-					return dlId;
-				} else {
-					publishProgress(0);
-					try {
-						dlId = utils.downloadFileWithUrl(getSherlockActivity(),
-								origFileData.id, getNewFilename(),
-								PutioUtils.resolveRedirect(utils.getFileDownloadUrl(origFileData.id).replace("https://", "http://")));
-						return dlId;
-					} catch (ClientProtocolException ee) {
-						ee.printStackTrace();
-					} catch (IOException ee) {
-						ee.printStackTrace();
-					}
-				}
-				return null;
-			}
-			
-			@Override
-			protected void onProgressUpdate(Integer... nothing) {
-				resolveRedirect = true;
-				
-				dialog = utils.PutioDialog(getSherlockActivity(), "Preparing to download", R.layout.dialog_loading);
-				dialog.setCanceledOnTouchOutside(false);
-				dialog.show();
-			}
-			
-			@Override
-			protected void onPostExecute(Long dlId) {
-				if (resolveRedirect) {
-					dialog.dismiss();
-				}
-				
-				Intent serviceIntent = new Intent(getSherlockActivity(), PutioOpenFileService.class);
-				serviceIntent.putExtra("downloadId", dlId);
-				serviceIntent.putExtra("filename", getNewFilename());
-				getSherlockActivity().startService(serviceIntent);
-				Toast.makeText(getSherlockActivity(), "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
-			}
-		}
-		new downloadFileTaskCompat().execute();
 	}
 	
 	private void setBarGraphics(String status, View convertButton, View available, View converting) {

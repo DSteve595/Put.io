@@ -279,8 +279,7 @@ public final class Files extends SherlockFragment {
 	
 	private void initDownload(final long id) {
 		utils.downloadFile(getSherlockActivity(),
-				fileData[(int) id].id,
-				fileData[(int) id].name);
+				fileData[(int) id].id, fileData[(int) id].name, false);
 	}
 	
 	private void initRename(final long id) {
@@ -366,16 +365,18 @@ public final class Files extends SherlockFragment {
 	}
 	
 	public void invalidateList(int highlightId) {
+		if (search.getStatus() == AsyncTask.Status.RUNNING) {
+			search.cancel(true);
+		}
+		
+		if (update.getStatus() == AsyncTask.Status.RUNNING) {
+			update.cancel(true);
+		}
+		
 		if (isSearch) {
-			if (search.getStatus() == AsyncTask.Status.RUNNING) {
-				search.cancel(true);
-			}
 			search = new searchFilesTask();
 			search.execute();
 		} else {
-			if (update.getStatus() == AsyncTask.Status.RUNNING) {
-				update.cancel(true);
-			}
 			update = new updateFilesTask();
 			update.execute(highlightId);
 		}
@@ -593,7 +594,7 @@ public final class Files extends SherlockFragment {
 				
 				listview.setClickable(true);
 				
-				getSherlockActivity().sendBroadcast(new Intent(Putio.CUSTOM_INTENT2));
+				getSherlockActivity().sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
 			} catch (FileNotFoundException e) {
 				
 			} catch (IOException e) {

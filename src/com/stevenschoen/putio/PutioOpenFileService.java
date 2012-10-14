@@ -22,7 +22,7 @@ public class PutioOpenFileService extends Service {
 	
 	PutioUtils utils;
 	
-	IntentFilter intentFilter3 = new IntentFilter(Putio.CUSTOM_INTENT3);
+	IntentFilter intentFilter3 = new IntentFilter(Putio.fileDownloadUpdateIntent);
 
 	@Override
 	public void onCreate() {

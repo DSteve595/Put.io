@@ -3,31 +3,23 @@
     android:visibility="gone"
     android:layout_height="fill_parent" >
 
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/progressBar1"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="44dp"
-        android:text="@string/loading"
+        android:paddingBottom="64dp"
+        android:text="You don't have any transfers"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/progressBar1"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="14dp"
-        android:text="Your transfers will appear shortly."
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="Add some stuff by clicking the 'add' button above!"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

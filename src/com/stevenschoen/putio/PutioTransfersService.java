@@ -47,12 +47,19 @@ public class PutioTransfersService extends Service {
 
 			@Override
 			public void run() {
-				new updateTransfersTask().execute();
-				if (update.getStatus() == AsyncTask.Status.FINISHED || update.getStatus() == AsyncTask.Status.PENDING) {
+				if ((update.getStatus() == AsyncTask.Status.FINISHED || update.getStatus() == AsyncTask.Status.PENDING)
+						&& utils.isConnected(PutioTransfersService.this)) {
 					update = new updateTransfersTask();
 					update.execute();
-					handler.postDelayed(this, 8000);
 				}
+				
+				if (!utils.isConnected(PutioTransfersService.this)) {
+					Intent noNetworkIntent = new Intent(Putio.noNetworkIntent);
+					noNetworkIntent.putExtra("from", "transfers");
+					sendBroadcast(noNetworkIntent);
+				}
+				
+				handler.postDelayed(this, 8000);
 			}
 		};
 		handler.post(updateTransfersRunnable);
@@ -102,7 +109,7 @@ public class PutioTransfersService extends Service {
 							obj.getString("status_message"),
 							saveParentId);
 				}
-				Intent transfersUpdateIntent = new Intent(Putio.CUSTOM_INTENT4);
+				Intent transfersUpdateIntent = new Intent(Putio.transfersUpdateIntent);
 				transfersUpdateIntent.putExtra("transfers", file);
 				sendBroadcast(transfersUpdateIntent);
 			} catch (Exception e) {

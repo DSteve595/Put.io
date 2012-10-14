@@ -70,10 +70,11 @@ public class Putio extends SherlockFragmentActivity implements
 
 	private ActionBar actionBar;
 	
-	public static final String CUSTOM_INTENT1 = "com.stevenschoen.putio.invalidatelist";
-	public static final String CUSTOM_INTENT2 = "com.stevenschoen.putio.checkcachesize";
-	public static final String CUSTOM_INTENT3 = "com.stevenschoen.putio.filedownloadupdate";
-	public static final String CUSTOM_INTENT4 = "com.stevenschoen.putio.transfersupdate";
+	public static final String invalidateListIntent = "com.stevenschoen.putio.invalidatelist";
+	public static final String checkCacheSizeIntent = "com.stevenschoen.putio.checkcachesize";
+	public static final String fileDownloadUpdateIntent = "com.stevenschoen.putio.filedownloadupdate";
+	public static final String transfersUpdateIntent = "com.stevenschoen.putio.transfersupdate";
+	public static final String noNetworkIntent = "com.stevenschoen.putio.nonetwork";
 	
 	Files filesFragment;
 	FileDetails fileDetailsFragment;
@@ -122,13 +123,15 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 		
 		IntentFilter intentFilter1 = new IntentFilter(
-				Putio.CUSTOM_INTENT1);
+				Putio.invalidateListIntent);
 		IntentFilter intentFilter2 = new IntentFilter(
-				Putio.CUSTOM_INTENT2);
+				Putio.checkCacheSizeIntent);
 		IntentFilter intentFilter3 = new IntentFilter(
-				Putio.CUSTOM_INTENT3);
+				Putio.fileDownloadUpdateIntent);
 		IntentFilter intentFilter4 = new IntentFilter(
-				Putio.CUSTOM_INTENT4);
+				Putio.transfersUpdateIntent);
+		IntentFilter intentFilter5 = new IntentFilter(
+				Putio.noNetworkIntent);
 		
 		registerReceiver(invalidateReceiver, intentFilter1);
 		registerReceiver(checkCacheSizeReceiver, intentFilter2);
@@ -136,6 +139,7 @@ public class Putio extends SherlockFragmentActivity implements
 			registerReceiver(fileDownloadUpdateReceiver, intentFilter3);
 		}
 		registerReceiver(transfersUpdateReceiver, intentFilter4);
+		registerReceiver(noNetworkReceiver, intentFilter5);
 	}
 	
 	@Override
@@ -492,6 +496,15 @@ public class Putio extends SherlockFragmentActivity implements
 				transfers[i] = (PutioTransferData) transferParcelables[i];
 			}
 			transfersFragment.updateTransfers(transfers);
+			transfersFragment.setHasNetwork(true);
+		}
+	};
+	
+	private BroadcastReceiver noNetworkReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			transfersFragment.setHasNetwork(false);
 		}
 	};
 	
@@ -525,6 +538,7 @@ public class Putio extends SherlockFragmentActivity implements
 			unregisterReceiver(fileDownloadUpdateReceiver);
 		}
 		unregisterReceiver(transfersUpdateReceiver);
+		unregisterReceiver(noNetworkReceiver);
 		if (isTransfersServiceRunning()) {
 			stopService(transfersServiceIntent);
 		}

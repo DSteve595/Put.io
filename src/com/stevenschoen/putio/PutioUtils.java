@@ -27,6 +27,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -35,6 +36,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -64,6 +67,7 @@ public class PutioUtils {
 		this.sharedPrefs = sharedPrefs;
 	}
 
+	@SuppressWarnings("finally")
 	private boolean postRename(int id, String newName) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
@@ -245,7 +249,7 @@ public class PutioUtils {
 		new saveFileTask().execute(updates);
 		
 		if (hasUpdates) {
-			Intent invalidateListIntent = new Intent(Putio.CUSTOM_INTENT1);
+			Intent invalidateListIntent = new Intent(Putio.invalidateListIntent);
 			context.sendBroadcast(invalidateListIntent);
 		}
 	}
@@ -259,7 +263,7 @@ public class PutioUtils {
 		}
 		new deleteFileTask().execute();
 		
-		Intent invalidateListIntent = new Intent(Putio.CUSTOM_INTENT1);
+		Intent invalidateListIntent = new Intent(Putio.invalidateListIntent);
 		context.sendBroadcast(invalidateListIntent);
 	}
 	
@@ -371,42 +375,79 @@ public class PutioUtils {
 		return data;
 	}
 	
-	@TargetApi(11)
-	public long downloadFile(final Context context, final int id, String filename) {
-		if (idIsDownloaded(id)) {
-			deleteId(id);
+	public void downloadFile(final Context context, final int id, final String filename, final boolean openWhenDone) {
+		class downloadFileTaskCompat extends AsyncTask<Void, Integer, Long> {
+			private boolean resolveRedirect = false;
+			private Dialog dialog;
+			
+			@Override
+			protected Long doInBackground(Void... params) {
+				long dlId;
+				if (UIUtils.hasHoneycomb()) {
+					dlId = downloadFileWithoutUrl(context, id, filename);
+					return dlId;
+				} else {
+					publishProgress(0);
+					try {
+						dlId = downloadFileWithUrl(context, id, filename,
+								resolveRedirect(getFileDownloadUrl(id).replace("https://", "http://")));
+						return dlId;
+					} catch (ClientProtocolException ee) {
+						ee.printStackTrace();
+					} catch (IOException ee) {
+						ee.printStackTrace();
+					}
+				}
+				return null;
+			}
+			
+			@Override
+			protected void onProgressUpdate(Integer... nothing) {
+				resolveRedirect = true;
+				
+				dialog = PutioDialog(context, "Preparing to download", R.layout.dialog_loading);
+				dialog.setCanceledOnTouchOutside(false);
+				dialog.show();
+			}
+			
+			@Override
+			protected void onPostExecute(Long dlId) {
+				if (resolveRedirect) {
+					dialog.dismiss();
+				}
+				
+				if (openWhenDone) {
+					Intent serviceIntent = new Intent(context, PutioOpenFileService.class);
+					serviceIntent.putExtra("downloadId", (long) dlId);
+					serviceIntent.putExtra("filename", filename);
+					context.startService(serviceIntent);
+					Toast.makeText(context, "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(context, "Download started.", Toast.LENGTH_SHORT).show();
+				}
+			}
 		}
-		
-		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getFileDownloadUrl(id)));
-		
-		String path = "put.io" + File.separator + id + File.separator + filename;
-		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
-		boolean made = file.getParentFile().mkdirs();
-		
-		request.setDescription("put.io");
-		if (UIUtils.hasHoneycomb()) {
-		    request.allowScanningByMediaScanner();
-		    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-		}
-		request.setDestinationInExternalPublicDir(
-				Environment.DIRECTORY_DOWNLOADS,
-				path);
-
-		long downloadId = manager.enqueue(request);
-		
-		sharedPrefs.edit().putLong("downloadId" + id, downloadId);
-		return downloadId;
+		new downloadFileTaskCompat().execute();
+	}
+	
+	private long downloadFileWithoutUrl(final Context context, final int id, String filename) {
+		Uri uri = Uri.parse(getFileDownloadUrl(id));
+		return download(context, id, filename, uri);
+	}
+	
+	private long downloadFileWithUrl(final Context context, final int id, String filename, String url) {		
+		Uri uri = Uri.parse(url.replace("https://", "http://"));
+		return download(context, id, filename, uri);
 	}
 	
 	@TargetApi(11)
-	public long downloadFileWithUrl(final Context context, final int id, String filename, String url) {
+	private long download(Context context, int id, String filename, Uri uri) {
 		if (idIsDownloaded(id)) {
 			deleteId(id);
 		}
 		
 		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url.replace("https://", "http://")));
+		DownloadManager.Request request = new DownloadManager.Request(uri);
 		
 		String path = "put.io" + File.separator + id + File.separator + filename;
 		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
@@ -422,8 +463,6 @@ public class PutioUtils {
 				path);
 
 		long downloadId = manager.enqueue(request);
-		
-		sharedPrefs.edit().putLong("downloadId" + id, downloadId);
 		return downloadId;
 	}
 	
@@ -554,6 +593,16 @@ public class PutioUtils {
 	
 	public static void openDownloadedUri(Uri uri, Context context) {
 		open(uri, context);
+	}
+	
+	public boolean isConnected(Context context) {
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		if (activeNetwork == null) {
+			return false;
+		}
+		return activeNetwork.isConnected();
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {

@@ -28,6 +28,17 @@ public final class Transfers extends SherlockFragment {
 	private PutioTransferLayout dummyTransfer = new PutioTransferLayout("Loading...", 0, 0, 0, "FAKE");
 	private ListView listview;
 	
+	private int viewMode = 1;
+	public static final int VIEWMODE_LIST = 1;
+	public static final int VIEWMODE_LISTOREMPTY = 2;
+	public static final int VIEWMODE_LOADING = -1;
+	public static final int VIEWMODE_EMPTY = -2;
+	public static final int VIEWMODE_NONETWORK = -3;
+	
+	private View loadingView;
+	private View emptyView;
+	private View noNetworkView;
+	
 	public static Transfers newInstance() {
 		Transfers fragment = new Transfers();
 		
@@ -61,7 +72,6 @@ public final class Transfers extends SherlockFragment {
 		
 		adapter = new TransfersAdapter(getSherlockActivity(), R.layout.transfer,
 				transferLayouts);
-		listview.setEmptyView(view.findViewById(R.id.loading));
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
@@ -91,7 +101,60 @@ public final class Transfers extends SherlockFragment {
 			} catch (NullPointerException e) {
 			}
 		}
+		
+		loadingView = view.findViewById(R.id.transfers_loading);
+		emptyView = view.findViewById(R.id.transfers_empty);
+		noNetworkView = view.findViewById(R.id.transfers_nonetwork);
+		
+		setViewMode(VIEWMODE_LOADING);
 		return view;
+	}
+	
+	private void setViewMode(int mode) {
+		if (mode != viewMode) {
+			switch (mode) {
+			case VIEWMODE_LIST:
+				listview.setVisibility(View.VISIBLE);
+				loadingView.setVisibility(View.GONE);
+				emptyView.setVisibility(View.GONE);
+				noNetworkView.setVisibility(View.GONE);
+				break;
+			case VIEWMODE_LOADING:
+				listview.setVisibility(View.INVISIBLE);
+				loadingView.setVisibility(View.VISIBLE);
+				emptyView.setVisibility(View.GONE);
+				noNetworkView.setVisibility(View.GONE);
+				break;
+			case VIEWMODE_EMPTY:
+				listview.setVisibility(View.INVISIBLE);
+				loadingView.setVisibility(View.GONE);
+				emptyView.setVisibility(View.VISIBLE);
+				noNetworkView.setVisibility(View.GONE);
+				break;
+			case VIEWMODE_NONETWORK:
+				listview.setVisibility(View.INVISIBLE);
+				loadingView.setVisibility(View.GONE);
+				emptyView.setVisibility(View.GONE);
+				noNetworkView.setVisibility(View.VISIBLE);
+				break;
+			case VIEWMODE_LISTOREMPTY:
+				if (transfersData == null || transfersData.length == 0) {
+					setViewMode(VIEWMODE_EMPTY);
+				} else {
+					setViewMode(VIEWMODE_LIST);
+				}
+				break;
+			}
+			viewMode = mode;
+		}
+	}
+	
+	public void setHasNetwork(boolean has) {
+		if (has) {
+			setViewMode(VIEWMODE_LISTOREMPTY);
+		} else {
+			setViewMode(VIEWMODE_NONETWORK);
+		}
 	}
 	
     @Override
@@ -116,6 +179,14 @@ public final class Transfers extends SherlockFragment {
 	}
 	
 	public void updateTransfers(PutioTransferData[] transfers) {
+		if (transfers == null || transfers.length == 0) {
+			setViewMode(VIEWMODE_EMPTY);
+			transfersData = null;
+			return;
+		} else {
+			setViewMode(VIEWMODE_LIST);
+		}
+		
 		final ArrayList<PutioTransferLayout> transferLayoutsTemp = new ArrayList<PutioTransferLayout>();
 		for (int i = 0; i < transfers.length; i++) {
 			if (isAdded()) {

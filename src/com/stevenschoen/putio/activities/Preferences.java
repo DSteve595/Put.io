@@ -33,7 +33,7 @@ public final class Preferences extends SherlockPreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(PREFERENCE_KEY)) {
-			sendBroadcast(new Intent(Putio.CUSTOM_INTENT2));
+			sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
 		}
 	}
 	
