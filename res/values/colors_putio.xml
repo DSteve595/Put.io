@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<color name="transparent">#00000000</color>
     <color name="putio_accent">#FFF200</color>
+    <color name="putio_accent_threequarters">#C4FFF200</color>
     <color name="putio_accent_half">#80FFF200</color>
     <color name="putio_accent_quarter">#40FFF200</color>
     <color name="putio_accent_eigth">#20FFF200</color>

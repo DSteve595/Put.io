@@ -42,24 +42,23 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@id/buttonbarSeparator"
 		android:orientation="horizontal" >
-
+
 		<Button
-			android:id="@+id/button_tokenlogin_cancel"
-			style="@style/Putio.ButtonBar.Button"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:background="@drawable/putio_clickable_bg"
-			android:text="@string/cancel" />
-
+		    android:id="@+id/button_tokenlogin_cancel"
+		    style="@style/Putio.ButtonBar.Button"
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="@string/cancel" />
+
 		<Button
-			android:id="@+id/button_tokenlogin_login"
-			style="@style/Putio.ButtonBar.Button"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:background="@drawable/putio_clickable_bg"
-			android:text="@string/log_in" />
+		    android:id="@+id/button_tokenlogin_login"
+		    style="@style/Putio.ButtonBar.Button"
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="@string/log_in" />
+
 	</LinearLayout>
 
 </RelativeLayout>

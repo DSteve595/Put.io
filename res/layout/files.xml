@@ -6,11 +6,10 @@
         android:id="@+id/fileslist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:listSelector="@drawable/putio_clickable_list"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="49dp"
-        android:choiceMode="multipleChoice"
         android:fastScrollEnabled="true"
-        android:listSelector="@drawable/putio_clickable_bg"
         android:scrollbarStyle="outsideInset" >
     </ListView>
 
@@ -34,7 +33,6 @@
             style="@style/Putio.ButtonBar.Button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/putio_clickable_bg"
             android:text="@string/refresh" />
 
         <ProgressBar

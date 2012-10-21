@@ -7,7 +7,7 @@
     </style>
 
     <style name="Putio.ButtonBar.Button" parent="@android:style/Widget">
-        <item name="android:background">@drawable/putio_clickable_bg</item>
+        <item name="android:background">@drawable/putio_clickable_button</item>
     </style>
 
 </resources>

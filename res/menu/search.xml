@@ -5,7 +5,7 @@
         android:id="@+id/menu_search"
         android:actionViewClass="com.actionbarsherlock.widget.SearchView"
         android:hint="@string/searchyourfiles"
-        android:background="@drawable/putio_clickable_bg"
+        android:background="@drawable/putio_clickable_button"
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
         android:title="@string/search"/>

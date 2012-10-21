@@ -10,14 +10,14 @@
         android:layout_height="wrap_content"
         android:background="@color/putio_dark"
         android:orientation="horizontal" >
-
+
         <Button
             android:id="@+id/button_setup_gotosite"
             style="@style/Putio.ButtonBar.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_bg"
+            android:background="@drawable/putio_clickable_button"
             android:text="@string/gotosite" />
 
         <Button
@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_bg"
+            android:background="@drawable/putio_clickable_button"
             android:text="@string/log_in" />
     </LinearLayout>
 

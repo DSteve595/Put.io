@@ -72,7 +72,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_bg"
             android:text="@string/cancel" />
 
         <Button
@@ -81,7 +80,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_bg"
             android:text="@string/apply" />
     </LinearLayout>
 

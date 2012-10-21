@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-	<item android:drawable="@color/putio_select" android:state_focused="true" android:state_pressed="false"/>
-	<item android:drawable="@color/putio_accent_half" android:state_pressed="true"/>
-	<item android:drawable="@color/putio_accent_half" android:state_activated="true"/>
-	<item android:drawable="@color/putio_convert_button"/>
-
-</selector>

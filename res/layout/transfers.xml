@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:choiceMode="multipleChoice"
-        android:listSelector="@drawable/putio_clickable_bg" >
+        android:listSelector="@drawable/putio_clickable_list" >
     </ListView>
 
     <View

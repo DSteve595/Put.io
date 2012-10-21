@@ -72,7 +72,7 @@ public final class Files extends SherlockFragment {
         public void onFileSelected(int id);
         public void onSomethingSelected();
     }
-
+    
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void onFileSelected(int id) {

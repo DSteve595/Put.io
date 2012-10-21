@@ -24,15 +24,15 @@
         android:layout_below="@+id/View1"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
-
+
         <Button
             android:id="@+id/button_login_cancel"
             style="@style/Putio.ButtonBar.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_bg"
             android:text="@string/cancel" />
+
     </LinearLayout>
 
 </RelativeLayout>

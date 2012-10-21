@@ -42,34 +42,32 @@
 			android:layout_alignParentLeft="true"
 			android:layout_below="@id/buttonbarSeparator"
 			android:orientation="horizontal" >
-
-			<Button
-				android:id="@+id/button_redownloadforopen_cancel"
-				style="@style/Putio.ButtonBar.Button"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/cancel" />
 
 			<Button
-				android:id="@+id/button_redownloadforopen_download"
-				style="@style/Putio.ButtonBar.Button"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/redownload"
-				android:textAppearance="?android:attr/textAppearanceSmallInverse" />
-
+			    android:id="@+id/button_redownloadforopen_cancel"
+			    style="@style/Putio.ButtonBar.Button"
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="1"
+			    android:text="@string/cancel" />
+
 			<Button
-				android:id="@+id/button_redownloadforopen_open"
-				style="@style/Putio.ButtonBar.Button"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:background="@drawable/putio_clickable_bg"
-				android:text="@string/open" />
+			    android:id="@+id/button_redownloadforopen_download"
+			    style="@style/Putio.ButtonBar.Button"
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="1"
+			    android:text="@string/redownload"
+			    android:textAppearance="?android:attr/textAppearanceSmallInverse" />
+
+			<Button
+			    android:id="@+id/button_redownloadforopen_open"
+			    style="@style/Putio.ButtonBar.Button"
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="1"
+			    android:text="@string/open" />
+
 		</LinearLayout>
 	</RelativeLayout>
 
