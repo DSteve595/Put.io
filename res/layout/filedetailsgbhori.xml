@@ -99,7 +99,7 @@
             android:text="@string/cancel" />
 
         <Button
-            android:id="@+id/button_filedetails_save"
+            android:id="@+id/button_filedetails_apply"
             style="@style/Putio.ButtonBar.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

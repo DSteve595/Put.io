@@ -437,7 +437,7 @@ public class Putio extends SherlockFragmentActivity implements
 			apply.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					utils.saveFileToServer(Putio.this,
+					utils.applyFileToServer(Putio.this,
 							fileDetailsFragment.getId(),
 							fileDetailsFragment.getOldFilename(),
 							fileDetailsFragment.getNewFilename());

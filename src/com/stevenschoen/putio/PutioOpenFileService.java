@@ -18,7 +18,9 @@ public class PutioOpenFileService extends Service {
 	DownloadManager downloadManager;
 	String Download_ID = "DOWNLOAD_ID";
 	long downloadId;
+	int id;
 	String filename;
+	int mode;
 	
 	PutioUtils utils;
 	
@@ -36,7 +38,9 @@ public class PutioOpenFileService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		this.downloadId = intent.getExtras().getLong("downloadId");
+		this.id = intent.getExtras().getInt("id");
 		this.filename = intent.getExtras().getString("filename");
+		this.mode = intent.getExtras().getInt("mode");
 		
 		IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
 		registerReceiver(downloadReceiver, intentFilter);
@@ -66,8 +70,9 @@ public class PutioOpenFileService extends Service {
 //					file = downloadManager.openDownloadedFile(downloadId);
 					Intent finishedIntent = new Intent(PutioOpenFileService.this, FileFinished.class);
 					finishedIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					finishedIntent.putExtra("downloadId", downloadId);
+					finishedIntent.putExtra("id", id);
 					finishedIntent.putExtra("filename", filename);
+					finishedIntent.putExtra("mode", mode);
 					startActivity(finishedIntent);
 				} else if (status == DownloadManager.STATUS_FAILED) {
 					

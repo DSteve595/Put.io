@@ -9,29 +9,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
-        <FrameLayout
-            android:id="@+id/nameHolder"
+
+        <TextView
+            android:id="@+id/text_redownloadbody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:paddingBottom="@dimen/padding_medium"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/padding_large"
-            android:paddingTop="@dimen/padding_medium" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/redownloadfordlbody" />
-        </FrameLayout>
-
+            android:padding="@dimen/padding_large" />
+
         <View
             android:id="@+id/buttonbarSeparator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/nameHolder"
-            android:layout_marginTop="@dimen/padding_large"
+            android:layout_below="@+id/text_redownloadbody"
             android:background="@drawable/divider_horizontal" />
 
         <LinearLayout
@@ -42,23 +31,31 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/buttonbarSeparator"
             android:orientation="horizontal" >
-
+
             <Button
-                android:id="@+id/button_redownloadfordl_cancel"
+                android:id="@+id/button_redownload_cancel"
                 style="@style/Putio.ButtonBar.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/cancel" />
-
+
             <Button
-                android:id="@+id/button_redownloadfordl_download"
+                android:id="@+id/button_redownload_download"
                 style="@style/Putio.ButtonBar.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/redownload" />
+                android:text="@string/redownload"
+                android:textAppearance="?android:attr/textAppearanceSmallInverse" />
 
+            <Button
+                android:id="@+id/button_redownload_open"
+                style="@style/Putio.ButtonBar.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/open" />
         </LinearLayout>
     </RelativeLayout>
 

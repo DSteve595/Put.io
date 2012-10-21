@@ -20,12 +20,12 @@
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
         layout="@layout/empty" />
-
+
     <FrameLayout
         android:id="@+id/buttonbar"
         style="@style/Putio.ButtonBar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 
         <Button

@@ -14,11 +14,13 @@
     <string name="menu_addtransfers">Add transfers</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Log out</string>
+    <string name="menu_share">Share</string>
     <string name="log_in">Log in</string>
     <string name="apply">Apply</string>
     <string name="download">Download</string>
     <string name="redownload">Re-download</string>
     <string name="open">Open</string>
+    <string name="share">Share</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="search">Search</string>
@@ -29,11 +31,14 @@
     <string name="renametitle">Rename this file?</string>
     <string name="deletetitle">Delete this file?</string>
     <string name="deletebody">You can only get it back by adding it all over again.</string>
-    <string name="downloadfinishedtitle">Open file?</string>
+    <string name="downloadfinishedopentitle">Open file?</string>
+    <string name="downloadfinishedsharetitle">Share file?</string>
     <string name="downloadfinishedbody">%1$s is done downloading.</string>
     <string name="redownloadtitle">Re-download file?</string>
     <string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
     <string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
+    <string name="sharetitle">It looks like this has already been downloaded. Download it anyway?</string>
+    <string name="sharebody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
     <string name="addtransferstitle">Add transfers</string>
 
     <!-- Errors (for users) -->

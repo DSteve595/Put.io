@@ -279,7 +279,7 @@ public final class Files extends SherlockFragment {
 	
 	private void initDownload(final long id) {
 		utils.downloadFile(getSherlockActivity(),
-				fileData[(int) id].id, fileData[(int) id].name, false);
+				fileData[(int) id].id, fileData[(int) id].name, PutioUtils.ACTION_NOTHING);
 	}
 	
 	private void initRename(final long id) {
@@ -313,7 +313,7 @@ public final class Files extends SherlockFragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				utils.saveFileToServer(getSherlockActivity(),
+				utils.applyFileToServer(getSherlockActivity(),
 						fileData[(int) id].id, fileData[(int) id].name, textFileName.getText().toString());
 				renameDialog.dismiss();
 			}

@@ -53,6 +53,10 @@ public class PutioUtils {
 	public static final int TYPE_VIDEO = -1;
 	public static final String[] streamingMediaTypes = new String[] { "audio", "video" };
 	
+	public static final int ACTION_NOTHING = -1;
+	public static final int ACTION_OPEN = 1;
+	public static final int ACTION_SHARE = -2;
+	
 	public final String baseUrl = "https://api.put.io/v2/";
 
 	private String token;
@@ -224,7 +228,7 @@ public class PutioUtils {
 		}
 	}
 
-	public void saveFileToServer(final Context context, final int id,
+	public void applyFileToServer(final Context context, final int id,
 			String origName, final String newName) {
 		boolean updateName = false;
 		if (!newName.matches(origName)) {
@@ -375,7 +379,7 @@ public class PutioUtils {
 		return data;
 	}
 	
-	public void downloadFile(final Context context, final int id, final String filename, final boolean openWhenDone) {
+	public void downloadFile(final Context context, final int id, final String filename, final int actionWhenDone) {
 		class downloadFileTaskCompat extends AsyncTask<Void, Integer, Long> {
 			private boolean resolveRedirect = false;
 			private Dialog dialog;
@@ -416,14 +420,28 @@ public class PutioUtils {
 					dialog.dismiss();
 				}
 				
-				if (openWhenDone) {
-					Intent serviceIntent = new Intent(context, PutioOpenFileService.class);
-					serviceIntent.putExtra("downloadId", (long) dlId);
-					serviceIntent.putExtra("filename", filename);
-					context.startService(serviceIntent);
+				switch (actionWhenDone) {
+				case ACTION_OPEN:
+					Intent serviceOpenIntent = new Intent(context, PutioOpenFileService.class);
+					serviceOpenIntent.putExtra("downloadId", (long) dlId);
+					serviceOpenIntent.putExtra("id", id);
+					serviceOpenIntent.putExtra("filename", filename);
+					serviceOpenIntent.putExtra("mode", actionWhenDone);
+					context.startService(serviceOpenIntent);
 					Toast.makeText(context, "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
-				} else {
+					break;
+				case ACTION_SHARE:
+					Intent serviceShareIntent = new Intent(context, PutioOpenFileService.class);
+					serviceShareIntent.putExtra("downloadId", (long) dlId);
+					serviceShareIntent.putExtra("id", id);
+					serviceShareIntent.putExtra("filename", filename);
+					serviceShareIntent.putExtra("mode", actionWhenDone);
+					context.startService(serviceShareIntent);
+					Toast.makeText(context, "Your file will be shared as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+					break;
+				case ACTION_NOTHING:
 					Toast.makeText(context, "Download started.", Toast.LENGTH_SHORT).show();
+					break;					
 				}
 			}
 		}
@@ -591,8 +609,36 @@ public class PutioUtils {
 		}
 	}
 	
+	private static void share(Uri uri, Context context) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		intent.setDataAndType(uri, "application/octet-stream");
+		try {
+			context.startActivity(Intent.createChooser(intent, uri.getLastPathSegment()));
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	public static void shareDownloadedId(int id, Context context) {
+		if (idIsDownloaded(id)) {
+			String path = Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
+					+ File.separator + "put.io" + File.separator + id;
+			File file = new File(path).listFiles()[0];
+			Uri uri = Uri.fromFile(file);
+			share(uri, context);
+		} else {
+			Toast.makeText(context, "The file could not be found. Was it deleted?", Toast.LENGTH_LONG).show();
+		}
+	}
+	
 	public static void openDownloadedUri(Uri uri, Context context) {
 		open(uri, context);
+	}
+	
+	public static void shareDownloadedUri(Uri uri, Context context) {
+		share(uri, context);
 	}
 	
 	public boolean isConnected(Context context) {
