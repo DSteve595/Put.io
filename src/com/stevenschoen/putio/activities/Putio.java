@@ -17,6 +17,8 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -25,14 +27,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.internal.widget.ScrollingTabContainerView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.stevenschoen.putio.PutioTransferData;
@@ -283,10 +287,10 @@ public class Putio extends SherlockFragmentActivity implements
 			startService(transfersServiceIntent);
 		}
 		
-		if (!UIUtils.isTablet(this)) {
-			setupPhoneLayout();
-		} else {
+		if (UIUtils.isTablet(this)) {
 			setupTabletLayout();
+		} else {
+			setupPhoneLayout();
 		}
 	}
 	
@@ -340,9 +344,20 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 	}
 	
-	private void setupTabletLayout() {
+	private void setupTabletLayout() {		
 		// Files
-		tabletFilesView = getLayoutInflater().inflate(R.layout.tablet_files, null);
+		int tabletFilesLayoutId = R.layout.tablet_files;
+		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(this, getResources().getDisplayMetrics().heightPixels) >= 600) {
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				tabletFilesLayoutId = R.layout.tablet_filesgb600port;
+			} else {
+				tabletFilesLayoutId = R.layout.tablet_filesgb600;
+			}
+		} else if (!UIUtils.hasHoneycomb()) {
+			tabletFilesLayoutId = R.layout.tablet_filesgb600;
+		}
+		
+		tabletFilesView = getLayoutInflater().inflate(tabletFilesLayoutId, null);
 		filesId = R.id.fragment_files;
 		fileDetailsId = tabletFilesView.findViewById(R.id.fragment_details).getId();
 		
@@ -353,16 +368,37 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 		
 		// Transfers
-		tabletTransfersView = getLayoutInflater().inflate(R.layout.tablet_transfers, null);
+		int tabletTransfersLayoutId = R.layout.tablet_transfers;
+		if (!UIUtils.hasHoneycomb()) {
+			tabletTransfersLayoutId = R.layout.tablet_transfersgb;
+		}
+		
+		tabletTransfersView = getLayoutInflater().inflate(tabletTransfersLayoutId, null);
 		transfersId = R.id.fragment_transfers;
 		
 		transfersFragment = (Transfers) getSupportFragmentManager().findFragmentById(R.id.fragment_transfers);
 		
-		// Other
+		// Other		
 		for (int i = 0; i < 2; i++) {
 			actionBar.addTab(actionBar.newTab()
 					.setText(titles[i])
 					.setTabListener(this));
+		}
+		
+		if (!UIUtils.hasHoneycomb()) {
+			ViewGroup vg = (ViewGroup) findViewById(R.id.abs__action_bar);
+			for (int i = 0; i < vg.getChildCount(); i++) {
+				if (vg.getChildAt(i) instanceof ScrollingTabContainerView) {
+					ViewGroup vg2 = (ViewGroup) vg.getChildAt(i);
+					ViewGroup vg3 = (ViewGroup) vg2.getChildAt(0);
+					vg3.setBackgroundColor(Color.TRANSPARENT);
+					for (int ii = 0; ii < vg3.getChildCount(); ii++) {
+						ViewGroup tab = (ViewGroup) vg3.getChildAt(ii);
+						TextView text = (TextView) tab.getChildAt(0);
+						text.setTextColor(Color.WHITE);
+					}
+				}
+			}
 		}
 		
 		if (savedInstanceState != null) {

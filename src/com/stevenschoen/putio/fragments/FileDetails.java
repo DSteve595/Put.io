@@ -70,7 +70,6 @@ public class FileDetails extends SherlockFragment {
     }
 	
     public interface Callbacks {
-
         public void onFDCancelled();
         public void onFDFinished();
     }

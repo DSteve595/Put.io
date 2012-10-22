@@ -150,8 +150,10 @@ public final class Files extends SherlockFragment {
 		registerForContextMenu(listview);
 		if (UIUtils.isTablet(getSherlockActivity())) {
 			listview.setVerticalFadingEdgeEnabled(true);
-			listview.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
-			listview.setFastScrollAlwaysVisible(true);
+			if (UIUtils.hasHoneycomb()) {
+				listview.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+				listview.setFastScrollAlwaysVisible(true);
+			}
 			setActivateOnItemClick(true);
 		}
 		listview.setOnItemClickListener(new OnItemClickListener() {
