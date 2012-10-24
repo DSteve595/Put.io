@@ -260,7 +260,7 @@ public class Putio extends SherlockFragmentActivity implements
 		private String makeFragmentName(int viewId, int index) {
 			return "android:switcher:" + viewId + ":" + index;
 		}
-
+		
 		@Override
 		public int getCount() {
 			return 2;

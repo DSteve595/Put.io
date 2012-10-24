@@ -33,7 +33,7 @@ public final class Transfers extends SherlockFragment {
 	public static final int VIEWMODE_LISTOREMPTY = 2;
 	public static final int VIEWMODE_LOADING = -1;
 	public static final int VIEWMODE_EMPTY = -2;
-	public static final int VIEWMODE_NONETWORK = -3;
+	public static final int VIEWMODE_NONETWORK = 3;
 	
 	private View loadingView;
 	private View emptyView;

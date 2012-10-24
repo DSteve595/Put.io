@@ -9,7 +9,7 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="44dp"
         android:paddingBottom="64dp"
-        android:text="Where&apos;s the internet?"
+        android:text="You don't have any files"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="14dp"
-        android:text="You need to be online to view your transfers."
+        android:text="Add some stuff by clicking the 'add' button above!"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

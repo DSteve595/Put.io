@@ -46,7 +46,7 @@
     </style>
 
     <style name="Putio.ActionButton" parent="Widget.Sherlock.ActionButton">
-        <item name="android:background">@drawable/putio_clickable_button</item>
+        <item name="android:background">@drawable/putio_clickable_actionbutton</item>
     </style>
 
     <style name="Putio.PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">
@@ -54,7 +54,7 @@
     </style>
 
     <style name="Putio.DropDownListView" parent="@style/Widget.Sherlock.ListView.DropDown">
-        <item name="android:listSelector">@drawable/putio_clickable_list</item>
+        <item name="android:listSelector">@drawable/putio_clickable_actionbutton</item>
         <item name="android:textColor">#fff200</item>
     </style>
 
@@ -66,7 +66,7 @@
         <item name="background">@drawable/spinner_background_ab_putio</item>
         <item name="android:background">@drawable/spinner_background_ab_putio</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_putio</item>
-        <item name="android:dropDownSelector">@drawable/putio_clickable_list</item>
+        <item name="android:dropDownSelector">@drawable/putio_clickable_actionbutton</item>
     </style>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->

@@ -61,6 +61,14 @@ import com.stevenschoen.putio.activities.FileDetailsActivity;
 import com.stevenschoen.putio.activities.Putio;
 
 public final class Files extends SherlockFragment {
+	
+	private int viewMode = 1;
+	public static final int VIEWMODE_LIST = 1;
+	public static final int VIEWMODE_LISTOREMPTY = 2;
+	public static final int VIEWMODE_LOADING = -1;
+	public static final int VIEWMODE_EMPTY = -2;
+	public static final int VIEWMODE_LISTORLOADING = 3;
+	
 	public static Files newInstance() {
 		Files fragment = new Files();
 		
@@ -92,7 +100,12 @@ public final class Files extends SherlockFragment {
 	private ArrayList<PutioFileLayout> fileLayouts = new ArrayList<PutioFileLayout>();
 	private PutioFileLayout dummyFile = new PutioFileLayout("Loading...", "Your files will appear shortly.", R.drawable.ic_launcher);
 	private ListView listview;
-	View emptyView;
+	
+	private View loadingView;
+	private View emptyView;
+	private View emptySubView;
+	
+	private boolean hasUpdated = false;
 	
 	private PutioFileData[] fileData;
 	private int origId;
@@ -144,7 +157,6 @@ public final class Files extends SherlockFragment {
 		
 		adapter = new FilesAdapter(getSherlockActivity(), R.layout.file,
 				fileLayouts);
-		listview.setEmptyView(view.findViewById(R.id.loading));
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
@@ -224,9 +236,59 @@ public final class Files extends SherlockFragment {
 		});
 		
 		fileLayouts.add(0, dummyFile);
+		
+		loadingView = view.findViewById(R.id.files_loading);
+		emptyView = view.findViewById(R.id.files_empty);
+		emptySubView = view.findViewById(R.id.files_emptysub);
+		
 		invalidateList();
 		
+		setViewMode(VIEWMODE_LOADING);
 		return view;
+	}
+	
+	private void setViewMode(int mode) {
+		Log.d("asdf", "mode is " + mode);
+		if (mode != viewMode) {
+			switch (mode) {
+			case VIEWMODE_LIST:
+				listview.setVisibility(View.VISIBLE);
+				loadingView.setVisibility(View.GONE);
+				emptyView.setVisibility(View.GONE);
+				break;
+			case VIEWMODE_LOADING:
+				listview.setVisibility(View.INVISIBLE);
+				loadingView.setVisibility(View.VISIBLE);
+				emptyView.setVisibility(View.GONE);
+				break;
+			case VIEWMODE_EMPTY:
+				listview.setVisibility(View.INVISIBLE);
+				loadingView.setVisibility(View.GONE);
+				if (currentFolderId == 0) {
+					emptyView.setVisibility(View.VISIBLE);
+					emptySubView.setVisibility(View.GONE);
+				} else {
+					emptyView.setVisibility(View.GONE);
+					emptySubView.setVisibility(View.VISIBLE);
+				}
+				break;
+			case VIEWMODE_LISTOREMPTY:
+				if (fileData == null || fileData.length == 0) {
+					setViewMode(VIEWMODE_EMPTY);
+				} else {
+					setViewMode(VIEWMODE_LIST);
+				}
+				break;
+			case VIEWMODE_LISTORLOADING:
+				if ((fileData == null || fileData.length == 0) && !hasUpdated) {
+					setViewMode(VIEWMODE_LOADING);
+				} else {
+					setViewMode(VIEWMODE_LISTOREMPTY);
+				}
+				break;
+			}
+			viewMode = mode;
+		}
 	}
 	
     @Override
@@ -473,7 +535,7 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void populateList(final PutioFileData[] file, int newId, int origIdBefore, int highlightId) {
-		emptyView.setVisibility(View.GONE);
+		hasUpdated = true;
 		int index = listview.getFirstVisiblePosition();
 		View v = listview.getChildAt(0);
 		int top = (v == null) ? 0 : v.getTop();
@@ -486,12 +548,13 @@ public final class Files extends SherlockFragment {
 		}
 		
 		if (file == null) {
-			emptyView.setVisibility(View.VISIBLE);
-			
+			setViewMode(VIEWMODE_EMPTY);
 			return;
 		}
 		
-		emptyView.setVisibility(View.GONE);
+		fileData = file;
+		
+		setViewMode(VIEWMODE_LISTOREMPTY);
 		
 		final ArrayList<PutioFileLayout> files = new ArrayList<PutioFileLayout>();
 		
@@ -516,9 +579,6 @@ public final class Files extends SherlockFragment {
 			}
 		} catch (NullPointerException e) {
 		}
-		
-		fileData = file;
-		
 		for (int ii = 0; ii < files.size(); ii++) {
 			adapter.add(files.get(ii));
 		}
@@ -545,7 +605,6 @@ public final class Files extends SherlockFragment {
 			}
 		} else {
 		}
-		
 	}
 	
 	class updateFilesTask extends AsyncTask<Integer, Void, PutioFileData[]> {

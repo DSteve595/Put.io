@@ -3,7 +3,7 @@
 
     <item android:drawable="@color/putio_accent" android:state_pressed="true"/>
     <item android:drawable="@color/putio_accent_half" android:state_focused="true"/>
-    <item android:drawable="@color/putio_accent_half" android:state_activated="true"/>
+    <item android:drawable="@drawable/activated" android:state_activated="true"/>
     <item android:drawable="@color/transparent"/>
 
 </selector>
