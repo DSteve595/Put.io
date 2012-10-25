@@ -3,31 +3,29 @@ package com.stevenschoen.putio;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -41,8 +39,12 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,10 +59,10 @@ public class PutioUtils {
 	public static final int ACTION_OPEN = 1;
 	public static final int ACTION_SHARE = -2;
 	
-	public final String baseUrl = "https://api.put.io/v2/";
+	public final static String baseUrl = "https://api.put.io/v2/";
 
 	private String token;
-	private String tokenWithStuff;
+	private static String tokenWithStuff;
 
 	private SharedPreferences sharedPrefs;
 	
@@ -71,56 +73,50 @@ public class PutioUtils {
 		this.sharedPrefs = sharedPrefs;
 	}
 
-	@SuppressWarnings("finally")
 	private boolean postRename(int id, String newName) {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+		URL url = null;
 		try {
-			uri = new URI(baseUrl + "files/rename" + tokenWithStuff);
-			HttpPost method = new HttpPost(uri);
-
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("file_id", Integer
-					.toString(id)));
-			nameValuePairs.add(new BasicNameValuePair("name", newName));
-
-			method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+			url = new URL(baseUrl + "files/rename" + tokenWithStuff);
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			return false;
 		}
-
+		
 		try {
-			JSONObject jsonResponse = new JSONObject(
-					convertStreamToString(data));
-			String responseCode = jsonResponse.getString("status");
-
-			if (responseCode.matches("OK")) {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
+			
+			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
+		    output.write("file_id=" + id + "&name=" + URLEncoder.encode(newName, "UTF-8"));
+		    output.flush();
+			connection.connect();
+			
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				return true;
 			} else {
 				return false;
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
-		} finally {
-			return false;
 		}
+		return false;
 	}
 	
-	@SuppressWarnings("finally")
-	private boolean postDelete(Integer... ids) {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+	private static boolean postDelete(Integer... ids) {
+		URL url = null;
 		try {
-			uri = new URI(baseUrl + "files/delete" + tokenWithStuff);
-			HttpPost method = new HttpPost(uri);
-
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			url = new URL(baseUrl + "files/delete" + tokenWithStuff);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
+			
+			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
 			String idsString = null;
 			for (int i = 0; i < ids.length; i++) {
 				if (i == 0) {
@@ -129,103 +125,112 @@ public class PutioUtils {
 					idsString = idsString + ", " + ids[i];
 				}
 			}
-			nameValuePairs.add(new BasicNameValuePair("file_ids", idsString));
-
-			method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		try {
-			JSONObject jsonResponse = new JSONObject(
-					convertStreamToString(data));
-			String responseCode = jsonResponse.getString("status");
-
-			if (responseCode.matches("OK")) {
+		    output.write("file_ids=" + idsString);
+		    output.flush();
+			connection.connect();
+			
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				return true;
 			} else {
 				return false;
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
-		} finally {
-			return false;
 		}
+		return false;
 	}
 	
-	@SuppressWarnings("finally")
-	private boolean postAddTransfer(String urls) {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+	private boolean postAddTransferByUrl(String urls) {
+		URL url = null;
 		try {
-			uri = new URI(baseUrl + "transfers/add" + tokenWithStuff);
-			HttpPost method = new HttpPost(uri);
-
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("url", urls));
-
-			method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+			url = new URL(baseUrl + "transfers/add" + tokenWithStuff);
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			return false;
 		}
-
+		
 		try {
-			JSONObject jsonResponse = new JSONObject(
-					convertStreamToString(data));
-			String responseCode = jsonResponse.getString("status");
-
-			if (responseCode.matches("OK")) {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
+			
+			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
+		    output.write(urls);
+		    output.flush();
+			connection.connect();
+			
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				return true;
 			} else {
 				return false;
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
-		} finally {
-			return false;
 		}
+		return false;
 	}
 	
-	@SuppressWarnings("finally")
+	private boolean postAddTransferByFile(String filePath) {
+		URL url = null;
+		try {
+			url = new URL(baseUrl + "files/upload" + tokenWithStuff);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
+			
+			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
+			InputStream fileStream = FileUtils.openInputStream(new File(filePath));
+			Log.d("asdf", new File(filePath).getAbsolutePath());
+			IOUtils.copy(fileStream, output);
+		    output.flush();
+		    
+			connection.connect();
+//			Log.d("asdf", convertStreamToString(connection.getInputStream()));
+			Log.d("asdf", convertStreamToString(connection.getErrorStream()));
+			
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	private boolean postConvert(int id) {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+		URL url = null;
 		try {
-			uri = new URI(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
-			HttpPost method = new HttpPost(uri);
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+			url = new URL(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			return false;
 		}
-
+		
 		try {
-			JSONObject jsonResponse = new JSONObject(
-					convertStreamToString(data));
-			String responseCode = jsonResponse.getString("status");
-
-			if (responseCode.matches("OK")) {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
+			
+			connection.connect();
+			
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				return true;
 			} else {
 				return false;
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
-		} finally {
-			return false;
 		}
+		return false;
 	}
 
 	public void applyFileToServer(final Context context, final int id,
@@ -258,7 +263,7 @@ public class PutioUtils {
 		}
 	}
 	
-	public void deleteFile(Context context, final Integer... ids) {
+	public static void deleteFileAsync(Context context, final Integer... ids) {
 		class deleteFileTask extends AsyncTask<Void, Void, Boolean> {
 			protected Boolean doInBackground(Void... nothing) {
 				Boolean saved = postDelete(ids);
@@ -271,17 +276,27 @@ public class PutioUtils {
 		context.sendBroadcast(invalidateListIntent);
 	}
 	
-	public void addTransfers(final String urls) {
+	public void addTransfersByUrlAsync(final String urls) {
 		class addTransferTask extends AsyncTask<Void, Void, Boolean> {
 			protected Boolean doInBackground(Void... nothing) {
-				Boolean saved = postAddTransfer(urls);
+				Boolean saved = postAddTransferByUrl(urls);
 				return null;
 			}
 		}
 		new addTransferTask().execute();
 	}
 	
-	public void convertToMp4(int id) {
+	public void addTransfersByFileAsync(final String filePath) {
+		class addTransferTask extends AsyncTask<Void, Void, Boolean> {
+			protected Boolean doInBackground(Void... nothing) {
+				Boolean saved = postAddTransferByFile(filePath);
+				return null;
+			}
+		}
+		new addTransferTask().execute();
+	}
+	
+	public void convertToMp4Async(int id) {
 		class convertToMp4 extends AsyncTask<Integer, Void, Void> {
 			
 			@Override
@@ -306,7 +321,7 @@ public class PutioUtils {
 		return dialog;
 	}
 	
-	public Dialog PutioDialog(Context context, String title, int contentViewId) {
+	public static Dialog PutioDialog(Context context, String title, int contentViewId) {
 		Typeface robotoLight = Typeface.createFromAsset(context.getAssets(), "Roboto-Light.ttf");
 		
 		Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
@@ -328,55 +343,60 @@ public class PutioUtils {
 	}
 	
 	public InputStream getFilesListJsonData(int id) {
-		String url = baseUrl + "files/list" + tokenWithStuff;
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+		URL url = null;
 		try {
+			url = new URL(baseUrl + "files/list" + tokenWithStuff);
 			if (id != 0) {
-				uri = new URI(url + "&parent_id=" + id);
-			} else {
-				uri = new URI(url);
+				url = new URL(url + "&parent_id=" + id);
 			}
-			HttpGet method = new HttpGet(uri);
-			
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return data;
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			
+			return connection.getInputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public InputStream getFilesSearchJsonData(String query) throws UnsupportedEncodingException {
-		String url = baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1" + tokenWithStuff;
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+		URL url = null;
 		try {
-			uri = new URI(url);
-			HttpGet method = new HttpGet(uri);
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+			url = new URL(baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1" + tokenWithStuff);
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return data;
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			
+			return connection.getInputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
-	public InputStream getFileJsonData(String url) {
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+	public InputStream getFileJsonData(int id) {
+		URL url = null;
 		try {
-			uri = new URI(url);
-			HttpGet method = new HttpGet(uri);
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+			url = new URL(baseUrl + "files/" + id + tokenWithStuff);
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return data;
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			
+			return connection.getInputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public void downloadFile(final Context context, final int id, final String filename, final int actionWhenDone) {
@@ -495,43 +515,50 @@ public class PutioUtils {
 		} else {
 			typeString = "video";
 		}
+		
+		if (url == null) {
+			Toast.makeText(context, context.getString(R.string.streamerror), Toast.LENGTH_LONG).show();
+			return;
+		}
 		streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
 		
 		context.startActivity(streamIntent);
 	}
 	
 	public InputStream getTransfersListJsonData() {
-		String url = baseUrl + "transfers/list" + tokenWithStuff;
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+		URL url = null;
 		try {
-			uri = new URI(url);
-			HttpGet method = new HttpGet(uri);
-			
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
-		} catch (Exception e) {
+			url = new URL(baseUrl + "transfers/list" + tokenWithStuff);
+		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		return data;
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			
+			return connection.getInputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public InputStream getMp4JsonData(int id) {
-		String url = baseUrl + "files/" + id + "/mp4" + tokenWithStuff;
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		URI uri;
-		InputStream data = null;
+		URL url = null;
 		try {
-			uri = new URI(url);
-			HttpGet method = new HttpGet(uri);
+			url = new URL(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
 			
-			HttpResponse response = httpClient.execute(method);
-			data = response.getEntity().getContent();
+			return connection.getInputStream();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return data;
+		return null;
 	}
 	
 	public static String resolveRedirect(String url) throws ClientProtocolException, IOException {
@@ -639,6 +666,31 @@ public class PutioUtils {
 	
 	public static void shareDownloadedUri(Uri uri, Context context) {
 		share(uri, context);
+	}
+	
+	public static void showDeleteDialog(final Context context, final int idToDelete) {
+		final Dialog deleteDialog = PutioDialog(context, context.getString(R.string.deletetitle), R.layout.dialog_delete);
+		deleteDialog.show();
+		
+		Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
+		deleteDelete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				deleteFileAsync(context, idToDelete);
+				Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
+				deleteDialog.dismiss();
+			}
+		});
+		
+		Button cancelDelete = (Button) deleteDialog.findViewById(R.id.button_delete_cancel);
+		cancelDelete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				deleteDialog.cancel();
+			}
+		});
 	}
 	
 	public boolean isConnected(Context context) {

@@ -155,5 +155,8 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
     </style>
+    
+    	<style name="Putio.DialogOrActivity" parent="@style/Theme.Putio">
+	</style>
 
 </resources>

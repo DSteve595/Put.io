@@ -44,6 +44,7 @@ import com.stevenschoen.putio.PutioTransfersService;
 import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
+import com.stevenschoen.putio.fragments.About;
 import com.stevenschoen.putio.fragments.FileDetails;
 import com.stevenschoen.putio.fragments.Files;
 import com.stevenschoen.putio.fragments.Transfers;
@@ -225,6 +226,16 @@ public class Putio extends SherlockFragmentActivity implements
 			
 			public boolean onMenuItemClick(MenuItem item) {
 				logOut();
+				return false;
+			}
+		});
+		
+		MenuItem buttonAbout = menu.findItem(R.id.menu_about);
+		buttonAbout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			
+			public boolean onMenuItemClick(MenuItem item) {
+				Intent aboutIntent = new Intent(Putio.this, AboutActivity.class);
+				startActivity(aboutIntent);
 				return false;
 			}
 		});

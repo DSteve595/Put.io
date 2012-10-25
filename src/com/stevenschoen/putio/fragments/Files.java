@@ -248,7 +248,6 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void setViewMode(int mode) {
-		Log.d("asdf", "mode is " + mode);
 		if (mode != viewMode) {
 			switch (mode) {
 			case VIEWMODE_LIST:
@@ -328,26 +327,26 @@ public final class Files extends SherlockFragment {
 				.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.context_download:
-				initDownload(getAdjustedPosition((int) info.id));
+				initDownloadFile(getAdjustedPosition((int) info.id));
 				return true;
 			case R.id.context_rename:
-				initRename(getAdjustedPosition((int) info.id));
+				initRenameFile(getAdjustedPosition((int) info.id));
 				return true;
 			case R.id.context_delete:
-				initDelete(getAdjustedPosition((int) info.id));
+				initDeleteFile(getAdjustedPosition((int) info.id));
 				return true;
 			default:
 				return super.onContextItemSelected(item);
 		}
 	}
 	
-	private void initDownload(final long id) {
+	private void initDownloadFile(final long id) {
 		utils.downloadFile(getSherlockActivity(),
 				fileData[(int) id].id, fileData[(int) id].name, PutioUtils.ACTION_NOTHING);
 	}
 	
-	private void initRename(final long id) {
-		final Dialog renameDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
+	private void initRenameFile(final long id) {
+		final Dialog renameDialog = PutioUtils.PutioDialog(getSherlockActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
 		renameDialog.show();
 		
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
@@ -393,28 +392,8 @@ public final class Files extends SherlockFragment {
 		});
 	}
 	
-	private void initDelete(final long id) {
-		final Dialog deleteDialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.deletetitle), R.layout.dialog_delete);
-		deleteDialog.show();
-		
-		Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
-		deleteDelete.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				utils.deleteFile(getSherlockActivity(), fileData[(int) id].id);
-				deleteDialog.dismiss();
-			}
-		});
-		
-		Button cancelDelete = (Button) deleteDialog.findViewById(R.id.button_delete_cancel);
-		cancelDelete.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				deleteDialog.cancel();
-			}
-		});
+	private void initDeleteFile(int id) {
+		PutioUtils.showDeleteDialog(getSherlockActivity(), fileData[id].id);
 	}
 	
 	public void toast(String message) {

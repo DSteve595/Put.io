@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putio"
-    android:versionCode="8"
-    android:versionName="1.3.1" >
+    android:versionCode="9"
+    android:versionName="1.3.2" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -97,11 +97,21 @@
                 <data android:scheme="magnet" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.AboutActivity"
+            android:theme="@style/Putio.DialogOrActivity" >
+        </activity>
 
         <service android:name=".PutioOpenFileService" >
         </service>
         <service android:name=".PutioTransfersService" >
         </service>
+
+        <activity
+            android:name="group.pals.android.lib.ui.filechooser.FileChooserActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
+
+        <service android:name="group.pals.android.lib.ui.filechooser.services.LocalFileProvider" />
     </application>
 
 </manifest>

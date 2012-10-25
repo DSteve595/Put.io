@@ -14,13 +14,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -42,7 +43,6 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putio.FlushedInputStream;
 import com.stevenschoen.putio.PutioFileData;
-import com.stevenschoen.putio.PutioOpenFileService;
 import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
@@ -181,7 +181,7 @@ public class FileDetails extends SherlockFragment {
 			protected PutioFileData doInBackground(Void... nothing) {
 				JSONObject obj;
 				try {					
-					InputStream is = utils.getFileJsonData(baseUrl + "files/" + origFileData.id + tokenWithStuff);
+					InputStream is = utils.getFileJsonData(getFileId());
 					String string = utils.convertStreamToString(is);
 					obj = new JSONObject(string).getJSONObject("file");
 
@@ -335,7 +335,7 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
-				utils.convertToMp4(getFileId());
+				utils.convertToMp4Async(getFileId());
 			}
 		});
 		
@@ -382,7 +382,7 @@ public class FileDetails extends SherlockFragment {
 	
 	private void initActionFile(final int mode) {
 		if (PutioUtils.idIsDownloaded(getFileId())) {
-			final Dialog dialog = utils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownload);
+			final Dialog dialog = PutioUtils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownload);
 			dialog.show();
 			
 			TextView textBody = (TextView) dialog.findViewById(R.id.text_redownloadbody);
@@ -441,9 +441,13 @@ public class FileDetails extends SherlockFragment {
 		}
 	}
 	
+	private void initDeleteFile() {
+		PutioUtils.showDeleteDialog(getSherlockActivity(), getFileId());
+	}
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.share, menu);
+		inflater.inflate(R.menu.filedetails, menu);
 		
 		MenuItem buttonShare = menu.findItem(R.id.menu_share);
 		buttonShare.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -451,6 +455,16 @@ public class FileDetails extends SherlockFragment {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				initShareFile();
+				return false;
+			}
+		});
+		
+		MenuItem buttonDelete = menu.findItem(R.id.menu_delete);
+		buttonDelete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				initDeleteFile();
 				return false;
 			}
 		});
@@ -502,9 +516,16 @@ public class FileDetails extends SherlockFragment {
 		
 		@Override
 		public void onPreExecute() {
-			gettingStreamDialog = utils.PutioDialog(getSherlockActivity(),
+			gettingStreamDialog = PutioUtils.PutioDialog(getSherlockActivity(),
 					getString(R.string.gettingstreamurltitle),
 					R.layout.dialog_loading);
+			gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					getStreamUrlAndPlay.this.cancel(true);
+				}
+			});
 			gettingStreamDialog.show();
 		}
 

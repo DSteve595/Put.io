@@ -1,0 +1,6 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<style name="Putio.DialogOrActivity" parent="@style/Putio.Dialog">
+	</style>
+
+</resources>

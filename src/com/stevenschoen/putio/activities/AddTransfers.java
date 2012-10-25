@@ -13,7 +13,6 @@ import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,12 +87,19 @@ public class AddTransfers extends SherlockFragmentActivity {
 				switch (mViewPager.getCurrentItem()) {
 					case 0:
 						if (!urlFragment.getEnteredUrls().isEmpty()) {
-							utils.addTransfers(urlFragment.getEnteredUrls());
+							utils.addTransfersByUrlAsync(urlFragment.getEnteredUrls());
 							Toast.makeText(AddTransfers.this, getString(R.string.torrentadded), Toast.LENGTH_LONG).show();
 						} else {
 							Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 						} break;
-					case 1: break;
+					case 1:
+						if (fileFragment.getChosenFile() != null) {
+							utils.addTransfersByFileAsync(fileFragment.getChosenFile().getAbsolutePath());
+							Toast.makeText(AddTransfers.this, getString(R.string.torrentadded), Toast.LENGTH_LONG).show();
+						} else {
+							Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
+							break;
+						}
 				}
 				finish();
 			}
