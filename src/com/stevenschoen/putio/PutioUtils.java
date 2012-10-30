@@ -155,7 +155,7 @@ public class PutioUtils {
 			connection.setDoOutput(true);
 			
 			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-		    output.write(urls);
+		    output.write("url=" + urls);
 		    output.flush();
 			connection.connect();
 			
