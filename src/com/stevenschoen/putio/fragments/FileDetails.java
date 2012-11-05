@@ -442,7 +442,7 @@ public class FileDetails extends SherlockFragment {
 	}
 	
 	private void initDeleteFile() {
-		PutioUtils.showDeleteDialog(getSherlockActivity(), getFileId());
+		PutioUtils.showDeleteFileDialog(getSherlockActivity(), getFileId());
 	}
 	
 	@Override

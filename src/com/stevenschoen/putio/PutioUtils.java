@@ -141,6 +141,44 @@ public class PutioUtils {
 		return false;
 	}
 	
+	private static boolean postRemoveTransfer(Integer... ids) {
+		URL url = null;
+		try {
+			url = new URL(baseUrl + "transfers/cancel" + tokenWithStuff);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
+			
+			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
+			String idsString = null;
+			for (int i = 0; i < ids.length; i++) {
+				if (i == 0) {
+					idsString = Integer.toString(ids[i]);
+				} else {
+					idsString = idsString + ", " + ids[i];
+				}
+			}
+		    output.write("transfer_ids=" + idsString);
+		    output.flush();
+			connection.connect();
+			
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	private boolean postAddTransferByUrl(String urls) {
 		URL url = null;
 		try {
@@ -274,6 +312,16 @@ public class PutioUtils {
 		
 		Intent invalidateListIntent = new Intent(Putio.invalidateListIntent);
 		context.sendBroadcast(invalidateListIntent);
+	}
+	
+	public static void removeTransferAsync(Context context, final Integer... ids) {
+		class RemoveTransferTask extends AsyncTask<Void, Void, Boolean> {
+			protected Boolean doInBackground(Void... nothing) {
+				Boolean saved = postRemoveTransfer(ids);
+				return null;
+			}
+		}
+		new RemoveTransferTask().execute();
 	}
 	
 	public void addTransfersByUrlAsync(final String urls) {
@@ -668,7 +716,7 @@ public class PutioUtils {
 		share(uri, context);
 	}
 	
-	public static void showDeleteDialog(final Context context, final int idToDelete) {
+	public static void showDeleteFileDialog(final Context context, final int idToDelete) {
 		final Dialog deleteDialog = PutioDialog(context, context.getString(R.string.deletetitle), R.layout.dialog_delete);
 		deleteDialog.show();
 		
@@ -689,6 +737,31 @@ public class PutioUtils {
 			@Override
 			public void onClick(View arg0) {
 				deleteDialog.cancel();
+			}
+		});
+	}
+	
+	public static void showRemoveTransferDialog(final Context context, final int idToDelete) {
+		final Dialog removeDialog = PutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
+		removeDialog.show();
+		
+		Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
+		removeRemove.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				removeTransferAsync(context, idToDelete);
+				Toast.makeText(context, context.getString(R.string.transferremoved), Toast.LENGTH_SHORT).show();
+				removeDialog.dismiss();
+			}
+		});
+		
+		Button cancelRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_cancel);
+		cancelRemove.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				removeDialog.cancel();
 			}
 		});
 	}

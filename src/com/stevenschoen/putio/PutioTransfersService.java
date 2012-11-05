@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.stevenschoen.putio.activities.Putio;
 
@@ -109,8 +108,13 @@ public class PutioTransfersService extends Service {
 							obj.getString("status_message"),
 							saveParentId);
 				}
+				PutioTransferData[] fileInverted = new PutioTransferData[file.length];
+				for (int i = 0; i < file.length; i++) {
+					fileInverted[i] = file[file.length - i - 1];
+				}
+				
 				Intent transfersUpdateIntent = new Intent(Putio.transfersUpdateIntent);
-				transfersUpdateIntent.putExtra("transfers", file);
+				transfersUpdateIntent.putExtra("transfers", fileInverted);
 				sendBroadcast(transfersUpdateIntent);
 			} catch (Exception e) {
 				e.printStackTrace();

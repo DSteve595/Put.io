@@ -22,8 +22,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -46,8 +44,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
@@ -392,8 +388,8 @@ public final class Files extends SherlockFragment {
 		});
 	}
 	
-	private void initDeleteFile(int id) {
-		PutioUtils.showDeleteDialog(getSherlockActivity(), fileData[id].id);
+	private void initDeleteFile(int idInList) {
+		PutioUtils.showDeleteFileDialog(getSherlockActivity(), fileData[idInList].id);
 	}
 	
 	public void toast(String message) {

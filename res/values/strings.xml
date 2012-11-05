@@ -27,6 +27,7 @@
     <string name="delete">Delete</string>
     <string name="search">Search</string>
     <string name="browse">Browse</string>
+    <string name="remove">Remove</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Preparing to stream</string>
@@ -34,6 +35,8 @@
     <string name="renametitle">Rename this file?</string>
     <string name="deletetitle">Delete this file?</string>
     <string name="deletebody">You can only get it back by adding it all over again.</string>
+    <string name="removetransfertitle">Remove this transfer?</string>
+    <string name="removetransferbody">The download will be cancelled.</string>
     <string name="downloadfinishedopentitle">Open file?</string>
     <string name="downloadfinishedsharetitle">Share file?</string>
     <string name="downloadfinishedbody">%1$s is done downloading.</string>
@@ -76,6 +79,7 @@
     <string name="searchyourfiles">Search your files</string>
     <string name="nofilesfound">No files were found.</string>
 	<string name="filedeleted">File deleted!</string>
+	<string name="transferremoved">Transfer removed!</string>
 
     <!-- About screen -->
     <string name="appbysteven">Android app by Steven Schoen.</string>

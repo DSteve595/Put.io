@@ -6,16 +6,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.stevenschoen.putio.PutioTransferData;
 import com.stevenschoen.putio.PutioTransferLayout;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.TransfersAdapter;
 import com.stevenschoen.putio.UIUtils;
@@ -146,6 +151,37 @@ public final class Transfers extends SherlockFragment {
 				break;
 			}
 			viewMode = mode;
+		}
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		
+		menu.setHeaderTitle(transfersData[info.position].name);
+	    MenuInflater inflater = getSherlockActivity().getMenuInflater();
+	    inflater.inflate(R.menu.context_transfers, menu);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		switch (item.getItemId()) {
+			case R.id.context_remove:
+				initRemoveTransfer((int) info.id);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
+	}
+	
+	private void initRemoveTransfer(int idInList) {
+		if(transfersData[idInList].status.matches("COMPLETED")) {
+			PutioUtils.removeTransferAsync(getActivity(), transfersData[idInList].id);
+		} else {
+			PutioUtils.showRemoveTransferDialog(getSherlockActivity(), transfersData[idInList].id);
 		}
 	}
 	
