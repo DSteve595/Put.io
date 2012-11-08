@@ -25,6 +25,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -766,6 +768,36 @@ public class PutioUtils {
 		});
 	}
 	
+	public PutioAccountInfo getAccountInfo() {
+		URL url = null;
+		try {
+			url = new URL(baseUrl + "account/info" + tokenWithStuff);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			
+			String string = convertStreamToString(connection.getInputStream());
+			try {
+				JSONObject json = new JSONObject(string).getJSONObject("info");
+				JSONObject disk = json.getJSONObject("disk");
+				return new PutioAccountInfo(
+						json.getString("username"),
+						json.getString("mail"),
+						disk.getLong("avail"),
+						disk.getLong("used"),
+						disk.getLong("size"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public boolean isConnected(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -781,8 +813,10 @@ public class PutioUtils {
 		if (bytes < unit)
 			return bytes + " B";
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
-		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
-				+ (si ? "" : "i");
+//		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
+		String pre = ("KMGTPE").charAt(exp - 1)
+//				+ (si ? "" : "i");
+				+ "";
 		return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 	
@@ -791,8 +825,10 @@ public class PutioUtils {
 		if (bytes < unit)
 			return new String[] { Long.toString(bytes), "B" };
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
-		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
-				+ (si ? "" : "i");
+//		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
+		String pre = ("KMGTPE").charAt(exp - 1)
+//				+ (si ? "" : "i");
+				+ "";
 		String one = String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
 		return one.split(" ");
 	}

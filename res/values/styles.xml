@@ -87,12 +87,15 @@
 
     <style name="Putio.ActionBarTabStyle" parent="@style/Widget.Sherlock.ActionBar.TabView">
         <item name="android:background">@drawable/putio_tab_indicator</item>
-        <item name="android:paddingLeft">32dp</item>
-        <item name="android:paddingRight">32dp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
     </style>
 
     <style name="Putio.ActionBarTabBarStyle" parent="@style/Widget.Sherlock.ActionBar.TabBar">
         <item name="android:background">#EEEEEE</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:fadingEdgeLength">0dp</item>
+        <item name="android:requiresFadingEdge">none</item>
     </style>
 
     <style name="Putio.Spinner" parent="@android:style/Widget.Spinner">
@@ -155,8 +158,7 @@
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
     </style>
-    
-    	<style name="Putio.DialogOrActivity" parent="@style/Theme.Putio">
-	</style>
+
+    <style name="Putio.DialogOrActivity" parent="@style/Theme.Putio"></style>
 
 </resources>

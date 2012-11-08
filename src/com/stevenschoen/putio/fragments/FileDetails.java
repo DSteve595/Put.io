@@ -122,7 +122,6 @@ public class FileDetails extends SherlockFragment {
 		
 		int fileDetailsLayoutId = R.layout.filedetails;
 		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
-			
 			fileDetailsLayoutId = R.layout.filedetailsgbhori;
 		} else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
 			fileDetailsLayoutId = R.layout.filedetailsgbvert;

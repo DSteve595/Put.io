@@ -25,8 +25,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -44,7 +46,7 @@ import com.stevenschoen.putio.PutioTransfersService;
 import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 import com.stevenschoen.putio.UIUtils;
-import com.stevenschoen.putio.fragments.About;
+import com.stevenschoen.putio.fragments.Account;
 import com.stevenschoen.putio.fragments.FileDetails;
 import com.stevenschoen.putio.fragments.Files;
 import com.stevenschoen.putio.fragments.Transfers;
@@ -81,16 +83,20 @@ public class Putio extends SherlockFragmentActivity implements
 	public static final String transfersUpdateIntent = "com.stevenschoen.putio.transfersupdate";
 	public static final String noNetworkIntent = "com.stevenschoen.putio.nonetwork";
 	
+	Account accountFragment;
 	Files filesFragment;
 	FileDetails fileDetailsFragment;
 	Transfers transfersFragment;
 	
+	private String titleAccount;
 	private String titleFiles;
 	private String titleTransfers;
 	private String[] titles;
-
+	
+	private View tabletAccountView;
 	private View tabletFilesView;
 	private View tabletTransfersView;
+	private int accountId;
 	private int filesId;
 	private int fileDetailsId;
 	private int transfersId;
@@ -108,13 +114,19 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		if (!UIUtils.isTablet(this) && getResources().getConfiguration().orientation ==
+				Configuration.ORIENTATION_LANDSCAPE) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		}
+		
 		if (UIUtils.isTablet(this)) {
 			actionBar.setDisplayShowTitleEnabled(false);
 		}
 		
+		titleAccount = getString(R.string.account).toUpperCase(Locale.US);
 		titleFiles = getString(R.string.files).toUpperCase(Locale.US);
 		titleTransfers = getString(R.string.transfers).toUpperCase(Locale.US);
-		titles = new String[] {titleFiles, titleTransfers};
+		titles = new String[] {titleAccount, titleFiles, titleTransfers};
 		
 		if (!sharedPrefs.getBoolean("loggedIn", false)) {
 			Intent setupIntent = new Intent(this, Setup.class);
@@ -175,8 +187,9 @@ public class Putio extends SherlockFragmentActivity implements
 			}
 		} else {
 			switch (tab.getPosition()) {
-				case 0: setContentView(tabletFilesView); break;
-				case 1: setContentView(tabletTransfersView); break;
+				case 0: setContentView(tabletAccountView); break;
+				case 1: setContentView(tabletFilesView); break;
+				case 2: setContentView(tabletTransfersView); break;
 			}
 		}
 	}
@@ -189,11 +202,9 @@ public class Putio extends SherlockFragmentActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
-		if (UIUtils.isTablet(this)) {
-			try {
-				outState.putInt("currentTab", actionBar.getSelectedTab().getPosition());
-			} catch (NullPointerException e) {
-			}
+		try {
+			outState.putInt("currentTab", actionBar.getSelectedTab().getPosition());
+		} catch (NullPointerException e) {
 		}
 	}
 	
@@ -259,9 +270,12 @@ public class Putio extends SherlockFragmentActivity implements
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
+				accountFragment = Account.newInstance();
+				return accountFragment;
+			case 1:
 				filesFragment = Files.newInstance();
 				return filesFragment;
-			case 1:
+			case 2:
 				transfersFragment = Transfers.newInstance();
 				return transfersFragment;
 			}
@@ -274,15 +288,17 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 		
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return titleFiles;
+				return titleAccount;
 			case 1:
+				return titleFiles;
+			case 2:
 				return titleTransfers;
 			}
 			return null;
@@ -294,14 +310,19 @@ public class Putio extends SherlockFragmentActivity implements
 		utils = new PutioUtils(token, sharedPrefs);
 		
 		transfersServiceIntent = new Intent(this, PutioTransfersService.class);
-		if (!isTransfersServiceRunning()) {
-			startService(transfersServiceIntent);
-		}
 		
 		if (UIUtils.isTablet(this)) {
 			setupTabletLayout();
 		} else {
 			setupPhoneLayout();
+		}
+		
+		int navItem = 1;
+		if (savedInstanceState != null) {
+			navItem = savedInstanceState.getInt("currentTab");
+		}
+		if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
+			actionBar.setSelectedNavigationItem(navItem);
 		}
 	}
 	
@@ -317,16 +338,18 @@ public class Putio extends SherlockFragmentActivity implements
 		// primary sections
 		// of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+				getSupportFragmentManager());		
 		
-		
-		String filesFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
+		String accountFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
+		accountFragment = (Account) getSupportFragmentManager().findFragmentByTag(accountFragmentName);
+		String filesFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 1);
 		filesFragment = (Files) getSupportFragmentManager().findFragmentByTag(filesFragmentName);
-		String transfersFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 1);
+		String transfersFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 2);
 		transfersFragment = (Transfers) getSupportFragmentManager().findFragmentByTag(transfersFragmentName);
 		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
@@ -338,7 +361,9 @@ public class Putio extends SherlockFragmentActivity implements
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 					@Override
 					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
+						if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
+							actionBar.setSelectedNavigationItem(position);
+						}
 					}
 				});
 
@@ -355,7 +380,15 @@ public class Putio extends SherlockFragmentActivity implements
 		}
 	}
 	
-	private void setupTabletLayout() {		
+	private void setupTabletLayout() {
+		// Account
+		int tabletAccountLayoutId = R.layout.tablet_account;
+		
+		tabletAccountView = getLayoutInflater().inflate(tabletAccountLayoutId, null);
+		accountId = R.id.fragment_account;
+		
+		accountFragment = (Account) getSupportFragmentManager().findFragmentById(R.id.fragment_account);
+		
 		// Files
 		int tabletFilesLayoutId = R.layout.tablet_files;
 		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(this, getResources().getDisplayMetrics().heightPixels) >= 600) {
@@ -390,7 +423,7 @@ public class Putio extends SherlockFragmentActivity implements
 		transfersFragment = (Transfers) getSupportFragmentManager().findFragmentById(R.id.fragment_transfers);
 		
 		// Other		
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 3; i++) {
 			actionBar.addTab(actionBar.newTab()
 					.setText(titles[i])
 					.setTabListener(this));
@@ -411,14 +444,10 @@ public class Putio extends SherlockFragmentActivity implements
 				}
 			}
 		}
-		
-		if (savedInstanceState != null) {
-			actionBar.setSelectedNavigationItem(savedInstanceState.getInt("currentTab"));
-		}
 	}
 	
 	public void showFilesAndHighlightFile(int parentId, int id) {
-		actionBar.setSelectedNavigationItem(0);
+		actionBar.setSelectedNavigationItem(1);
 		filesFragment.highlightFile(parentId, id);
 	}
 	
@@ -450,6 +479,13 @@ public class Putio extends SherlockFragmentActivity implements
 	@Override
 	public void onFDFinished() {
 		removeFD(R.anim.slide_out_left);
+	}
+	
+	@Override
+	public void transfersReady() {
+		if (!isTransfersServiceRunning()) {
+			startService(new Intent(this, PutioTransfersService.class));
+		}
 	}
 	
 	@Override
@@ -542,8 +578,14 @@ public class Putio extends SherlockFragmentActivity implements
 			for (int i = 0; i < transferParcelables.length; i++) {
 				transfers[i] = (PutioTransferData) transferParcelables[i];
 			}
+			
 			transfersFragment.updateTransfers(transfers);
 			transfersFragment.setHasNetwork(true);
+			
+			if (intent.getBooleanExtra("changed", false)) {
+				accountFragment.invalidateAccountInfo();
+				filesFragment.invalidateList();
+			}
 		}
 	};
 	
@@ -605,7 +647,7 @@ public class Putio extends SherlockFragmentActivity implements
 	public void onWindowFocusChanged(boolean hasFocus) {
 		if (!hasFocus && isTransfersServiceRunning()) {
 			stopService(transfersServiceIntent);
-		} else if (hasFocus && !isTransfersServiceRunning()) {
+		} else if (hasFocus && !isTransfersServiceRunning() && transfersFragment != null) {
 			startService(transfersServiceIntent);
 		}
 		super.onWindowFocusChanged(hasFocus);

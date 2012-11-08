@@ -56,6 +56,7 @@
     <string name="streamerror">Sorry, there was an error streaming your video.</string>
 
     <!-- Other stuff -->
+    <string name="account">Account</string>
     <string name="files">Your files</string>
     <string name="transfers">Transfers</string>
     <string name="loginsuccess">Successfully logged in!</string>

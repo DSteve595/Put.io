@@ -541,7 +541,7 @@ public final class Files extends SherlockFragment {
 						file[i].name,
 						getString(R.string.size_is)
 								+ " "
-								+ PutioUtils.humanReadableByteCount(file[i].size, true),
+								+ PutioUtils.humanReadableByteCount(file[i].size, false),
 						iconResource));
 			}
 		}

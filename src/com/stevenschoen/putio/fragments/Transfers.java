@@ -52,10 +52,14 @@ public final class Transfers extends SherlockFragment {
 	
     public interface Callbacks {
 
+    	public void transfersReady();
         public void onTransferSelected(int parentId, int id);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
+    	@Override
+    	public void transfersReady() {
+    	}
         @Override
         public void onTransferSelected(int parentId, int id) {
         }
@@ -198,6 +202,7 @@ public final class Transfers extends SherlockFragment {
         super.onAttach(activity);
         
     	mCallbacks = (Callbacks) activity;
+    	mCallbacks.transfersReady();
     }
     
     @Override

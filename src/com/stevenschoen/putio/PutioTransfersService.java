@@ -30,6 +30,9 @@ public class PutioTransfersService extends Service {
 
 	private Runnable updateTransfersRunnable;
 	
+	private PutioTransferData[] files;
+	private PutioTransferData[] filesOld;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -78,7 +81,7 @@ public class PutioTransfersService extends Service {
 				json = new JSONObject(string);
 				
 				array = json.getJSONArray("transfers");
-				PutioTransferData[] file = new PutioTransferData[array.length()];
+				files = new PutioTransferData[array.length()];
 				
 				for (int i = 0; i < array.length(); i++) {
 					JSONObject obj = array.getJSONObject(i);
@@ -93,7 +96,7 @@ public class PutioTransfersService extends Service {
 						saveParentId = obj.getInt("save_parent_id");
 					} catch (JSONException e) {
 					}
-					file[i] = new PutioTransferData(
+					files[i] = new PutioTransferData(
 							obj.getInt("id"),
 							fileId,
 							obj.getLong("size"),
@@ -108,13 +111,19 @@ public class PutioTransfersService extends Service {
 							obj.getString("status_message"),
 							saveParentId);
 				}
-				PutioTransferData[] fileInverted = new PutioTransferData[file.length];
-				for (int i = 0; i < file.length; i++) {
-					fileInverted[i] = file[file.length - i - 1];
+				
+				PutioTransferData[] filesInverted = new PutioTransferData[files.length];
+				for (int i = 0; i < files.length; i++) {
+					filesInverted[i] = files[files.length - i - 1];
 				}
 				
 				Intent transfersUpdateIntent = new Intent(Putio.transfersUpdateIntent);
-				transfersUpdateIntent.putExtra("transfers", fileInverted);
+				if (files != filesOld) {
+					transfersUpdateIntent.putExtra("changed", true);
+				}
+				filesOld = files;
+				
+				transfersUpdateIntent.putExtra("transfers", filesInverted);
 				sendBroadcast(transfersUpdateIntent);
 			} catch (Exception e) {
 				e.printStackTrace();

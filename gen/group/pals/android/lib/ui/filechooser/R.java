@@ -8,43 +8,43 @@ package group.pals.android.lib.ui.filechooser;
 
 public final class R {
 	public static final class id {
-		public static final int afc_context_menu_view_listview_menu = 0x7f0c0042;
-		public static final int afc_filechooser_activity_view_locations = 0x7f0c0048;
-		public static final int afc_filechooser_activity_menuitem_home = 0x7f0c00c5;
-		public static final int afc_filechooser_activity_menugroup_view = 0x7f0c00c9;
-		public static final int afc_settings_sort_view_button_sort_by_size_desc = 0x7f0c005a;
-		public static final int afc_settings_sort_view_button_sort_by_date_desc = 0x7f0c005c;
-		public static final int afc_filechooser_activity_button_go_back = 0x7f0c0044;
-		public static final int afc_filechooser_activity_footer_view_divider = 0x7f0c004f;
-		public static final int afc_file_item_textview_filename = 0x7f0c0054;
-		public static final int afc_filechooser_activity_viewgroup_files = 0x7f0c004b;
-		public static final int afc_filechooser_activity_menugroup_navigator = 0x7f0c00c4;
-		public static final int afc_filechooser_activity_menuitem_reload = 0x7f0c00c6;
-		public static final int afc_filechooser_activity_textview_full_dir_name = 0x7f0c004a;
-		public static final int afc_filechooser_activity_header_view_divider = 0x7f0c0049;
-		public static final int afc_file_item_imageview_icon = 0x7f0c0053;
-		public static final int afc_filechooser_activity_viewgroup_header = 0x7f0c0043;
-		public static final int afc_filechooser_activity_menugroup_editor = 0x7f0c00cb;
-		public static final int afc_settings_sort_view_button_sort_by_date_asc = 0x7f0c005b;
-		public static final int afc_filechooser_activity_view_files_footer_view = 0x7f0c004e;
-		public static final int afc_filechooser_activity_viewgroup_button_locations = 0x7f0c0046;
-		public static final int afc_filechooser_activity_menuitem_sort = 0x7f0c00c8;
-		public static final int afc_settings_sort_view_button_sort_by_name_asc = 0x7f0c0057;
-		public static final int afc_filechooser_activity_button_ok = 0x7f0c0052;
-		public static final int afc_filechooser_activity_button_go_forward = 0x7f0c0045;
-		public static final int afc_filechooser_activity_menugroup_sorter = 0x7f0c00c7;
-		public static final int afc_settings_sort_view_button_sort_by_size_asc = 0x7f0c0059;
-		public static final int afc_simple_text_input_view_text1 = 0x7f0c005d;
-		public static final int afc_settings_sort_view_button_sort_by_name_desc = 0x7f0c0058;
-		public static final int afc_filechooser_activity_viewgroup_footer_container = 0x7f0c004c;
-		public static final int afc_filechooser_activity_textview_saveas_filename = 0x7f0c0051;
-		public static final int afc_file_item_textview_file_info = 0x7f0c0055;
-		public static final int afc_file_item_checkbox_selection = 0x7f0c0056;
-		public static final int afc_filechooser_activity_menuitem_switch_viewmode = 0x7f0c00ca;
-		public static final int afc_filechooser_activity_menuitem_new_folder = 0x7f0c00cc;
-		public static final int afc_filechooser_activity_view_locations_container = 0x7f0c0047;
-		public static final int afc_filechooser_activity_view_files_container = 0x7f0c004d;
-		public static final int afc_filechooser_activity_viewgroup_footer = 0x7f0c0050;
+		public static final int afc_context_menu_view_listview_menu = 0x7f0c004a;
+		public static final int afc_filechooser_activity_view_locations = 0x7f0c0050;
+		public static final int afc_filechooser_activity_menuitem_home = 0x7f0c00ce;
+		public static final int afc_filechooser_activity_menugroup_view = 0x7f0c00d2;
+		public static final int afc_settings_sort_view_button_sort_by_size_desc = 0x7f0c0062;
+		public static final int afc_settings_sort_view_button_sort_by_date_desc = 0x7f0c0064;
+		public static final int afc_filechooser_activity_button_go_back = 0x7f0c004c;
+		public static final int afc_filechooser_activity_footer_view_divider = 0x7f0c0057;
+		public static final int afc_file_item_textview_filename = 0x7f0c005c;
+		public static final int afc_filechooser_activity_viewgroup_files = 0x7f0c0053;
+		public static final int afc_filechooser_activity_menugroup_navigator = 0x7f0c00cd;
+		public static final int afc_filechooser_activity_menuitem_reload = 0x7f0c00cf;
+		public static final int afc_filechooser_activity_textview_full_dir_name = 0x7f0c0052;
+		public static final int afc_filechooser_activity_header_view_divider = 0x7f0c0051;
+		public static final int afc_file_item_imageview_icon = 0x7f0c005b;
+		public static final int afc_filechooser_activity_viewgroup_header = 0x7f0c004b;
+		public static final int afc_filechooser_activity_menugroup_editor = 0x7f0c00d4;
+		public static final int afc_settings_sort_view_button_sort_by_date_asc = 0x7f0c0063;
+		public static final int afc_filechooser_activity_view_files_footer_view = 0x7f0c0056;
+		public static final int afc_filechooser_activity_viewgroup_button_locations = 0x7f0c004e;
+		public static final int afc_filechooser_activity_menuitem_sort = 0x7f0c00d1;
+		public static final int afc_settings_sort_view_button_sort_by_name_asc = 0x7f0c005f;
+		public static final int afc_filechooser_activity_button_ok = 0x7f0c005a;
+		public static final int afc_filechooser_activity_button_go_forward = 0x7f0c004d;
+		public static final int afc_filechooser_activity_menugroup_sorter = 0x7f0c00d0;
+		public static final int afc_settings_sort_view_button_sort_by_size_asc = 0x7f0c0061;
+		public static final int afc_simple_text_input_view_text1 = 0x7f0c0065;
+		public static final int afc_settings_sort_view_button_sort_by_name_desc = 0x7f0c0060;
+		public static final int afc_filechooser_activity_viewgroup_footer_container = 0x7f0c0054;
+		public static final int afc_filechooser_activity_textview_saveas_filename = 0x7f0c0059;
+		public static final int afc_file_item_textview_file_info = 0x7f0c005d;
+		public static final int afc_file_item_checkbox_selection = 0x7f0c005e;
+		public static final int afc_filechooser_activity_menuitem_switch_viewmode = 0x7f0c00d3;
+		public static final int afc_filechooser_activity_menuitem_new_folder = 0x7f0c00d5;
+		public static final int afc_filechooser_activity_view_locations_container = 0x7f0c004f;
+		public static final int afc_filechooser_activity_view_files_container = 0x7f0c0055;
+		public static final int afc_filechooser_activity_viewgroup_footer = 0x7f0c0058;
 	}
 	public static final class style {
 		public static final int afc_button_location = 0x7f0b0002;
@@ -127,16 +127,16 @@ public final class R {
 		public static final int afc_file_chooser_activity = 0x7f0d0000;
 	}
 	public static final class layout {
-		public static final int afc_context_menu_view = 0x7f03001e;
-		public static final int afc_view_locations_divider = 0x7f030025;
-		public static final int afc_context_menu_tiem = 0x7f03001d;
-		public static final int afc_button_location = 0x7f03001c;
-		public static final int afc_simple_text_input_view = 0x7f030024;
-		public static final int afc_listview_files = 0x7f030022;
-		public static final int afc_settings_sort_view = 0x7f030023;
-		public static final int afc_file_item = 0x7f030020;
-		public static final int afc_gridview_files = 0x7f030021;
-		public static final int afc_file_chooser = 0x7f03001f;
+		public static final int afc_context_menu_view = 0x7f030021;
+		public static final int afc_view_locations_divider = 0x7f030028;
+		public static final int afc_context_menu_tiem = 0x7f030020;
+		public static final int afc_button_location = 0x7f03001f;
+		public static final int afc_simple_text_input_view = 0x7f030027;
+		public static final int afc_listview_files = 0x7f030025;
+		public static final int afc_settings_sort_view = 0x7f030026;
+		public static final int afc_file_item = 0x7f030023;
+		public static final int afc_gridview_files = 0x7f030024;
+		public static final int afc_file_chooser = 0x7f030022;
 	}
 	public static final class drawable {
 		public static final int afc_file = 0x7f02007a;
