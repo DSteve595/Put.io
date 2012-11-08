@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putio"
-    android:versionCode="12"
+    android:versionCode="13"
     android:versionName="1.4" >
 
     <uses-sdk

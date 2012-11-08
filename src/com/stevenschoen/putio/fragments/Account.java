@@ -74,10 +74,15 @@ public class Account extends SherlockFragment {
 			
 			@Override
 			protected void onPostExecute(final PutioAccountInfo info) {
-				textName.setText(info.username);
-				textEmail.setText(info.email);
-				textDiskFree.setText(PutioUtils.humanReadableByteCount(info.diskAvailable, false));
-				textDiskTotal.setText(PutioUtils.humanReadableByteCount(info.diskSize, false));
+				try {
+					textName.setText(info.username);
+					textEmail.setText(info.email);
+					textDiskFree.setText(PutioUtils.humanReadableByteCount(info.diskAvailable, false));
+					textDiskTotal.setText(PutioUtils.humanReadableByteCount(info.diskSize, false));
+				} catch (NullPointerException e) {
+					textDiskFree.setText(PutioUtils.humanReadableByteCount(0, false));
+					textDiskTotal.setText(PutioUtils.humanReadableByteCount(0, false));
+				}
 			}
 		}
 		new GetAccountInfoTask().execute();
