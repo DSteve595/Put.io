@@ -1,11 +1,11 @@
 package com.stevenschoen.putio.fragments;
 
+import java.net.SocketTimeoutException;
+
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +61,8 @@ public class Account extends SherlockFragment {
 		textDiskFree = (TextView) view.findViewById(R.id.text_storage_amountfree);
 		textDiskTotal = (TextView) view.findViewById(R.id.text_storage_amounttotal);
 		
+		invalidateAccountInfo();
+		
 		return view;
 	}
 	
@@ -69,19 +71,20 @@ public class Account extends SherlockFragment {
 
 			@Override
 			protected PutioAccountInfo doInBackground(Void... nothing) {
-				return utils.getAccountInfo();
+				try {
+					return utils.getAccountInfo();
+				} catch (SocketTimeoutException e) {
+					return null;
+				}
 			}
 			
 			@Override
 			protected void onPostExecute(final PutioAccountInfo info) {
-				try {
+				if (info != null) {
 					textName.setText(info.username);
 					textEmail.setText(info.email);
 					textDiskFree.setText(PutioUtils.humanReadableByteCount(info.diskAvailable, false));
 					textDiskTotal.setText(PutioUtils.humanReadableByteCount(info.diskSize, false));
-				} catch (NullPointerException e) {
-					textDiskFree.setText(PutioUtils.humanReadableByteCount(0, false));
-					textDiskTotal.setText(PutioUtils.humanReadableByteCount(0, false));
 				}
 			}
 		}

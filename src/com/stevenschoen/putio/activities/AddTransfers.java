@@ -1,5 +1,7 @@
 package com.stevenschoen.putio.activities;
 
+import org.apache.commons.io.FileUtils;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -94,8 +96,12 @@ public class AddTransfers extends SherlockFragmentActivity {
 						} break;
 					case 1:
 						if (fileFragment.getChosenFile() != null) {
-							utils.addTransfersByFileAsync(fileFragment.getChosenFile().getAbsolutePath());
-							Toast.makeText(AddTransfers.this, getString(R.string.torrentadded), Toast.LENGTH_LONG).show();
+							if (FileUtils.sizeOf(fileFragment.getChosenFile()) > FileUtils.ONE_MB) {
+								Toast.makeText(AddTransfers.this, getString(R.string.filetoobig), Toast.LENGTH_LONG).show();
+							} else {
+								utils.addTransfersByFileAsync(fileFragment.getChosenFile().getAbsolutePath());
+								Toast.makeText(AddTransfers.this, getString(R.string.torrentadded), Toast.LENGTH_LONG).show();
+							}
 						} else {
 							Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 							break;

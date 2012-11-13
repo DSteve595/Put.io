@@ -29,7 +29,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="bold" />
     </LinearLayout>
-
+
     <Button
         android:id="@+id/button_addtransferfile_browse"
         style="@style/Putio.Button"

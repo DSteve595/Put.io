@@ -52,6 +52,7 @@
     <string name="cantopenbecausetype">None of your apps can open this type of file.</string>
     <string name="transferfailed">This transfer failed to download.</string>
     <string name="nothingenteredtofetch">Enter something to fetch first!</string>
+    <string name="filetoobig">This file is too big! Are you sure it\'s a torrent?</string>
     <string name="nofilechosen">Browse for a file first!</string>
     <string name="streamerror">Sorry, there was an error streaming your video.</string>
 

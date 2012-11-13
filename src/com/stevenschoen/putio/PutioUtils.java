@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
@@ -13,13 +14,15 @@ import java.util.Locale;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -41,7 +44,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -220,21 +222,17 @@ public class PutioUtils {
 		}
 		
 		try {
-			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setConnectTimeout(8000);
-			connection.setDoOutput(true);
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(url.toString());
 			
-			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-			InputStream fileStream = FileUtils.openInputStream(new File(filePath));
-			Log.d("asdf", new File(filePath).getAbsolutePath());
-			IOUtils.copy(fileStream, output);
-		    output.flush();
-		    
-			connection.connect();
-//			Log.d("asdf", convertStreamToString(connection.getInputStream()));
-			Log.d("asdf", convertStreamToString(connection.getErrorStream()));
+			MultipartEntity reqEntity = new MultipartEntity();
+			reqEntity.addPart("file", new FileBody(new File(filePath)));
+
+			httppost.setEntity(reqEntity);
+
+			HttpResponse response = httpclient.execute(httppost);
 			
-			int responseCode = connection.getResponseCode();
+			int responseCode = response.getStatusLine().getStatusCode();
 			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				return true;
 			} else {
@@ -392,7 +390,7 @@ public class PutioUtils {
 		}
 	}
 	
-	public InputStream getFilesListJsonData(int id) {
+	public InputStream getFilesListJsonData(int id) throws SocketTimeoutException {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "files/list" + tokenWithStuff);
@@ -407,13 +405,16 @@ public class PutioUtils {
 			connection.setConnectTimeout(8000);
 			
 			return connection.getInputStream();
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	public InputStream getFilesSearchJsonData(String query) throws UnsupportedEncodingException {
+
+	public InputStream getFilesSearchJsonData(String query)
+			throws UnsupportedEncodingException, SocketTimeoutException {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1" + tokenWithStuff);
@@ -425,13 +426,15 @@ public class PutioUtils {
 			connection.setConnectTimeout(8000);
 			
 			return connection.getInputStream();
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public InputStream getFileJsonData(int id) {
+	public InputStream getFileJsonData(int id) throws SocketTimeoutException {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "files/" + id + tokenWithStuff);
@@ -443,6 +446,8 @@ public class PutioUtils {
 			connection.setConnectTimeout(8000);
 			
 			return connection.getInputStream();
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -575,7 +580,7 @@ public class PutioUtils {
 		context.startActivity(streamIntent);
 	}
 	
-	public InputStream getTransfersListJsonData() {
+	public InputStream getTransfersListJsonData() throws SocketTimeoutException {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "transfers/list" + tokenWithStuff);
@@ -587,13 +592,15 @@ public class PutioUtils {
 			connection.setConnectTimeout(8000);
 			
 			return connection.getInputStream();
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public InputStream getMp4JsonData(int id) {
+	public InputStream getMp4JsonData(int id) throws SocketTimeoutException {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
@@ -605,6 +612,8 @@ public class PutioUtils {
 			connection.setConnectTimeout(8000);
 			
 			return connection.getInputStream();
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -768,7 +777,7 @@ public class PutioUtils {
 		});
 	}
 	
-	public PutioAccountInfo getAccountInfo() {
+	public PutioAccountInfo getAccountInfo() throws SocketTimeoutException {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "account/info" + tokenWithStuff);
@@ -783,15 +792,42 @@ public class PutioUtils {
 			try {
 				JSONObject json = new JSONObject(string).getJSONObject("info");
 				JSONObject disk = json.getJSONObject("disk");
+				String username = null;
+				String mail = null;
+				long avail = 0;
+				long used = 0;
+				long size = 0;
+				try {
+					username = json.getString("username");
+				} catch (JSONException e) {
+				}
+				try {
+					mail = json.getString("mail");
+				} catch (JSONException e) {
+				}
+				try {
+					avail = disk.getLong("avail");
+				} catch (JSONException e) {
+				}
+				try {
+					used = disk.getLong("used");
+				} catch (JSONException e) {
+				}
+				try {
+					size = disk.getLong("size");
+				} catch (JSONException e) {
+				}
 				return new PutioAccountInfo(
-						json.getString("username"),
-						json.getString("mail"),
-						disk.getLong("avail"),
-						disk.getLong("used"),
-						disk.getLong("size"));
+						username,
+						mail,
+						avail,
+						used,
+						size);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

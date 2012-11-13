@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
@@ -583,6 +584,8 @@ public final class Files extends SherlockFragment {
 	}
 	
 	class updateFilesTask extends AsyncTask<Integer, Void, PutioFileData[]> {
+		boolean noNetwork = false;
+		
 		private int highlightId;
 		
 		private int newId;
@@ -641,7 +644,7 @@ public final class Files extends SherlockFragment {
 		}
 		
 		@Override
-		protected PutioFileData[] doInBackground(Integer... highlightId) {
+		protected PutioFileData[] doInBackground(Integer... highlightId) {			
 			if (highlightId != null) {
 				this.highlightId = highlightId[0];
 			}
@@ -695,6 +698,9 @@ public final class Files extends SherlockFragment {
 				}
 				
 				return file;
+			} catch (SocketTimeoutException e) {
+				noNetwork = true;
+				return null;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -703,10 +709,16 @@ public final class Files extends SherlockFragment {
 
 		public void onPostExecute(final PutioFileData[] file) {
 			populateList(file, newId, origIdBefore, highlightId);
+			
+			if (noNetwork) {
+				Toast.makeText(getSherlockActivity(), "No connection!",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 	
 	class searchFilesTask extends AsyncTask<String, Void, PutioFileData[]> {
+		boolean noNetwork = false;
 		
 		public void onPreExecute() {
 			isSearch = true;
@@ -714,7 +726,7 @@ public final class Files extends SherlockFragment {
 			currentFolderId = -1;
 		}
 		
-		protected PutioFileData[] doInBackground(String... query) {
+		protected PutioFileData[] doInBackground(String... query) {			
 			JSONObject json;
 			JSONArray array;
 			
@@ -752,6 +764,10 @@ public final class Files extends SherlockFragment {
 							obj.getLong("size"));
 				}
 				return file;
+			} catch (SocketTimeoutException e) {
+				noNetwork = true;
+				
+				return null;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -760,6 +776,11 @@ public final class Files extends SherlockFragment {
 		
 		public void onPostExecute(PutioFileData[] file) {
 			populateList(file, -1, -2);
+			
+			if (noNetwork) {
+				Toast.makeText(getSherlockActivity(), "No connection!",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 	

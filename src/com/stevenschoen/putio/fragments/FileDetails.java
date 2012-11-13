@@ -5,6 +5,7 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -22,7 +23,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -179,7 +179,7 @@ public class FileDetails extends SherlockFragment {
 		class updateFileTask extends AsyncTask<Void, Void, PutioFileData> {
 			protected PutioFileData doInBackground(Void... nothing) {
 				JSONObject obj;
-				try {					
+				try {
 					InputStream is = utils.getFileJsonData(getFileId());
 					String string = utils.convertStreamToString(is);
 					obj = new JSONObject(string).getJSONObject("file");
@@ -195,6 +195,8 @@ public class FileDetails extends SherlockFragment {
 							obj.getInt("id"),
 							obj.getLong("size"));
 					return newFileData;
+				} catch (SocketTimeoutException e) {
+					return null;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -360,9 +362,14 @@ public class FileDetails extends SherlockFragment {
 						mp4Status = obj.getString("status");
 						
 						return null;
+					} catch (SocketTimeoutException e) {
+						setBarGraphics(MP4_NOT_AVAILABLE, buttonConvert,
+								view.findViewById(R.id.holder_filepreview_available),
+								view.findViewById(R.id.holder_filepreview_converting));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
 					return null;
 				}
 				

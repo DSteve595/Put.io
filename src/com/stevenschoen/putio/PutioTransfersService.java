@@ -1,6 +1,7 @@
 package com.stevenschoen.putio;
 
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.stevenschoen.putio.activities.Putio;
 
@@ -74,8 +76,18 @@ public class PutioTransfersService extends Service {
 			JSONObject json;
 			JSONArray array;
 			
+			InputStream is = null;
+			
 			try {
-				InputStream is = utils.getTransfersListJsonData();
+				try {
+					is = utils.getTransfersListJsonData();
+				} catch (SocketTimeoutException e) {
+					Intent noNetworkIntent = new Intent(Putio.noNetworkIntent);
+					noNetworkIntent.putExtra("from", "transfers");
+					sendBroadcast(noNetworkIntent);
+					
+					return null;
+				}
 
 				String string = utils.convertStreamToString(is);
 				json = new JSONObject(string);
@@ -87,11 +99,16 @@ public class PutioTransfersService extends Service {
 					JSONObject obj = array.getJSONObject(i);
 					
 					int fileId = 0;
+					long size = 0;
+					int saveParentId = 0;
 					try {
 						fileId = obj.getInt("file_id");
 					} catch (JSONException e) {
 					}
-					int saveParentId = 0;
+					try {
+						size = obj.getInt("size");
+					} catch (JSONException e) {
+					}
 					try {
 						saveParentId = obj.getInt("save_parent_id");
 					} catch (JSONException e) {
@@ -99,7 +116,7 @@ public class PutioTransfersService extends Service {
 					files[i] = new PutioTransferData(
 							obj.getInt("id"),
 							fileId,
-							obj.getLong("size"),
+							size,
 							obj.getString("name"),
 							obj.getString("estimated_time"),
 							obj.getString("created_at"),
@@ -113,12 +130,16 @@ public class PutioTransfersService extends Service {
 				}
 				
 				PutioTransferData[] filesInverted = new PutioTransferData[files.length];
+				boolean changed = false;
 				for (int i = 0; i < files.length; i++) {
 					filesInverted[i] = files[files.length - i - 1];
+					if (filesOld != null && (files.length != filesOld.length || files[i].id != filesOld[i].id)) {
+						changed = true;
+					}
 				}
 				
 				Intent transfersUpdateIntent = new Intent(Putio.transfersUpdateIntent);
-				if (files != filesOld) {
+				if (changed) {
 					transfersUpdateIntent.putExtra("changed", true);
 				}
 				filesOld = files;
