@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
@@ -114,6 +115,8 @@ public class Setup extends SherlockActivity {
 						"https://api.put.io/v2/oauth2/access_token?client_id=83&client_secret=6xf3yaxu62uj1cjbzfvz&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
 								+ code);
 				saveTokenFromWeb(finalUrl);
+			} else if (url.contains("token=")) {
+				saveToken(url.substring(url.indexOf("token=") + 6));
 			}
 		}
 	}
@@ -178,6 +181,7 @@ public class Setup extends SherlockActivity {
 		sharedPrefs.edit().putBoolean("loggedIn", true).commit();
 		Toast.makeText(this, R.string.loginsuccess, Toast.LENGTH_SHORT).show();
 		setResult(RESULT_OK);
+		startActivity(new Intent(this, Putio.class));
 		finish();
 	}
 }

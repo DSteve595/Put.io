@@ -596,8 +596,12 @@ public final class Files extends SherlockFragment {
 			JSONArray array;
 			
 			try {
+//				take this out
+//				FileUtils.writeStringToFile(new File("/sdcard/"), data)
+				
 				File input = new File(getSherlockActivity().getCacheDir(), currentFolderId + ".json");
 				FileInputStream fis = FileUtils.openInputStream(input);
+				FileInputStream fis2 = fis;
 				
                 json = new JSONObject(utils.convertStreamToString(fis));
                 fis.close();
@@ -614,9 +618,17 @@ public final class Files extends SherlockFragment {
                 origId = newId;
 				PutioFileData[] file = new PutioFileData[array.length()];
 				
+				FileUtils.writeStringToFile(new File("/sdcard/putio.log"), utils.convertStreamToString(fis2), true);
+				fis2.close();
+				
 				for (int i = 0; i < array.length(); i++) {
 					JSONObject obj = array.getJSONObject(i);
 					
+					long size = 0;
+					try {
+						size = obj.getLong("size");
+					} catch (JSONException e) {
+					}
 					file[i] = new PutioFileData(
 							utils.stringToBooleanHack(obj.getString("is_shared")),
 							obj.getString("name"),
@@ -626,7 +638,7 @@ public final class Files extends SherlockFragment {
 							utils.stringToBooleanHack(obj.getString("is_mp4_available")),
 							obj.getString("content_type"),
 							obj.getInt("id"),
-							obj.getLong("size"));
+							size);
 				}
 				
 				populateList(file, newId, origIdBefore);
@@ -639,6 +651,16 @@ public final class Files extends SherlockFragment {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (JSONException e) {
+				StringBuilder sb = new StringBuilder();
+				for (StackTraceElement element : e.getStackTrace()) {
+					sb.append(element.toString());
+					sb.append("\n");
+				}
+				try {
+					FileUtils.writeStringToFile(new File("/sdcard/putio.log"), sb.toString(), true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				e.printStackTrace();
 			}
 		}
@@ -673,7 +695,12 @@ public final class Files extends SherlockFragment {
 				
 				for (int i = 0; i < array.length(); i++) {
 					JSONObject obj = array.getJSONObject(i);
-
+					
+					long size = 0;
+					try {
+						size = obj.getLong("size");
+					} catch (JSONException e) {
+					}
 					file[i] = new PutioFileData(
 							utils.stringToBooleanHack(obj.getString("is_shared")),
 							obj.getString("name"),
@@ -683,7 +710,7 @@ public final class Files extends SherlockFragment {
 							utils.stringToBooleanHack(obj.getString("is_mp4_available")),
 							obj.getString("content_type"),
 							obj.getInt("id"),
-							obj.getLong("size"));
+							size);
 				}
 				
 				if (isAdded()) {
@@ -701,6 +728,18 @@ public final class Files extends SherlockFragment {
 			} catch (SocketTimeoutException e) {
 				noNetwork = true;
 				return null;
+			} catch (JSONException e) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("\n jsonexception: \n");
+				for (StackTraceElement element : e.getStackTrace()) {
+					sb.append(element.toString());
+					sb.append("\n");
+				}
+				try {
+					FileUtils.writeStringToFile(new File("/sdcard/putio.log"), sb.toString(), true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

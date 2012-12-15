@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putio"
-    android:versionCode="14"
-    android:versionName="1.4.1" >
+    android:versionCode="16"
+    android:versionName="1.4.3" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -18,7 +18,7 @@
         android:windowSoftInputMode="adjustPan" >
         <activity
             android:name=".activities.Putio"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +55,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    scheme="http"
+                    android:scheme="http"
                     android:mimeType="application/x-bittorrent" />
             </intent-filter>
             <intent-filter>
@@ -76,7 +76,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    scheme="file"
+                    android:scheme="file"
                     android:mimeType="application/x-bittorrent" />
             </intent-filter>
             <intent-filter>

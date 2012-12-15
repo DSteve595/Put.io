@@ -25,10 +25,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -329,8 +327,11 @@ public class Putio extends SherlockFragmentActivity implements
 	public void logOut() {
 		sharedPrefs.edit().remove("token").remove("loggedIn").commit();
 		Intent setupIntent = new Intent(Putio.this, Setup.class);
-		Putio.this.startActivity(setupIntent);
+		startActivityForResult(setupIntent, requestCode);
 		finish();
+//		accountFragment = null;
+//		filesFragment = null;
+//		transfersFragment = null;
 	}
 	
 	private void setupPhoneLayout() {
