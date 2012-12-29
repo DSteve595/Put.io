@@ -82,6 +82,7 @@
     <string name="nofilesfound">No files were found.</string>
 	<string name="filedeleted">File deleted!</string>
 	<string name="transferremoved">Transfer removed!</string>
+	<string name="hey">Hey!</string>
 
     <!-- About screen -->
     <string name="appbysteven">Android app by Steven Schoen.</string>

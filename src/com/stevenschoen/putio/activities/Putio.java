@@ -1,10 +1,19 @@
 package com.stevenschoen.putio.activities;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
 import java.io.File;
+import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
@@ -19,6 +28,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -31,6 +41,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -39,10 +51,14 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.internal.widget.ScrollingTabContainerView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.stevenschoen.putio.PutioNotification;
 import com.stevenschoen.putio.PutioTransferData;
 import com.stevenschoen.putio.PutioTransfersService;
 import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
+import com.stevenschoen.putio.SwipeDismissTouchListener;
 import com.stevenschoen.putio.UIUtils;
 import com.stevenschoen.putio.fragments.Account;
 import com.stevenschoen.putio.fragments.FileDetails;
@@ -98,6 +114,8 @@ public class Putio extends SherlockFragmentActivity implements
 	private int filesId;
 	private int fileDetailsId;
 	private int transfersId;
+	
+	private PutioNotification[] notifs;
 	
 	PutioUtils utils;
 	
@@ -191,7 +209,7 @@ public class Putio extends SherlockFragmentActivity implements
 			}
 		}
 	}
-
+	
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
 	}
@@ -322,6 +340,104 @@ public class Putio extends SherlockFragmentActivity implements
 		if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
 			actionBar.setSelectedNavigationItem(navItem);
 		}
+		
+		class NotificationTask extends AsyncTask<Void, Void, PutioNotification[]> {
+
+			@Override
+			protected PutioNotification[] doInBackground(Void... nothing) {
+				InputStream is;
+				try {
+					is = utils.getNotificationsJsonData();
+				} catch (SocketTimeoutException e) {
+					return null;
+				}
+				String string = utils.convertStreamToString(is);
+				try {
+					JSONObject json = new JSONObject(string);
+					
+					JSONArray notifications = json.getJSONArray("notifications");
+					notifs = new PutioNotification[notifications.length()];
+					for (int i = 0; i < notifications.length(); i++) {
+						JSONObject obj = notifications.getJSONObject(i);
+//						prime numbers yay
+						boolean show = sharedPrefs.getInt("readNotifs", 1) % obj.getInt("id") != 0;
+						notifs[i] = new PutioNotification(obj.getInt("id"), obj.getString("text"),
+								show);
+					}
+					return notifs;
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			
+			@SuppressLint("NewApi")
+			@Override
+			protected void onPostExecute(final PutioNotification[] result) {
+				for (int i = 0; i < result.length; i++) {
+					if (result[i].show) {
+						final LinearLayout ll = (LinearLayout) getWindow().getDecorView().
+								findViewById(R.id.layout_main_root);
+						final View notifView = getLayoutInflater().inflate(R.layout.notification, null);
+						TextView textNotifTitle = (TextView) notifView.findViewById(
+								R.id.text_main_notificationtitle);
+						TextView textNotifBody = (TextView) notifView.findViewById(
+								R.id.text_main_notificationbody);
+						textNotifBody.setText(result[i].text);
+						ImageButton buttonNotifDismiss = (ImageButton) notifView.findViewById(
+								R.id.button_main_closenotification);
+						
+						final int ii = i;
+						
+						buttonNotifDismiss.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								animate(notifView)
+			                        .translationX(notifView.getWidth())
+			                        .alpha(0)
+			                        .setDuration(getResources().getInteger(
+							                android.R.integer.config_shortAnimTime))
+			                        .setListener(new AnimatorListenerAdapter() {
+			                            @Override
+			                            public void onAnimationEnd(Animator animation) {
+			                            	sharedPrefs.edit().putInt("readNotifs",
+				                        			sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
+			                            	ll.removeView(notifView);
+			                            	result[ii].show = false;
+			                            	NotificationTask.this.onPostExecute(result);
+			                            }
+			                        });
+							}
+						});
+						
+						notifView.setOnTouchListener(new SwipeDismissTouchListener(
+			                    notifView,
+			                    null,
+			                    new SwipeDismissTouchListener.OnDismissCallback() {
+			                    	
+			                        @Override
+			                        public void onDismiss(View view, Object token) {
+		                        	sharedPrefs.edit().putInt("readNotifs",
+		                        			sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
+			                            ll.removeView(notifView);
+			                            result[ii].show = false;
+			                            NotificationTask.this.onPostExecute(result);
+			                        }
+			                    }));
+						
+						if (UIUtils.hasHoneycomb()) {
+							final LayoutTransition transitioner = new LayoutTransition();					
+					        ll.setLayoutTransition(transitioner);
+						}
+						
+						ll.addView(notifView, 0);
+						break;
+					}
+				}
+			}
+		}
+		new NotificationTask().execute();
 	}
 	
 	public void logOut() {
@@ -329,9 +445,6 @@ public class Putio extends SherlockFragmentActivity implements
 		Intent setupIntent = new Intent(Putio.this, Setup.class);
 		startActivityForResult(setupIntent, requestCode);
 		finish();
-//		accountFragment = null;
-//		filesFragment = null;
-//		transfersFragment = null;
 	}
 	
 	private void setupPhoneLayout() {
@@ -580,8 +693,10 @@ public class Putio extends SherlockFragmentActivity implements
 				transfers[i] = (PutioTransferData) transferParcelables[i];
 			}
 			
-			transfersFragment.updateTransfers(transfers);
-			transfersFragment.setHasNetwork(true);
+			if (transfersFragment != null) {
+				transfersFragment.updateTransfers(transfers);
+				transfersFragment.setHasNetwork(true);
+			}
 			
 			if (intent.getBooleanExtra("changed", false)) {
 				accountFragment.invalidateAccountInfo();

@@ -2,6 +2,7 @@ package com.stevenschoen.putio.fragments;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -23,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -291,11 +293,27 @@ public class FileDetails extends SherlockFragment {
 					URLConnection connection = url.openConnection();
 					FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
 					baf = new ByteArrayBuffer(100);
-					int current = 0;  
+					int current = 0;
 					while((current = fis.read()) != -1){  
 					    baf.append((byte)current);  
 					}
 					fis.close();
+				} catch (FileNotFoundException e) {
+					try {
+						url = new URL(origFileData.screenshot.replace(".jpg", "%3D%3D.jpg"));
+						URLConnection connection = url.openConnection();
+						FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
+						baf = new ByteArrayBuffer(100);
+						int current = 0;
+						while((current = fis.read()) != -1){  
+						    baf.append((byte)current);  
+						}
+						fis.close();
+					} catch (FileNotFoundException ee) {
+						return null;
+					} catch (IOException ee) {
+						e.printStackTrace();
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -305,7 +323,9 @@ public class FileDetails extends SherlockFragment {
 			
 			@Override
 			public void onPostExecute (final Bitmap bitmap) {
-				changeImagePreview(bitmap, true);
+				if (bitmap != null) {
+					changeImagePreview(bitmap, true);
+				}
 				imagePreviewBitmap = bitmap;
 			}
 		}

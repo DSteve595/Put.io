@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -443,6 +444,26 @@ public class PutioUtils {
 		}
 		try {
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			
+			return connection.getInputStream();
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public InputStream getNotificationsJsonData() throws SocketTimeoutException {
+		URL url = null;
+		try {
+			url = new URL("http://stevenschoen.com/putio/notifications.json");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		try {
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setConnectTimeout(8000);
 			
 			return connection.getInputStream();
