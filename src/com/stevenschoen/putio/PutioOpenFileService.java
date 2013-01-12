@@ -70,6 +70,7 @@ public class PutioOpenFileService extends Service {
 //					file = downloadManager.openDownloadedFile(downloadId);
 					Intent finishedIntent = new Intent(PutioOpenFileService.this, FileFinished.class);
 					finishedIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					finishedIntent.putExtra("downloadId", downloadId);
 					finishedIntent.putExtra("id", id);
 					finishedIntent.putExtra("filename", filename);
 					finishedIntent.putExtra("mode", mode);

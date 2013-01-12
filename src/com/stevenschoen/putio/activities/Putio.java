@@ -374,65 +374,67 @@ public class Putio extends SherlockFragmentActivity implements
 			@SuppressLint("NewApi")
 			@Override
 			protected void onPostExecute(final PutioNotification[] result) {
-				for (int i = 0; i < result.length; i++) {
-					if (result[i].show) {
-						final LinearLayout ll = (LinearLayout) getWindow().getDecorView().
-								findViewById(R.id.layout_main_root);
-						final View notifView = getLayoutInflater().inflate(R.layout.notification, null);
-						TextView textNotifTitle = (TextView) notifView.findViewById(
-								R.id.text_main_notificationtitle);
-						TextView textNotifBody = (TextView) notifView.findViewById(
-								R.id.text_main_notificationbody);
-						textNotifBody.setText(result[i].text);
-						ImageButton buttonNotifDismiss = (ImageButton) notifView.findViewById(
-								R.id.button_main_closenotification);
-						
-						final int ii = i;
-						
-						buttonNotifDismiss.setOnClickListener(new OnClickListener() {
+				if (result != null) {
+					for (int i = 0; i < result.length; i++) {
+						if (result[i].show) {
+							final LinearLayout ll = (LinearLayout) getWindow().getDecorView().
+									findViewById(R.id.layout_main_root);
+							final View notifView = getLayoutInflater().inflate(R.layout.notification, null);
+							TextView textNotifTitle = (TextView) notifView.findViewById(
+									R.id.text_main_notificationtitle);
+							TextView textNotifBody = (TextView) notifView.findViewById(
+									R.id.text_main_notificationbody);
+							textNotifBody.setText(result[i].text);
+							ImageButton buttonNotifDismiss = (ImageButton) notifView.findViewById(
+									R.id.button_main_closenotification);
 							
-							@Override
-							public void onClick(View v) {
-								animate(notifView)
-			                        .translationX(notifView.getWidth())
-			                        .alpha(0)
-			                        .setDuration(getResources().getInteger(
-							                android.R.integer.config_shortAnimTime))
-			                        .setListener(new AnimatorListenerAdapter() {
-			                            @Override
-			                            public void onAnimationEnd(Animator animation) {
-			                            	sharedPrefs.edit().putInt("readNotifs",
-				                        			sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
-			                            	ll.removeView(notifView);
-			                            	result[ii].show = false;
-			                            	NotificationTask.this.onPostExecute(result);
-			                            }
-			                        });
+							final int ii = i;
+							
+							buttonNotifDismiss.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									animate(notifView)
+				                        .translationX(notifView.getWidth())
+				                        .alpha(0)
+				                        .setDuration(getResources().getInteger(
+								                android.R.integer.config_shortAnimTime))
+				                        .setListener(new AnimatorListenerAdapter() {
+				                            @Override
+				                            public void onAnimationEnd(Animator animation) {
+				                            	sharedPrefs.edit().putInt("readNotifs",
+					                        			sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
+				                            	ll.removeView(notifView);
+				                            	result[ii].show = false;
+				                            	NotificationTask.this.onPostExecute(result);
+				                            }
+				                        });
+								}
+							});
+							
+							notifView.setOnTouchListener(new SwipeDismissTouchListener(
+				                    notifView,
+				                    null,
+				                    new SwipeDismissTouchListener.OnDismissCallback() {
+				                    	
+				                        @Override
+				                        public void onDismiss(View view, Object token) {
+			                        	sharedPrefs.edit().putInt("readNotifs",
+			                        			sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
+				                            ll.removeView(notifView);
+				                            result[ii].show = false;
+				                            NotificationTask.this.onPostExecute(result);
+				                        }
+				                    }));
+							
+							if (UIUtils.hasHoneycomb()) {
+								final LayoutTransition transitioner = new LayoutTransition();					
+						        ll.setLayoutTransition(transitioner);
 							}
-						});
-						
-						notifView.setOnTouchListener(new SwipeDismissTouchListener(
-			                    notifView,
-			                    null,
-			                    new SwipeDismissTouchListener.OnDismissCallback() {
-			                    	
-			                        @Override
-			                        public void onDismiss(View view, Object token) {
-		                        	sharedPrefs.edit().putInt("readNotifs",
-		                        			sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
-			                            ll.removeView(notifView);
-			                            result[ii].show = false;
-			                            NotificationTask.this.onPostExecute(result);
-			                        }
-			                    }));
-						
-						if (UIUtils.hasHoneycomb()) {
-							final LayoutTransition transitioner = new LayoutTransition();					
-					        ll.setLayoutTransition(transitioner);
+							
+							ll.addView(notifView, 0);
+							break;
 						}
-						
-						ll.addView(notifView, 0);
-						break;
 					}
 				}
 			}
