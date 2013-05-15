@@ -45,6 +45,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -66,7 +67,7 @@ public class PutioUtils {
 	
 	public final static String baseUrl = "https://api.put.io/v2/";
 
-	private String token;
+	private static String token;
 	private static String tokenWithStuff;
 
 	private SharedPreferences sharedPrefs;
@@ -475,7 +476,7 @@ public class PutioUtils {
 		return null;
 	}
 	
-	public void downloadFile(final Context context, final int id, final String filename, final int actionWhenDone) {
+	public void downloadFile(final Context context, final int id, final boolean isFolder, final String filename, final int actionWhenDone) {
 		class downloadFileTaskCompat extends AsyncTask<Void, Integer, Long> {
 			private boolean resolveRedirect = false;
 			private Dialog dialog;
@@ -484,18 +485,31 @@ public class PutioUtils {
 			protected Long doInBackground(Void... params) {
 				long dlId;
 				if (UIUtils.hasHoneycomb()) {
-					dlId = downloadFileWithoutUrl(context, id, filename);
-					return dlId;
+					if (isFolder) {
+						int[] folder = new int[] {id};
+						dlId = downloadZipWithoutUrl(context, folder, filename);
+					} else {
+						dlId = downloadFileWithoutUrl(context, id, filename);
+						return dlId;
+					}
 				} else {
 					publishProgress(0);
-					try {
-						dlId = downloadFileWithUrl(context, id, filename,
-								resolveRedirect(getFileDownloadUrl(id).replace("https://", "http://")));
+					if (isFolder) {
+						int[] folder = new int[] {id};
+						dlId = downloadZipWithUrl(context, folder, filename,
+								getZipDownloadUrl(folder).replace("https://", "http://"));
+//									resolveRedirect(getFileDownloadUrl(id).replace("https://", "http://")));
 						return dlId;
-					} catch (ClientProtocolException ee) {
-						ee.printStackTrace();
-					} catch (IOException ee) {
-						ee.printStackTrace();
+					} else {
+						try {
+							dlId = downloadFileWithUrl(context, id, filename,
+									resolveRedirect(getFileDownloadUrl(id).replace("https://", "http://")));
+							return dlId;
+						} catch (ClientProtocolException ee) {
+							ee.printStackTrace();
+						} catch (IOException ee) {
+							ee.printStackTrace();
+						}
 					}
 				}
 				return null;
@@ -546,24 +560,39 @@ public class PutioUtils {
 	
 	private long downloadFileWithoutUrl(final Context context, final int id, String filename) {
 		Uri uri = Uri.parse(getFileDownloadUrl(id));
-		return download(context, id, filename, uri);
+		return download(context, id, false, filename, uri);
 	}
 	
 	private long downloadFileWithUrl(final Context context, final int id, String filename, String url) {		
 		Uri uri = Uri.parse(url.replace("https://", "http://"));
-		return download(context, id, filename, uri);
+		return download(context, id, false, filename, uri);
+	}
+	
+	private long downloadZipWithoutUrl(final Context context, final int[] id, String filename) {
+		Uri uri = Uri.parse(getZipDownloadUrl(id));
+		return download(context, 0, true, filename, uri);
+	}
+	
+	private long downloadZipWithUrl(final Context context, final int[] id, String filename, String url) {		
+		Uri uri = Uri.parse(url.replace("https://", "http://"));
+		return download(context, 0, true, filename, uri);
 	}
 	
 	@TargetApi(11)
-	private long download(Context context, int id, String filename, Uri uri) {
-		if (idIsDownloaded(id)) {
+	private long download(Context context, int id, boolean isZip, String filename, Uri uri) {
+		if (idIsDownloaded(id) && !isZip) {
 			deleteId(id);
 		}
 		
 		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 		DownloadManager.Request request = new DownloadManager.Request(uri);
 		
-		String path = "put.io" + File.separator + id + File.separator + filename;
+		String path = "put.io" + File.separator;
+		if (isZip) {
+			path += filename;
+		} else {
+			path += id + File.separator + filename;
+		}
 		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
 		boolean made = file.getParentFile().mkdirs();
 		
@@ -661,6 +690,14 @@ public class PutioUtils {
 	
 	public String getFileDownloadUrl(int id) {
 		return baseUrl + "files/" + id + "/download" + tokenWithStuff;
+	}
+	
+	public String getZipDownloadUrl(int[] id) {
+		String ids = Integer.toString(id[0]);
+		for (int i = 1; i < id.length; i++) {
+			ids += "," + Integer.toString(id[i]);
+		}
+		return baseUrl + "files/zip?file_ids=" + ids + tokenWithStuff.replace("?", "&"); // TODO hacky
 	}
 	
 	public static boolean idIsDownloaded(int id) {

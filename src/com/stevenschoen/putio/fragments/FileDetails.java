@@ -441,7 +441,7 @@ public class FileDetails extends SherlockFragment {
 				@Override
 				public void onClick(View v) {
 					PutioUtils.deleteId(getFileId());
-					utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename(), mode);
+					utils.downloadFile(getSherlockActivity(), origFileData.id, false, getNewFilename(), mode);
 					dialog.dismiss();
 				}
 			});
@@ -455,7 +455,7 @@ public class FileDetails extends SherlockFragment {
 				}
 			});
 		} else {
-			utils.downloadFile(getSherlockActivity(), getFileId(), getNewFilename(), mode);
+			utils.downloadFile(getSherlockActivity(), getFileId(), false, getNewFilename(), mode);
 		}
 	}
 	
@@ -463,7 +463,7 @@ public class FileDetails extends SherlockFragment {
 		if (PutioUtils.idIsDownloaded(getFileId())) {
 			PutioUtils.shareDownloadedId(getFileId(), getSherlockActivity());
 		} else {
-			utils.downloadFile(getSherlockActivity(), origFileData.id, getNewFilename(), PutioUtils.ACTION_SHARE);
+			utils.downloadFile(getSherlockActivity(), origFileData.id, false, getNewFilename(), PutioUtils.ACTION_SHARE);
 		}
 	}
 	
