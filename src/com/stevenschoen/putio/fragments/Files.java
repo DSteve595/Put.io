@@ -337,9 +337,9 @@ public final class Files extends SherlockFragment {
 		}
 	}
 	
-	private void initDownloadFile(final long id) {
+	private void initDownloadFile(final int id) {
 		utils.downloadFile(getSherlockActivity(),
-				fileData[(int) id].id, fileData[(int) id].name, PutioUtils.ACTION_NOTHING);
+				fileData[id].id, fileData[id].isFolder, fileData[id].name, PutioUtils.ACTION_NOTHING);
 	}
 	
 	private void initRenameFile(final long id) {
