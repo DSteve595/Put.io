@@ -2,7 +2,8 @@
     android:layout_width="wrap_content"
     android:layout_height="64dp"
     android:paddingLeft="@dimen/padding_small"
-    android:paddingRight="@dimen/padding_small" >
+    android:paddingRight="@dimen/padding_small"
+    android:background="@drawable/putio_clickable_list" >
 
 	<ImageView
 		android:id="@+id/img_fileIcon"

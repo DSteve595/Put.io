@@ -42,8 +42,8 @@ public class AddTransfers extends SherlockFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dialog_addtransfer);
 		setTheme(R.style.Putio_Dialog);
+		setContentView(R.layout.dialog_addtransfer);
 		
 		if (getIntent().getAction() != null) {
 			if (getIntent().getScheme().matches("magnet")) {

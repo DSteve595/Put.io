@@ -10,6 +10,7 @@
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@null"
         android:gravity="center_vertical|left"
         android:minHeight="16sp"
         android:paddingBottom="4dp"

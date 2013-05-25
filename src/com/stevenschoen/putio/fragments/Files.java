@@ -547,6 +547,9 @@ public final class Files extends SherlockFragment {
 			}
 		}
 		
+		for (int ii = 0; ii < files.size(); ii++) {
+			adapter.add(files.get(ii));
+		}
 		try {
 			if (newId != origIdBefore) {
 				for (int i = 0; i < listview.getCount(); i++) {
@@ -555,9 +558,7 @@ public final class Files extends SherlockFragment {
 			}
 		} catch (NullPointerException e) {
 		}
-		for (int ii = 0; ii < files.size(); ii++) {
-			adapter.add(files.get(ii));
-		}
+		
 		listview.setSelectionFromTop(index, top);
 		
 		setShowRefreshButton(true);
@@ -565,20 +566,10 @@ public final class Files extends SherlockFragment {
 		fileLayouts = files;
 		
 		if (highlightId != 0) {
-			boolean highlight = false;
-			int highlightPos = 0;
+			int highlightPos = setFileChecked(highlightId, true);
 			
-			for (int i = 0; i < fileData.length; i++) {
-				if (fileData[i].id == highlightId && !fileData[i].contentType.matches("directory")) {
-					highlight = true;
-					highlightPos = i;
-				}
-			}
-			
-			if (highlight) {
-				listview.requestFocus();
-				listview.setSelection(highlightPos);
-			}
+			listview.requestFocus();
+			listview.setSelection(highlightPos);
 		} else {
 		}
 	}
@@ -876,6 +867,16 @@ public final class Files extends SherlockFragment {
 	public void highlightFile(int parentId, int id) {
 		currentFolderId = parentId;
 		invalidateList(id);
+	}
+	
+	public int setFileChecked(int fileId, boolean checked) {
+		for (int i = 0; i < fileData.length; i++) {
+			if (fileData[i].id == fileId) {
+				listview.setItemChecked(i, checked);
+				return i;
+			}
+		}
+		return 0;
 	}
 	
 	@Override

@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import com.stevenschoen.putio.activities.FileFinished;
 import com.stevenschoen.putio.activities.Putio;

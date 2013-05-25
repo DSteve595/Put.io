@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/putio_accent" android:state_pressed="true"/>
-    <item android:drawable="@color/putio_accent_half" android:state_focused="true"/>
-    <item android:drawable="@drawable/activated" android:state_activated="true"/>
+    <item android:state_pressed="true"><shape>
+            <solid android:color="@color/putio_accent" />
+        </shape></item>
+    <item android:state_focused="true"><shape>
+            <solid android:color="@color/putio_accent_half" />
+        </shape></item>
+    <item android:state_activated="true"><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+            <gradient android:angle="0" android:endColor="@color/putio_accent_quarter" android:startColor="@color/putio_accent_half" android:type="linear" />
+        </shape></item>
     <item android:drawable="@color/transparent"/>
 
 </selector>

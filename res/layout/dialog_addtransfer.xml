@@ -4,7 +4,6 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/putio_accent_eigth"
@@ -17,6 +16,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical|left"
             android:minHeight="16sp"
+            android:background="@null"
             android:paddingBottom="4dp"
             android:paddingLeft="16dip"
             android:paddingRight="16dip"

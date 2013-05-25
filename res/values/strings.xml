@@ -46,6 +46,7 @@
     <string name="sharetitle">It looks like this has already been downloaded. Download it anyway?</string>
     <string name="sharebody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
     <string name="addtransferstitle">Add transfers</string>
+    <string name="applychangestitle">Apply changes?</string>
 
     <!-- Errors (for users) -->
     <string name="cantopenbecausefuckyou">There was an error opening the file.</string>
@@ -55,6 +56,7 @@
     <string name="filetoobig">This file is too big! Are you sure it\'s a torrent?</string>
     <string name="nofilechosen">Browse for a file first!</string>
     <string name="streamerror">Sorry, there was an error streaming your video.</string>
+    <string name="couldntconnect">Couldn&amp;apos;t connect to Put.io. Are you online?</string>
 
     <!-- Other stuff -->
     <string name="account">Account</string>

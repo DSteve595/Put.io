@@ -4,7 +4,6 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.SocketTimeoutException;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
@@ -51,8 +50,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.internal.widget.ScrollingTabContainerView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putio.PutioNotification;
 import com.stevenschoen.putio.PutioTransferData;
 import com.stevenschoen.putio.PutioTransfersService;
@@ -129,11 +130,6 @@ public class Putio extends SherlockFragmentActivity implements
 		this.savedInstanceState = savedInstanceState;
 		
 		actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		if (!UIUtils.isTablet(this) && getResources().getConfiguration().orientation ==
-				Configuration.ORIENTATION_LANDSCAPE) {
-			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		}
 		
 		if (UIUtils.isTablet(this)) {
 			actionBar.setDisplayShowTitleEnabled(false);
@@ -337,9 +333,7 @@ public class Putio extends SherlockFragmentActivity implements
 		if (savedInstanceState != null) {
 			navItem = savedInstanceState.getInt("currentTab");
 		}
-		if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
-			actionBar.setSelectedNavigationItem(navItem);
-		}
+		selectTab(navItem);
 		
 		class NotificationTask extends AsyncTask<Void, Void, PutioNotification[]> {
 
@@ -348,7 +342,7 @@ public class Putio extends SherlockFragmentActivity implements
 				InputStream is;
 				try {
 					is = utils.getNotificationsJsonData();
-				} catch (SocketTimeoutException e) {
+				} catch (Exception e) {
 					return null;
 				}
 				String string = utils.convertStreamToString(is);
@@ -444,9 +438,8 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	public void logOut() {
 		sharedPrefs.edit().remove("token").remove("loggedIn").commit();
-		Intent setupIntent = new Intent(Putio.this, Setup.class);
-		startActivityForResult(setupIntent, requestCode);
 		finish();
+		startActivity(getIntent());
 	}
 	
 	private void setupPhoneLayout() {
@@ -454,7 +447,13 @@ public class Putio extends SherlockFragmentActivity implements
 		// primary sections
 		// of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());		
+				getSupportFragmentManager());
+		
+		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		ViewHelper.setAlpha(tabs, 0);
+		tabs.setTextColor(Color.BLACK);
+		tabs.setIndicatorColorResource(R.color.putio_accent);
+		tabs.setShouldExpand(true);
 		
 		String accountFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
 		accountFragment = (Account) getSupportFragmentManager().findFragmentByTag(accountFragmentName);
@@ -467,36 +466,14 @@ public class Putio extends SherlockFragmentActivity implements
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		// When swiping between different sections, select the corresponding
-		// tab.
-		// We can also use ActionBar.Tab#select() to do this if we have a
-		// reference to the
-		// Tab.
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) {
-							actionBar.setSelectedNavigationItem(position);
-						}
-					}
-				});
-
-		// For each of the sections in the app, add a tab to the action bar.
-		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			// Create a tab with text corresponding to the page title defined by
-			// the adapter.
-			// Also specify this Activity object, which implements the
-			// TabListener interface, as the
-			// listener for when this tab is selected.
-			actionBar.addTab(actionBar.newTab()
-					.setText(mSectionsPagerAdapter.getPageTitle(i))
-					.setTabListener(this));
-		}
+		
+		tabs.setViewPager(mViewPager);
+		animate(tabs).alpha(1).setDuration(200);
 	}
 	
 	private void setupTabletLayout() {
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
 		// Account
 		int tabletAccountLayoutId = R.layout.tablet_account;
 		
@@ -610,6 +587,7 @@ public class Putio extends SherlockFragmentActivity implements
 	}
 	
 	private void removeFD(int exitAnim) {
+		filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
 		getSupportFragmentManager().beginTransaction()
 				.setCustomAnimations(R.anim.slide_in_left, exitAnim)
 				.remove(fileDetailsFragment).commit();
@@ -637,7 +615,7 @@ public class Putio extends SherlockFragmentActivity implements
 				@Override
 				public void onClick(View arg0) {
 					utils.applyFileToServer(Putio.this,
-							fileDetailsFragment.getId(),
+							fileDetailsFragment.getFileId(),
 							fileDetailsFragment.getOldFilename(),
 							fileDetailsFragment.getNewFilename());
 					confirmChangesDialog.dismiss();
@@ -716,6 +694,8 @@ public class Putio extends SherlockFragmentActivity implements
 	};
 	
 	private Intent transfersServiceIntent;
+
+	private PagerSlidingTabStrip tabs;
 	
 	@Override
 	public void onBackPressed() {
@@ -733,6 +713,14 @@ public class Putio extends SherlockFragmentActivity implements
 					filesFragment.goBack();
 				}
 			}
+		}
+	}
+	
+	private void selectTab(int position) {
+		if (UIUtils.isTablet(this)) {
+			actionBar.setSelectedNavigationItem(position);
+		} else {
+//			tabs.setc
 		}
 	}
 	

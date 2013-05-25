@@ -1,5 +1,7 @@
 package com.stevenschoen.putio.activities;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
 import java.io.InputStream;
 import java.net.URI;
 
@@ -10,32 +12,41 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.view.ViewHelper;
+import com.stevenschoen.putio.PutioUtils;
 import com.stevenschoen.putio.R;
 
 public class Setup extends SherlockActivity {
 	public SharedPreferences sharedPrefs;
-	private Dialog webDialog;
 	private WebView loginWebView;
+	
+	private int viewMode = 0;
+	public static final int VIEWMODE_LOGIN = 1;
+	public static final int VIEWMODE_LOADING = 2;
+	public static final int VIEWMODE_NONETWORK = 3;
+	
+	private View viewLoading;
+	
+	private View viewNoNetwork;
+	private TextView textNoConnection;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,66 +59,60 @@ public class Setup extends SherlockActivity {
 
 		StrictMode.setThreadPolicy(new ThreadPolicy.Builder().permitNetwork().build());
 		
-		Typeface robotoThin = Typeface.createFromAsset(this.getAssets(), "Roboto-Thin.ttf");
-		Typeface robotoLight = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
-		Typeface robotoBold = Typeface.createFromAsset(this.getAssets(), "Roboto-Bold.ttf");
-		
-		TextView introText1 = (TextView) findViewById(R.id.text_setup_intro1);
-		introText1.setTypeface(robotoLight);
-		
-		webDialog = new Dialog(this, R.style.Putio_Dialog);
-		webDialog.setCanceledOnTouchOutside(false);
-		webDialog.setContentView(R.layout.dialog_login);
-		webDialog.setTitle("Log in");
-		
-		Button loginButton = (Button) findViewById(R.id.button_setup_login);
-		loginButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				webDialog.show();
-			}
-		});
-		
-		Button goToSiteButton = (Button) findViewById(R.id.button_setup_gotosite);
-		goToSiteButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent goToSiteIntent = new Intent(Intent.ACTION_VIEW);
-				goToSiteIntent.setData(Uri.parse("http://put.io/"));
-				startActivity(goToSiteIntent);
-			}
-		});
-		
-		Button cancelLogin = (Button) webDialog.findViewById(R.id.button_login_cancel);
-		cancelLogin.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				loginWebView.loadUrl(loginUrl);
-				webDialog.cancel();
-			}
-		});
-		
-		loginWebView = (WebView) webDialog.findViewById(R.id.webview_login);
+		loginWebView = (WebView) findViewById(R.id.webview_setup);
+		loginWebView.setVisibility(View.INVISIBLE);
 		loginWebView.getSettings().setJavaScriptEnabled(true);
-		loginWebView.setVisibility(View.VISIBLE);
 		loginWebView.setWebViewClient(new LoginWebViewClient());
 		
 		loginWebView.loadUrl(loginUrl);
+		
+		viewLoading = findViewById(R.id.loading_setup);
+		viewLoading.setVisibility(View.INVISIBLE);
+		
+		viewNoNetwork = findViewById(R.id.view_setup_noconnection);
+		viewNoNetwork.setVisibility(View.INVISIBLE);
+		ViewHelper.setAlpha(viewNoNetwork, 0);
+		
+		Typeface robotoLight = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
+		textNoConnection = (TextView) findViewById(R.id.text_setup_noconnection);
+		textNoConnection.setTypeface(robotoLight);
+		
+		setViewMode(VIEWMODE_LOADING);
 	}
 	
 	private class LoginWebViewClient extends WebViewClient {
+		boolean error = false;
+		
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			super.onPageFinished(view, url);
+			if (!error) {
+				setViewMode(VIEWMODE_LOGIN);
+			}
+			loginWebView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					error = false;
+				}
+			}, 500);
+		}
+		 
+		@Override
+		public void onReceivedError(WebView view, int errorCode,
+				String description, String failingUrl) {
+			setViewMode(VIEWMODE_NONETWORK);
+			error = true;
+		}
+		
 	    @Override
 	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	        view.loadUrl(url);
-	        return true;
+    		view.loadUrl(url);
+    		return true;
 	    }
 	    
 	    @Override
 		public void onLoadResource(WebView view, String url) {
-			if (url.contains("code=")) {
+	    	if (url.contains("code=")) {
 				String[] strings = url.split("code=");
 				String code = strings[1];
 
@@ -138,6 +143,56 @@ public class Setup extends SherlockActivity {
 		return true;
 	}
 	
+	private void setViewMode(int mode) {
+		if (mode != viewMode) {
+			if (viewMode != 0) {
+				View viewToRemove = null;
+				switch (this.viewMode) {
+				case VIEWMODE_LOGIN:
+					viewToRemove = loginWebView;
+					break;
+				case VIEWMODE_LOADING:
+					viewToRemove = viewLoading;
+					break;
+				case VIEWMODE_NONETWORK:
+					viewToRemove = viewNoNetwork;
+					break;
+				}
+				final View viewToRemove2 = viewToRemove;
+				animate(viewToRemove).setDuration(500).alpha(0).setListener(new AnimatorListener() {
+					@Override
+					public void onAnimationStart(Animator animation) {}
+					@Override
+					public void onAnimationRepeat(Animator animation) {}
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						viewToRemove2.setVisibility(View.INVISIBLE);
+					}
+					@Override
+					public void onAnimationCancel(Animator animation) {}
+				});
+			}
+			
+			View viewToAdd = null;
+			switch (mode) {
+			case VIEWMODE_LOGIN:
+				viewToAdd = loginWebView;
+				break;
+			case VIEWMODE_LOADING:
+				viewToAdd = viewLoading;
+				break;
+			case VIEWMODE_NONETWORK:
+				viewToAdd = viewNoNetwork;
+				break;
+			}
+			ViewHelper.setAlpha(viewToAdd, 0);
+			viewToAdd.setVisibility(View.VISIBLE);
+			animate(viewToAdd).setDuration(500).alpha(1);
+			
+			viewMode = mode;
+		}
+	}
+	
 	public InputStream getJsonData(String url) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		URI uri;
@@ -153,26 +208,17 @@ public class Setup extends SherlockActivity {
 		return data;
 	}
 	
-	public String convertStreamToString(InputStream is) {
-	    try {
-	        return new java.util.Scanner(is).useDelimiter("\\A").next();
-	    } catch (java.util.NoSuchElementException e) {
-	        return "";
-	    }
-	}
-	
 	void saveTokenFromWeb(final String url) {
 		String token = null;
 		
 		JSONObject json;
 		try {
-			json = new JSONObject(convertStreamToString(getJsonData(url)));
+			json = new JSONObject(PutioUtils.convertStreamToString(getJsonData(url)));
 			token = json.getString("access_token");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
-		webDialog.dismiss();
 		saveToken(token);
 	}
 	
@@ -181,7 +227,10 @@ public class Setup extends SherlockActivity {
 		sharedPrefs.edit().putBoolean("loggedIn", true).commit();
 		Toast.makeText(this, R.string.loginsuccess, Toast.LENGTH_SHORT).show();
 		setResult(RESULT_OK);
-		startActivity(new Intent(this, Putio.class));
+		
+		CookieManager cookieManager = CookieManager.getInstance();
+		cookieManager.removeAllCookie();
+		
 		finish();
 	}
 }

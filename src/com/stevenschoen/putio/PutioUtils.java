@@ -45,7 +45,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -73,8 +72,8 @@ public class PutioUtils {
 	private SharedPreferences sharedPrefs;
 	
 	public PutioUtils(String token, SharedPreferences sharedPrefs) {
-		this.token = token;
-		this.tokenWithStuff = "?oauth_token=" + token;
+		PutioUtils.token = token;
+		PutioUtils.tokenWithStuff = "?oauth_token=" + token;
 		
 		this.sharedPrefs = sharedPrefs;
 	}
@@ -363,7 +362,7 @@ public class PutioUtils {
 		Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setContentView(R.layout.dialog_confirmchanges);
-		dialog.setTitle("Apply changes?");
+		dialog.setTitle(context.getString(R.string.applychanges));
 		
 		TextView text = (TextView) dialog.findViewById(R.id.text_confirmText);
 		text.setText(String.format(context.getString(R.string.applychanges), filename));
@@ -384,7 +383,7 @@ public class PutioUtils {
 		return dialog;
 	}
 
-	public String convertStreamToString(InputStream is) {
+	public static String convertStreamToString(InputStream is) {
 		try {
 			return new java.util.Scanner(is).useDelimiter("\\A").next();
 		} catch (java.util.NoSuchElementException e) {

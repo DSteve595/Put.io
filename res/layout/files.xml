@@ -6,7 +6,6 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -15,9 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="49dp"
+            android:layout_marginBottom="56dp"
             android:fastScrollEnabled="true"
-            android:listSelector="@drawable/putio_clickable_list"
             android:scrollbarStyle="outsideInset" >
         </ListView>
 
@@ -25,7 +23,7 @@
             android:id="@+id/buttonbar"
             style="@style/Putio.ButtonBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_alignParentBottom="true" >
 
             <Button
@@ -37,8 +35,8 @@
 
             <ProgressBar
                 android:id="@+id/item_files_refresh"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:indeterminate="true" >
             </ProgressBar>

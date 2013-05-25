@@ -38,6 +38,6 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"
-        layout="@layout/setupbox" />
+        layout="@layout/oldsetupbox" />
 
 </RelativeLayout>
