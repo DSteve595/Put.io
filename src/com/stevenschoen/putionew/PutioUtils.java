@@ -458,7 +458,7 @@ public class PutioUtils {
 	public InputStream getNotificationsJsonData() throws SocketTimeoutException {
 		URL url = null;
 		try {
-			url = new URL("http://stevenschoen.com/putio/notifications.json");
+			url = new URL("http://stevenschoen.com/putio/notifications2.json");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
