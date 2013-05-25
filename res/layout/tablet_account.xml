@@ -8,7 +8,7 @@
         android:id="@+id/fragment_account"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.stevenschoen.putio.fragments.Account"
+        class="com.stevenschoen.putionew.fragments.Account"
         tools:layout="@layout/account" />
 
 </LinearLayout>

@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/fragment1"
-        android:name="com.stevenschoen.putio.fragments.About"
+        android:name="com.stevenschoen.putionew.fragments.About"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/about" />

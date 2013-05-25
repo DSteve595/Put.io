@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".45"
-            class="com.stevenschoen.putio.fragments.Files"
+            class="com.stevenschoen.putionew.fragments.Files"
             tools:layout="@layout/files" />
 
         <FrameLayout
