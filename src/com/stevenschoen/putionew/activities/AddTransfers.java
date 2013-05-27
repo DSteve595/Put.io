@@ -95,7 +95,7 @@ public class AddTransfers extends SherlockFragmentActivity {
 							Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 						} break;
 					case 1:
-						if (fileFragment.getChosenFile() != null) {
+						if (fileFragment != null && fileFragment.getChosenFile() != null) {
 							if (FileUtils.sizeOf(fileFragment.getChosenFile()) > FileUtils.ONE_MB) {
 								Toast.makeText(AddTransfers.this, getString(R.string.filetoobig), Toast.LENGTH_LONG).show();
 							} else {

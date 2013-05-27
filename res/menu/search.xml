@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/menu_search"
-        android:icon="@drawable/ic_action_search"
         android:actionViewClass="com.actionbarsherlock.widget.SearchView"
         android:hint="@string/searchyourfiles"
+        android:icon="@drawable/ic_action_search"
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
-        android:titleCondensed="@string/search"
-        android:title="@string/search"/>
+        android:title="@string/search"
+        android:titleCondensed="@string/search"/>
 
 </menu>

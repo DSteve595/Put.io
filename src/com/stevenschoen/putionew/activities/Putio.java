@@ -36,6 +36,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -91,6 +93,8 @@ public class Putio extends SherlockFragmentActivity implements
 	Bundle savedInstanceState;
 
 	private ActionBar actionBar;
+	
+	private Menu mMenu;
 	
 	public static final String invalidateListIntent = "com.stevenschoen.putio.invalidatelist";
 	public static final String checkCacheSizeIntent = "com.stevenschoen.putio.checkcachesize";
@@ -191,18 +195,10 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction fragmentTransaction) {
-		// When the given tab is selected, switch to the corresponding page in
-		// the ViewPager.
-		if (!UIUtils.isTablet(this)) {
-			if (mViewPager.getCurrentItem() != tab.getPosition()) {
-				mViewPager.setCurrentItem(tab.getPosition());
-			}
-		} else {
-			switch (tab.getPosition()) {
-				case 0: setContentView(tabletAccountView); break;
-				case 1: setContentView(tabletFilesView); break;
-				case 2: setContentView(tabletTransfersView); break;
-			}
+		switch (tab.getPosition()) {
+		case 0: setContentView(tabletAccountView); break;
+		case 1: setContentView(tabletFilesView); break;
+		case 2: setContentView(tabletTransfersView); break;
 		}
 	}
 	
@@ -223,6 +219,8 @@ public class Putio extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.putio, menu);
+		
+		mMenu = menu;
 		
 		MenuItem buttonAdd = menu.findItem(R.id.menu_addtransfers);
 		buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -345,7 +343,7 @@ public class Putio extends SherlockFragmentActivity implements
 				} catch (Exception e) {
 					return null;
 				}
-				String string = utils.convertStreamToString(is);
+				String string = PutioUtils.convertStreamToString(is);
 				try {
 					JSONObject json = new JSONObject(string);
 					
@@ -451,9 +449,10 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		ViewHelper.setAlpha(tabs, 0);
+		tabs.setShouldExpand(true);
+		tabs.setTabBackground(R.drawable.putio_tab_indicator);
 		tabs.setTextColor(Color.BLACK);
 		tabs.setIndicatorColorResource(R.color.putio_accent);
-		tabs.setShouldExpand(true);
 		
 		String accountFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
 		accountFragment = (Account) getSupportFragmentManager().findFragmentByTag(accountFragmentName);
@@ -469,6 +468,7 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		tabs.setViewPager(mViewPager);
 		animate(tabs).alpha(1).setDuration(200);
+		selectTab(1);
 	}
 	
 	private void setupTabletLayout() {
@@ -540,7 +540,7 @@ public class Putio extends SherlockFragmentActivity implements
 	}
 	
 	public void showFilesAndHighlightFile(int parentId, int id) {
-		actionBar.setSelectedNavigationItem(1);
+		selectTab(1);
 		filesFragment.highlightFile(parentId, id);
 	}
 	
@@ -720,7 +720,7 @@ public class Putio extends SherlockFragmentActivity implements
 		if (UIUtils.isTablet(this)) {
 			actionBar.setSelectedNavigationItem(position);
 		} else {
-//			tabs.setc
+			if (mViewPager.getCurrentItem() != position) mViewPager.setCurrentItem(position, false);
 		}
 	}
 	
