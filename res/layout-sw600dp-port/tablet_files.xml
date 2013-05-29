@@ -6,10 +6,9 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingRight="@dimen/padding_large" >
 
@@ -27,4 +26,5 @@
             android:layout_height="match_parent"
             android:layout_weight=".55" />
     </LinearLayout>
-</LinearLayout>
+
+</LinearLayout>

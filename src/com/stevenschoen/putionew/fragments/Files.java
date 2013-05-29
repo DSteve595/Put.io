@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -40,6 +39,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -353,7 +353,7 @@ public final class Files extends SherlockFragment {
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
 		textFileName.setText(fileData[listId].name);
 		
-		Button btnUndoName = (Button) renameDialog.findViewById(R.id.button_undoName);
+		ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
 		btnUndoName.setOnClickListener(new OnClickListener() {
 
 			@Override

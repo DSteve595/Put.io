@@ -6,7 +6,6 @@
         <item name="actionBarStyle">@style/Putio.ActionBar</item>
         <item name="actionBarTabBarStyle">@style/Putio.ActionBarTabBarStyle</item>
         <item name="actionBarTabStyle">@style/Putio.ActionBarTabStyle</item>
-        <item name="actionBarTabTextStyle">@style/Putio.TabText</item>
         <item name="actionDropDownStyle">@style/Putio.DropDownNav</item>
         <item name="dropDownListViewStyle">@style/Putio.DropDownListView</item>
         <item name="popupMenuStyle">@style/Putio.PopupMenu</item>
@@ -15,7 +14,6 @@
         <item name="android:actionBarStyle">@style/Putio.ActionBar</item>
         <item name="android:actionBarTabBarStyle">@style/Putio.ActionBarTabBarStyle</item>
         <item name="android:actionBarTabStyle">@style/Putio.ActionBarTabStyle</item>
-        <item name="android:actionBarTabTextStyle">@style/Putio.TabText</item>
         <item name="android:actionDropDownStyle">@style/Putio.DropDownNav</item>
         <item name="android:buttonStyle">@style/Putio.Button</item>
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
@@ -53,10 +51,6 @@
         <item name="android:textColor">#fff200</item>
     </style>
 
-    <style name="Putio.TabText" parent="@style/Widget.Sherlock.ActionBar.TabText">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
     <style name="Putio.DropDownNav" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
         <item name="background">@drawable/spinner_background_ab_putio</item>
         <item name="android:background">@drawable/spinner_background_ab_putio</item>
@@ -87,7 +81,6 @@
     </style>
 
     <style name="Putio.ActionBarTabBarStyle" parent="@style/Widget.Sherlock.ActionBar.TabBar">
-        <item name="android:background">#EEEEEE</item>
         <item name="android:fadingEdge">none</item>
         <item name="android:fadingEdgeLength">0dp</item>
         <item name="android:requiresFadingEdge">none</item>

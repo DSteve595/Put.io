@@ -14,6 +14,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -24,7 +25,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
@@ -49,6 +51,7 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 
+@SuppressLint("ValidFragment")
 public class FileDetails extends SherlockFragment {
 	PutioFileData origFileData;
 	PutioFileData newFileData;
@@ -130,12 +133,37 @@ public class FileDetails extends SherlockFragment {
 		} else if (!UIUtils.hasHoneycomb()) {
 			fileDetailsLayoutId = R.layout.filedetailsgbvert;
 		}
+		
 		final View view = inflater.inflate(fileDetailsLayoutId, container, false);
+		
+		if (UIUtils.isTablet(getSherlockActivity())) {
+			view.setBackgroundResource(R.drawable.card_bg_r8);
+			
+			view.post(new Runnable() {
+				@Override
+				public void run() {
+					if (PutioUtils.dpFromPx(getSherlockActivity(), view.getHeight()) > 560) {
+						view.getLayoutParams().height =
+								(int) PutioUtils.pxFromDp(getSherlockActivity(), 560);
+					}
+					
+					if (PutioUtils.dpFromPx(getSherlockActivity(), view.getWidth()) > 400) {
+						view.getLayoutParams().width =
+								(int) PutioUtils.pxFromDp(getSherlockActivity(), 400);
+					}
+					
+					View parent = (View) view.getParent();
+					FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) parent.getLayoutParams();
+					params.height = ViewGroup.LayoutParams.WRAP_CONTENT; params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+					parent.setLayoutParams(params);
+				}
+			});
+		}
 		
 		textFileName = (EditText) view.findViewById(R.id.editText_fileName);
 		textFileName.setText(origFileData.name);
 		
-		Button btnUndoName = (Button) view.findViewById(R.id.button_undoName);
+		ImageButton btnUndoName = (ImageButton) view.findViewById(R.id.button_undoName);
 		btnUndoName.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -183,7 +211,7 @@ public class FileDetails extends SherlockFragment {
 				JSONObject obj;
 				try {
 					InputStream is = utils.getFileJsonData(getFileId());
-					String string = utils.convertStreamToString(is);
+					String string = PutioUtils.convertStreamToString(is);
 					obj = new JSONObject(string).getJSONObject("file");
 
 					newFileData = new PutioFileData(
@@ -377,7 +405,7 @@ public class FileDetails extends SherlockFragment {
 					JSONObject obj;
 					try {					
 						InputStream is = utils.getMp4JsonData(getFileId());
-						String string = utils.convertStreamToString(is);
+						String string = PutioUtils.convertStreamToString(is);
 						obj = new JSONObject(string).getJSONObject("mp4");
 						mp4Status = obj.getString("status");
 						

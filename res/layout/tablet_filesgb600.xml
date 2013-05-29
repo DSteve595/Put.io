@@ -1,22 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="horizontal"
-	android:paddingRight="@dimen/padding_large" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:paddingRight="@dimen/padding_large" >
 
-	<fragment
-		android:id="@+id/fragment_files"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight=".6"
-		class="com.stevenschoen.putionew.fragments.Files"
-		tools:layout="@layout/files" />
+    <fragment
+        android:id="@+id/fragment_files"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".6"
+        class="com.stevenschoen.putionew.fragments.Files"
+        tools:layout="@layout/files" />
 
-	<FrameLayout
-		android:id="@+id/fragment_details"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight=".4" />
+    <FrameLayout
+        android:id="@+id/fragment_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight=".4" />
 
 </LinearLayout>

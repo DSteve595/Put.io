@@ -36,11 +36,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -49,7 +46,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.ScrollingTabContainerView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
@@ -96,11 +92,11 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	private Menu mMenu;
 	
-	public static final String invalidateListIntent = "com.stevenschoen.putio.invalidatelist";
-	public static final String checkCacheSizeIntent = "com.stevenschoen.putio.checkcachesize";
-	public static final String fileDownloadUpdateIntent = "com.stevenschoen.putio.filedownloadupdate";
-	public static final String transfersUpdateIntent = "com.stevenschoen.putio.transfersupdate";
-	public static final String noNetworkIntent = "com.stevenschoen.putio.nonetwork";
+	public static final String invalidateListIntent = "com.stevenschoen.putionew.invalidatelist";
+	public static final String checkCacheSizeIntent = "com.stevenschoen.putionew.checkcachesize";
+	public static final String fileDownloadUpdateIntent = "com.stevenschoen.putionew.filedownloadupdate";
+	public static final String transfersUpdateIntent = "com.stevenschoen.putionew.transfersupdate";
+	public static final String noNetworkIntent = "com.stevenschoen.putionew.nonetwork";
 	
 	Account accountFragment;
 	Files filesFragment;
@@ -521,22 +517,6 @@ public class Putio extends SherlockFragmentActivity implements
 					.setText(titles[i])
 					.setTabListener(this));
 		}
-		
-		if (!UIUtils.hasHoneycomb()) {
-			ViewGroup vg = (ViewGroup) findViewById(R.id.abs__action_bar);
-			for (int i = 0; i < vg.getChildCount(); i++) {
-				if (vg.getChildAt(i) instanceof ScrollingTabContainerView) {
-					ViewGroup vg2 = (ViewGroup) vg.getChildAt(i);
-					ViewGroup vg3 = (ViewGroup) vg2.getChildAt(0);
-					vg3.setBackgroundColor(Color.TRANSPARENT);
-					for (int ii = 0; ii < vg3.getChildCount(); ii++) {
-						ViewGroup tab = (ViewGroup) vg3.getChildAt(ii);
-						TextView text = (TextView) tab.getChildAt(0);
-						text.setTextColor(Color.WHITE);
-					}
-				}
-			}
-		}
 	}
 	
 	public void showFilesAndHighlightFile(int parentId, int id) {
@@ -762,7 +742,7 @@ public class Putio extends SherlockFragmentActivity implements
 	private boolean isTransfersServiceRunning() {
 	    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	        if ("com.stevenschoen.putio.PutioTransfersService".equals(service.service.getClassName())) {
+	        if ("com.stevenschoen.putionew.PutioTransfersService".equals(service.service.getClassName())) {
 	            return true;
 	        }
 	    }
