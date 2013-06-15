@@ -4,39 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/filenameholder"
+    <de.ankri.views.AutoScaleTextView
+        android:id="@+id/text_addtransferfile_file"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="@dimen/padding_large"
-        android:paddingLeft="@dimen/padding_large"
-        android:paddingRight="@dimen/padding_large"
-        android:paddingTop="@dimen/padding_large" >
-
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="File:"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/text_addtransferfile_filename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/padding_medium"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/button_addtransferfile_browse"
-        style="@style/Putio.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/filenameholder"
-        android:layout_centerHorizontal="true"
-        android:text="@string/browse" />
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/putio_clickable_dark_button"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="@string/choose_file"
+        android:textSize="20sp" />
 
 </RelativeLayout>

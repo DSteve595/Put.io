@@ -53,8 +53,8 @@ public class PutioFileData implements Parcelable {
 	public static String[] contentTypesArray = new String[] { "file", "application/x-directory",
 			"application/x-iso9660-image", "application/zip",
 			"application/x-rar", "application/x-dosexec", "application/pdf", "text/plain" };
-	public static int[] icons = new int[] { R.drawable.ic_file, R.drawable.ic_folder, R.drawable.ic_image,
-			R.drawable.ic_compressed, R.drawable.ic_compressed, R.drawable.ic_file, R.drawable.ic_pdf, R.drawable.ic_text};
+	public static int[] icons = new int[] { R.drawable.ic_putio_file, R.drawable.ic_putio_folder, R.drawable.ic_putio_image,
+			R.drawable.ic_putio_compressed, R.drawable.ic_putio_compressed, R.drawable.ic_putio_file, R.drawable.ic_putio_pdf, R.drawable.ic_putio_text};
 	
 	List<String> contentTypes = Arrays.asList(contentTypesArray);
 

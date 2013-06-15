@@ -152,7 +152,7 @@ public final class Files extends SherlockFragment {
 		
 		listview = (ListView) view.findViewById(R.id.fileslist);
 		
-		adapter = new FilesAdapter(getSherlockActivity(), R.layout.file,
+		adapter = new FilesAdapter(getSherlockActivity(), R.layout.file_putio,
 				fileLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

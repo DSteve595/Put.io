@@ -107,11 +107,8 @@
         <service android:name=".PutioTransfersService" >
         </service>
 
-        <activity
-            android:name="group.pals.android.lib.ui.filechooser.FileChooserActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
-
-        <service android:name="group.pals.android.lib.ui.filechooser.services.LocalFileProvider" />
+        <activity android:name="com.ipaulpro.afilechooser.FileChooserActivity" >
+        </activity>
     </application>
 
 </manifest>
