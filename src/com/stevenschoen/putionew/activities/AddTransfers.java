@@ -39,6 +39,9 @@ public class AddTransfers extends SherlockFragmentActivity {
 	
 	PutioUtils utils;
 	
+	private static final int TYPE_URL = 1;
+	private static final int TYPE_FILE = -1;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,9 +50,9 @@ public class AddTransfers extends SherlockFragmentActivity {
 		
 		if (getIntent().getAction() != null) {
 			if (getIntent().getScheme().matches("magnet")) {
-				fragmentType = 1;
+				fragmentType = TYPE_URL;
 			} else if (getIntent().getScheme().matches("file")) {
-				fragmentType = -1;
+				fragmentType = TYPE_FILE;
 			}
 		}
 		
@@ -131,13 +134,13 @@ public class AddTransfers extends SherlockFragmentActivity {
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				if (fragmentType == 1) {
+				if (fragmentType == TYPE_URL) {
 					urlFragment = AddTransferUrl.newInstance();
 					Bundle bundle = new Bundle();
 					bundle.putString("url", getIntent().getDataString());
 					urlFragment.setArguments(bundle);
 					return urlFragment;
-				} else if (fragmentType == -1) {
+				} else if (fragmentType == TYPE_FILE) {
 					fileFragment = AddTransferFile.newInstance();
 					return fileFragment;
 				} else {

@@ -1,24 +1,23 @@
 package com.stevenschoen.putionew.fragments;
 
-import group.pals.android.lib.ui.filechooser.FileChooserActivity;
-import group.pals.android.lib.ui.filechooser.io.localfile.LocalFile;
-import group.pals.android.lib.ui.filechooser.services.IFileProvider;
-
 import java.io.File;
-import java.util.List;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.ipaulpro.afilechooser.FileChooserActivity;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.stevenschoen.putionew.R;
 
 public class AddTransferFile extends SherlockFragment {
@@ -30,25 +29,25 @@ public class AddTransferFile extends SherlockFragment {
 	
 	private File chosenFile = null;
 	
-	private TextView textFilename;
+	private TextView textFile;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.addtransfer_file, container, false);
 		
-		Button buttonBrowse = (Button) view.findViewById(R.id.button_addtransferfile_browse);
-		buttonBrowse.setOnClickListener(new OnClickListener() {
+		Typeface robotoLight = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Light.ttf");
+		
+		textFile = (TextView) view.findViewById(R.id.text_addtransferfile_file);
+		textFile.setTypeface(robotoLight);
+		textFile.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getSherlockActivity(), FileChooserActivity.class);
-				intent.putExtra(FileChooserActivity._Rootpath, (Parcelable) new LocalFile("/"));
 				startActivityForResult(intent, 0);
 			}
 		});
-		
-		textFilename = (TextView) view.findViewById(R.id.text_addtransferfile_filename);
 		
 		return view;
 	}
@@ -62,23 +61,18 @@ public class AddTransferFile extends SherlockFragment {
 	    switch (requestCode) {
 	    case 0:
 	        if (resultCode == Activity.RESULT_OK) {
-	            /*
-	             * you can use two flags included in data
-	             */
-	            IFileProvider.FilterMode filterMode = (IFileProvider.FilterMode)
-	                data.getSerializableExtra(FileChooserActivity._FilterMode);
-	            boolean saveDialog = data.getBooleanExtra(FileChooserActivity._SaveDialog, false);
+	        	if (data != null) {
+	        		final Uri uri = data.getData();
 
-	            /*
-	             * a list of files will always return,
-	             * if selection mode is single, the list contains one file
-	             */
-	            List<LocalFile> files = (List<LocalFile>)
-	                data.getSerializableExtra(FileChooserActivity._Results);
-	            for (File f : files) {
-	                chosenFile = f;
-	                textFilename.setText(f.getName());
-	            }
+					try {
+						// Create a file instance from the URI
+						final File file = FileUtils.getFile(uri);
+						textFile.setText(file.getName());
+						chosenFile = file;						
+					} catch (Exception e) {
+						Log.e("FileSelectorTestActivity", "File select error", e);
+					}
+	        	}
 	        }
 	        break;
 	    }
