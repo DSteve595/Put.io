@@ -56,7 +56,8 @@
     <string name="filetoobig">This file is too big! Are you sure it\'s a torrent?</string>
     <string name="nofilechosen">Browse for a file first!</string>
     <string name="streamerror">Sorry, there was an error streaming your video.</string>
-    <string name="couldntconnect">Couldn&amp;apos;t connect to Put.io. Are you online?</string>
+    <string name="couldntconnect">Couldn\'t connect to Put.io. Are you online?</string>
+    <string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
 
     <!-- Other stuff -->
     <string name="account">Account</string>

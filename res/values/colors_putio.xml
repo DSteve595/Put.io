@@ -13,5 +13,6 @@
     <color name="putio_lightgreen">#C8FFC8</color>
     <color name="putio_error">#F0BE76</color>
     <color name="putio_convert_button">#C0DDDDDD</color>
+    <color name="putio_lightred">#FF4444</color>
 
 </resources>

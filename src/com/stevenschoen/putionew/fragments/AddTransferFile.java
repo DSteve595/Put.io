@@ -1,9 +1,10 @@
 package com.stevenschoen.putionew.fragments;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
 import java.io.File;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.ipaulpro.afilechooser.utils.FileUtils;
+import com.ipaulpro.afilechooser.utils.MimeTypes;
+import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.R;
 
 public class AddTransferFile extends SherlockFragment {
@@ -30,6 +33,7 @@ public class AddTransferFile extends SherlockFragment {
 	private File chosenFile = null;
 	
 	private TextView textFile;
+	private TextView textNotATorrent;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +53,9 @@ public class AddTransferFile extends SherlockFragment {
 			}
 		});
 		
+		textNotATorrent = (TextView) view.findViewById(R.id.text_addtransferfile_notatorrent);
+		ViewHelper.setAlpha(textNotATorrent, 0);
+		
 		return view;
 	}
 	
@@ -63,12 +70,17 @@ public class AddTransferFile extends SherlockFragment {
 	        if (resultCode == Activity.RESULT_OK) {
 	        	if (data != null) {
 	        		final Uri uri = data.getData();
-
 					try {
 						// Create a file instance from the URI
 						final File file = FileUtils.getFile(uri);
 						textFile.setText(file.getName());
-						chosenFile = file;						
+						chosenFile = file;
+						String mimetype = new MimeTypes().getMimeType(uri);
+						if (!mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) == 0) {
+							animate(textNotATorrent).alpha(1);
+						} else if (mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) != 0) {
+							animate(textNotATorrent).alpha(0);
+						}
 					} catch (Exception e) {
 						Log.e("FileSelectorTestActivity", "File select error", e);
 					}

@@ -333,14 +333,10 @@ public class Putio extends SherlockFragmentActivity implements
 
 			@Override
 			protected PutioNotification[] doInBackground(Void... nothing) {
-				InputStream is;
 				try {
-					is = utils.getNotificationsJsonData();
-				} catch (Exception e) {
-					return null;
-				}
-				String string = PutioUtils.convertStreamToString(is);
-				try {
+					InputStream is = utils.getNotificationsJsonData();
+					String string = PutioUtils.convertStreamToString(is);
+					
 					JSONObject json = new JSONObject(string);
 					
 					JSONArray notifications = json.getJSONArray("notifications");
@@ -353,8 +349,7 @@ public class Putio extends SherlockFragmentActivity implements
 								show);
 					}
 					return notifs;
-				} catch (JSONException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
 					return null;
 				}
 			}

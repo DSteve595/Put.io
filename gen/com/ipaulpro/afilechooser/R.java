@@ -122,10 +122,10 @@ public final class R {
 		public static final int abs__bright_foreground_disabled_holo_light = 0x7f080005;
 		public static final int abs__bright_foreground_holo_dark = 0x7f080002;
 		public static final int abs__bright_foreground_holo_light = 0x7f080003;
-		public static final int abs__primary_text_disable_only_holo_dark = 0x7f080014;
-		public static final int abs__primary_text_disable_only_holo_light = 0x7f080015;
-		public static final int abs__primary_text_holo_dark = 0x7f080016;
-		public static final int abs__primary_text_holo_light = 0x7f080017;
+		public static final int abs__primary_text_disable_only_holo_dark = 0x7f080015;
+		public static final int abs__primary_text_disable_only_holo_light = 0x7f080016;
+		public static final int abs__primary_text_holo_dark = 0x7f080017;
+		public static final int abs__primary_text_holo_light = 0x7f080018;
 	}
 	public static final class dimen {
 		public static final int abs__action_bar_default_height = 0x7f090001;
@@ -305,9 +305,9 @@ public final class R {
 		public static final int abs__up = 0x7f06000b;
 		public static final int disableHome = 0x7f060009;
 		public static final int edit_query = 0x7f06002b;
-		public static final int explorer_fragment = 0x7f060046;
-		public static final int file_icon = 0x7f060065;
-		public static final int file_name = 0x7f060066;
+		public static final int explorer_fragment = 0x7f060047;
+		public static final int file_icon = 0x7f060066;
+		public static final int file_name = 0x7f060067;
 		public static final int homeAsUp = 0x7f060006;
 		public static final int listMode = 0x7f060002;
 		public static final int normal = 0x7f060001;
