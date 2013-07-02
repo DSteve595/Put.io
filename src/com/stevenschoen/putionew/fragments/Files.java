@@ -178,7 +178,7 @@ public final class Files extends SherlockFragment {
 
 				// If user is in a folder other than root
 				// Lowers the position value to realign with the extra list item
-				if (currentFolderId != 0) {
+				if (isInSubfolder()) {
 					adjustedPosition = position - 1;
 
 					// If user picked the "Go up" option
@@ -324,13 +324,13 @@ public final class Files extends SherlockFragment {
 				.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.context_download:
-				initDownloadFile(fileData[(int) info.id].id);
+				initDownloadFile(fileData[getAdjustedPosition((int) info.id)].id);
 				return true;
 			case R.id.context_rename:
-				initRenameFile(fileData[(int) info.id].id);
+				initRenameFile(fileData[getAdjustedPosition((int) info.id)].id);
 				return true;
 			case R.id.context_delete:
-				initDeleteFile(fileData[(int) info.id].id);
+				initDeleteFile(fileData[getAdjustedPosition((int) info.id)].id);
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -660,7 +660,7 @@ public final class Files extends SherlockFragment {
 				String string = PutioUtils.convertStreamToString(is);
 				json = new JSONObject(string);
 				
-				if (currentFolderId != 0) {
+				if (isInSubfolder()) {
 					try {
 						parentParentId = json.getJSONObject("parent").getInt("parent_id");
 					} catch (JSONException e) {
@@ -807,7 +807,7 @@ public final class Files extends SherlockFragment {
 	}
 	
 	public int getListIdFromFileId(int fileId) {
-		for (int i = 0; i < fileData.length; i++) {
+		for (int i = (isInSubfolder()) ? 1 : 0; i < fileData.length; i++) {
 			if (fileData[i].id == fileId) {
 				return i;
 			}
@@ -847,6 +847,10 @@ public final class Files extends SherlockFragment {
 			currentFolderId = parentParentId;
 		}
 		invalidateList();
+	}
+	
+	public boolean isInSubfolder() {
+		return (currentFolderId != 0);
 	}
 	
 	public void highlightFile(int parentId, int id) {

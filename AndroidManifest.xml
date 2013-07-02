@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putionew"
-    android:versionCode="25"
-    android:versionName="1.5.4" >
+    android:versionCode="26"
+    android:versionName="1.5.5" >
 
     <uses-sdk
         android:minSdkVersion="10"
