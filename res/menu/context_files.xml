@@ -7,6 +7,10 @@
 		android:showAsAction="ifRoom"
 		android:title="Download"/>
 	<item
+		android:id="@+id/context_copydownloadlink"
+		android:showAsAction="never"
+		android:title="Copy download link"/>
+	<item
 		android:id="@+id/context_rename"
 		android:icon="@android:drawable/ic_menu_edit"
 		android:showAsAction="ifRoom"

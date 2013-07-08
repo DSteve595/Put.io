@@ -1225,10 +1225,11 @@ containing a value of this type.
         public static final int buttonbarSeparator=0x7f06004c;
         public static final int center=0x7f0600a5;
         public static final int checkbox_addtransfer_extract=0x7f060046;
-        public static final int context_delete=0x7f0600c0;
+        public static final int context_copydownloadlink=0x7f0600bf;
+        public static final int context_delete=0x7f0600c1;
         public static final int context_download=0x7f0600be;
-        public static final int context_remove=0x7f0600c1;
-        public static final int context_rename=0x7f0600bf;
+        public static final int context_remove=0x7f0600c2;
+        public static final int context_rename=0x7f0600c0;
         public static final int createdHolder=0x7f06006f;
         public static final int descriptionFrame=0x7f06006b;
         public static final int dialog_title=0x7f060048;
@@ -1274,13 +1275,13 @@ containing a value of this type.
         public static final int listMode=0x7f060002;
         public static final int loading_setup=0x7f0600a2;
         public static final int logoHolder=0x7f06009d;
-        public static final int menu_about=0x7f0600c7;
-        public static final int menu_addtransfers=0x7f0600c4;
-        public static final int menu_delete=0x7f0600c3;
-        public static final int menu_logout=0x7f0600c6;
-        public static final int menu_search=0x7f0600c8;
-        public static final int menu_settings=0x7f0600c5;
-        public static final int menu_share=0x7f0600c2;
+        public static final int menu_about=0x7f0600c8;
+        public static final int menu_addtransfers=0x7f0600c5;
+        public static final int menu_delete=0x7f0600c4;
+        public static final int menu_logout=0x7f0600c7;
+        public static final int menu_search=0x7f0600c9;
+        public static final int menu_settings=0x7f0600c6;
+        public static final int menu_share=0x7f0600c3;
         public static final int nameHolder=0x7f060044;
         public static final int normal=0x7f060001;
         public static final int nothingview=0x7f060093;
@@ -1428,7 +1429,7 @@ containing a value of this type.
         public static final int transfersnonetwork=0x7f030049;
     }
     public static final class menu {
-        public static final int context=0x7f0d0000;
+        public static final int context_files=0x7f0d0000;
         public static final int context_transfers=0x7f0d0001;
         public static final int filedetails=0x7f0d0002;
         public static final int putio=0x7f0d0003;
@@ -1476,17 +1477,17 @@ containing a value of this type.
         public static final int abs__shareactionprovider_share_with_application=0x7f0b0007;
         /**  Other stuff 
          */
-        public static final int account=0x7f0b0045;
+        public static final int account=0x7f0b0046;
         public static final int add=0x7f0b0018;
         public static final int addtransferstitle=0x7f0b003a;
         public static final int app_name=0x7f0b0011;
         /**  About screen 
          */
-        public static final int appbysteven=0x7f0b005f;
+        public static final int appbysteven=0x7f0b0061;
         public static final int apply=0x7f0b0021;
-        public static final int applychanges=0x7f0b0053;
+        public static final int applychanges=0x7f0b0054;
         public static final int applychangestitle=0x7f0b003b;
-        public static final int at=0x7f0b004c;
+        public static final int at=0x7f0b004d;
         public static final int browse=0x7f0b0029;
         public static final int cancel=0x7f0b0015;
         /**  Errors (for users) 
@@ -1494,9 +1495,10 @@ containing a value of this type.
         public static final int cantopenbecausefuckyou=0x7f0b003c;
         public static final int cantopenbecausetype=0x7f0b003d;
         public static final int choose_file=0x7f0b000f;
-        public static final int codedwithlove=0x7f0b0060;
+        public static final int codedwithlove=0x7f0b0062;
         public static final int couldntconnect=0x7f0b0043;
-        public static final int created=0x7f0b004b;
+        public static final int couldntgetdownloadlink=0x7f0b0045;
+        public static final int created=0x7f0b004c;
         public static final int delete=0x7f0b0027;
         public static final int deletebody=0x7f0b002f;
         public static final int deletetitle=0x7f0b002e;
@@ -1505,23 +1507,23 @@ containing a value of this type.
         public static final int downloadfinishedopentitle=0x7f0b0032;
         public static final int downloadfinishedsharetitle=0x7f0b0033;
         public static final int empty_directory=0x7f0b000d;
-        public static final int entertoken=0x7f0b0055;
+        public static final int entertoken=0x7f0b0056;
         public static final int error_selecting_file=0x7f0b0010;
-        public static final int extractwhenfinished=0x7f0b0059;
-        public static final int filedeleted=0x7f0b005c;
-        public static final int files=0x7f0b0046;
+        public static final int extractwhenfinished=0x7f0b005a;
+        public static final int filedeleted=0x7f0b005d;
+        public static final int files=0x7f0b0047;
         public static final int filetoobig=0x7f0b0040;
         public static final int gettingstreamurlbody=0x7f0b002c;
         /**  Dialog text 
          */
         public static final int gettingstreamurltitle=0x7f0b002b;
-        public static final int gotosite=0x7f0b004e;
-        public static final int hey=0x7f0b005e;
-        public static final int intro1=0x7f0b004f;
-        public static final int intro2=0x7f0b0050;
-        public static final int loading=0x7f0b004a;
+        public static final int gotosite=0x7f0b004f;
+        public static final int hey=0x7f0b005f;
+        public static final int intro1=0x7f0b0050;
+        public static final int intro2=0x7f0b0051;
+        public static final int loading=0x7f0b004b;
         public static final int log_in=0x7f0b0020;
-        public static final int loginsuccess=0x7f0b0048;
+        public static final int loginsuccess=0x7f0b0049;
         public static final int menu_about=0x7f0b001f;
         public static final int menu_addtransfers=0x7f0b001a;
         public static final int menu_delete=0x7f0b001e;
@@ -1530,14 +1532,15 @@ containing a value of this type.
         public static final int menu_share=0x7f0b001d;
         public static final int no=0x7f0b0013;
         public static final int nofilechosen=0x7f0b0041;
-        public static final int nofilesfound=0x7f0b005b;
-        public static final int notaffiliated=0x7f0b0061;
+        public static final int nofilesfound=0x7f0b005c;
+        public static final int notaffiliated=0x7f0b0063;
         public static final int notatorrent=0x7f0b0044;
         public static final int nothingenteredtofetch=0x7f0b003f;
         public static final int ok=0x7f0b0026;
         public static final int open=0x7f0b0024;
-        public static final int pasteurls=0x7f0b0056;
+        public static final int pasteurls=0x7f0b0057;
         public static final int play=0x7f0b0019;
+        public static final int readytopaste=0x7f0b0060;
         public static final int redownload=0x7f0b0023;
         public static final int redownloadfordlbody=0x7f0b0036;
         public static final int redownloadforopenbody=0x7f0b0037;
@@ -1550,22 +1553,22 @@ containing a value of this type.
         public static final int renametitle=0x7f0b002d;
         public static final int save=0x7f0b0014;
         public static final int search=0x7f0b0028;
-        public static final int searchyourfiles=0x7f0b005a;
+        public static final int searchyourfiles=0x7f0b005b;
         public static final int share=0x7f0b0025;
         public static final int sharebody=0x7f0b0039;
         public static final int sharetitle=0x7f0b0038;
-        public static final int size_is=0x7f0b0049;
-        public static final int slogan1=0x7f0b0051;
-        public static final int slogan2=0x7f0b0052;
+        public static final int size_is=0x7f0b004a;
+        public static final int slogan1=0x7f0b0052;
+        public static final int slogan2=0x7f0b0053;
         public static final int storage_removed=0x7f0b000e;
         public static final int streamerror=0x7f0b0042;
-        public static final int title_activity_swipe=0x7f0b0057;
-        public static final int tokenlogin=0x7f0b0054;
-        public static final int torrentadded=0x7f0b0058;
+        public static final int title_activity_swipe=0x7f0b0058;
+        public static final int tokenlogin=0x7f0b0055;
+        public static final int torrentadded=0x7f0b0059;
         public static final int transferfailed=0x7f0b003e;
-        public static final int transferremoved=0x7f0b005d;
-        public static final int transfers=0x7f0b0047;
-        public static final int welcome=0x7f0b004d;
+        public static final int transferremoved=0x7f0b005e;
+        public static final int transfers=0x7f0b0048;
+        public static final int welcome=0x7f0b004e;
         /**  Short commands and responses 
          */
         public static final int yes=0x7f0b0012;

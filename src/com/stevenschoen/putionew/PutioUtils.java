@@ -32,10 +32,12 @@ import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +47,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.text.ClipboardManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -418,7 +421,8 @@ public class PutioUtils {
 			throws UnsupportedEncodingException, SocketTimeoutException {
 		URL url = null;
 		try {
-			url = new URL(baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1" + tokenWithStuff);
+			url = new URL(baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1"
+					+ tokenWithStuff);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -497,7 +501,6 @@ public class PutioUtils {
 						int[] folder = new int[] {id};
 						dlId = downloadZipWithUrl(context, folder, filename,
 								getZipDownloadUrl(folder).replace("https://", "http://"));
-//									resolveRedirect(getFileDownloadUrl(id).replace("https://", "http://")));
 						return dlId;
 					} else {
 						try {
@@ -537,7 +540,8 @@ public class PutioUtils {
 					serviceOpenIntent.putExtra("filename", filename);
 					serviceOpenIntent.putExtra("mode", actionWhenDone);
 					context.startService(serviceOpenIntent);
-					Toast.makeText(context, "Your file will open as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+					Toast.makeText(context, "Your file will open as soon as it is finished downloading.",
+							Toast.LENGTH_LONG).show();
 					break;
 				case ACTION_SHARE:
 					Intent serviceShareIntent = new Intent(context, PutioOpenFileService.class);
@@ -667,6 +671,57 @@ public class PutioUtils {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void copyDownloadLink(final Context context, int id) {
+		class GetDlLinkTask extends AsyncTask<Integer, Void, String> {
+			Dialog dialog;
+			
+			@Override
+			protected void onPreExecute() {
+				dialog = PutioUtils.PutioDialog(context, "Copying download link", R.layout.dialog_loading);
+				dialog.show();
+			}
+
+			@Override
+			protected String doInBackground(Integer... fileId) {
+				try {
+					return PutioUtils.resolveRedirect(baseUrl + "files/" + fileId[0] + "/download"
+							+ tokenWithStuff);
+				} catch (ClientProtocolException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+			@SuppressLint({ "NewApi", "ServiceCast" })
+			@Override
+			protected void onPostExecute(String result) {
+				dialog.dismiss();
+				if (result != null) {
+					if (UIUtils.hasHoneycomb()) {
+						android.content.ClipboardManager clip =
+								(android.content.ClipboardManager) context.getSystemService(
+								Context.CLIPBOARD_SERVICE);
+						clip.setPrimaryClip(ClipData.newPlainText("Download link", result));
+					} else {
+						android.text.ClipboardManager clip =
+								(android.text.ClipboardManager) context.getSystemService(
+								Context.CLIPBOARD_SERVICE);
+						clip.setText(result);
+					}
+					Toast.makeText(context, context.getString(R.string.readytopaste),
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(context, context.getString(R.string.couldntgetdownloadlink),
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+		
+		new GetDlLinkTask().execute(id);
 	}
 	
 	public static String resolveRedirect(String url) throws ClientProtocolException, IOException {

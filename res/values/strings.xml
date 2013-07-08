@@ -58,6 +58,7 @@
     <string name="streamerror">Sorry, there was an error streaming your video.</string>
     <string name="couldntconnect">Couldn\'t connect to Put.io. Are you online?</string>
     <string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
+    <string name="couldntgetdownloadlink">There was a problem getting the download link.</string>
 
     <!-- Other stuff -->
     <string name="account">Account</string>
@@ -86,6 +87,7 @@
 	<string name="filedeleted">File deleted!</string>
 	<string name="transferremoved">Transfer removed!</string>
 	<string name="hey">Hey!</string>
+	<string name="readytopaste">The download link is ready to be pasted.</string>
 
     <!-- About screen -->
     <string name="appbysteven">Android app by Steven Schoen.</string>

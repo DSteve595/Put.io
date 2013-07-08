@@ -313,7 +313,7 @@ public final class Files extends SherlockFragment {
 			if (v.getId() == R.id.fileslist) {
 				menu.setHeaderTitle(fileData[getAdjustedPosition(info.position)].name);
 			    MenuInflater inflater = getSherlockActivity().getMenuInflater();
-			    inflater.inflate(R.menu.context, menu);
+			    inflater.inflate(R.menu.context_files, menu);
 			}
 		}
 	}
@@ -325,6 +325,9 @@ public final class Files extends SherlockFragment {
 		switch (item.getItemId()) {
 			case R.id.context_download:
 				initDownloadFile(fileData[getAdjustedPosition((int) info.id)].id);
+				return true;
+			case R.id.context_copydownloadlink:
+				initCopyFileDownloadLink(fileData[getAdjustedPosition((int) info.id)].id);
 				return true;
 			case R.id.context_rename:
 				initRenameFile(fileData[getAdjustedPosition((int) info.id)].id);
@@ -344,6 +347,10 @@ public final class Files extends SherlockFragment {
 				fileId, fileData[listId].isFolder, fileData[listId].name, PutioUtils.ACTION_NOTHING);
 	}
 	
+	private void initCopyFileDownloadLink(int fileId) {
+		utils.copyDownloadLink(getSherlockActivity(), fileId);
+	}
+
 	private void initRenameFile(final int fileId) {
 		final int listId = getListIdFromFileId(fileId);
 		
