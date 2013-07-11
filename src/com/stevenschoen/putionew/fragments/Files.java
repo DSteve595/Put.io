@@ -341,10 +341,10 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void initDownloadFile(final int fileId) {
-		final int listId = getListIdFromFileId(fileId);
+		final int index = getIndexFromFileId(fileId);
 		
 		utils.downloadFile(getSherlockActivity(),
-				fileId, fileData[listId].isFolder, fileData[listId].name, PutioUtils.ACTION_NOTHING);
+				fileId, fileData[index].isFolder, fileData[index].name, PutioUtils.ACTION_NOTHING);
 	}
 	
 	private void initCopyFileDownloadLink(int fileId) {
@@ -352,20 +352,20 @@ public final class Files extends SherlockFragment {
 	}
 
 	private void initRenameFile(final int fileId) {
-		final int listId = getListIdFromFileId(fileId);
+		final int index = getIndexFromFileId(fileId);
 		
 		final Dialog renameDialog = PutioUtils.PutioDialog(getSherlockActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
 		renameDialog.show();
 		
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
-		textFileName.setText(fileData[listId].name);
+		textFileName.setText(fileData[index].name);
 		
 		ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
 		btnUndoName.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				textFileName.setText(fileData[listId].name);
+				textFileName.setText(fileData[index].name);
 			}
 		});
 		
@@ -385,7 +385,7 @@ public final class Files extends SherlockFragment {
 			@Override
 			public void onClick(View arg0) {
 				utils.applyFileToServer(getSherlockActivity(),
-						fileId, fileData[listId].name, textFileName.getText().toString());
+						fileId, fileData[index].name, textFileName.getText().toString());
 				renameDialog.dismiss();
 			}
 		});
@@ -573,7 +573,7 @@ public final class Files extends SherlockFragment {
 		fileLayouts = files;
 		
 		if (highlightId != 0) {
-			int highlightPos = getListIdFromFileId(highlightId);
+			int highlightPos = getIndexFromFileId(highlightId);
 			
 			listview.requestFocus();
 			listview.setSelection(highlightPos);
@@ -813,8 +813,8 @@ public final class Files extends SherlockFragment {
 		}
 	}
 	
-	public int getListIdFromFileId(int fileId) {
-		for (int i = (isInSubfolder()) ? 1 : 0; i < fileData.length; i++) {
+	public int getIndexFromFileId(int fileId) {
+		for (int i = 0; i < fileData.length; i++) {
 			if (fileData[i].id == fileId) {
 				return i;
 			}
@@ -866,7 +866,7 @@ public final class Files extends SherlockFragment {
 	}
 	
 	public void setFileChecked(int fileId, boolean checked) {
-		listview.setItemChecked(getListIdFromFileId(fileId), checked);
+		listview.setItemChecked(getIndexFromFileId(fileId), checked);
 	}
 	
 	@Override
