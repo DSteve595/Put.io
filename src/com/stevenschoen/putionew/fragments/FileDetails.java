@@ -14,7 +14,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -25,8 +24,13 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,11 +43,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.FlushedInputStream;
 import com.stevenschoen.putionew.PutioFileData;
@@ -51,8 +50,7 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 
-@SuppressLint("ValidFragment")
-public class FileDetails extends SherlockFragment {
+public class FileDetails extends Fragment {
 	PutioFileData origFileData;
 	PutioFileData newFileData;
 	
@@ -126,9 +124,9 @@ public class FileDetails extends SherlockFragment {
 			Bundle savedInstanceState) {
 		
 		int fileDetailsLayoutId = R.layout.filedetails;
-		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
+		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
 			fileDetailsLayoutId = R.layout.filedetailsgbhori;
-		} else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
+		} else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
 			fileDetailsLayoutId = R.layout.filedetailsgbvert;
 		} else if (!UIUtils.hasHoneycomb()) {
 			fileDetailsLayoutId = R.layout.filedetailsgbvert;
@@ -136,20 +134,20 @@ public class FileDetails extends SherlockFragment {
 		
 		final View view = inflater.inflate(fileDetailsLayoutId, container, false);
 		
-		if (UIUtils.isTablet(getSherlockActivity())) {
+		if (UIUtils.isTablet(getActivity())) {
 			view.setBackgroundResource(R.drawable.card_bg_r8);
 			
 			view.post(new Runnable() {
 				@Override
 				public void run() {
-					if (PutioUtils.dpFromPx(getSherlockActivity(), view.getHeight()) > 560) {
+					if (PutioUtils.dpFromPx(getActivity(), view.getHeight()) > 560) {
 						view.getLayoutParams().height =
-								(int) PutioUtils.pxFromDp(getSherlockActivity(), 560);
+								(int) PutioUtils.pxFromDp(getActivity(), 560);
 					}
 					
-					if (PutioUtils.dpFromPx(getSherlockActivity(), view.getWidth()) > 400) {
+					if (PutioUtils.dpFromPx(getActivity(), view.getWidth()) > 400) {
 						view.getLayoutParams().width =
-								(int) PutioUtils.pxFromDp(getSherlockActivity(), 400);
+								(int) PutioUtils.pxFromDp(getActivity(), 400);
 					}
 					
 					View parent = (View) view.getParent();
@@ -249,7 +247,7 @@ public class FileDetails extends SherlockFragment {
 			@Override
 			public void onClick(View arg0) {
 				if (!UIUtils.isTablet(getActivity())) {
-					getSherlockActivity().finish();
+					getActivity().finish();
 				} else {
 					mCallbacks.onFDCancelled();
 				}
@@ -295,8 +293,9 @@ public class FileDetails extends SherlockFragment {
 
 			@Override
 			public void run() {
-				if (PutioUtils.dpFromPx(getSherlockActivity(), filePreviewBox.getWidth()) > 460) {
-					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) PutioUtils.pxFromDp(getSherlockActivity(), 460),
+				if (PutioUtils.dpFromPx(getActivity(), filePreviewBox.getWidth()) > 460) {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+							(int) PutioUtils.pxFromDp(getActivity(), 460),
 							filePreviewBox.getHeight());
 					params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 					filePreviewBox.setLayoutParams(params);
@@ -436,7 +435,7 @@ public class FileDetails extends SherlockFragment {
 	
 	private void initActionFile(final int mode) {
 		if (PutioUtils.idIsDownloaded(getFileId())) {
-			final Dialog dialog = PutioUtils.PutioDialog(getSherlockActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownload);
+			final Dialog dialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownload);
 			dialog.show();
 			
 			TextView textBody = (TextView) dialog.findViewById(R.id.text_redownloadbody);
@@ -455,7 +454,7 @@ public class FileDetails extends SherlockFragment {
 
 					@Override
 					public void onClick(View v) {
-						PutioUtils.openDownloadedId(getFileId(), getSherlockActivity());
+						PutioUtils.openDownloadedId(getFileId(), getActivity());
 						dialog.dismiss();
 					}
 				});
@@ -469,7 +468,7 @@ public class FileDetails extends SherlockFragment {
 				@Override
 				public void onClick(View v) {
 					PutioUtils.deleteId(getFileId());
-					utils.downloadFile(getSherlockActivity(), origFileData.id, false, getNewFilename(), mode);
+					utils.downloadFile(getActivity(), origFileData.id, false, getNewFilename(), mode);
 					dialog.dismiss();
 				}
 			});
@@ -483,20 +482,20 @@ public class FileDetails extends SherlockFragment {
 				}
 			});
 		} else {
-			utils.downloadFile(getSherlockActivity(), getFileId(), false, getNewFilename(), mode);
+			utils.downloadFile(getActivity(), getFileId(), false, getNewFilename(), mode);
 		}
 	}
 	
 	private void initShareFile() {
 		if (PutioUtils.idIsDownloaded(getFileId())) {
-			PutioUtils.shareDownloadedId(getFileId(), getSherlockActivity());
+			PutioUtils.shareDownloadedId(getFileId(), getActivity());
 		} else {
-			utils.downloadFile(getSherlockActivity(), origFileData.id, false, getNewFilename(), PutioUtils.ACTION_SHARE);
+			utils.downloadFile(getActivity(), origFileData.id, false, getNewFilename(), PutioUtils.ACTION_SHARE);
 		}
 	}
 	
 	private void initDeleteFile() {
-		PutioUtils.showDeleteFileDialog(getSherlockActivity(), getFileId());
+		PutioUtils.showDeleteFileDialog(getActivity(), getFileId());
 	}
 	
 	@Override
@@ -570,7 +569,7 @@ public class FileDetails extends SherlockFragment {
 		
 		@Override
 		public void onPreExecute() {
-			gettingStreamDialog = PutioUtils.PutioDialog(getSherlockActivity(),
+			gettingStreamDialog = PutioUtils.PutioDialog(getActivity(),
 					getString(R.string.gettingstreamurltitle),
 					R.layout.dialog_loading);
 			gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
@@ -606,7 +605,7 @@ public class FileDetails extends SherlockFragment {
 			} else {
 				type = PutioUtils.TYPE_VIDEO;
 			}
-			utils.stream(getSherlockActivity(), finalUrl, type);
+			utils.stream(getActivity(), finalUrl, type);
 		}
 	}
 	
@@ -640,7 +639,7 @@ public class FileDetails extends SherlockFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (UIUtils.isTablet(getSherlockActivity())) {
+        if (UIUtils.isTablet(getActivity())) {
         	mCallbacks = (Callbacks) activity;
         }
     }
@@ -653,9 +652,9 @@ public class FileDetails extends SherlockFragment {
     }
 	
 	public void applyFileToServerAndFinish() {
-		utils.applyFileToServer(getSherlockActivity(), newFileData.id, origFileData.name, newFileData.name);
-		if (!UIUtils.isTablet(getSherlockActivity())) {
-			getSherlockActivity().finish();
+		utils.applyFileToServer(getActivity(), newFileData.id, origFileData.name, newFileData.name);
+		if (!UIUtils.isTablet(getActivity())) {
+			getActivity().finish();
 		} else {
 			mCallbacks.onFDFinished();
 		}

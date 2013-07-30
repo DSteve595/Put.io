@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -16,15 +17,14 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.stevenschoen.putionew.PutioTransferData;
 import com.stevenschoen.putionew.PutioTransferLayout;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.PutioTransferData;
 
-public final class Transfers extends SherlockFragment {
+public final class Transfers extends Fragment {
 	
 	private TransfersAdapter adapter;
 	private ArrayList<PutioTransferLayout> transferLayouts = new ArrayList<PutioTransferLayout>();
@@ -78,12 +78,12 @@ public final class Transfers extends SherlockFragment {
 		
 		listview = (ListView) view.findViewById(R.id.transferslist);
 		
-		adapter = new TransfersAdapter(getSherlockActivity(), R.layout.transfer,
+		adapter = new TransfersAdapter(getActivity(), R.layout.transfer,
 				transferLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
-		if (UIUtils.isTablet(getSherlockActivity())) {
+		if (UIUtils.isTablet(getActivity())) {
 			listview.setVerticalFadingEdgeEnabled(true);
 		}
 		listview.setOnItemClickListener(new OnItemClickListener() {
@@ -163,7 +163,7 @@ public final class Transfers extends SherlockFragment {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		
 		menu.setHeaderTitle(transfersData[info.position].name);
-	    MenuInflater inflater = getSherlockActivity().getMenuInflater();
+	    MenuInflater inflater = getActivity().getMenuInflater();
 	    inflater.inflate(R.menu.context_transfers, menu);
 	}
 	
@@ -184,7 +184,7 @@ public final class Transfers extends SherlockFragment {
 		if(transfersData[idInList].status.matches("COMPLETED")) {
 			PutioUtils.removeTransferAsync(getActivity(), transfersData[idInList].id);
 		} else {
-			PutioUtils.showRemoveTransferDialog(getSherlockActivity(), transfersData[idInList].id);
+			PutioUtils.showRemoveTransferDialog(getActivity(), transfersData[idInList].id);
 		}
 	}
 	

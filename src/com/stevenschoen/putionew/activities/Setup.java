@@ -18,6 +18,9 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -25,16 +28,13 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 
-public class Setup extends SherlockActivity {
+public class Setup extends ActionBarActivity {
 	public SharedPreferences sharedPrefs;
 	private WebView loginWebView;
 	
@@ -128,19 +128,19 @@ public class Setup extends SherlockActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem buttonTokenLogin = menu.add("Alternate login");
-		buttonTokenLogin.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		buttonTokenLogin.setIcon(android.R.drawable.ic_menu_preferences);
-		buttonTokenLogin.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-			
-			public boolean onMenuItemClick(MenuItem item) {
-				Dialog tokenLoginDialog = new Dialog(Setup.this, R.style.Putio_Dialog);
-				tokenLoginDialog.setContentView(R.layout.dialog_tokenlogin);
-				return false;
-			}
-		});
+//		MenuItem buttonTokenLogin = menu.add("Alternate login");
+//		buttonTokenLogin.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//		buttonTokenLogin.setIcon(android.R.drawable.ic_menu_preferences);
+//		buttonTokenLogin.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//			
+//			public boolean onMenuItemClick(MenuItem item) {
+//				Dialog tokenLoginDialog = new Dialog(Setup.this, R.style.Putio_Dialog);
+//				tokenLoginDialog.setContentView(R.layout.dialog_tokenlogin);
+//				return false;
+//			}
+//		});
 		
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	private void setViewMode(int mode) {

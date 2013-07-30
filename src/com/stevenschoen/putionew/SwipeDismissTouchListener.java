@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;

@@ -3,18 +3,18 @@ package com.stevenschoen.putionew.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.activities.Putio;
 
-public class About extends SherlockFragment {
+public class About extends Fragment {
 	public static About newInstance() {
 		About fragment = new About();
 		
@@ -44,7 +44,7 @@ public class About extends SherlockFragment {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			Intent homeIntent = new Intent(getSherlockActivity(), Putio.class);
+			Intent homeIntent = new Intent(getActivity(), Putio.class);
 			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(homeIntent);
 			return true;

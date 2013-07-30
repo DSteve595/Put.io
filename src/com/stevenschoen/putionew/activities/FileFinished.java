@@ -2,16 +2,16 @@ package com.stevenschoen.putionew.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 
-public class FileFinished extends SherlockActivity {
+public class FileFinished extends ActionBarActivity {
 	int mode;
 	
 	@Override

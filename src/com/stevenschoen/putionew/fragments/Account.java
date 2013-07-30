@@ -6,18 +6,18 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.stevenschoen.putionew.PutioAccountInfo;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 
-public class Account extends SherlockFragment {
+public class Account extends Fragment {
 	public static Account newInstance() {
 		Account fragment = new Account();
 		
@@ -37,7 +37,7 @@ public class Account extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getSherlockActivity());		
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());		
 		String token = sharedPrefs.getString("token", null);
 		utils = new PutioUtils(token, sharedPrefs);
 	}
@@ -47,9 +47,9 @@ public class Account extends SherlockFragment {
 			Bundle savedInstanceState) {
 		
 		int accountLayoutId = R.layout.account;
-		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
+		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
 			accountLayoutId = R.layout.accountgbhori;
-		} else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getSherlockActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
+		} else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
 			accountLayoutId = R.layout.accountgbvert;
 		} else if (!UIUtils.hasHoneycomb()) {
 			accountLayoutId = R.layout.accountgbvert;

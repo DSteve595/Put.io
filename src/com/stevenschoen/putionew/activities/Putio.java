@@ -8,7 +8,6 @@ import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.animation.LayoutTransition;
@@ -36,6 +35,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -43,28 +47,23 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioNotification;
-import com.stevenschoen.putionew.PutioTransferData;
 import com.stevenschoen.putionew.PutioTransfersService;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.SwipeDismissTouchListener;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.PutioTransferData;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
 
-public class Putio extends SherlockFragmentActivity implements
+public class Putio extends ActionBarActivity implements
 		ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
 
 	/**
@@ -87,8 +86,6 @@ public class Putio extends SherlockFragmentActivity implements
 	SharedPreferences sharedPrefs;
 	
 	Bundle savedInstanceState;
-
-	private ActionBar actionBar;
 	
 	private Menu mMenu;
 	
@@ -129,10 +126,8 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		this.savedInstanceState = savedInstanceState;
 		
-		actionBar = getSupportActionBar();
-		
 		if (UIUtils.isTablet(this)) {
-			actionBar.setDisplayShowTitleEnabled(false);
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
 		}
 		
 		titleAccount = getString(R.string.account).toUpperCase(Locale.US);
@@ -207,14 +202,14 @@ public class Putio extends SherlockFragmentActivity implements
 		super.onSaveInstanceState(outState);
 		
 		try {
-			outState.putInt("currentTab", actionBar.getSelectedTab().getPosition());
+			outState.putInt("currentTab", getSupportActionBar().getSelectedTab().getPosition());
 		} catch (NullPointerException e) {
 		}
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.putio, menu);
+		getMenuInflater().inflate(R.menu.putio, menu);
 		
 		mMenu = menu;
 		
@@ -463,7 +458,7 @@ public class Putio extends SherlockFragmentActivity implements
 	}
 	
 	private void setupTabletLayout() {
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		// Account
 		int tabletAccountLayoutId = R.layout.tablet_account;
@@ -508,7 +503,7 @@ public class Putio extends SherlockFragmentActivity implements
 		
 		// Other		
 		for (int i = 0; i < 3; i++) {
-			actionBar.addTab(actionBar.newTab()
+			getSupportActionBar().addTab(getSupportActionBar().newTab()
 					.setText(titles[i])
 					.setTabListener(this));
 		}
@@ -693,7 +688,7 @@ public class Putio extends SherlockFragmentActivity implements
 	
 	private void selectTab(int position) {
 		if (UIUtils.isTablet(this)) {
-			actionBar.setSelectedNavigationItem(position);
+			getSupportActionBar().setSelectedNavigationItem(position);
 		} else {
 			if (mViewPager.getCurrentItem() != position) mViewPager.setCurrentItem(position, false);
 		}

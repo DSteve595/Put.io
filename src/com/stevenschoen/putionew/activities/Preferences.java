@@ -5,12 +5,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.stevenschoen.putionew.R;
 
-public final class Preferences extends SherlockPreferenceActivity implements
+public final class Preferences extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	// Check /res/xml/preferences.xml file for this preference
@@ -19,9 +18,6 @@ public final class Preferences extends SherlockPreferenceActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		addPreferencesFromResource(R.xml.preferences);
 

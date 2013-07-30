@@ -13,19 +13,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.AddTransferFile;
 import com.stevenschoen.putionew.fragments.AddTransferUrl;
 
-public class AddTransfers extends SherlockFragmentActivity {
+public class AddTransfers extends ActionBarActivity {
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
 	PagerTitleStrip mPagerTitleStrip;

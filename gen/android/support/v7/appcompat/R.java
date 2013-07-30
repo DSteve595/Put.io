@@ -4,7 +4,7 @@
  * aapt tool from the resource data it found.  It
  * should not be modified by hand.
  */
-package com.ipaulpro.afilechooser;
+package android.support.v7.appcompat;
 
 public final class R {
 	public static final class anim {
@@ -154,8 +154,6 @@ public final class R {
 		public static final int abc_panel_menu_list_width = 0x7f09000a;
 		public static final int abc_search_view_preferred_width = 0x7f09000c;
 		public static final int abc_search_view_text_min_width = 0x7f09000b;
-		public static final int list_item_padding = 0x7f090011;
-		public static final int list_padding = 0x7f090010;
 	}
 	public static final class drawable {
 		public static final int abc_ab_bottom_solid_dark_holo = 0x7f020001;
@@ -245,9 +243,6 @@ public final class R {
 		public static final int abc_textfield_searchview_holo_light = 0x7f020055;
 		public static final int abc_textfield_searchview_right_holo_dark = 0x7f020056;
 		public static final int abc_textfield_searchview_right_holo_light = 0x7f020057;
-		public static final int ic_chooser = 0x7f02007a;
-		public static final int ic_file = 0x7f02007c;
-		public static final int ic_folder = 0x7f02007d;
 	}
 	public static final class id {
 		public static final int action_bar = 0x7f06001a;
@@ -276,9 +271,6 @@ public final class R {
 		public static final int end = 0x7f060013;
 		public static final int expand_activities_button = 0x7f060024;
 		public static final int expanded_menu = 0x7f06002a;
-		public static final int explorer_fragment = 0x7f060057;
-		public static final int file_icon = 0x7f060076;
-		public static final int file_name = 0x7f060077;
 		public static final int home = 0x7f060014;
 		public static final int homeAsUp = 0x7f060005;
 		public static final int icon = 0x7f060028;
@@ -348,8 +340,6 @@ public final class R {
 		public static final int abc_screen = 0x7f030015;
 		public static final int abc_search_dropdown_item_icons_2line = 0x7f030016;
 		public static final int abc_search_view = 0x7f030017;
-		public static final int chooser = 0x7f030020;
-		public static final int file = 0x7f03002c;
 		public static final int support_simple_spinner_dropdown_item = 0x7f030040;
 	}
 	public static final class string {
@@ -366,10 +356,6 @@ public final class R {
 		public static final int abc_searchview_description_voice = 0x7f0b0008;
 		public static final int abc_shareactionprovider_share_with = 0x7f0b000c;
 		public static final int abc_shareactionprovider_share_with_application = 0x7f0b000b;
-		public static final int choose_file = 0x7f0b000f;
-		public static final int empty_directory = 0x7f0b000d;
-		public static final int error_selecting_file = 0x7f0b0010;
-		public static final int storage_removed = 0x7f0b000e;
 	}
 	public static final class style {
 		public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog = 0x7f0c0061;
@@ -499,8 +485,6 @@ public final class R {
 		public static final int Widget_AppCompat_ProgressBar = 0x7f0c000a;
 		public static final int Widget_AppCompat_ProgressBar_Horizontal = 0x7f0c0009;
 		public static final int Widget_AppCompat_Spinner_DropDown_ActionBar = 0x7f0c0022;
-		public static final int fileChooserIcon = 0x7f0c0080;
-		public static final int fileChooserName = 0x7f0c007f;
 	}
 	public static final class styleable {
 		public static final int[] ActionBar = { 0x7f010021, 0x7f010022, 0x7f010023, 0x7f010024, 0x7f010025, 0x7f010026, 0x7f010027, 0x7f010028, 0x7f010029, 0x7f01002a, 0x7f01002b, 0x7f01002c, 0x7f01002d, 0x7f01002e, 0x7f01002f, 0x7f010030, 0x7f010031, 0x7f010032, 0x7f010033 };
@@ -609,8 +593,5 @@ public final class R {
 		public static final int View_android_focusable = 0;
 		public static final int View_paddingEnd = 2;
 		public static final int View_paddingStart = 1;
-	}
-	public static final class xml {
-		public static final int mimetypes = 0x7f050000;
 	}
 }

@@ -47,7 +47,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.text.ClipboardManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;

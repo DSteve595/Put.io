@@ -4,14 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.FileDetails;
 
-public class FileDetailsActivity extends SherlockFragmentActivity {
+public class FileDetailsActivity extends ActionBarActivity {
 	private FileDetails fileDetailsFragment;
 
 	public void onCreate(Bundle savedInstanceState) {

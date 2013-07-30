@@ -4,11 +4,14 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +19,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.ipaulpro.afilechooser.FileChooserActivity;
-import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.ipaulpro.afilechooser.utils.MimeTypes;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.R;
 
-public class AddTransferFile extends SherlockFragment {
+public class AddTransferFile extends Fragment {
 	public static AddTransferFile newInstance() {
 		AddTransferFile fragment = new AddTransferFile();
 		
@@ -40,7 +41,7 @@ public class AddTransferFile extends SherlockFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.addtransfer_file, container, false);
 		
-		Typeface robotoLight = Typeface.createFromAsset(getSherlockActivity().getAssets(), "Roboto-Light.ttf");
+		Typeface robotoLight = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Light.ttf");
 		
 		textFile = (TextView) view.findViewById(R.id.text_addtransferfile_file);
 		textFile.setTypeface(robotoLight);
@@ -48,7 +49,7 @@ public class AddTransferFile extends SherlockFragment {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getSherlockActivity(), FileChooserActivity.class);
+				Intent intent = new Intent(getActivity(), FileChooserActivity.class);
 				startActivityForResult(intent, 0);
 			}
 		});
@@ -72,7 +73,7 @@ public class AddTransferFile extends SherlockFragment {
 	        		final Uri uri = data.getData();
 					try {
 						// Create a file instance from the URI
-						final File file = FileUtils.getFile(uri);
+						final File file = FileUtils.getFile(uri.toString());
 						textFile.setText(file.getName());
 						chosenFile = file;
 						String mimetype = new MimeTypes().getMimeType(uri);

@@ -26,11 +26,16 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -44,8 +49,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.widget.SearchView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.stevenschoen.putionew.FilesAdapter;
@@ -57,7 +60,7 @@ import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.activities.Putio;
 
-public final class Files extends SherlockFragment {
+public final class Files extends Fragment {
 	
 	private int viewMode = 1;
 	public static final int VIEWMODE_LIST = 1;
@@ -152,12 +155,12 @@ public final class Files extends SherlockFragment {
 		
 		listview = (ListView) view.findViewById(R.id.fileslist);
 		
-		adapter = new FilesAdapter(getSherlockActivity(), R.layout.file_putio,
+		adapter = new FilesAdapter(getActivity(), R.layout.file_putio,
 				fileLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
-		if (UIUtils.isTablet(getSherlockActivity())) {
+		if (UIUtils.isTablet(getActivity())) {
 			listview.setVerticalFadingEdgeEnabled(true);
 			if (UIUtils.hasHoneycomb()) {
 				listview.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
@@ -191,7 +194,7 @@ public final class Files extends SherlockFragment {
 				}
 
 				if (!fileData[adjustedPosition].isFolder) {
-					if (!UIUtils.isTablet(getSherlockActivity())) {
+					if (!UIUtils.isTablet(getActivity())) {
 						Intent detailsIntent = new Intent(getActivity(),
 								FileDetailsActivity.class);
 						detailsIntent.putExtra("fileData",
@@ -291,7 +294,7 @@ public final class Files extends SherlockFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (UIUtils.isTablet(getSherlockActivity())) {
+        if (UIUtils.isTablet(getActivity())) {
         	mCallbacks = (Callbacks) activity;
         }
     }
@@ -312,7 +315,7 @@ public final class Files extends SherlockFragment {
 		} else {
 			if (v.getId() == R.id.fileslist) {
 				menu.setHeaderTitle(fileData[getAdjustedPosition(info.position)].name);
-			    MenuInflater inflater = getSherlockActivity().getMenuInflater();
+			    MenuInflater inflater = getActivity().getMenuInflater();
 			    inflater.inflate(R.menu.context_files, menu);
 			}
 		}
@@ -343,18 +346,18 @@ public final class Files extends SherlockFragment {
 	private void initDownloadFile(final int fileId) {
 		final int index = getIndexFromFileId(fileId);
 		
-		utils.downloadFile(getSherlockActivity(),
+		utils.downloadFile(getActivity(),
 				fileId, fileData[index].isFolder, fileData[index].name, PutioUtils.ACTION_NOTHING);
 	}
 	
 	private void initCopyFileDownloadLink(int fileId) {
-		utils.copyDownloadLink(getSherlockActivity(), fileId);
+		utils.copyDownloadLink(getActivity(), fileId);
 	}
 
 	private void initRenameFile(final int fileId) {
 		final int index = getIndexFromFileId(fileId);
 		
-		final Dialog renameDialog = PutioUtils.PutioDialog(getSherlockActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
+		final Dialog renameDialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
 		renameDialog.show();
 		
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
@@ -384,7 +387,7 @@ public final class Files extends SherlockFragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				utils.applyFileToServer(getSherlockActivity(),
+				utils.applyFileToServer(getActivity(),
 						fileId, fileData[index].name, textFileName.getText().toString());
 				renameDialog.dismiss();
 			}
@@ -401,11 +404,11 @@ public final class Files extends SherlockFragment {
 	}
 	
 	private void initDeleteFile(int fileId) {
-		PutioUtils.showDeleteFileDialog(getSherlockActivity(), fileId);
+		PutioUtils.showDeleteFileDialog(getActivity(), fileId);
 	}
 	
 	public void toast(String message) {
-		Toast.makeText(getSherlockActivity(), message, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 	}
 	
 	public void invalidateList() {
@@ -498,15 +501,15 @@ public final class Files extends SherlockFragment {
 	}
 	
 	@Override
-	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.search, menu);
 		
-		com.actionbarsherlock.view.MenuItem buttonSearch = menu.findItem(R.id.menu_search);
-		SearchManager searchManager = (SearchManager) getSherlockActivity().getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) buttonSearch.getActionView();
+		MenuItem buttonSearch = menu.findItem(R.id.menu_search);
+		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(buttonSearch);
 		searchView.setIconifiedByDefault(true);
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getSherlockActivity().getComponentName()));
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 	}
 	
 	public void initSearch(String query) {
@@ -593,11 +596,8 @@ public final class Files extends SherlockFragment {
 			JSONObject json;
 			JSONArray array;
 			
-			try {
-//				take this out
-//				FileUtils.writeStringToFile(new File("/sdcard/"), data)
-				
-				File input = new File(getSherlockActivity().getCacheDir(), currentFolderId + ".json");
+			try {				
+				File input = new File(getActivity().getCacheDir(), currentFolderId + ".json");
 				FileInputStream fis = FileUtils.openInputStream(input);
 				FileInputStream fis2 = fis;
 				
@@ -642,7 +642,7 @@ public final class Files extends SherlockFragment {
 				
 				listview.setClickable(true);
 				
-				getSherlockActivity().sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
+				getActivity().sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
 			} catch (FileNotFoundException e) {
 				
 			} catch (IOException e) {
@@ -702,7 +702,7 @@ public final class Files extends SherlockFragment {
 				
 				if (isAdded()) {
 					try {
-						File output = new File(getSherlockActivity().getCacheDir(), newId + ".json");
+						File output = new File(getActivity().getCacheDir(), newId + ".json");
 						FileOutputStream fos = FileUtils.openOutputStream(output);
 						fos.write(string.getBytes());
 						fos.close();
@@ -732,7 +732,7 @@ public final class Files extends SherlockFragment {
 			populateList(file, newId, origIdBefore, highlightId);
 			
 			if (noNetwork) {
-				Toast.makeText(getSherlockActivity(), "No connection!",
+				Toast.makeText(getActivity(), "No connection!",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -799,7 +799,7 @@ public final class Files extends SherlockFragment {
 			populateList(file, -1, -2);
 			
 			if (noNetwork) {
-				Toast.makeText(getSherlockActivity(), "No connection!",
+				Toast.makeText(getActivity(), "No connection!",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
