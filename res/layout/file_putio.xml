@@ -5,7 +5,7 @@
     android:paddingRight="@dimen/padding_small"
     android:background="@drawable/putio_clickable_list" >
 
-	<ImageView
+	<com.android.volley.toolbox.NetworkImageView
 		android:id="@+id/img_fileIcon"
 		android:layout_width="36dp"
 		android:layout_height="36dp"

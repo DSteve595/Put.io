@@ -27,14 +27,17 @@ public class FileDetailsActivity extends ActionBarActivity {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager
 					.beginTransaction();
-			fileDetailsFragment = new FileDetails(fileData);
+			Bundle fileDetailsBundle = new Bundle();
+			fileDetailsBundle.putParcelable("fileData", fileData);
+			fileDetailsFragment = (FileDetails) FileDetails.instantiate(
+					this, FileDetails.class.getName(), fileDetailsBundle);
 			fragmentTransaction.add(R.id.DetailsHolder, fileDetailsFragment);
 			fragmentTransaction.commit();
 		} else {
 			fileDetailsFragment = (FileDetails) getSupportFragmentManager().findFragmentById(R.id.DetailsHolder);
 		}
 		
-		getSupportActionBar().setTitle(fileDetailsFragment.getOldFilename());
+		getSupportActionBar().setTitle(fileData.name);
 	}
 	
 	@Override

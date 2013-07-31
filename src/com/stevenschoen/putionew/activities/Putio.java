@@ -4,7 +4,6 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -52,12 +51,12 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioNotification;
+import com.stevenschoen.putionew.PutioTransferData;
 import com.stevenschoen.putionew.PutioTransfersService;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.SwipeDismissTouchListener;
 import com.stevenschoen.putionew.UIUtils;
-import com.stevenschoen.putionew.PutioTransferData;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
@@ -512,7 +511,10 @@ public class Putio extends ActionBarActivity implements
 	
 	@Override
 	public void onFileSelected(int id) {
-		fileDetailsFragment = new FileDetails(filesFragment.getFileAtId(id));
+		Bundle fileDetailsBundle = new Bundle();
+		fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtId(id));
+		fileDetailsFragment = (FileDetails) FileDetails.instantiate(
+			this, FileDetails.class.getName(), fileDetailsBundle);
 		
 		getSupportFragmentManager()
 				.beginTransaction()

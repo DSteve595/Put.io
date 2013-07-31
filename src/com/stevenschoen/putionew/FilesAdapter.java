@@ -8,20 +8,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
 
 public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 
 	Context context;
 	int layoutResourceId;
 	List<PutioFileLayout> data = null;
+	
+	RequestQueue requestQueue;
+	ImageLoader imageLoader;
 
 	public FilesAdapter(Context context, int layoutResourceId, List<PutioFileLayout> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
 		this.data = data;
+		
+		requestQueue = Volley.newRequestQueue(context);
+		imageLoader = new ImageLoader(
+					requestQueue,
+					new BitmapLruImageCache(10000000));
 	}
 
 	@Override
@@ -39,7 +51,7 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 			holder = new FileHolder();
 			holder.textName = (TextView) row.findViewById(R.id.text_fileListName);
 			holder.textDescription = (TextView) row.findViewById(R.id.text_fileListDesc);
-			holder.imgIcon = (ImageView) row.findViewById(R.id.img_fileIcon);
+			holder.imgIcon = (NetworkImageView) row.findViewById(R.id.img_fileIcon);
 
 			row.setTag(holder);
 		} else {
@@ -49,7 +61,12 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 		PutioFileLayout file = data.get(position);
 		holder.textName.setText(file.name);
 		holder.textDescription.setText(file.description);
-		holder.imgIcon.setImageResource(file.iconRes);
+		if (file.iconUrl == null) {
+			holder.imgIcon.setImageResource(file.iconRes);
+		} else {
+			holder.imgIcon.setImageUrl(file.iconUrl, imageLoader);
+			holder.imgIcon.setDefaultImageResId(file.iconRes);
+		}
 
 		return row;
 	}
@@ -57,6 +74,6 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 	static class FileHolder {
 		TextView textName;
 		TextView textDescription;
-		ImageView imgIcon;
+		NetworkImageView imgIcon;
 	}
 }

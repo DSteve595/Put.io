@@ -98,7 +98,8 @@ public final class Files extends Fragment {
 	
 	private FilesAdapter adapter;
 	private ArrayList<PutioFileLayout> fileLayouts = new ArrayList<PutioFileLayout>();
-	private PutioFileLayout dummyFile = new PutioFileLayout("Loading...", "Your files will appear shortly.", R.drawable.ic_launcher);
+	private PutioFileLayout dummyFile = new PutioFileLayout(
+			"Loading...", "Your files will appear shortly.", R.drawable.ic_launcher, null);
 	private ListView listview;
 	
 	private View loadingView;
@@ -530,7 +531,8 @@ public final class Files extends Fragment {
 		if (currentFolderId != 0 || isSearch) {
 			adapter.add(new PutioFileLayout("Up",
 					"Go back to the previous folder",	
-					R.drawable.ic_back));
+					R.drawable.ic_back,
+					null));
 		}
 		
 		if (file == null) {
@@ -553,7 +555,8 @@ public final class Files extends Fragment {
 						getString(R.string.size_is)
 								+ " "
 								+ PutioUtils.humanReadableByteCount(file[i].size, false),
-						iconResource));
+						iconResource,
+						file[i].iconUrl));
 			}
 		}
 		
@@ -634,6 +637,7 @@ public final class Files extends Fragment {
 							obj.getInt("parent_id"),
 							utils.stringToBooleanHack(obj.getString("is_mp4_available")),
 							obj.getString("content_type"),
+							obj.getString("icon"),
 							obj.getInt("id"),
 							size);
 				}
@@ -696,6 +700,7 @@ public final class Files extends Fragment {
 							obj.getInt("parent_id"),
 							utils.stringToBooleanHack(obj.getString("is_mp4_available")),
 							obj.getString("content_type"),
+							obj.getString("icon"),
 							obj.getInt("id"),
 							size);
 				}
@@ -781,6 +786,7 @@ public final class Files extends Fragment {
 							obj.getInt("parent_id"),
 							isMp4Available,
 							obj.getString("content_type"),
+							obj.getString("icon"),
 							obj.getInt("id"),
 							obj.getLong("size"));
 				}

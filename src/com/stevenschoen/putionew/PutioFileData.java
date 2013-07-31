@@ -15,6 +15,7 @@ public class PutioFileData implements Parcelable {
 	public boolean hasMp4;
 	public String contentType;
 	public int contentTypeIndex;
+	public String iconUrl;
 	public int id;
 	public long size;
 	
@@ -26,7 +27,7 @@ public class PutioFileData implements Parcelable {
 
 	public PutioFileData(boolean isShared, String name, String screenshot,
 			String createdTime, int parentId, boolean hasMp4,
-			String contentType, int id, long size) {
+			String contentType, String iconUrl, int id, long size) {
 		super();
 		this.isShared = isShared;
 		this.name = name;
@@ -40,6 +41,7 @@ public class PutioFileData implements Parcelable {
 				this.contentTypeIndex = i;
 			}
 		}
+		this.iconUrl = iconUrl;
 		this.id = id;
 		this.size = size;
 		
@@ -79,6 +81,7 @@ public class PutioFileData implements Parcelable {
 		this.hasMp4 = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
 		this.contentType = in.readString();
 		this.contentTypeIndex = in.readInt();
+		this.iconUrl = in.readString();
 		this.id = in.readInt();
 		this.size = in.readLong();
 	}
@@ -93,6 +96,7 @@ public class PutioFileData implements Parcelable {
 		out.writeValue(this.hasMp4);
 		out.writeString(this.contentType);
 		out.writeInt(this.contentTypeIndex);
+		out.writeString(this.iconUrl);
 		out.writeInt(this.id);
 		out.writeLong(this.size);
 	}

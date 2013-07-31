@@ -64,14 +64,6 @@ public class FileDetails extends Fragment {
 	
 	Bitmap imagePreviewBitmap;
 	
-	public FileDetails(PutioFileData fileData) {
-		this.origFileData = fileData;
-		this.newFileData = fileData;
-	}
-	
-	public FileDetails() {
-    }
-	
     public interface Callbacks {
         public void onFDCancelled();
         public void onFDFinished();
@@ -108,9 +100,12 @@ public class FileDetails extends Fragment {
 		
 		setHasOptionsMenu(true);
 
-		if (origFileData == null) {
+		if (savedInstanceState != null) {
 			origFileData = savedInstanceState.getParcelable("origFileData");
 			newFileData = savedInstanceState.getParcelable("newFileData");
+		} else {
+			origFileData = getArguments().getParcelable("fileData");
+			newFileData = getArguments().getParcelable("fileData");
 		}
 		sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
@@ -220,6 +215,7 @@ public class FileDetails extends Fragment {
 							obj.getInt("parent_id"),
 							origFileData.hasMp4,
 							obj.getString("content_type"),
+							obj.getString("icon"),
 							obj.getInt("id"),
 							obj.getLong("size"));
 					return newFileData;
@@ -624,15 +620,15 @@ public class FileDetails extends Fragment {
 	}
 	
 	@Override
-	public void onSaveInstanceState(Bundle icicle) {
-		icicle.putParcelable("origFileData", origFileData);
-		icicle.putParcelable("newFileData", newFileData);
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putParcelable("origFileData", origFileData);
+		outState.putParcelable("newFileData", newFileData);
 		if (imagePreviewBitmap != null) {
-			icicle.putParcelable("imagePreviewBitmap", imagePreviewBitmap);
+			outState.putParcelable("imagePreviewBitmap", imagePreviewBitmap);
 		} else {
 		}
 		
-		super.onSaveInstanceState(icicle);
+		super.onSaveInstanceState(outState);
 	}
 	
     @Override

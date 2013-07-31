@@ -7,16 +7,18 @@ public class PutioFileLayout implements Parcelable {
 	public String name;
 	public String description;
 	public int iconRes;
+	public String iconUrl;
 
 	public PutioFileLayout() {
 		super();
 	}
 
-	public PutioFileLayout(String name, String description, int icon) {
+	public PutioFileLayout(String name, String description, int iconRes, String iconUrl) {
 		super();
 		this.name = name;
 		this.description = description;
-		this.iconRes = icon;
+		this.iconRes = iconRes;
+		this.iconUrl = iconUrl;
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public class PutioFileLayout implements Parcelable {
 		this.name = in.readString();
 		this.description = in.readString();
 		this.iconRes = in.readInt();
+		this.iconUrl = in.readString();
 	}
 	
 	@Override
@@ -42,6 +45,7 @@ public class PutioFileLayout implements Parcelable {
 		out.writeString(this.name);
 		out.writeString(this.description);
 		out.writeInt(this.iconRes);
+		out.writeString(this.iconUrl);
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
