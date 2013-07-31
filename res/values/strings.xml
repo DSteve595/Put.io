@@ -62,7 +62,7 @@
 
     <!-- Other stuff -->
     <string name="account">Account</string>
-    <string name="files">Your files</string>
+    <string name="files">Files</string>
     <string name="transfers">Transfers</string>
     <string name="loginsuccess">Successfully logged in!</string>
     <string name="size_is">Size:</string>
@@ -88,6 +88,7 @@
 	<string name="transferremoved">Transfer removed!</string>
 	<string name="hey">Hey!</string>
 	<string name="readytopaste">The download link is ready to be pasted.</string>
+	<string name="choosefile">Choose a file</string>
 
     <!-- About screen -->
     <string name="appbysteven">Android app by Steven Schoen.</string>

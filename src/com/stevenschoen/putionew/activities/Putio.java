@@ -87,8 +87,6 @@ public class Putio extends ActionBarActivity implements
 	
 	Bundle savedInstanceState;
 	
-	private Menu mMenu;
-	
 	public static final String invalidateListIntent = "com.stevenschoen.putionew.invalidatelist";
 	public static final String checkCacheSizeIntent = "com.stevenschoen.putionew.checkcachesize";
 	public static final String fileDownloadUpdateIntent = "com.stevenschoen.putionew.filedownloadupdate";
@@ -130,9 +128,9 @@ public class Putio extends ActionBarActivity implements
 			getSupportActionBar().setDisplayShowTitleEnabled(false);
 		}
 		
-		titleAccount = getString(R.string.account).toUpperCase(Locale.US);
-		titleFiles = getString(R.string.files).toUpperCase(Locale.US);
-		titleTransfers = getString(R.string.transfers).toUpperCase(Locale.US);
+		titleAccount = getString(R.string.account);
+		titleFiles = getString(R.string.files);
+		titleTransfers = getString(R.string.transfers);
 		titles = new String[] {titleAccount, titleFiles, titleTransfers};
 		
 		if (!sharedPrefs.getBoolean("loggedIn", false)) {
@@ -210,8 +208,6 @@ public class Putio extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.putio, menu);
-		
-		mMenu = menu;
 		
 		MenuItem buttonAdd = menu.findItem(R.id.menu_addtransfers);
 		buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
