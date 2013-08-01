@@ -4,8 +4,6 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.io.File;
 
-import org.apache.commons.io.FileUtils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -20,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.FileChooserActivity;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.ipaulpro.afilechooser.utils.MimeTypes;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.R;
@@ -73,7 +72,7 @@ public class AddTransferFile extends Fragment {
 	        		final Uri uri = data.getData();
 					try {
 						// Create a file instance from the URI
-						final File file = FileUtils.getFile(uri.toString());
+						final File file = FileUtils.getFile(uri);
 						textFile.setText(file.getName());
 						chosenFile = file;
 						String mimetype = new MimeTypes().getMimeType(uri);
