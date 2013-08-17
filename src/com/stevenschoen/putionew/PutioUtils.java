@@ -572,12 +572,12 @@ public class PutioUtils {
 	
 	private long downloadZipWithoutUrl(final Context context, final int[] id, String filename) {
 		Uri uri = Uri.parse(getZipDownloadUrl(id));
-		return download(context, 0, true, filename, uri);
+		return download(context, 0, true, filename + ".zip", uri);
 	}
 	
 	private long downloadZipWithUrl(final Context context, final int[] id, String filename, String url) {		
 		Uri uri = Uri.parse(url.replace("https://", "http://"));
-		return download(context, 0, true, filename, uri);
+		return download(context, 0, true, filename + ".zip", uri);
 	}
 	
 	@TargetApi(11)

@@ -720,13 +720,6 @@ public final class Files extends Fragment {
 			} catch (SocketTimeoutException e) {
 				noNetwork = true;
 				return null;
-			} catch (JSONException e) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("\n jsonexception: \n");
-				for (StackTraceElement element : e.getStackTrace()) {
-					sb.append(element.toString());
-					sb.append("\n");
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
