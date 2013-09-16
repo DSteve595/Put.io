@@ -7,8 +7,8 @@
     <item android:state_focused="true"><shape>
             <solid android:color="@color/putio_accent_half" />
         </shape></item>
-    <item android:state_activated="true"><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-            <gradient android:angle="0" android:endColor="@color/putio_accent_quarter" android:startColor="@color/putio_accent_half" android:type="linear" />
+    <item android:state_activated="true"><shape>
+            <solid android:color="@color/putio_accent_quarter" />
         </shape></item>
     <item android:drawable="@color/transparent"/>
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +62,15 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 		PutioFileLayout file = data.get(position);
 		holder.textName.setText(file.name);
 		holder.textDescription.setText(file.description);
+//		Log.d("asdf", "name is " + file.name + ", iconUrl = " + file.iconUrl);
+		if (file.name.matches("Up")) {
+			Log.d("asdf", "Up iconRes = " + file.iconRes);
+		}
 		if (file.iconUrl == null) {
+//			holder.imgIcon.setImageUrl(null, null);
 			holder.imgIcon.setImageResource(file.iconRes);
 		} else {
+//			holder.imgIcon.setImageResource(0);
 			holder.imgIcon.setImageUrl(file.iconUrl, imageLoader);
 			holder.imgIcon.setDefaultImageResId(file.iconRes);
 		}
