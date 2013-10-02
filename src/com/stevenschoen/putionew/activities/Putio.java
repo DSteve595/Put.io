@@ -11,8 +11,6 @@ import org.json.JSONObject;
 
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -27,7 +25,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,8 +48,6 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioNotification;
-import com.stevenschoen.putionew.PutioTransferData;
-import com.stevenschoen.putionew.PutioTransfersService;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.SwipeDismissTouchListener;
@@ -89,7 +84,7 @@ public class Putio extends ActionBarActivity implements
 	public static final String invalidateListIntent = "com.stevenschoen.putionew.invalidatelist";
 	public static final String checkCacheSizeIntent = "com.stevenschoen.putionew.checkcachesize";
 	public static final String fileDownloadUpdateIntent = "com.stevenschoen.putionew.filedownloadupdate";
-	public static final String transfersUpdateIntent = "com.stevenschoen.putionew.transfersupdate";
+	public static final String transfersAvailableIntent = "com.stevenschoen.putionew.transfersavailable";
 	public static final String noNetworkIntent = "com.stevenschoen.putionew.nonetwork";
 	
 	Account accountFragment;
@@ -143,24 +138,21 @@ public class Putio extends ActionBarActivity implements
 			handleIntent(getIntent());
 		}
 		
-		IntentFilter intentFilter1 = new IntentFilter(
+		IntentFilter invalidateListIntentFilter = new IntentFilter(
 				Putio.invalidateListIntent);
-		IntentFilter intentFilter2 = new IntentFilter(
+		IntentFilter checkCacheSizeIntentFilter = new IntentFilter(
 				Putio.checkCacheSizeIntent);
-		IntentFilter intentFilter3 = new IntentFilter(
+		IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(
 				Putio.fileDownloadUpdateIntent);
-		IntentFilter intentFilter4 = new IntentFilter(
-				Putio.transfersUpdateIntent);
-		IntentFilter intentFilter5 = new IntentFilter(
+		IntentFilter noNetworkIntentFilter = new IntentFilter(
 				Putio.noNetworkIntent);
 		
-		registerReceiver(invalidateReceiver, intentFilter1);
-		registerReceiver(checkCacheSizeReceiver, intentFilter2);
+		registerReceiver(invalidateReceiver, invalidateListIntentFilter);
+		registerReceiver(checkCacheSizeReceiver, checkCacheSizeIntentFilter);
 		if (UIUtils.isTablet(this)) {
-			registerReceiver(fileDownloadUpdateReceiver, intentFilter3);
+			registerReceiver(fileDownloadUpdateReceiver, fileDownloadUpdateIntentFilter);
 		}
-		registerReceiver(transfersUpdateReceiver, intentFilter4);
-		registerReceiver(noNetworkReceiver, intentFilter5);
+		registerReceiver(noNetworkReceiver, noNetworkIntentFilter);
 	}
 	
 	@Override
@@ -304,8 +296,6 @@ public class Putio extends ActionBarActivity implements
 	private void init() {
 		String token = sharedPrefs.getString("token", null);
 		utils = new PutioUtils(token, sharedPrefs);
-		
-		transfersServiceIntent = new Intent(this, PutioTransfersService.class);
 		
 		if (UIUtils.isTablet(this)) {
 			setupTabletLayout();
@@ -544,9 +534,9 @@ public class Putio extends ActionBarActivity implements
 	
 	@Override
 	public void transfersReady() {
-		if (!isTransfersServiceRunning()) {
-			startService(new Intent(this, PutioTransfersService.class));
-		}
+//		if (!isTransfersServiceRunning()) {
+//			startService(new Intent(this, PutioTransfersService.class));
+//		}
 	}
 	
 	@Override
@@ -630,29 +620,6 @@ public class Putio extends ActionBarActivity implements
 		}
 	};
 	
-	private BroadcastReceiver transfersUpdateReceiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Parcelable[] transferParcelables = intent.getExtras().getParcelableArray("transfers");
-
-			PutioTransferData[] transfers = new PutioTransferData[transferParcelables.length];
-			for (int i = 0; i < transferParcelables.length; i++) {
-				transfers[i] = (PutioTransferData) transferParcelables[i];
-			}
-			
-			if (transfersFragment != null) {
-				transfersFragment.updateTransfers(transfers);
-				transfersFragment.setHasNetwork(true);
-			}
-			
-			if (intent.getBooleanExtra("changed", false)) {
-				accountFragment.invalidateAccountInfo();
-				filesFragment.invalidateList();
-			}
-		}
-	};
-	
 	private BroadcastReceiver noNetworkReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -660,8 +627,6 @@ public class Putio extends ActionBarActivity implements
 			transfersFragment.setHasNetwork(false);
 		}
 	};
-	
-	private Intent transfersServiceIntent;
 
 	private PagerSlidingTabStrip tabs;
 	
@@ -700,11 +665,7 @@ public class Putio extends ActionBarActivity implements
 		if (UIUtils.isTablet(this)) {
 			unregisterReceiver(fileDownloadUpdateReceiver);
 		}
-		unregisterReceiver(transfersUpdateReceiver);
 		unregisterReceiver(noNetworkReceiver);
-		if (isTransfersServiceRunning()) {
-			stopService(transfersServiceIntent);
-		}
 	}
 
 	@Override
@@ -715,26 +676,6 @@ public class Putio extends ActionBarActivity implements
 		} else {
 			finish();
 		}
-	}
-	
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		if (!hasFocus && isTransfersServiceRunning()) {
-			stopService(transfersServiceIntent);
-		} else if (hasFocus && !isTransfersServiceRunning() && transfersFragment != null) {
-			startService(transfersServiceIntent);
-		}
-		super.onWindowFocusChanged(hasFocus);
-	}
-	
-	private boolean isTransfersServiceRunning() {
-	    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	        if ("com.stevenschoen.putionew.PutioTransfersService".equals(service.service.getClassName())) {
-	            return true;
-	        }
-	    }
-	    return false;
 	}
 
 	public void checkCacheSize() {

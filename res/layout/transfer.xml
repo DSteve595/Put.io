@@ -6,7 +6,7 @@
         android:id="@+id/transfer_greenbar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@color/putio_lightgreen" />
+        android:background="#4000FF00" />
 
     <ImageView
         android:id="@+id/img_transfer_icon"

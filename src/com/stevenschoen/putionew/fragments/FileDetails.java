@@ -228,10 +228,12 @@ public class FileDetails extends Fragment {
 			}
 			
 			public void onPostExecute(final PutioFileData file) {
-				String[] created = PutioUtils.separateIsoTime(file.createdTime);
-				if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
-					textFileCreatedDate.setText(created[0]);
-					textFileCreatedTime.setText(created[1]);
+				if (file != null) {
+					String[] created = PutioUtils.separateIsoTime(file.createdTime);
+					if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
+						textFileCreatedDate.setText(created[0]);
+						textFileCreatedTime.setText(created[1]);
+					}
 				}
 			}
 		}

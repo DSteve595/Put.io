@@ -9,11 +9,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,7 +25,7 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.AddTransferFile;
 import com.stevenschoen.putionew.fragments.AddTransferUrl;
 
-public class AddTransfers extends ActionBarActivity {
+public class AddTransfers extends FragmentActivity {
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
 	PagerTitleStrip mPagerTitleStrip;
@@ -39,9 +39,6 @@ public class AddTransfers extends ActionBarActivity {
 	
 	PutioUtils utils;
 	
-	private static final int TYPE_URL = 1;
-	private static final int TYPE_FILE = -1;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,9 +47,9 @@ public class AddTransfers extends ActionBarActivity {
 		
 		if (getIntent().getAction() != null) {
 			if (getIntent().getScheme().matches("magnet")) {
-				fragmentType = TYPE_URL;
+				fragmentType = PutioUtils.ADDTRANSFER_URL;
 			} else if (getIntent().getScheme().matches("file")) {
-				fragmentType = TYPE_FILE;
+				fragmentType = PutioUtils.ADDTRANSFER_FILE;
 			}
 		}
 		
@@ -86,31 +83,18 @@ public class AddTransfers extends ActionBarActivity {
 		
 		Button addButton = (Button) findViewById(R.id.button_addtransfer_add);
 		addButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
-				switch (mViewPager.getCurrentItem()) {
-					case 0:
-						if (!urlFragment.getEnteredUrls().isEmpty()) {
-							utils.addTransfersByUrlAsync(urlFragment.getEnteredUrls());
-							Toast.makeText(AddTransfers.this, getString(R.string.torrentadded), Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
-						} break;
-					case 1:
-						if (fileFragment != null && fileFragment.getChosenFile() != null) {
-							if (FileUtils.sizeOf(fileFragment.getChosenFile()) > FileUtils.ONE_MB) {
-								Toast.makeText(AddTransfers.this, getString(R.string.filetoobig), Toast.LENGTH_LONG).show();
-							} else {
-								utils.addTransfersByFileAsync(fileFragment.getChosenFile().getAbsolutePath());
-								Toast.makeText(AddTransfers.this, getString(R.string.torrentadded), Toast.LENGTH_LONG).show();
-							}
-						} else {
-							Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
-							break;
-						}
+				if (fragmentType == 0) {
+					switch (mViewPager.getCurrentItem()) {
+					case 0: addUrl(); break;
+					case 1: addFile(); break;
+					}
+				} else if (mSectionsPagerAdapter.getItem(0) instanceof AddTransferUrl) {
+					addUrl();
+				} else if (mSectionsPagerAdapter.getItem(0) instanceof AddTransferFile) {
+					addFile();
 				}
-				finish();
 			}
 		});
 		
@@ -124,6 +108,34 @@ public class AddTransfers extends ActionBarActivity {
 		});
 	}
 	
+	private void addUrl() {
+		if (!urlFragment.getEnteredUrls().isEmpty()) {
+			Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
+			addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_URL);
+			addTransferIntent.putExtra("url", urlFragment.getEnteredUrls());
+			startActivity(addTransferIntent);
+			finish();
+		} else {
+			Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	private void addFile() {
+		if (fileFragment != null && fileFragment.getChosenFile() != null) {
+			if (FileUtils.sizeOf(fileFragment.getChosenFile()) <= FileUtils.ONE_MB) {
+				Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
+				addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_FILE);
+				addTransferIntent.putExtra("filepath", fileFragment.getChosenFile().getAbsolutePath());
+				startActivity(addTransferIntent);
+				finish();
+			} else {
+				Toast.makeText(AddTransfers.this, getString(R.string.filetoobig), Toast.LENGTH_LONG).show();
+			}
+		} else {
+			Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
+		}
+	}
+	
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
@@ -134,21 +146,32 @@ public class AddTransfers extends ActionBarActivity {
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				if (fragmentType == TYPE_URL) {
-					urlFragment = AddTransferUrl.newInstance();
-					Bundle bundle = new Bundle();
-					bundle.putString("url", getIntent().getDataString());
-					urlFragment.setArguments(bundle);
+				if (fragmentType == PutioUtils.ADDTRANSFER_URL) {
+					if (urlFragment == null) {
+						urlFragment = AddTransferUrl.newInstance();
+						Bundle bundle = new Bundle();
+						bundle.putString("url", getIntent().getDataString());
+						urlFragment.setArguments(bundle);
+					}
 					return urlFragment;
-				} else if (fragmentType == TYPE_FILE) {
-					fileFragment = AddTransferFile.newInstance();
+				} else if (fragmentType == PutioUtils.ADDTRANSFER_FILE) {
+					if (fileFragment == null) {
+						fileFragment = AddTransferFile.newInstance();
+						Bundle bundle = new Bundle();
+						bundle.putString("filepath", getIntent().getDataString());
+						fileFragment.setArguments(bundle);
+					}
 					return fileFragment;
 				} else {
-					urlFragment = AddTransferUrl.newInstance();
+					if (urlFragment == null) {
+						urlFragment = AddTransferUrl.newInstance();
+					}
 					return urlFragment;
 				}
 			case 1:
-				fileFragment = AddTransferFile.newInstance();
+				if (fileFragment == null) {
+					fileFragment = AddTransferFile.newInstance();
+				}
 				return fileFragment;
 			}
 			return null;

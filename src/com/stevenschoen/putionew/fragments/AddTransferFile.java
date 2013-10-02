@@ -56,6 +56,12 @@ public class AddTransferFile extends Fragment {
 		textNotATorrent = (TextView) view.findViewById(R.id.text_addtransferfile_notatorrent);
 		ViewHelper.setAlpha(textNotATorrent, 0);
 		
+		if (getArguments() != null && getArguments().getString("filepath") != null) {
+			Intent fileIntent = new Intent();
+			fileIntent.setData(Uri.parse(getArguments().getString("filepath")));
+			onActivityResult(0, Activity.RESULT_OK, fileIntent);
+		}
+		
 		return view;
 	}
 	

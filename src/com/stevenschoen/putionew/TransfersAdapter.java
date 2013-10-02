@@ -80,7 +80,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.textMessage.setVisibility(View.GONE);
 			holder.speedHolder.setVisibility(View.VISIBLE);
 			holder.textPercent.setText(percentString + "%");
-			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_lightgreen));
+			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
 			ViewHelper.setPivotX(holder.greenBar, 0);
 			ViewHelper.setScaleX(holder.greenBar, 1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
@@ -91,7 +91,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.textMessage.setVisibility(View.GONE);
 			holder.speedHolder.setVisibility(View.VISIBLE);
 			holder.textPercent.setText(percentString + "%");
-			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_lightgreen));
+			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
 			ViewHelper.setPivotX(holder.greenBar, 0);
 			ViewHelper.setScaleX(holder.greenBar, 1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
@@ -113,7 +113,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.textMessage.setVisibility(View.GONE);
 			holder.speedHolder.setVisibility(View.VISIBLE);
 			holder.textPercent.setText(percentString + "%");
-			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_lightgreen));
+			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
 			ViewHelper.setPivotX(holder.greenBar, 0);
 			ViewHelper.setScaleX(holder.greenBar, (float) data.get(position).percentDone / 100);
 			holder.textPercent.setTextColor(Color.BLACK);

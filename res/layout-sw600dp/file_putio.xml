@@ -3,7 +3,7 @@
     android:background="@drawable/putio_clickable_list"
     android:layout_height="64dp" >
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/img_fileIcon"
         android:layout_width="36dp"
         android:layout_height="36dp"

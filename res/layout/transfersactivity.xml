@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="320dp"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/putio_dark" >
+
+        <TextView
+            android:id="@+id/transfersactivity_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/transfers"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageButton
+            android:id="@+id/transfersactivity_button_maximize"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/putio_clickable_button"
+            android:src="@drawable/ic_maximize" />
+
+        <ImageButton
+            android:id="@+id/transfersactivity_button_close"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/putio_clickable_button"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <fragment
+        android:id="@+id/transfersactivity_transfersfragment"
+        android:name="com.stevenschoen.putionew.fragments.Transfers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.TransfersActivity"
+        tools:layout="@layout/transfers" />
+
+</LinearLayout>

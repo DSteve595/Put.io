@@ -36,17 +36,22 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -56,6 +61,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stevenschoen.putionew.activities.Putio;
+import com.stevenschoen.putionew.activities.TransfersActivity;
 
 public class PutioUtils {
 	public static final int TYPE_AUDIO = 1;
@@ -65,6 +71,9 @@ public class PutioUtils {
 	public static final int ACTION_NOTHING = -1;
 	public static final int ACTION_OPEN = 1;
 	public static final int ACTION_SHARE = -2;
+	
+	public static final int ADDTRANSFER_FILE = 1;
+	public static final int ADDTRANSFER_URL = -1;
 	
 	public final static String baseUrl = "https://api.put.io/v2/";
 
@@ -186,67 +195,6 @@ public class PutioUtils {
 		return false;
 	}
 	
-	private boolean postAddTransferByUrl(String urls) {
-		URL url = null;
-		try {
-			url = new URL(baseUrl + "transfers/add" + tokenWithStuff);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setConnectTimeout(8000);
-			connection.setDoOutput(true);
-			
-			OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-		    output.write("url=" + urls);
-		    output.flush();
-			connection.connect();
-			
-			int responseCode = connection.getResponseCode();
-			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
-	private boolean postAddTransferByFile(String filePath) {
-		URL url = null;
-		try {
-			url = new URL(baseUrl + "files/upload" + tokenWithStuff);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost(url.toString());
-			
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart("file", new FileBody(new File(filePath)));
-
-			httppost.setEntity(reqEntity);
-
-			HttpResponse response = httpclient.execute(httppost);
-			
-			int responseCode = response.getStatusLine().getStatusCode();
-			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
 	private boolean postConvert(int id) {
 		URL url = null;
 		try {
@@ -327,24 +275,136 @@ public class PutioUtils {
 		new RemoveTransferTask().execute();
 	}
 	
-	public void addTransfersByUrlAsync(final String urls) {
-		class addTransferTask extends AsyncTask<Void, Void, Boolean> {
-			protected Boolean doInBackground(Void... nothing) {
-				Boolean saved = postAddTransferByUrl(urls);
+	public static void addTransfersAsync(final Context context, final int mode, final Intent retryIntent,
+			final String urls, final String filePath) {
+		class AddTransfersTask extends AsyncTask<Void, Void, Void> {
+			NotificationManager notifManager;
+			
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				
+				notifManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+				notifStart();
+			}
+			
+			protected Void doInBackground(Void... nothing) {
+				URL url = null;
+				
+				if (mode == ADDTRANSFER_URL) {
+					try {
+						url = new URL(baseUrl + "transfers/add" + tokenWithStuff);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+					
+					try {
+						HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+						connection.setConnectTimeout(8000);
+						connection.setDoOutput(true);
+						
+						OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
+					    output.write("url=" + urls);
+					    output.flush();
+						connection.connect();
+						
+						int responseCode = connection.getResponseCode();
+						if (responseCode == HttpsURLConnection.HTTP_OK) {
+							notifSucceeded();
+						} else {
+							notifFailed();
+						}
+					} catch (IOException e) {
+						notifFailed();
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						url = new URL(baseUrl + "files/upload" + tokenWithStuff);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+					
+					HttpClient httpclient = new DefaultHttpClient();
+					HttpPost httppost = new HttpPost(url.toString());
+					
+					MultipartEntity reqEntity = new MultipartEntity();
+					reqEntity.addPart("file", new FileBody(new File(filePath)));
+
+					httppost.setEntity(reqEntity);
+					
+					HttpResponse response;
+					try {
+						response = httpclient.execute(httppost);
+						int responseCode = response.getStatusLine().getStatusCode();
+						if (responseCode == HttpsURLConnection.HTTP_OK) {
+							notifSucceeded();
+						} else {
+							notifFailed();
+						}
+					} catch (IOException e) {
+						notifFailed();
+					}
+				}
+
 				return null;
 			}
-		}
-		new addTransferTask().execute();
-	}
-	
-	public void addTransfersByFileAsync(final String filePath) {
-		class addTransferTask extends AsyncTask<Void, Void, Boolean> {
-			protected Boolean doInBackground(Void... nothing) {
-				Boolean saved = postAddTransferByFile(filePath);
-				return null;
+			
+			private void notifStart() {
+				NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
+				notifBuilder.setOngoing(true);
+				notifBuilder.setContentTitle("Uploading torrent");
+				notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
+				notifBuilder.setTicker("Uploading torrent...");
+				notifBuilder.setProgress(1, 0, true);
+				Notification notif = notifBuilder.build();
+				notif.ledARGB = Color.parseColor("#FFFFFF00");
+				try {
+					notifManager.notify(1, notif);
+				} catch (IllegalArgumentException e) {
+					notifBuilder.setContentIntent(PendingIntent.getActivity(
+							context, 0, new Intent(context, Putio.class), 0));
+					notif = notifBuilder.build();
+					notif.ledARGB = Color.parseColor("#FFFFFF00");
+					notifManager.notify(1, notif);
+				}
+			}
+			
+			private void notifSucceeded() {
+				NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
+				notifBuilder.setOngoing(false);
+				notifBuilder.setAutoCancel(true);
+				notifBuilder.setContentTitle("Uploaded torrent");
+				notifBuilder.setContentText("Fetching it now! Tap for info.");
+				notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
+				notifBuilder.setContentIntent(PendingIntent.getActivity(
+						context, 0, new Intent(context, TransfersActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK));
+//				notifBuilder.addAction(R.drawable.ic_notif_watch, "Watch", null);
+				notifBuilder.setTicker("Uploaded torrent");
+				notifBuilder.setProgress(0, 0, false);
+				Notification notif = notifBuilder.build();
+				notif.ledARGB = Color.parseColor("#FFFFFF00");
+				notifManager.notify(1, notif);
+			}
+			
+			private void notifFailed() {
+				NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
+				notifBuilder.setOngoing(false);
+				notifBuilder.setAutoCancel(true);
+				notifBuilder.setContentTitle("Couldn't upload torrent");
+				notifBuilder.setContentText("Try again?");
+				notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
+				PendingIntent retryNotifIntent = PendingIntent.getActivity(
+						context, 0, retryIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+				notifBuilder.addAction(R.drawable.ic_notif_retry, "Retry", retryNotifIntent);
+				notifBuilder.setContentIntent(retryNotifIntent);
+				notifBuilder.setTicker("Couldn't upload torrent");
+				Notification notif = notifBuilder.build();
+				notif.ledARGB = Color.parseColor("#FFFFFF00");
+				notifManager.notify(1, notif);
 			}
 		}
-		new addTransferTask().execute();
+		new AddTransfersTask().execute();
 	}
 	
 	public void convertToMp4Async(int id) {
