@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/tokenHolder"
-        android:background="@drawable/divider_horizontal" />
+        android:background="@color/putio_divider" />
 
     <LinearLayout
         android:id="@+id/buttonbar"

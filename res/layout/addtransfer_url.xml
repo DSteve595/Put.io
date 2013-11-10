@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/pasteurls" />
     </FrameLayout>
-
+
     <CheckBox
         android:id="@+id/checkbox_addtransfer_extract"
         style="@style/Putio.CheckBox"

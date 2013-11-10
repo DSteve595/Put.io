@@ -91,7 +91,7 @@
     </style>
 
     <style name="Putio.ButtonBar" parent="@android:style/Widget">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@color/putio_dark</item>
         <item name="android:divider">?android:attr/dividerVertical</item>
         <item name="android:showDividers">middle</item>
     </style>

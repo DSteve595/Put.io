@@ -71,11 +71,9 @@ public class FileDetails extends Fragment {
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onFDCancelled() {
-        }
+        public void onFDCancelled() { }
         @Override
-        public void onFDFinished() {
-        }
+        public void onFDFinished() { }
     };
 	
     private Callbacks mCallbacks = sDummyCallbacks;
@@ -594,7 +592,9 @@ public class FileDetails extends Fragment {
 		
 		@Override
 		public void onPostExecute(String finalUrl) {
-			gettingStreamDialog.dismiss();
+			if (gettingStreamDialog.isShowing()) {
+				gettingStreamDialog.dismiss();
+			}
 			int type;
 			if (origFileData.contentType.contains("audio")) {
 				type = PutioUtils.TYPE_AUDIO;

@@ -14,8 +14,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="56dp"
+            android:clipToPadding="false"
             android:fastScrollEnabled="true"
+            android:listSelector="@android:color/transparent"
+            android:paddingBottom="48dp"
             android:scrollbarStyle="outsideInset" >
         </ListView>
 
@@ -23,15 +25,19 @@
             android:id="@+id/buttonbar"
             style="@style/Putio.ButtonBar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentBottom="true" >
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/refreshbargradient" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_files_refresh"
                 style="@style/Putio.ButtonBar.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/refresh" />
+                android:contentDescription="@string/refresh"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_refresh" />
 
             <ProgressBar
                 android:id="@+id/item_files_refresh"
@@ -41,12 +47,6 @@
                 android:indeterminate="true" >
             </ProgressBar>
         </FrameLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_above="@id/buttonbar"
-            android:background="@drawable/divider_horizontal" />
 
         <include
             android:id="@+id/files_emptysub"

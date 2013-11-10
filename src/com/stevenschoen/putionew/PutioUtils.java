@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.Notification;
@@ -910,6 +911,10 @@ public class PutioUtils {
 				deleteFileAsync(context, idToDelete);
 				Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
 				deleteDialog.dismiss();
+				
+				if (!UIUtils.isTablet(context)) {
+					((Activity) context).finish();
+				}
 			}
 		});
 		

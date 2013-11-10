@@ -120,9 +120,7 @@ public final class Files extends Fragment {
 	public boolean isSearch;
 	private int parentParentId;
 
-	private int mActivatedPosition = ListView.INVALID_POSITION;
-
-	private Button buttonRefresh;
+	private ImageButton buttonRefresh;
 	private ProgressBar itemRefreshing;
 	private View buttonBar;
 	private int buttonBarHeight;
@@ -167,7 +165,6 @@ public final class Files extends Fragment {
 				listview.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
 				listview.setFastScrollAlwaysVisible(true);
 			}
-			setActivateOnItemClick(true);
 		}
 		listview.setOnItemClickListener(new OnItemClickListener() {
 
@@ -215,7 +212,7 @@ public final class Files extends Fragment {
 		
 		emptyView = view.findViewById(R.id.fileslistempty);
 		
-		buttonRefresh = (Button) view.findViewById(R.id.button_files_refresh);
+		buttonRefresh = (ImageButton) view.findViewById(R.id.button_files_refresh);
 		buttonRefresh.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -828,21 +825,13 @@ public final class Files extends Fragment {
 	public int getCurrentFolderId() {
 		return currentFolderId;
 	}
-	
-    public void setActivateOnItemClick(boolean activateOnItemClick) {
-        listview.setChoiceMode(activateOnItemClick
-                ? ListView.CHOICE_MODE_SINGLE
-                : ListView.CHOICE_MODE_NONE);
-    }
 
     public void setActivatedPosition(int position) {
         if (position == ListView.INVALID_POSITION) {
-            listview.setItemChecked(mActivatedPosition, false);
+            listview.setItemChecked(position, false);
         } else {
             listview.setItemChecked(position, true);
         }
-
-        mActivatedPosition = position;
     }
 	
 	public void goBack() {

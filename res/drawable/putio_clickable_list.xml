@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true"><shape>
-            <solid android:color="@color/putio_accent" />
+            <solid android:color="@color/putio_accent_threequarters" />
         </shape></item>
     <item android:state_focused="true"><shape>
             <solid android:color="@color/putio_accent_half" />
@@ -10,6 +10,6 @@
     <item android:state_activated="true"><shape>
             <solid android:color="@color/putio_accent_quarter" />
         </shape></item>
-    <item android:drawable="@color/transparent"/>
+    <item android:drawable="@android:color/transparent"/>
 
 </selector>

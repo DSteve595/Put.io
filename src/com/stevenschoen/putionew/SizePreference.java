@@ -12,7 +12,7 @@ import android.widget.TextView;
 public final class SizePreference extends DialogPreference implements
 		OnSeekBarChangeListener {
 	// Namespaces to read attributes
-	private static final String PREFERENCE_NS = "http://schemas.android.com/apk/res/com.stevenschoen.putio";
+	private static final String PREFERENCE_NS = "http://schemas.android.com/apk/res/com.stevenschoen.putionew";
 	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	// Attribute names
 	private static final String ATTR_DEFAULT_VALUE = "defaultValue";

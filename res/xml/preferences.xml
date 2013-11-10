@@ -10,8 +10,8 @@
             android:dialogTitle="Cache size"
             android:key="maxCacheSizeMb"
             android:persistent="true"
-            android:summary="How much space (in megabytes) to use for directory listings"
-            android:title="Cache size"
+            android:summary="@string/cacheexplanation"
+            android:title="@string/cachesize"
             sizePreference:maxValue="25"
             sizePreference:minValue="1" />
     </PreferenceCategory>
