@@ -491,7 +491,8 @@ public class FileDetails extends Fragment {
 	}
 	
 	private void initDeleteFile() {
-		PutioUtils.showDeleteFileDialog(getActivity(), getFileId());
+		PutioUtils.showDeleteFileDialog(getActivity(), getFileId(),
+				!UIUtils.isTablet(getActivity()));
 	}
 	
 	@Override

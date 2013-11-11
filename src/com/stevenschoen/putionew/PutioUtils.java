@@ -899,7 +899,7 @@ public class PutioUtils {
 		share(uri, context);
 	}
 	
-	public static void showDeleteFileDialog(final Context context, final int idToDelete) {
+	public static void showDeleteFileDialog(final Context context, final int idToDelete, final boolean finish) {
 		final Dialog deleteDialog = PutioDialog(context, context.getString(R.string.deletetitle), R.layout.dialog_delete);
 		deleteDialog.show();
 		
@@ -912,7 +912,7 @@ public class PutioUtils {
 				Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
 				deleteDialog.dismiss();
 				
-				if (!UIUtils.isTablet(context)) {
+				if (finish) {
 					((Activity) context).finish();
 				}
 			}

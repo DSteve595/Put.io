@@ -402,7 +402,7 @@ public final class Files extends Fragment {
 	}
 	
 	private void initDeleteFile(int fileId) {
-		PutioUtils.showDeleteFileDialog(getActivity(), fileId);
+		PutioUtils.showDeleteFileDialog(getActivity(), fileId, false);
 	}
 	
 	public void toast(String message) {
