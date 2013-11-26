@@ -26,7 +26,7 @@ import android.widget.ListView;
 import com.stevenschoen.putionew.PutioTransferData;
 import com.stevenschoen.putionew.PutioTransferLayout;
 import com.stevenschoen.putionew.PutioTransfersService;
-import com.stevenschoen.putionew.PutioTransfersService.TransfersBinder;
+import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
@@ -288,7 +288,7 @@ public final class Transfers extends Fragment {
 
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service) {
-			TransfersBinder binder = (TransfersBinder) service;
+			TransfersServiceBinder binder = (TransfersServiceBinder) service;
 			transfersService = binder.getService();
 			if (transfersService.getTransfers() != null) {
 				updateTransfers(transfersService.getTransfers());

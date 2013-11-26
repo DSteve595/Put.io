@@ -1,29 +1,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/layout_nameHolder"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_gravity="center_horizontal" >
+    android:id="@+id/layout_nameHolder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal" >
 
-	<EditText
-		android:id="@+id/editText_fileName"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:gravity="top|start"
-		android:hint="File name"
-		android:inputType="textMultiLine|textNoSuggestions"
-		android:maxLines="3" >
-	</EditText>
+    <ImageButton
+        android:id="@+id/button_undoName"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:background="@drawable/putio_clickable_button"
+        android:contentDescription="@string/undo"
+        android:padding="12dp"
+        android:src="@drawable/ic_menu_revert" >
+    </ImageButton>
 
-	<ImageButton
-		android:id="@+id/button_undoName"
-		android:layout_width="36dp"
-		android:layout_height="36dp"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:layout_marginLeft="4dp"
-		android:src="@drawable/ic_menu_revert"
-		android:background="@drawable/putio_clickable_button" >
-	</ImageButton>
+    <EditText
+        android:id="@+id/editText_fileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/button_undoName"
+        android:gravity="top|start"
+        android:hint="File name"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:maxLines="3" >
+    </EditText>
 
 </RelativeLayout>

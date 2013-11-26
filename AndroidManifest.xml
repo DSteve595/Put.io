@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putionew"
-    android:versionCode="39"
-    android:versionName="1.7.2" >
+    android:versionCode="40"
+    android:versionName="1.7.3" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -110,6 +110,8 @@
         <service android:name=".PutioOpenFileService" >
         </service>
         <service android:name=".PutioTransfersService" >
+        </service>
+        <service android:name="com.stevenschoen.putionew.cast.CastService" >
         </service>
 
         <activity android:name="com.ipaulpro.afilechooser.FileChooserActivity" >

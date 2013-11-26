@@ -43,6 +43,8 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -534,7 +536,7 @@ public class PutioUtils {
 		} catch (SocketTimeoutException e) {
 			throw new SocketTimeoutException();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return null;
 	}
@@ -672,7 +674,7 @@ public class PutioUtils {
 		return downloadId;
 	}
 	
-	public void stream(Context context, String url, int type) {
+	public static void stream(Context context, String url, int type) {
 		Intent streamIntent = new Intent();
 		streamIntent.setAction(Intent.ACTION_VIEW);
 		String typeString;
@@ -691,6 +693,57 @@ public class PutioUtils {
 		streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
 		
 		context.startActivity(streamIntent);
+	}
+	
+	public static void getStreamUrlAndPlay(final Context context, final PutioFileData file, String url) {
+		class GetStreamUrlAndPlay extends AsyncTask<String, Void, String> {
+			Dialog gettingStreamDialog;
+			
+			@Override
+			public void onPreExecute() {
+				gettingStreamDialog = PutioUtils.PutioDialog(context,
+						context.getString(R.string.gettingstreamurltitle),
+						R.layout.dialog_loading);
+				gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
+					
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						GetStreamUrlAndPlay.this.cancel(true);
+					}
+				});
+				gettingStreamDialog.show();
+			}
+
+			@Override
+			protected String doInBackground(String... params) {
+				try {
+					return PutioUtils.resolveRedirect(params[0]);
+				} catch (ClientProtocolException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+			@Override
+			public void onPostExecute(String finalUrl) {
+				if (gettingStreamDialog.isShowing()) {
+					gettingStreamDialog.dismiss();
+				}
+				int type;
+				if (file.contentType.contains("audio")) {
+					type = PutioUtils.TYPE_AUDIO;
+				} else if (file.contentType.contains("video")) {
+					type = PutioUtils.TYPE_VIDEO;
+				} else {
+					type = PutioUtils.TYPE_VIDEO;
+				}
+				PutioUtils.stream(context, finalUrl, type);
+			}
+		}
+		
+		new GetStreamUrlAndPlay().execute(url);
 	}
 	
 	public InputStream getTransfersListJsonData() throws SocketTimeoutException {

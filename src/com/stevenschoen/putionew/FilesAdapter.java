@@ -52,10 +52,6 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 		PutioFileLayout file = data.get(position);
 		holder.textName.setText(file.name);
 		holder.textDescription.setText(file.description);
-//		Log.d("asdf", "name is " + file.name + ", iconUrl = " + file.iconUrl);
-		if (file.name.matches("Up")) {
-			Log.d("asdf", "Up iconRes = " + file.iconRes);
-		}
 		if (file.iconUrl == null) {
 			Picasso.with(context).cancelRequest(holder.imgIcon);
 			holder.imgIcon.setImageResource(file.iconRes);

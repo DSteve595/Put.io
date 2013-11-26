@@ -34,8 +34,8 @@
     </style>
 
     <style name="Putio.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:windowNoTitle">true</item>\
-    </style>
+        <item name="android:windowNoTitle">true</item>
+\</style>
 
     <style name="Putio.ActionButton" parent="Widget.AppCompat.ActionButton">
         <item name="android:background">@drawable/putio_clickable_actionbutton</item>
@@ -92,6 +92,12 @@
 
     <style name="Putio.ButtonBar" parent="@android:style/Widget">
         <item name="android:background">@color/putio_dark</item>
+        <item name="android:divider">?android:attr/dividerVertical</item>
+        <item name="android:showDividers">middle</item>
+    </style>
+
+    <style name="Putio.ButtonBar.Transparent" parent="@android:style/Widget">
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:divider">?android:attr/dividerVertical</item>
         <item name="android:showDividers">middle</item>
     </style>

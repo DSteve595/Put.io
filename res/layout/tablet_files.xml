@@ -6,8 +6,11 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingRight="@dimen/padding_large" >
 
@@ -15,7 +18,7 @@
             android:id="@+id/fragment_files"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".45"
+            android:layout_weight="@integer/weight_files"
             class="com.stevenschoen.putionew.fragments.Files"
             tools:layout="@layout/files" />
 
@@ -23,8 +26,16 @@
             android:id="@+id/fragment_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight=".55" />
+            android:layout_margin="4dp"
+            android:layout_weight="@integer/weight_filedetails" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/castbar_holder"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" >
+
+        <include layout="@layout/castbar" />
+    </FrameLayout>
 
 </LinearLayout>

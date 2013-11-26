@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <item name="weight_files" type="integer">0.45</item>
+    <item name="weight_filedetails" type="integer">0.55</item>
+
+</resources>

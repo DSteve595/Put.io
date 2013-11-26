@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.stevenschoen.putionew"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="#606060" >
+
+    <ImageButton
+        android:id="@+id/button_cast_playpause"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:background="@drawable/putio_clickable_button"
+        android:contentDescription="@string/play"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cast_play" />
+
+    <de.ankri.views.AutoScaleTextView
+        android:id="@+id/text_cast_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@id/button_cast_playpause"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:minTextSize="10sp" />
+
+</RelativeLayout>

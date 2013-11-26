@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,67 +14,71 @@ import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.MediaRouteActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.google.cast.MediaRouteHelper;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
+import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioNotification;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.SwipeDismissTouchListener;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.cast.CastService;
+import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
+import com.stevenschoen.putionew.cast.CastService.CastServiceBinder;
+import com.stevenschoen.putionew.cast.CastService.CastUpdateListener;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
 
 public class Putio extends ActionBarActivity implements
-		ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
+		ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks,
+		CastCallbacks, CastUpdateListener {
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
-	
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
 	ViewPager mViewPager;
+	
+	CastService castService;
+	MediaRouteActionProvider mediaRouteActionProvider;
 	
 	int requestCode;
 	
@@ -112,6 +117,7 @@ public class Putio extends ActionBarActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -170,16 +176,16 @@ public class Putio extends ActionBarActivity implements
 	}
 	
 	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction fragmentTransaction) {
-	}
+	public void onTabUnselected(Tab tab, FragmentTransaction fragmentTransaction) { }
 	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction fragmentTransaction) {
 		switch (tab.getPosition()) {
 		case 0: setContentView(tabletAccountView); break;
-		case 1: setContentView(tabletFilesView); break;
+		case 1: setContentView(tabletFilesView); filesFragment.fixPullToRefreshHack(); break;
 		case 2: setContentView(tabletTransfersView); break;
 		}
+		invalidateCast();
 	}
 	
 	@Override
@@ -239,13 +245,16 @@ public class Putio extends ActionBarActivity implements
 			}
 		});
 		
+		MenuItem buttonMediaRoute = menu.findItem(R.id.menu_cast);
+		mediaRouteActionProvider =
+                (MediaRouteActionProvider) MenuItemCompat.getActionProvider(buttonMediaRoute);
+		if (castService != null) {
+			mediaRouteActionProvider.setRouteSelector(castService.getMediaRouteSelector());
+		}
+		
 		return true;
 	}
 
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the primary sections of the app.
-	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		FragmentManager fm;
 		
@@ -293,6 +302,7 @@ public class Putio extends ActionBarActivity implements
 		}
 	}
 	
+	@SuppressLint("InlinedApi")
 	private void init() {
 		String token = sharedPrefs.getString("token", null);
 		utils = new PutioUtils(token, sharedPrefs);
@@ -340,7 +350,7 @@ public class Putio extends ActionBarActivity implements
 				if (result != null) {
 					for (int i = 0; i < result.length; i++) {
 						if (result[i].show) {
-							final LinearLayout ll = (LinearLayout) getWindow().getDecorView().
+							final ViewGroup ll = (ViewGroup) getWindow().getDecorView().
 									findViewById(R.id.layout_main_root);
 							final View notifView = getLayoutInflater().inflate(R.layout.notification, null);
 							TextView textNotifTitle = (TextView) notifView.findViewById(
@@ -403,6 +413,17 @@ public class Putio extends ActionBarActivity implements
 			}
 		}
 		new NotificationTask().execute();
+		
+		showCastBar(false);
+		
+//		Intent castServiceIntent = new Intent(this, CastService.class);
+//		startService(castServiceIntent);
+//		bindService(castServiceIntent, castServiceConnection, Service.BIND_IMPORTANT);
+	}
+	
+	private void initCast() {
+		MediaRouteHelper.registerMinimalMediaRouteProvider(castService.getCastContext(), castService);
+		supportInvalidateOptionsMenu();
 	}
 	
 	public void logOut() {
@@ -412,11 +433,7 @@ public class Putio extends ActionBarActivity implements
 	}
 	
 	private void setupPhoneLayout() {
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections
-		// of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		ViewHelper.setAlpha(tabs, 0);
@@ -446,42 +463,25 @@ public class Putio extends ActionBarActivity implements
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		// Account
-		int tabletAccountLayoutId = R.layout.tablet_account;
-		
-		tabletAccountView = getLayoutInflater().inflate(tabletAccountLayoutId, null);
+		tabletAccountView = getLayoutInflater().inflate(R.layout.tablet_account, null);
 		accountId = R.id.fragment_account;
 		
 		accountFragment = (Account) getSupportFragmentManager().findFragmentById(R.id.fragment_account);
 		
-		// Files
-		int tabletFilesLayoutId = R.layout.tablet_files;
-		if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(this, getResources().getDisplayMetrics().heightPixels) >= 600) {
-			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-				tabletFilesLayoutId = R.layout.tablet_filesgb600port;
-			} else {
-				tabletFilesLayoutId = R.layout.tablet_filesgb600;
-			}
-		} else if (!UIUtils.hasHoneycomb()) {
-			tabletFilesLayoutId = R.layout.tablet_filesgb600;
-		}
-		
-		tabletFilesView = getLayoutInflater().inflate(tabletFilesLayoutId, null);
+		// Files		
+		tabletFilesView = getLayoutInflater().inflate(R.layout.tablet_files, null);
 		filesId = R.id.fragment_files;
 		fileDetailsId = tabletFilesView.findViewById(R.id.fragment_details).getId();
 		
 		filesFragment = (Files) getSupportFragmentManager().findFragmentById(R.id.fragment_files);
 		
 		if (getSupportFragmentManager().findFragmentById(R.id.fragment_details) != null) {
-			fileDetailsFragment = (FileDetails) getSupportFragmentManager().findFragmentById(R.id.fragment_details);
+			fileDetailsFragment = (FileDetails) getSupportFragmentManager()
+					.findFragmentById(R.id.fragment_details);
 		}
 		
 		// Transfers
-		int tabletTransfersLayoutId = R.layout.tablet_transfers;
-		if (!UIUtils.hasHoneycomb()) {
-			tabletTransfersLayoutId = R.layout.tablet_transfersgb;
-		}
-		
-		tabletTransfersView = getLayoutInflater().inflate(tabletTransfersLayoutId, null);
+		tabletTransfersView = getLayoutInflater().inflate(R.layout.tablet_transfers, null);
 		transfersId = R.id.fragment_transfers;
 		
 		transfersFragment = (Transfers) getSupportFragmentManager().findFragmentById(R.id.fragment_transfers);
@@ -666,6 +666,11 @@ public class Putio extends ActionBarActivity implements
 			unregisterReceiver(fileDownloadUpdateReceiver);
 		}
 		unregisterReceiver(noNetworkReceiver);
+		
+		if (castService != null) {
+			castService.removeListener(Putio.this);
+			unbindService(castServiceConnection);
+		}
 	}
 
 	@Override
@@ -691,4 +696,108 @@ public class Putio extends ActionBarActivity implements
 			}
 		}
 	}
+	
+	private void showCastBar(boolean show) {
+		View castBar = findViewById(R.id.castbar_holder);
+		if (show) {
+			castBar.setVisibility(View.VISIBLE);
+		} else {
+			castBar.setVisibility(View.GONE);
+		}
+	}
+	
+	private View getCastBar() {
+		return findViewById(R.id.castbar_holder);
+	}
+	
+	private void invalidateCast() {
+		if (castService != null && castService.hasMediaLoaded()) {
+			if (castService.isPlaying()) {
+				showPause();
+			} else {
+				showPlay();
+			}
+			updateTitle();
+			
+			showCastBar(true);
+		} else {
+			showCastBar(false);
+		}
+	}
+	
+	public void showPlay() {
+		showCastBar(true);
+		ImageButton button = (ImageButton) getCastBar().findViewById(R.id.button_cast_playpause);
+		button.setImageResource(R.drawable.ic_cast_play);
+		button.setOnClickListener(onClickPlay);
+	}
+
+	public void showPause() {
+		showCastBar(true);
+		ImageButton button = (ImageButton) getCastBar().findViewById(R.id.button_cast_playpause);
+		button.setImageResource(R.drawable.ic_cast_pause);
+		button.setOnClickListener(onClickPause);
+	}
+	
+	public void updateTitle() {
+		showCastBar(true);
+		TextView textTitle = (TextView) getCastBar().findViewById(R.id.text_cast_title);
+		textTitle.setText(castService.getMessageStream().getTitle());
+	}
+	
+	private ServiceConnection castServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+        	CastServiceBinder binder = (CastServiceBinder) service;
+            castService = binder.getService();
+            initCast();
+            
+            castService.addListener(Putio.this);
+        }
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			castService = null;
+		}
+    };
+
+	@Override
+	public void load(PutioFileData file, String url) {
+		if (castService == null || !castService.isCasting()) {
+			PutioUtils.getStreamUrlAndPlay(this, file, url);
+		} else {
+			castService.loadAndPlayMedia(FilenameUtils.removeExtension(file.name), url);
+			showCastBar(true);
+		}
+	}
+	
+	@Override
+	public void onInvalidate() {
+		invalidateCast();
+	}
+	
+	@Override
+	public void onMediaPlay() {
+		showPause();
+	}
+
+	@Override
+	public void onMediaPause() {
+		showPlay();
+	}
+	
+	public OnClickListener onClickPlay = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			castService.mediaPlay();
+		}
+	};
+	
+	public OnClickListener onClickPause = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			castService.mediaPause();
+		}
+	};
 }

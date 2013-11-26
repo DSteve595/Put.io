@@ -1,12 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_main_root"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/filesPullToRefresh"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent" >
 
         <ListView
@@ -14,56 +13,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:clipToPadding="false"
             android:fastScrollEnabled="true"
             android:listSelector="@android:color/transparent"
-            android:paddingBottom="48dp"
-            android:scrollbarStyle="outsideInset" >
-        </ListView>
+            android:scrollbarStyle="insideOverlay" />
+    </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
-        <FrameLayout
-            android:id="@+id/buttonbar"
-            style="@style/Putio.ButtonBar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/refreshbargradient" >
+    <include
+        android:id="@+id/files_emptysub"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@id/filesPullToRefresh"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
+        layout="@layout/filesemptysub" />
 
-            <ImageButton
-                android:id="@+id/button_files_refresh"
-                style="@style/Putio.ButtonBar.Button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/refresh"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_refresh" />
+    <include
+        android:id="@+id/files_empty"
+        layout="@layout/filesempty" />
 
-            <ProgressBar
-                android:id="@+id/item_files_refresh"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:indeterminate="true" >
-            </ProgressBar>
-        </FrameLayout>
+    <include
+        android:id="@+id/files_loading"
+        layout="@layout/filesloading" />
 
-        <include
-            android:id="@+id/files_emptysub"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_below="@id/fileslist"
-            android:layout_marginLeft="@dimen/padding_large"
-            android:layout_marginRight="@dimen/padding_large"
-            layout="@layout/filesemptysub" />
-
-        <include
-            android:id="@+id/files_empty"
-            layout="@layout/filesempty" />
-
-        <include
-            android:id="@+id/files_loading"
-            layout="@layout/filesloading" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

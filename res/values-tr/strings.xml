@@ -28,6 +28,7 @@
     <string name="search">Ara</string>
     <string name="browse">Gözat</string>
     <string name="remove">Kaldır</string>
+    <string name="undo">Geri al</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Akış hazırlanıyor</string>
@@ -89,6 +90,8 @@
 	<string name="hey">Hey!</string>
 	<string name="readytopaste">İndirme bağlantısı yapıştırılmaya hazır.</string>
 	<string name="choosefile">Dosya seçin</string>
+	<string name="cachesize">Önbellek boyutu</string>
+	<string name="cacheexplanation">Ne kadar alan önbellek için kullanılmalıdır?\nBu indirilen dosyaları etkilemez.</string>
 
     <!-- About screen -->
     <string name="appbysteven">Steven Schoen tarafından geliştirilen Android uygulaması.</string>

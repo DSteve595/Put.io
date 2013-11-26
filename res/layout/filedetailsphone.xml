@@ -1,6 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/DetailsHolder"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/castbar_holder"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true" >
+
+        <include layout="@layout/castbar" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/DetailsHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/castbar_holder" >
+    </FrameLayout>
+
+</RelativeLayout>

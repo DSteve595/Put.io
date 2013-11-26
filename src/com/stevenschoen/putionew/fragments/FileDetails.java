@@ -10,14 +10,11 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,6 +46,7 @@ import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
 
 public class FileDetails extends Fragment {
 	PutioFileData origFileData;
@@ -75,8 +73,14 @@ public class FileDetails extends Fragment {
         @Override
         public void onFDFinished() { }
     };
+    
+    private static CastCallbacks sDummyCastCallbacks = new CastCallbacks() {
+		@Override
+		public void load(PutioFileData file, String url) { }
+    };
 	
     private Callbacks mCallbacks = sDummyCallbacks;
+    private CastCallbacks mCastCallbacks = sDummyCastCallbacks;
 
 	SharedPreferences sharedPrefs;
 	
@@ -163,16 +167,6 @@ public class FileDetails extends Fragment {
 			}
 			
 		});
-		
-		view.post(new Runnable() {   
-		    @Override
-		    public void run() {
-				RelativeLayout nameHolder = (RelativeLayout) view.findViewById(R.id.layout_nameHolder);
-				float nameHolderWidth = nameHolder.getMeasuredWidth();
-				float dip40 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-				textFileName.setWidth(Math.round(nameHolderWidth - dip40));
-	        }
-	    });
 		
 		String[] created = PutioUtils.separateIsoTime(origFileData.createdTime);
 		TextView textFileCreatedCreated = (TextView) view.findViewById(R.id.text_fileDetailsCreatedStatic);
@@ -271,8 +265,10 @@ public class FileDetails extends Fragment {
 				} else {
 					streamOrStreamMp4 = "/stream";
 				}
-				new getStreamUrlAndPlay().execute(baseUrl + "files/"
-						+ origFileData.id + streamOrStreamMp4 + tokenWithStuff);
+				
+				String url = baseUrl + "files/"
+						+ origFileData.id + streamOrStreamMp4 + tokenWithStuff;
+				mCastCallbacks.load(newFileData, url);
 			}
 		};
 		
@@ -561,53 +557,6 @@ public class FileDetails extends Fragment {
 		}
 	}
 	
-	class getStreamUrlAndPlay extends AsyncTask<String, Void, String> {
-		Dialog gettingStreamDialog;
-		
-		@Override
-		public void onPreExecute() {
-			gettingStreamDialog = PutioUtils.PutioDialog(getActivity(),
-					getString(R.string.gettingstreamurltitle),
-					R.layout.dialog_loading);
-			gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
-				
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					getStreamUrlAndPlay.this.cancel(true);
-				}
-			});
-			gettingStreamDialog.show();
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			try {
-				return PutioUtils.resolveRedirect(params[0]);
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-		
-		@Override
-		public void onPostExecute(String finalUrl) {
-			if (gettingStreamDialog.isShowing()) {
-				gettingStreamDialog.dismiss();
-			}
-			int type;
-			if (origFileData.contentType.contains("audio")) {
-				type = PutioUtils.TYPE_AUDIO;
-			} else if (origFileData.contentType.contains("video")) {
-				type = PutioUtils.TYPE_VIDEO;
-			} else {
-				type = PutioUtils.TYPE_VIDEO;
-			}
-			utils.stream(getActivity(), finalUrl, type);
-		}
-	}
-	
 	public void updatePercent(int percent) {
 		textPercent.setText(Integer.toString(percent));
 	}
@@ -641,6 +590,7 @@ public class FileDetails extends Fragment {
         if (UIUtils.isTablet(getActivity())) {
         	mCallbacks = (Callbacks) activity;
         }
+        mCastCallbacks = (CastCallbacks) activity;
     }
     
     @Override
@@ -648,6 +598,7 @@ public class FileDetails extends Fragment {
         super.onDetach();
 
         mCallbacks = sDummyCallbacks;
+        mCastCallbacks = sDummyCastCallbacks;
     }
 	
 	public void applyFileToServerAndFinish() {

@@ -23,10 +23,11 @@ import android.preference.PreferenceManager;
 import com.stevenschoen.putionew.activities.Putio;
 
 public class PutioTransfersService extends Service {
-	private final IBinder binder = new TransfersBinder();
+	
+	private final IBinder binder = new TransfersServiceBinder();
 	private TimerTask stopTask;
 
-	public class TransfersBinder extends Binder {
+	public class TransfersServiceBinder extends Binder {
 		public PutioTransfersService getService() {
 			return PutioTransfersService.this;
 		}
@@ -156,15 +157,13 @@ public class PutioTransfersService extends Service {
 		protected void onPostExecute(PutioTransferData[] result) {
 			super.onPostExecute(result);
 			
-			transfersInverted = transfers.clone();
-			Collections.reverse(Arrays.asList(transfersInverted)); // this is convenient
-//			Log.d("asdf", "just inited, inverted length " + transfersInverted.length);
-//			for (int i = 0; i < result.length; i++) {
-//				transfersInverted[i] = result[result.length - i - 1];
-//			}
-			
-			Intent transfersAvailableIntent = new Intent(Putio.transfersAvailableIntent);
-			sendBroadcast(transfersAvailableIntent);
+			if (result != null) {
+				transfersInverted = transfers.clone();
+				Collections.reverse(Arrays.asList(transfersInverted));
+				
+				Intent transfersAvailableIntent = new Intent(Putio.transfersAvailableIntent);
+				sendBroadcast(transfersAvailableIntent);
+			}
 		}
 	}
 	

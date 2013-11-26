@@ -1,7 +1,5 @@
 package com.stevenschoen.putionew.fragments;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
@@ -29,7 +31,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -46,11 +47,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.stevenschoen.putionew.FilesAdapter;
 import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioFileLayout;
@@ -60,7 +59,7 @@ import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.activities.Putio;
 
-public final class Files extends Fragment {
+public final class Files extends Fragment implements OnRefreshListener {
 	
 	private int viewMode = 1;
 	public static final int VIEWMODE_LIST = 1;
@@ -101,6 +100,7 @@ public final class Files extends Fragment {
 	private PutioFileLayout dummyFile = new PutioFileLayout(
 			"Loading...", "Your files will appear shortly.", R.drawable.ic_launcher, null);
 	private ListView listview;
+	private PullToRefreshLayout mPullToRefreshLayout;
 	
 	private View loadingView;
 	private View emptyView;
@@ -109,7 +109,6 @@ public final class Files extends Fragment {
 	private boolean hasUpdated = false;
 	
 	private PutioFileData[] fileData;
-	private int origId;
 	
 	updateFilesTask update = new updateFilesTask();
 	searchFilesTask search = new searchFilesTask();
@@ -117,13 +116,9 @@ public final class Files extends Fragment {
 	private String tokenWithStuff;
 	
 	public int currentFolderId;
+	private int origId;
 	public boolean isSearch;
 	private int parentParentId;
-
-	private ImageButton buttonRefresh;
-	private ProgressBar itemRefreshing;
-	private View buttonBar;
-	private int buttonBarHeight;
 	
 	PutioUtils utils;
 	
@@ -148,19 +143,26 @@ public final class Files extends Fragment {
 	
 	@TargetApi(11)
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.files, container, false);
 		
 		listview = (ListView) view.findViewById(R.id.fileslist);
+		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.filesPullToRefresh);
+		ActionBarPullToRefresh.from(getActivity())
+			.options(Options.create()
+					.minimize()
+					.build())
+			.allChildrenArePullable()
+			.listener(this)
+			.setup(mPullToRefreshLayout);
 		
-		adapter = new FilesAdapter(getActivity(), R.layout.file_putio,
-				fileLayouts);
+		adapter = new FilesAdapter(getActivity(), R.layout.file_putio, fileLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
 		if (UIUtils.isTablet(getActivity())) {
 			listview.setVerticalFadingEdgeEnabled(true);
+			listview.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_INSET);
 			if (UIUtils.hasHoneycomb()) {
 				listview.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
 				listview.setFastScrollAlwaysVisible(true);
@@ -212,31 +214,17 @@ public final class Files extends Fragment {
 		
 		emptyView = view.findViewById(R.id.fileslistempty);
 		
-		buttonRefresh = (ImageButton) view.findViewById(R.id.button_files_refresh);
+		fileLayouts.add(0, dummyFile);
+		
+		loadingView = view.findViewById(R.id.files_loading);
+		emptyView = view.findViewById(R.id.files_empty);
+		ImageButton buttonRefresh = (ImageButton) emptyView.findViewById(R.id.button_filesempty_refresh);
 		buttonRefresh.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				invalidateList();
 			}
 		});
-		
-		itemRefreshing = (ProgressBar) view.findViewById(R.id.item_files_refresh);
-		itemRefreshing.setEnabled(false);
-		
-		buttonBar = view.findViewById(R.id.buttonbar);
-		buttonBar.post(new Runnable() {
-
-			@Override
-			public void run() {
-				buttonBarHeight = buttonBar.getHeight();
-			}
-		});
-		
-		fileLayouts.add(0, dummyFile);
-		
-		loadingView = view.findViewById(R.id.files_loading);
-		emptyView = view.findViewById(R.id.files_empty);
 		emptySubView = view.findViewById(R.id.files_emptysub);
 		
 		invalidateList();
@@ -370,16 +358,6 @@ public final class Files extends Fragment {
 			}
 		});
 		
-		textFileName.post(new Runnable() {   
-		    @Override
-		    public void run() {
-				View nameHolder = renameDialog.findViewById(R.id.layout_nameHolder);
-				float nameHolderWidth = nameHolder.getMeasuredWidth();
-				float dip40 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-				textFileName.setWidth(Math.round(nameHolderWidth - dip40));
-	        }
-	    });
-		
 		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
 		saveRename.setOnClickListener(new OnClickListener() {
 			
@@ -429,73 +407,8 @@ public final class Files extends Fragment {
 			update = new updateFilesTask();
 			update.execute(highlightId);
 		}
-		setShowRefreshButton(false);
-	}
-	
-	public void setShowRefreshButton(boolean value) {
-		if (value) {
-			animate(buttonBar).setDuration(200).translationY(buttonBarHeight);
-			animate(buttonBar).setListener(new AnimatorListener() {
-
-				@Override
-				public void onAnimationStart(Animator animation) {
-				}
-
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					itemRefreshing.setEnabled(false);
-					itemRefreshing.setVisibility(View.INVISIBLE);
-					
-					buttonRefresh.setEnabled(true);
-					animate(buttonRefresh).setDuration(0).alpha(1);
-					
-					animate(buttonBar).setDuration(200).translationY(0);
-					animate(buttonBar).setListener(null);
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animation) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-				}
-				
-			});
-		} else if (!value) {
-			buttonRefresh.setEnabled(false);
-			buttonBar.post(new Runnable() {
-				@Override
-				public void run() {
-					animate(buttonBar).setDuration(200).translationY(buttonBarHeight);
-				}
-			});
-			animate(buttonBar).setDuration(200).translationY(buttonBarHeight);
-			animate(buttonBar).setListener(new AnimatorListener() {
-
-				@Override
-				public void onAnimationStart(Animator animation) {
-				}
-
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					animate(buttonBar).setDuration(200).translationY(0);
-					animate(buttonBar).setListener(null);
-					animate(buttonRefresh).setDuration(0).alpha(0);
-					
-					itemRefreshing.setEnabled(true);
-					itemRefreshing.setVisibility(View.VISIBLE);
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animation) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-				}
-			});
-		}
+		
+		mPullToRefreshLayout.setRefreshing(true);
 	}
 	
 	@Override
@@ -571,7 +484,7 @@ public final class Files extends Fragment {
 		
 		listview.setSelectionFromTop(index, top);
 		
-		setShowRefreshButton(true);
+		mPullToRefreshLayout.setRefreshComplete();
 		
 		fileLayouts = files;
 		
@@ -593,63 +506,66 @@ public final class Files extends Fragment {
 		private int origIdBefore = origId;
 		
 		public void onPreExecute() {
-			JSONObject json;
-			JSONArray array;
+			boolean changed = (origId != currentFolderId);
 			
-			try {				
-				File input = new File(getActivity().getCacheDir(), currentFolderId + ".json");
-				FileInputStream fis = FileUtils.openInputStream(input);
-				FileInputStream fis2 = fis;
+			if (changed) {
+				JSONObject json;
+				JSONArray array;
 				
-                json = new JSONObject(PutioUtils.convertStreamToString(fis));
-                fis.close();
-                
-                array = json.getJSONArray("files");
-                newId = json.getJSONObject("parent").getInt("id");
-				if (currentFolderId != 0) {
-					try {
-						parentParentId = json.getJSONObject("parent").getInt("parent_id");
-					} catch (JSONException e) {
-						parentParentId = 0;
-					}
-				}
-                origId = newId;
-				PutioFileData[] file = new PutioFileData[array.length()];
-				
-				fis2.close();
-				
-				for (int i = 0; i < array.length(); i++) {
-					JSONObject obj = array.getJSONObject(i);
+				try {
+					File input = new File(getActivity().getCacheDir(), currentFolderId + ".json");
+					FileInputStream fis = FileUtils.openInputStream(input);
+					FileInputStream fis2 = fis;
 					
-					long size = 0;
-					try {
-						size = obj.getLong("size");
-					} catch (JSONException e) {
+	                json = new JSONObject(PutioUtils.convertStreamToString(fis));
+	                fis.close();
+	                
+	                array = json.getJSONArray("files");
+	                newId = json.getJSONObject("parent").getInt("id");
+					if (currentFolderId != 0) {
+						try {
+							parentParentId = json.getJSONObject("parent").getInt("parent_id");
+						} catch (JSONException e) {
+							parentParentId = 0;
+						}
 					}
-					file[i] = new PutioFileData(
-							utils.stringToBooleanHack(obj.getString("is_shared")),
-							obj.getString("name"),
-							obj.getString("screenshot"),
-							obj.getString("created_at"),
-							obj.getInt("parent_id"),
-							utils.stringToBooleanHack(obj.getString("is_mp4_available")),
-							obj.getString("content_type"),
-							obj.getString("icon"),
-							obj.getInt("id"),
-							size);
+	                origId = newId;
+					PutioFileData[] file = new PutioFileData[array.length()];
+					
+					fis2.close();
+					
+					for (int i = 0; i < array.length(); i++) {
+						JSONObject obj = array.getJSONObject(i);
+						
+						long size = 0;
+						try {
+							size = obj.getLong("size");
+						} catch (JSONException e) { }
+						file[i] = new PutioFileData(
+								utils.stringToBooleanHack(obj.getString("is_shared")),
+								obj.getString("name"),
+								obj.getString("screenshot"),
+								obj.getString("created_at"),
+								obj.getInt("parent_id"),
+								utils.stringToBooleanHack(obj.getString("is_mp4_available")),
+								obj.getString("content_type"),
+								obj.getString("icon"),
+								obj.getInt("id"),
+								size);
+					}
+					
+					populateList(file, newId, origIdBefore);
+					
+					listview.setClickable(true);
+					
+					getActivity().sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
+				} catch (FileNotFoundException e) {
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-				
-				populateList(file, newId, origIdBefore);
-				
-				listview.setClickable(true);
-				
-				getActivity().sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
-			} catch (FileNotFoundException e) {
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
 			}
 		}
 		
@@ -862,5 +778,22 @@ public final class Files extends Fragment {
 		super.onSaveInstanceState(outState);
 		
 		outState.putInt("currentFolderId", currentFolderId);
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		invalidateList();
+	}
+	
+	public void fixPullToRefreshHack() {
+		if (isAdded() && isVisible()) {
+			ActionBarPullToRefresh.from(getActivity())
+			.options(Options.create()
+					.minimize()
+					.build())
+			.allChildrenArePullable()
+			.listener(this)
+			.setup(mPullToRefreshLayout);
+		}
 	}
 }

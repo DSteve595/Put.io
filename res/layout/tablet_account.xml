@@ -2,13 +2,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
     <fragment
         android:id="@+id/fragment_account"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         class="com.stevenschoen.putionew.fragments.Account"
         tools:layout="@layout/account" />
+
+    <FrameLayout
+        android:id="@+id/castbar_holder"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" >
+
+        <include layout="@layout/castbar" />
+    </FrameLayout>
 
 </LinearLayout>
