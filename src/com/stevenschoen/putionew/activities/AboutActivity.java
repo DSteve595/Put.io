@@ -17,8 +17,7 @@ public class AboutActivity extends ActionBarActivity {
 		setContentView(R.layout.aboutphone);
 		if (UIUtils.isTablet(this)) {
 			getWindow().setLayout((int) PutioUtils.pxFromDp(this, 380), (int) PutioUtils.pxFromDp(this, 500));
-		}
-		if (!UIUtils.isTablet(this)) {
+		} else {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}

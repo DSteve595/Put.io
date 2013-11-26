@@ -212,8 +212,6 @@ public final class Files extends Fragment implements OnRefreshListener {
 			}
 		});
 		
-		emptyView = view.findViewById(R.id.fileslistempty);
-		
 		fileLayouts.add(0, dummyFile);
 		
 		loadingView = view.findViewById(R.id.files_loading);
