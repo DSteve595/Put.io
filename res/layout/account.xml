@@ -22,16 +22,17 @@
             android:text="Available Storage"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <TextView
+        <de.ankri.views.AutoScaleTextView
             android:id="@+id/text_storage_amountfree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingLeft="12dp"
+            android:maxLines="1"
+            android:paddingRight="12dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="40sp"
+            android:textSize="48sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -57,7 +58,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </RelativeLayout>
-    <LinearLayout
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
