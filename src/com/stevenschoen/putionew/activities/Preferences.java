@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import com.stevenschoen.putionew.R;
@@ -37,9 +38,7 @@ public final class Preferences extends PreferenceActivity implements
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			Intent homeIntent = new Intent(this, Putio.class);
-			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(homeIntent);
+			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
 		return (super.onOptionsItemSelected(menuItem));
