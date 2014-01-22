@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/putio_accent_eigth"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:minHeight="16sp"
+            android:background="@null"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dip"
+            android:paddingRight="16dip"
+            android:paddingTop="12dp"
+            android:textAppearance="@style/TextAppearance.Putio.DialogWindowTitle" />
+
+        <View
+            android:id="@+id/titleDivider"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="@color/putio_accent"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/addtransfer_pager"
+        android:layout_width="wrap_content"
+        android:layout_height="140dp">
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/addtransfer_pager_title_strip"
+            style="@style/PagerTitleStrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="#fff" />
+    </android.support.v4.view.ViewPager>
+
+    <View
+        android:id="@+id/buttonbarSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/padding_large"
+        android:background="?attr/dividerVertical" />
+
+    <LinearLayout
+        android:id="@+id/buttonbar"
+        style="@style/Putio.ButtonBar.Dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_addtransfer_cancel"
+            style="@style/Putio.ButtonBar.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/button_addtransfer_add"
+            style="@style/Putio.ButtonBar.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add" />
+    </LinearLayout>
+
+</LinearLayout>

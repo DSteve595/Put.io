@@ -1,0 +1,158 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Putio" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarWidgetTheme">@style/Theme.Putio.Dark</item>
+        <item name="actionBarItemBackground">@drawable/putio_clickable_actionbutton</item>
+        <item name="actionBarStyle">@style/Putio.ActionBar</item>
+        <item name="actionBarTabBarStyle">@style/Putio.ActionBarTabBarStyle</item>
+        <item name="actionBarTabStyle">@style/Putio.ActionBarTabStyle</item>
+        <item name="actionDropDownStyle">@style/Putio.DropDownNav</item>
+        <item name="dropDownListViewStyle">@style/Putio.DropDownListView</item>
+        <item name="popupMenuStyle">@style/Putio.PopupMenu</item>
+        <item name="android:actionBarWidgetTheme">@style/Theme.Putio.Dark</item>
+        <item name="android:actionBarItemBackground">@drawable/putio_clickable_actionbutton</item>
+        <item name="android:actionBarStyle">@style/Putio.ActionBar</item>
+        <item name="android:actionBarTabBarStyle">@style/Putio.ActionBarTabBarStyle</item>
+        <item name="android:actionBarTabStyle">@style/Putio.ActionBarTabStyle</item>
+        <item name="android:actionDropDownStyle">@style/Putio.DropDownNav</item>
+        <item name="android:buttonStyle">@style/Putio.Button</item>
+        <item name="android:dialogTheme">@style/Putio.Dialog</item>
+        <item name="android:dropDownListViewStyle">@style/Putio.DropDownListView</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/putio_fastscroll_thumb</item>
+        <item name="android:popupMenuStyle">@style/Putio.PopupMenu</item>
+        <item name="android:spinnerStyle">@style/Putio.Spinner</item>
+        <item name="android:editTextStyle">@style/Putio.EditText</item>
+        <item name="android:checkboxStyle">@style/Putio.CheckBox</item>
+    </style>
+
+    <style name="Theme.Putio.Dark" parent="Theme.AppCompat">
+        <item name="android:dropDownListViewStyle">@style/Putio.DropDownListView</item>
+        <item name="dropDownListViewStyle">@style/Putio.DropDownListView</item>
+        <item name="android:actionButtonStyle">@style/Putio.ActionButton</item>
+        <item name="actionButtonStyle">@style/Putio.ActionButton</item>
+        <item name="searchViewTextField">@drawable/edit_text_search_putio</item>
+    </style>
+
+    <style name="Putio.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:windowNoTitle">true</item>
+        \
+    </style>
+
+    <style name="Putio.ActionButton" parent="Widget.AppCompat.ActionButton">
+        <item name="android:background">@drawable/putio_clickable_actionbutton</item>
+    </style>
+
+    <style name="Putio.PopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_putio</item>
+    </style>
+
+    <style name="Putio.DropDownListView" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/putio_clickable_actionbutton</item>
+        <item name="android:textColor">#fff200</item>
+    </style>
+
+    <style name="Putio.DropDownNav" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="background">@drawable/spinner_background_ab_putio</item>
+        <item name="android:background">@drawable/spinner_background_ab_putio</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_putio</item>
+        <item name="android:dropDownSelector">@drawable/putio_clickable_actionbutton</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Putio.widget" parent="@style/Theme.AppCompat">
+        <item name="popupMenuStyle">@style/Putio.PopupMenu</item>
+        <item name="dropDownListViewStyle">@style/Putio.DropDownListView</item>
+        <item name="android:popupMenuStyle">@style/Putio.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/Putio.DropDownListView</item>
+    </style>
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Putio.DropDownItem" parent="@style/Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:textAppearance">?android:attr/textAppearanceInverse</item>
+    </style>
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Putio.SpinnerItem" parent="@style/Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:textAppearance">?android:attr/textAppearanceInverse</item>
+    </style>
+
+    <style name="Putio.ActionBarTabStyle" parent="@style/Widget.AppCompat.ActionBar.TabView">
+        <item name="android:background">@drawable/putio_tab_indicator</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+    </style>
+
+    <style name="Putio.ActionBarTabBarStyle" parent="@style/Widget.AppCompat.ActionBar.TabBar">
+        <item name="android:fadingEdge">none</item>
+        <item name="android:fadingEdgeLength">0dp</item>
+        <item name="android:requiresFadingEdge">none</item>
+    </style>
+
+    <style name="Putio.Spinner" parent="@android:style/Widget.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_putio</item>
+        <item name="background">@drawable/spinner_background_ab_putio</item>
+    </style>
+
+    <style name="Putio.ButtonBar" parent="@android:style/Widget">
+        <item name="android:background">@color/putio_dark</item>
+        <item name="android:divider">?attr/dividerHorizontal</item>
+        <item name="android:showDividers">middle</item>
+    </style>
+
+    <style name="Putio.ButtonBar.Transparent" parent="@style/Putio.ButtonBar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Putio.ButtonBar.Dialog" parent="@style/Putio.ButtonBar.Transparent"></style>
+
+    <style name="Putio.ButtonBar.Button" parent="@android:style/Widget">
+        <item name="android:background">@drawable/putio_clickable_button</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <declare-styleable name="com.stevenschoen.putio.SizePreference">
+        <attr name="minValue" format="integer" />
+        <attr name="maxValue" format="integer" />
+    </declare-styleable>
+
+    <style name="Putio.Dialog" parent="@style/Theme.Putio">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:buttonBarStyle">@style/Putio.ButtonBar</item>
+        <item name="android:textViewStyle">@android:style/Widget.TextView</item>
+        <item name="android:editTextStyle">@style/Putio.EditText</item>
+    </style>
+
+    <style name="TextAppearance.Putio.DialogWindowTitle" parent="@android:style/Widget">
+        <item name="android:textColor">@color/putio_dark_text</item>
+        <item name="android:textSize">26sp</item>
+    </style>
+
+    <style name="Putio.CheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/btn_check_putio</item>
+    </style>
+
+    <style name="Putio.MenuTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="Putio.Button" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/btn_putio</item>
+    </style>
+
+    <style name="Putio.EditText" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/edit_text_putio</item>
+    </style>
+
+    <style name="PagerTitleStrip">
+        <item name="android:background">@drawable/titlestrip</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="Putio.DialogOrActivity" parent="@style/Theme.Putio"></style>
+
+</resources>

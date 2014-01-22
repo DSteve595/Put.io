@@ -1,0 +1,45 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.+'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '19.0.1'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:mediarouter-v7:18.0.+'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.httpcomponents:httpmime:4.3.1'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.3'
+    compile 'com.squareup.picasso:picasso:2.1.1'
+    compile project(':libraries:aFileChooser')
+    compile files('libs/GoogleCastSdkAndroid.jar')
+}
