@@ -1,18 +1,5 @@
 package com.stevenschoen.putionew.fragments;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -46,6 +33,19 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
+
+import org.apache.http.util.ByteArrayBuffer;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class FileDetails extends Fragment {
 	PutioFileData origFileData;

@@ -1,16 +1,5 @@
 package com.stevenschoen.putionew;
 
-import java.io.InputStream;
-import java.net.SocketTimeoutException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +10,17 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 
 import com.stevenschoen.putionew.activities.Putio;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.SocketTimeoutException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PutioTransfersService extends Service {
 	

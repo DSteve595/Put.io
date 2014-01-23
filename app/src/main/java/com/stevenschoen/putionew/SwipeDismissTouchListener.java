@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -11,6 +10,8 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class SwipeDismissTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values

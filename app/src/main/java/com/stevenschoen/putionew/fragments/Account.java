@@ -1,7 +1,5 @@
 package com.stevenschoen.putionew.fragments;
 
-import java.net.SocketTimeoutException;
-
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +14,8 @@ import com.stevenschoen.putionew.PutioAccountInfo;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
+
+import java.net.SocketTimeoutException;
 
 public class Account extends Fragment {
 	public static Account newInstance() {

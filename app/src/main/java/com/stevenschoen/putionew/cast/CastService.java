@@ -1,10 +1,5 @@
 package com.stevenschoen.putionew.cast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -27,6 +22,11 @@ import com.google.cast.MediaRouteStateChangeListener;
 import com.google.cast.SessionError;
 import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.cast.PutioMessageStream.OnStatusUpdateListener;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CastService extends Service implements MediaRouteAdapter {
 	

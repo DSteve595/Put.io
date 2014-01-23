@@ -12,15 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.FileChooserActivity;
-import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.nineoldandroids.view.ViewHelper;
+import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-
-import java.io.File;
+import com.stevenschoen.putionew.UIUtils;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
@@ -31,7 +29,7 @@ public class AddTransferFile extends Fragment {
 		return fragment;
 	}
 	
-	private File chosenFile = null;
+	private Uri chosenTorrentUri = null;
 	
 	private TextView textFile;
 	private TextView textNotATorrent;
@@ -49,8 +47,15 @@ public class AddTransferFile extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), FileChooserActivity.class);
-				startActivityForResult(intent, 0);
+                if (UIUtils.hasKitKat()) {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.setType("application/x-bittorrent");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    startActivityForResult(intent, 0);
+                } else {
+                    Intent intent = new Intent(getActivity(), FileChooserActivity.class);
+                    startActivityForResult(intent, 0);
+                }
 			}
 		});
 		
@@ -66,8 +71,8 @@ public class AddTransferFile extends Fragment {
 		return view;
 	}
 	
-	public File getChosenFile() {
-		return chosenFile;
+	public Uri getChosenTorrentUri() {
+		return chosenTorrentUri;
 	}
 	
 	@Override
@@ -78,20 +83,17 @@ public class AddTransferFile extends Fragment {
 	        	if (data != null) {
 	        		final Uri uri = data.getData();
 					try {
-						// Create a file instance from the URI
-						final File file = FileUtils.getFile(getActivity(), uri);
-						textFile.setText(file.getName());
-						chosenFile = file;
+                        chosenTorrentUri = uri;
+						textFile.setText(PutioUtils.getNameFromUri(getActivity(), uri));
                         ContentResolver cr = getActivity().getContentResolver();
-                        MimeTypeMap mime = MimeTypeMap.getSingleton();
-                        String mimetype = mime.getExtensionFromMimeType(cr.getType(uri));
-						if (!mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) == 0) {
+                        String mimetype = cr.getType(uri);
+                        if (!mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) == 0) {
 							animate(textNotATorrent).alpha(1);
 						} else if (mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) != 0) {
 							animate(textNotATorrent).alpha(0);
 						}
 					} catch (Exception e) {
-						Log.e("FileSelectorTestActivity", "File select error", e);
+						Log.d("asdf", "File select error", e);
 					}
 	        	}
 	        }

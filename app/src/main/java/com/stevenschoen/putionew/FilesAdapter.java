@@ -1,7 +1,5 @@
 package com.stevenschoen.putionew;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 

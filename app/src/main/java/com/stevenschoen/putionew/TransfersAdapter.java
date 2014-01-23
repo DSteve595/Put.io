@@ -1,7 +1,5 @@
 package com.stevenschoen.putionew;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -14,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
+
+import java.util.List;
 
 public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 

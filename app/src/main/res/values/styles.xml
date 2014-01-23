@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Putio" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarWidgetTheme">@style/Theme.Putio.Dark</item>

@@ -72,9 +72,8 @@
     <orderEntry type="jdk" jdkName="Android API 8 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ComAstuetzPagerslidingtabstrip101.aar" level="project" />
-    <orderEntry type="library" exported="" name="internal_impl-18.0.0" level="project" />
-    <orderEntry type="library" exported="" name="ComAndroidSupportMediarouterV71800.aar" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
+    <orderEntry type="library" exported="" name="internal_impl-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
     <orderEntry type="library" exported="" name="ComAndroidSupportAppcompatV71901.aar" level="project" />
     <orderEntry type="library" exported="" name="ComGithubChrisbanesActionbarpulltorefreshLibrary093.aar" level="project" />
@@ -82,6 +81,8 @@
     <orderEntry type="module" module-name="aFileChooser" exported="" />
     <orderEntry type="library" exported="" name="picasso-2.1.1" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.3.1" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.3.1" level="project" />
+    <orderEntry type="library" exported="" name="ComAndroidSupportMediarouterV71901.aar" level="project" />
     <orderEntry type="library" exported="" name="ComGithubCastorflexSmoothprogressbarLibrary020.aar" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="GoogleCastSdkAndroid" level="project" />

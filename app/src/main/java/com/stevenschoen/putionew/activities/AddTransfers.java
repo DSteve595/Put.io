@@ -1,7 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import org.apache.commons.io.FileUtils;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -24,6 +22,10 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.AddTransferFile;
 import com.stevenschoen.putionew.fragments.AddTransferUrl;
+
+import org.apache.commons.io.FileUtils;
+
+import java.io.FileNotFoundException;
 
 public class AddTransfers extends FragmentActivity {
 	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -121,16 +123,23 @@ public class AddTransfers extends FragmentActivity {
 	}
 	
 	private void addFile() {
-		if (fileFragment != null && fileFragment.getChosenFile() != null) {
-			if (FileUtils.sizeOf(fileFragment.getChosenFile()) <= FileUtils.ONE_MB) {
-				Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
-				addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_FILE);
-				addTransferIntent.putExtra("filepath", fileFragment.getChosenFile().getAbsolutePath());
-				startActivity(addTransferIntent);
-				finish();
-			} else {
-				Toast.makeText(AddTransfers.this, getString(R.string.filetoobig), Toast.LENGTH_LONG).show();
-			}
+		if (fileFragment != null && fileFragment.getChosenTorrentUri() != null) {
+            try {
+                long size = getContentResolver()
+                        .openFileDescriptor(fileFragment.getChosenTorrentUri(), "r").getStatSize();
+
+                if (size <= FileUtils.ONE_MB) {
+                    Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
+                    addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_FILE);
+                    addTransferIntent.putExtra("torrenturi", fileFragment.getChosenTorrentUri());
+                    startActivity(addTransferIntent);
+                    finish();
+                } else {
+                    Toast.makeText(AddTransfers.this, getString(R.string.filetoobig), Toast.LENGTH_LONG).show();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 		} else {
 			Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 		}

@@ -1,10 +1,10 @@
 package com.stevenschoen.putionew.cast;
 
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.google.cast.MediaProtocolMessageStream;
+
+import org.json.JSONObject;
 
 public class PutioMessageStream extends MediaProtocolMessageStream {
 	OnStatusUpdateListener statusUpdateListener;

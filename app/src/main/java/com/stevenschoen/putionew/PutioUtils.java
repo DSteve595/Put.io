@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -22,6 +23,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +37,7 @@ import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.activities.TransfersActivity;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -42,8 +45,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -53,6 +57,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -279,7 +284,7 @@ public class PutioUtils {
 	}
 	
 	public static void addTransfersAsync(final Context context, final int mode, final Intent retryIntent,
-			final String urls, final String filePath) {
+			final String urls, final Uri torrentUri) {
 		class AddTransfersTask extends AsyncTask<Void, Void, Void> {
 			NotificationManager notifManager;
 			
@@ -332,7 +337,16 @@ public class PutioUtils {
 					HttpPost httppost = new HttpPost(url.toString());
 
                     MultipartEntityBuilder mpBuilder = MultipartEntityBuilder.create();
-                    mpBuilder.addPart("file", new FileBody(new File(filePath)));
+                    try {
+                        InputStream in = getInputStreamFromUri(context, torrentUri);
+                        byte[] bytes = IOUtils.toByteArray(in);
+                        mpBuilder.addPart("file", new ByteArrayBody(
+                                bytes,
+                                ContentType.create("application/x-bittorrent"),
+                                getNameFromUri(context, torrentUri)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
 					httppost.setEntity(mpBuilder.build());
 					
@@ -347,6 +361,7 @@ public class PutioUtils {
 						}
 					} catch (IOException e) {
 						notifFailed();
+                        e.printStackTrace();
 					}
 				}
 
@@ -455,6 +470,31 @@ public class PutioUtils {
 			return "";
 		}
 	}
+
+    public static InputStream getInputStreamFromUri(Context context, Uri uri)
+            throws FileNotFoundException {
+        return context.getContentResolver().openInputStream(uri);
+    }
+
+    public static String getNameFromUri(Context context, Uri uri) {
+        if (uri.getScheme().matches("file")) {
+            return new File(uri.getPath()).getName();
+        } else if (uri.getScheme().matches("content")) {
+            Cursor cursor = context.getContentResolver()
+                    .query(uri, null, null, null, null, null);
+
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    return cursor.getString(
+                            cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        return null;
+    }
 	
 	public InputStream getFilesListJsonData(int id) throws SocketTimeoutException {
 		URL url = null;

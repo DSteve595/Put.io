@@ -1,7 +1,5 @@
 package com.stevenschoen.putionew.fragments;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -32,6 +30,8 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.Putio;
+
+import java.util.ArrayList;
 
 public final class Transfers extends Fragment {
 	

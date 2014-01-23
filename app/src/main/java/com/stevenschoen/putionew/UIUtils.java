@@ -38,6 +38,10 @@ public class UIUtils {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
 	}
 
+    public static boolean hasKitKat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
 	public static boolean isTablet(Context context) {
 		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}

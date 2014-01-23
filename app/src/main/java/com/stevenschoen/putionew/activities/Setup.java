@@ -1,17 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-import java.io.InputStream;
-import java.net.URI;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,7 +8,6 @@ import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -33,6 +20,17 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.URI;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class Setup extends ActionBarActivity {
 	public SharedPreferences sharedPrefs;

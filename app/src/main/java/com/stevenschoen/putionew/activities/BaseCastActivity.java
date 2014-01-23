@@ -1,14 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import org.apache.commons.io.FilenameUtils;
-import com.google.cast.MediaRouteHelper;
-import com.stevenschoen.putionew.PutioFileData;
-import com.stevenschoen.putionew.PutioUtils;
-import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.cast.CastService;
-import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
-import com.stevenschoen.putionew.cast.CastService.CastServiceBinder;
-import com.stevenschoen.putionew.cast.CastService.CastUpdateListener;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ComponentName;
@@ -26,6 +17,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.cast.MediaRouteHelper;
+import com.stevenschoen.putionew.PutioFileData;
+import com.stevenschoen.putionew.PutioUtils;
+import com.stevenschoen.putionew.R;
+import com.stevenschoen.putionew.cast.CastService;
+import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
+import com.stevenschoen.putionew.cast.CastService.CastServiceBinder;
+import com.stevenschoen.putionew.cast.CastService.CastUpdateListener;
+
+import org.apache.commons.io.FilenameUtils;
 
 public class BaseCastActivity extends ActionBarActivity implements CastCallbacks, CastUpdateListener {
 	

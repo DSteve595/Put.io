@@ -1,14 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-import java.io.File;
-import java.io.InputStream;
-
-import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -37,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -55,6 +45,15 @@ import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
+
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.InputStream;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class Putio extends BaseCastActivity implements
 		ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {

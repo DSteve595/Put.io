@@ -3,6 +3,7 @@ package com.stevenschoen.putionew.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
@@ -23,18 +24,22 @@ public class TransfersActivity extends FragmentActivity {
 		if (getIntent().getExtras() != null && getIntent().getIntExtra("mode", 0) != 0) {
 			int mode = getIntent().getIntExtra("mode", 0);
 			switch (mode) {
-			case PutioUtils.ADDTRANSFER_URL: PutioUtils.addTransfersAsync(
+			case PutioUtils.ADDTRANSFER_URL:
+                PutioUtils.addTransfersAsync(
 					this,
 					mode,
 					getIntent(),
 					getIntent().getStringExtra("url"),
-					null); break;
-			case PutioUtils.ADDTRANSFER_FILE: PutioUtils.addTransfersAsync(
+					null);
+                break;
+			case PutioUtils.ADDTRANSFER_FILE:
+                PutioUtils.addTransfersAsync(
 					this,
 					mode,
 					getIntent(),
 					null,
-					getIntent().getStringExtra("filepath")); break;
+                    (Uri) getIntent().getParcelableExtra("torrenturi"));
+                break;
 			}
 			
 			finish();
@@ -51,12 +56,14 @@ public class TransfersActivity extends FragmentActivity {
 				public void onClick(View v) {
 					Intent putioIntent = new Intent(TransfersActivity.this, Putio.class);
 					if (UIUtils.hasHoneycomb()) {
+                        View content = findViewById(android.R.id.content);
 						Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
-								findViewById(android.R.id.content),
-								findViewById(android.R.id.content).getLeft(),
-								findViewById(android.R.id.content).getTop(),
-								findViewById(android.R.id.content).getWidth(),
-								findViewById(android.R.id.content).getHeight()).toBundle();
+                                content,
+                                content.getLeft(),
+                                content.getTop(),
+                                content.getWidth(),
+                                content.getHeight())
+                                .toBundle();
 						startActivity(putioIntent, options);
 					} else {
 						startActivity(putioIntent);
