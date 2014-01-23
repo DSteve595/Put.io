@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putionew"
     android:versionCode="41"
-    android:versionName="1.7.4-beta">
+    android:versionName="1.7.4">
 
     <uses-sdk
         android:minSdkVersion="10"
