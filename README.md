@@ -13,6 +13,8 @@ Chromecast support!
 	
 Other languages (please contribute translations!)
 
+<a href='https://pledgie.com/campaigns/24005'><img alt='Click here to lend your support to: Put.io for Android and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/24005.png?skin_name=chrome' border='0' ></a>
+
 ###Libraries used:
 
 NineOldAndroids by Jake Wharton: http://nineoldandroids.com/
