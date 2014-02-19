@@ -33,9 +33,19 @@
         <item name="searchViewTextField">@drawable/edit_text_search_putio</item>
     </style>
 
+    <style name="Theme.Putio.CastPlayer" parent="Theme.Putio">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/Putio.ActionBar.Transparent</item>
+        <item name="actionBarStyle">@style/Putio.ActionBar.Transparent</item>
+    </style>
+
     <style name="Putio.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:windowNoTitle">true</item>
-        \
+    </style>
+
+    <style name="Putio.ActionBar.Transparent" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="background">@null</item>
     </style>
 
     <style name="Putio.ActionButton" parent="Widget.AppCompat.ActionButton">

@@ -1,1 +1,1 @@
-include ':app', ':libraries:aFileChooser'
+include ':app', ':libraries:aFileChooser', ':libraries:CastCompanionLibrary'

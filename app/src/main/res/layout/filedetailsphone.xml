@@ -1,21 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <com.google.sample.castcompanionlibrary.widgets.MiniController
         android:id="@+id/castbar_holder"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true" >
-
-        <include layout="@layout/castbar" />
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F0F0F0"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/DetailsHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/castbar_holder" >
-    </FrameLayout>
+        android:layout_above="@id/castbar_holder" />
 
 </RelativeLayout>

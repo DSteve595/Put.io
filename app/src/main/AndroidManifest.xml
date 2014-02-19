@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stevenschoen.putionew"
-    android:versionCode="41"
-    android:versionName="1.7.4">
+    android:versionCode="45"
+    android:versionName="1.8-beta">
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -15,14 +15,18 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:debuggable="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/putio"
         android:theme="@style/Theme.Putio"
-        android:windowSoftInputMode="adjustPan"
-        android:debuggable="false">
+        android:windowSoftInputMode="adjustPan">
+
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".activities.Putio"
@@ -106,9 +110,42 @@
             android:name=".activities.AboutActivity"
             android:theme="@style/Putio.DialogOrActivity"></activity>
 
+        <activity
+            android:name="com.google.sample.castcompanionlibrary.cast.player.VideoCastControllerActivity"
+            android:label="@string/putio"
+            android:launchMode="singleTask"
+            android:parentActivityName=".activities.Putio"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Putio.CastPlayer">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.Putio" />
+        </activity>
+
+        <receiver android:name="com.google.sample.castcompanionlibrary.remotecontrol.VideoIntentReceiver">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
+                <action android:name="com.google.sample.cast.refplayer.notification.toggleplayback" />
+                <action android:name="com.google.sample.cast.refplayer.notification.stop" />
+            </intent-filter>
+        </receiver>
+
         <service android:name=".PutioOpenFileService"></service>
         <service android:name=".PutioTransfersService"></service>
         <service android:name="com.stevenschoen.putionew.cast.CastService"></service>
+
+        <service
+            android:name="com.google.sample.castcompanionlibrary.notification.VideoCastNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.sample.cast.refplayer.notification.toggleplayback" />
+                <action android:name="com.google.sample.cast.refplayer.notification.stop" />
+                <action android:name="com.google.sample.cast.refplayer.notification.visibility" />
+            </intent-filter>
+        </service>
+
 
         <activity android:name="com.ipaulpro.afilechooser.FileChooserActivity"></activity>
         <activity

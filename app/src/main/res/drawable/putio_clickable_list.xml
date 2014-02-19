@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_pressed="true"><shape>
+    <item android:state_pressed="true">
+        <shape>
             <solid android:color="@color/putio_accent_threequarters" />
-        </shape></item>
-    <item android:state_focused="true"><shape>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
             <solid android:color="@color/putio_accent_half" />
-        </shape></item>
-    <item android:state_activated="true"><shape>
+        </shape>
+    </item>
+    <item android:state_activated="true">
+        <shape>
             <solid android:color="@color/putio_accent_quarter" />
-        </shape></item>
-    <item android:drawable="@android:color/transparent"/>
+        </shape>
+    </item>
+    <item android:drawable="@android:color/transparent" />
 
 </selector>

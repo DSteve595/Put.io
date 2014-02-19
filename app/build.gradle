@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 
@@ -41,15 +41,14 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:+'
     compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:mediarouter-v7:+'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.httpcomponents:httpmime:4.3.1' // 4.3.2 is out
     compile 'org.apache.httpcomponents:httpcore:4.3.1'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.3'
-    compile 'com.squareup.picasso:picasso:2.1.1'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.+'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.+'
+    compile 'com.squareup.picasso:picasso:2.2.+'
     compile project(':libraries:aFileChooser')
-    compile files('libs/GoogleCastSdkAndroid.jar')
+    compile project(':libraries:CastCompanionLibrary')
 }

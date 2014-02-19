@@ -2,22 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <fragment
         android:id="@+id/fragment_account"
+        class="com.stevenschoen.putionew.fragments.Account"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        class="com.stevenschoen.putionew.fragments.Account"
         tools:layout="@layout/account" />
 
-    <FrameLayout
+    <com.google.sample.castcompanionlibrary.widgets.MiniController
         android:id="@+id/castbar_holder"
         android:layout_width="match_parent"
-        android:layout_height="56dp" >
-
-        <include layout="@layout/castbar" />
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:background="#F0F0F0"
+        android:visibility="gone" />
 
 </LinearLayout>
