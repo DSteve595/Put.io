@@ -1,18 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
     package="com.stevenschoen.putionew"
-    android:versionCode="45"
-    android:versionName="1.8-beta">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="19" />
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false" />
+        android:required="false"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:debuggable="false"
@@ -23,92 +19,92 @@
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"
-            android:value="true" />
+            android:value="true"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name=".activities.Putio"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".activities.Putio" />
+                android:value=".activities.Putio"/>
         </activity>
-        <activity android:name=".activities.Setup"></activity>
-        <activity android:name=".activities.FileDetailsActivity"></activity>
-        <activity android:name=".activities.Preferences"></activity>
+        <activity android:name=".activities.Setup"/>
+        <activity android:name=".activities.FileDetailsActivity"/>
+        <activity android:name=".activities.Preferences"/>
         <activity
             android:name=".activities.FileFinished"
-            android:theme="@style/Putio.Dialog"></activity>
+            android:theme="@style/Putio.Dialog"/>
         <activity
             android:name=".activities.AddTransfers"
             android:theme="@style/Putio.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:mimeType="application/x-bittorrent"
-                    android:scheme="http" />
+                    android:scheme="http"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:host="*"
                     android:pathPattern=".*\\.torrent"
-                    android:scheme="http" />
+                    android:scheme="http"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:mimeType="application/x-bittorrent"
-                    android:scheme="file" />
+                    android:scheme="file"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
                 <data
                     android:pathPattern=".*\\.torrent"
-                    android:scheme="file" />
+                    android:scheme="file"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="magnet" />
+                <data android:scheme="magnet"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.AboutActivity"
-            android:theme="@style/Putio.DialogOrActivity"></activity>
+            android:theme="@style/Putio.DialogOrActivity"/>
 
         <activity
             android:name="com.google.sample.castcompanionlibrary.cast.player.VideoCastControllerActivity"
@@ -119,40 +115,38 @@
             android:theme="@style/Theme.Putio.CastPlayer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Putio" />
+                android:value=".activities.Putio"/>
         </activity>
 
         <receiver android:name="com.google.sample.castcompanionlibrary.remotecontrol.VideoIntentReceiver">
             <intent-filter>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
-                <action android:name="com.google.sample.cast.refplayer.notification.toggleplayback" />
-                <action android:name="com.google.sample.cast.refplayer.notification.stop" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.media.VOLUME_CHANGED_ACTION"/>
+                <action android:name="com.google.sample.castcompanionlibrary.action.toggleplayback"/>
+                <action android:name="com.google.sample.castcompanionlibrary.action.stop"/>
             </intent-filter>
         </receiver>
 
-        <service android:name=".PutioOpenFileService"></service>
-        <service android:name=".PutioTransfersService"></service>
-        <service android:name="com.stevenschoen.putionew.cast.CastService"></service>
-
+        <service android:name=".PutioOpenFileService"/>
+        <service android:name=".PutioTransfersService"/>
+        <service android:name="com.stevenschoen.putionew.cast.CastService"/>
         <service
             android:name="com.google.sample.castcompanionlibrary.notification.VideoCastNotificationService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.sample.cast.refplayer.notification.toggleplayback" />
-                <action android:name="com.google.sample.cast.refplayer.notification.stop" />
-                <action android:name="com.google.sample.cast.refplayer.notification.visibility" />
+                <action android:name="com.google.sample.castcompanionlibrary.action.toggleplayback"/>
+                <action android:name="com.google.sample.castcompanionlibrary.action.stop"/>
+                <action android:name="com.google.sample.castcompanionlibrary.action.notificationvisibility"/>
             </intent-filter>
         </service>
 
-
-        <activity android:name="com.ipaulpro.afilechooser.FileChooserActivity"></activity>
+        <activity android:name="com.ipaulpro.afilechooser.FileChooserActivity"/>
         <activity
             android:name=".activities.TransfersActivity"
             android:excludeFromRecents="true"
             android:taskAffinity="com.stevenschoen.putio.transfersdialog"
-            android:theme="@style/Putio.Dialog"></activity>
+            android:theme="@style/Putio.Dialog"/>
     </application>
 
 </manifest>

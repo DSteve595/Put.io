@@ -60,6 +60,7 @@
     <string name="couldntconnect">Couldn\'t connect to Put.io. Are you online?</string>
     <string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
     <string name="couldntgetdownloadlink">There was a problem getting the download link.</string>
+    <string name="noactivityfound">No installed apps can open this.</string>
 
     <!-- Other stuff -->
     <string name="account">Account</string>

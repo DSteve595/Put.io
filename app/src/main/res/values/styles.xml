@@ -34,6 +34,7 @@
     </style>
 
     <style name="Theme.Putio.CastPlayer" parent="Theme.Putio">
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/Putio.ActionBar.Transparent</item>
@@ -45,6 +46,7 @@
     </style>
 
     <style name="Putio.ActionBar.Transparent" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@null</item>
         <item name="background">@null</item>
     </style>
 

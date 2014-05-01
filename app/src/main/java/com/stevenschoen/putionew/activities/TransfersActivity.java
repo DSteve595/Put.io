@@ -55,12 +55,12 @@ public class TransfersActivity extends FragmentActivity {
 				@Override
 				public void onClick(View v) {
 					Intent putioIntent = new Intent(TransfersActivity.this, Putio.class);
-					if (UIUtils.hasHoneycomb()) {
+					if (UIUtils.hasJellyBean()) {
                         View content = findViewById(android.R.id.content);
 						Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
                                 content,
-                                content.getLeft(),
-                                content.getTop(),
+                                0,
+                                0,
                                 content.getWidth(),
                                 content.getHeight())
                                 .toBundle();

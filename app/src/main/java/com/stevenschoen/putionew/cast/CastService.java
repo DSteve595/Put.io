@@ -48,6 +48,7 @@ public class CastService extends Service {
         videoCastManager.enableFeatures(VideoCastManager.FEATURE_NOTIFICATION |
                 VideoCastManager.FEATURE_LOCKSCREEN |
                 VideoCastManager.FEATURE_DEBUGGING);
+        videoCastManager.setStopOnDisconnect(true);
         videoCastManager.setContext(this);
     }
 
@@ -112,7 +113,7 @@ public class CastService extends Service {
     @Override
     public void onDestroy() {
         try {
-            videoCastManager.stopApplication();
+             videoCastManager.stopApplication();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (TransientNetworkDisconnectionException e) {
@@ -125,15 +126,7 @@ public class CastService extends Service {
     }
 
     public interface CastCallbacks {
-        public void load(PutioFileData file, String url);
-    }
-
-    public interface CastUpdateListener {
-        public void onInvalidate();
-
-        public void onMediaPlay();
-
-        public void onMediaPause();
+        public void load(PutioFileData file, String url, PutioUtils utils);
     }
 
     public class CastServiceBinder extends Binder {

@@ -166,7 +166,6 @@ public class Putio extends BaseCastActivity implements
                 break;
             case 1:
                 setContentView(tabletFilesView);
-                filesFragment.fixPullToRefreshHack();
                 break;
             case 2:
                 setContentView(tabletTransfersView);
@@ -319,6 +318,7 @@ public class Putio extends BaseCastActivity implements
                     }
                     return notifs;
                 } catch (Exception e) {
+					e.printStackTrace();
                     return null;
                 }
             }
@@ -469,22 +469,24 @@ public class Putio extends BaseCastActivity implements
 
     @Override
     public void onFileSelected(int id) {
-        Bundle fileDetailsBundle = new Bundle();
-        fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtId(id));
-        fileDetailsFragment = (FileDetails) FileDetails.instantiate(
-                this, FileDetails.class.getName(), fileDetailsBundle);
+        if (UIUtils.isTablet(this)) {
+            Bundle fileDetailsBundle = new Bundle();
+            fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtId(id));
+            fileDetailsFragment = (FileDetails) FileDetails.instantiate(
+                    this, FileDetails.class.getName(), fileDetailsBundle);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left,
-                        R.anim.slide_out_right)
-                .replace(fileDetailsId, fileDetailsFragment).commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_left,
+                            R.anim.slide_out_right)
+                    .replace(fileDetailsId, fileDetailsFragment).commit();
+        }
     }
 
     @Override
     public void onSomethingSelected() {
-        if (fileDetailsFragment != null) {
-            if (fileDetailsFragment.isAdded()) {
+        if (UIUtils.isTablet(this)) {
+            if (fileDetailsFragment != null && fileDetailsFragment.isAdded()) {
                 removeFD(true);
             }
         }

@@ -32,6 +32,7 @@ import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -51,10 +52,10 @@ public class FileDetails extends Fragment {
     PutioFileData origFileData;
     PutioFileData newFileData;
 
-    String MP4_NOT_AVAILABLE = "NOT_AVAILABLE";
-    String MP4_AVAILABLE = "COMPLETED";
-    String MP4_IN_QUEUE = "IN_QUEUE";
-    String MP4_CONVERTING = "CONVERTING";
+    static final String MP4_NOT_AVAILABLE = "NOT_AVAILABLE";
+    static final String MP4_AVAILABLE = "COMPLETED";
+    static final String MP4_IN_QUEUE = "IN_QUEUE";
+    static final String MP4_CONVERTING = "CONVERTING";
     String mp4Status;
 
     TextView textPercent;
@@ -75,7 +76,7 @@ public class FileDetails extends Fragment {
 
     private static CastCallbacks sDummyCastCallbacks = new CastCallbacks() {
         @Override
-		public void load(PutioFileData file, String url) { }
+		public void load(PutioFileData file, String url, PutioUtils utils) { }
     };
 
     private Callbacks mCallbacks = sDummyCallbacks;
@@ -268,7 +269,7 @@ public class FileDetails extends Fragment {
 
                 String url = baseUrl + "files/"
                         + origFileData.id + streamOrStreamMp4 + tokenWithStuff;
-                mCastCallbacks.load(newFileData, url);
+                mCastCallbacks.load(newFileData, url, utils);
             }
         };
 
@@ -517,22 +518,29 @@ public class FileDetails extends Fragment {
     }
 
     private void setBarGraphics(String status, View convertButton, View available, View converting) {
-        if (status.matches(MP4_AVAILABLE)) {
-            convertButton.setVisibility(View.INVISIBLE);
-            available.setVisibility(View.VISIBLE);
-            converting.setVisibility(View.INVISIBLE);
-        } else if (status.matches(MP4_CONVERTING)) {
-            convertButton.setVisibility(View.INVISIBLE);
-            available.setVisibility(View.INVISIBLE);
-            converting.setVisibility(View.VISIBLE);
-        } else if (status.matches(MP4_IN_QUEUE)) {
-            convertButton.setVisibility(View.INVISIBLE);
-            available.setVisibility(View.INVISIBLE);
-            converting.setVisibility(View.VISIBLE);
-        } else if (status.matches(MP4_NOT_AVAILABLE)) {
-            convertButton.setVisibility(View.VISIBLE);
-            available.setVisibility(View.INVISIBLE);
-            converting.setVisibility(View.INVISIBLE);
+        if (isAdded()) {
+            switch (status) {
+                case MP4_AVAILABLE:
+                    convertButton.setVisibility(View.INVISIBLE);
+                    available.setVisibility(View.VISIBLE);
+                    converting.setVisibility(View.INVISIBLE);
+                    break;
+                case MP4_CONVERTING:
+                    convertButton.setVisibility(View.INVISIBLE);
+                    available.setVisibility(View.INVISIBLE);
+                    converting.setVisibility(View.VISIBLE);
+                    break;
+                case MP4_IN_QUEUE:
+                    convertButton.setVisibility(View.INVISIBLE);
+                    available.setVisibility(View.INVISIBLE);
+                    converting.setVisibility(View.VISIBLE);
+                    break;
+                case MP4_NOT_AVAILABLE:
+                    convertButton.setVisibility(View.VISIBLE);
+                    available.setVisibility(View.INVISIBLE);
+                    converting.setVisibility(View.INVISIBLE);
+                    break;
+            }
         }
     }
 

@@ -2,9 +2,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/filesPullToRefresh"
+        android:id="@+id/filesSwipeRefresh"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" >
 
@@ -14,15 +14,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:fastScrollEnabled="true"
-            android:listSelector="@android:color/transparent"
+            android:listSelector="@drawable/putio_clickable_list"
             android:scrollbarStyle="insideOverlay" />
-    </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <include
         android:id="@+id/files_emptysub"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_below="@id/filesPullToRefresh"
+        android:layout_below="@id/filesSwipeRefresh"
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
         layout="@layout/filesemptysub" />

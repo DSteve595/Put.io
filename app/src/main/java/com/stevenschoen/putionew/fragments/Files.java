@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -55,12 +56,7 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
-public final class Files extends Fragment implements OnRefreshListener {
+public final class Files extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 	
 	private int viewMode = 1;
 	public static final int VIEWMODE_LIST = 1;
@@ -74,20 +70,17 @@ public final class Files extends Fragment implements OnRefreshListener {
 		
 		return fragment;
 	}
-	
-    public interface Callbacks {
 
+	public interface Callbacks {
         public void onFileSelected(int id);
         public void onSomethingSelected();
     }
     
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onFileSelected(int id) {
-        }
+        public void onFileSelected(int id) { }
         @Override
-        public void onSomethingSelected() {
-        }
+        public void onSomethingSelected() { }
     };
 	
     private Callbacks mCallbacks = sDummyCallbacks;
@@ -98,10 +91,8 @@ public final class Files extends Fragment implements OnRefreshListener {
 	
 	private FilesAdapter adapter;
 	private ArrayList<PutioFileLayout> fileLayouts = new ArrayList<PutioFileLayout>();
-	private PutioFileLayout dummyFile = new PutioFileLayout(
-			"Loading...", "Your files will appear shortly.", R.drawable.ic_launcher, null);
 	private ListView listview;
-	private PullToRefreshLayout mPullToRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	
 	private View loadingView;
 	private View emptyView;
@@ -148,14 +139,15 @@ public final class Files extends Fragment implements OnRefreshListener {
 		View view = inflater.inflate(R.layout.files, container, false);
 		
 		listview = (ListView) view.findViewById(R.id.fileslist);
-		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.filesPullToRefresh);
-		ActionBarPullToRefresh.from(getActivity())
-			.options(Options.create()
-					.minimize()
-					.build())
-			.allChildrenArePullable()
-			.listener(this)
-			.setup(mPullToRefreshLayout);
+        if (!UIUtils.isGoogleTV(getActivity())) {
+            swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
+            swipeRefreshLayout.setOnRefreshListener(this);
+			swipeRefreshLayout.setColorScheme(
+					R.color.putio_accent,
+					R.color.putio_accent,
+					R.color.putio_accent,
+					R.color.putio_accent);
+		}
 		
 		adapter = new FilesAdapter(getActivity(), R.layout.file_putio, fileLayouts);
 		listview.setAdapter(adapter);
@@ -212,8 +204,6 @@ public final class Files extends Fragment implements OnRefreshListener {
 				}
 			}
 		});
-		
-		fileLayouts.add(0, dummyFile);
 		
 		loadingView = view.findViewById(R.id.files_loading);
 		emptyView = view.findViewById(R.id.files_empty);
@@ -279,9 +269,7 @@ public final class Files extends Fragment implements OnRefreshListener {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (UIUtils.isTablet(getActivity())) {
-        	mCallbacks = (Callbacks) activity;
-        }
+        mCallbacks = (Callbacks) activity;
     }
     
     @Override
@@ -407,7 +395,7 @@ public final class Files extends Fragment implements OnRefreshListener {
 			update.execute(highlightId);
 		}
 		
-		mPullToRefreshLayout.setRefreshing(true);
+		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
 	
 	@Override
@@ -482,8 +470,8 @@ public final class Files extends Fragment implements OnRefreshListener {
 		}
 		
 		listview.setSelectionFromTop(index, top);
-		
-		mPullToRefreshLayout.setRefreshComplete();
+
+        if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 		
 		fileLayouts = files;
 		
@@ -780,19 +768,7 @@ public final class Files extends Fragment implements OnRefreshListener {
 	}
 
 	@Override
-	public void onRefreshStarted(View view) {
+	public void onRefresh() {
 		invalidateList();
-	}
-	
-	public void fixPullToRefreshHack() {
-		if (isAdded() && isVisible()) {
-			ActionBarPullToRefresh.from(getActivity())
-			.options(Options.create()
-					.minimize()
-					.build())
-			.allChildrenArePullable()
-			.listener(this)
-			.setup(mPullToRefreshLayout);
-		}
 	}
 }

@@ -11,11 +11,10 @@ import android.os.IBinder;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.MediaRouteActionProvider;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
@@ -34,6 +33,8 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
     CastService castService;
     MediaRouteActionProvider mediaRouteActionProvider;
     private MiniController castBar;
+
+	private boolean resumed = false;
 
     @SuppressLint("InlinedApi")
     @Override
@@ -62,7 +63,15 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
     protected void initCast() {
         supportInvalidateOptionsMenu();
         castBar = (MiniController) findViewById(R.id.castbar_holder);
-        castService.videoCastManager.addMiniController(castBar);
+		if (castBar != null && castService != null) {
+			castService.videoCastManager.setContext(this);
+			castService.videoCastManager.addMiniController(castBar);
+		}
+
+		if (resumed) {
+			castService.videoCastManager.incrementUiCounter();
+			resumed = false;
+		}
     }
 
     @Override
@@ -97,6 +106,24 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (castService != null) {
+            castService.videoCastManager.incrementUiCounter();
+        } else {
+			resumed = true;
+		}
+    }
+
+    @Override
+    protected void onPause() {
+        if (castService != null) {
+            castService.videoCastManager.decrementUiCounter();
+        }
+        super.onPause();
+    }
+
     private ServiceConnection castServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -111,15 +138,18 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
         }
     };
 
-    public void load(PutioFileData file, String url) {
+    public void load(PutioFileData file, String url, PutioUtils utils) {
         if (castService == null || !castService.isCasting()) {
             PutioUtils.getStreamUrlAndPlay(this, file, url);
         } else {
             MediaMetadata metaData = new MediaMetadata(file.contentType.contains("video") ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-            metaData.putString("title", FilenameUtils.removeExtension(file.name));
+            metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(file.name));
             metaData.addImage(new WebImage(Uri.parse(file.iconUrl)));
             metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
+
+            String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id + "/subtitles/default" +
+					PutioUtils.tokenWithStuff + "&format=webvtt";
             MediaInfo mediaInfo = new MediaInfo.Builder(url)
                     .setContentType(file.contentType)
                     .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)

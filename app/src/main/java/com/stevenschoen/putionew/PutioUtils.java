@@ -83,12 +83,13 @@ public class PutioUtils {
     public static final int ADDTRANSFER_FILE = 1;
     public static final int ADDTRANSFER_URL = -1;
 
-    public static final String CAST_APPLICATION_ID = "E5977464";
+    public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
+//    public static final String CAST_APPLICATION_ID = "C18ACC9E";
 
     public final static String baseUrl = "https://api.put.io/v2/";
 
-    private static String token;
-    private static String tokenWithStuff;
+    public static String token;
+    public static String tokenWithStuff;
 
     private SharedPreferences sharedPrefs;
 
@@ -734,7 +735,11 @@ public class PutioUtils {
         }
         streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
 
-        context.startActivity(streamIntent);
+        try {
+            context.startActivity(streamIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, context.getString(R.string.noactivityfound), Toast.LENGTH_LONG).show();
+        }
     }
 
     public static void getStreamUrlAndPlay(final Context context, final PutioFileData file, String url) {
@@ -812,6 +817,26 @@ public class PutioUtils {
         URL url = null;
         try {
             url = new URL(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
+        }
+        try {
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setConnectTimeout(8000);
+
+            return connection.getInputStream();
+        } catch (SocketTimeoutException e) {
+            throw new SocketTimeoutException();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public InputStream getDefaultSubtitleData(int id) throws SocketTimeoutException {
+        URL url = null;
+        try {
+            url = new URL(baseUrl + "files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
