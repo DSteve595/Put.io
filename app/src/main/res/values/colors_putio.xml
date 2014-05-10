@@ -2,6 +2,7 @@
 <resources>
 
     <color name="putio_accent">#FFF200</color>
+    <color name="putio_accent_dark">#E6E073</color>
     <color name="putio_accent_threequarters">#C0FFF200</color>
     <color name="putio_accent_half">#80FFF200</color>
     <color name="putio_accent_quarter">#40FFF200</color>

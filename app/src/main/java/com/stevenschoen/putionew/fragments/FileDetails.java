@@ -32,7 +32,6 @@ import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
-import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -461,7 +460,7 @@ public class FileDetails extends Fragment {
                 @Override
                 public void onClick(View v) {
                     PutioUtils.deleteId(getFileId());
-                    utils.downloadFile(getActivity(), origFileData.id, false, getNewFilename(), mode);
+					utils.downloadFile(getActivity(), mode, newFileData);
                     dialog.dismiss();
                 }
             });
@@ -475,7 +474,7 @@ public class FileDetails extends Fragment {
                 }
             });
         } else {
-            utils.downloadFile(getActivity(), getFileId(), false, getNewFilename(), mode);
+			utils.downloadFile(getActivity(), mode, newFileData);
         }
     }
 
@@ -483,13 +482,12 @@ public class FileDetails extends Fragment {
         if (PutioUtils.idIsDownloaded(getFileId())) {
             PutioUtils.shareDownloadedId(getFileId(), getActivity());
         } else {
-            utils.downloadFile(getActivity(), origFileData.id, false, getNewFilename(), PutioUtils.ACTION_SHARE);
+            utils.downloadFile(getActivity(), PutioUtils.ACTION_SHARE, newFileData);
         }
     }
 
     private void initDeleteFile() {
-        PutioUtils.showDeleteFileDialog(getActivity(), getFileId(),
-                !UIUtils.isTablet(getActivity()));
+        PutioUtils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), newFileData);
     }
 
     @Override

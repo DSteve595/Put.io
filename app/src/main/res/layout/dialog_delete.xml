@@ -1,14 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
-    <include layout="@layout/dialog_title_putio" >
+    <include layout="@layout/dialog_title_putio">
     </include>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/nameHolder"
@@ -18,12 +18,12 @@
             android:paddingBottom="@dimen/padding_large"
             android:paddingLeft="@dimen/padding_large"
             android:paddingRight="@dimen/padding_large"
-            android:paddingTop="@dimen/padding_large" >
+            android:paddingTop="@dimen/padding_large">
 
             <TextView
+                android:id="@+id/text_delete_body"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/deletebody" />
+                android:layout_height="wrap_content"/>
         </FrameLayout>
 
         <View
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/nameHolder"
-            android:background="?attr/dividerVertical" />
+            android:background="?attr/dividerVertical"/>
 
         <LinearLayout
             android:id="@+id/buttonbar"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttonbarSeparator"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button_delete_cancel"
@@ -47,7 +47,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/cancel" />
+                android:text="@string/cancel"/>
 
             <Button
                 android:id="@+id/button_delete_delete"
@@ -55,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/delete" />
+                android:text="@string/delete"/>
         </LinearLayout>
     </RelativeLayout>
 

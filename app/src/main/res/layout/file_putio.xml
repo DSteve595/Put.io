@@ -1,42 +1,43 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="64dp"
-    android:paddingLeft="@dimen/padding_small"
-    android:paddingRight="@dimen/padding_small"
-    android:background="@drawable/putio_clickable_list" >
+    android:background="@drawable/putio_clickable_list"
+    android:paddingLeft="@dimen/file_rowpadding"
+    android:paddingRight="@dimen/file_rowpadding">
 
-	<ImageView
-		android:id="@+id/img_fileIcon"
-		android:layout_width="36dp"
-		android:layout_height="36dp"
-		android:layout_alignParentLeft="true"
-		android:layout_centerVertical="true"
-		android:scaleType="fitCenter"
-		android:src="@drawable/ic_launcher" />
+    <ImageView
+        android:id="@+id/img_fileIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_launcher"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_toRightOf="@id/img_fileIcon"
-		android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/img_fileIcon"
+        android:orientation="vertical">
 
-		<TextView
-			android:id="@+id/text_fileListName"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="12dp"
-			android:layout_marginTop="12dp"
-			android:ellipsize="end"
-			android:maxLines="1"
-			android:text="File name"
-			android:textAppearance="?android:attr/textAppearanceMedium" />
+        <CheckedTextView
+            android:id="@+id/text_fileListName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="File name"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-		<TextView
-			android:id="@+id/text_fileListDesc"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="12dp"
-			android:text="File description" />
-	</LinearLayout>
+        <TextView
+            android:id="@+id/text_fileListDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:text="File description"/>
+    </LinearLayout>
 
 </RelativeLayout>

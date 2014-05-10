@@ -130,7 +130,7 @@ public class PutioUtils {
         return false;
     }
 
-    private static boolean postDelete(Integer... ids) {
+    private static boolean postDelete(int... ids) {
         URL url = null;
         try {
             url = new URL(baseUrl + "files/delete" + tokenWithStuff);
@@ -149,7 +149,7 @@ public class PutioUtils {
                 if (i == 0) {
                     idsString = Integer.toString(ids[i]);
                 } else {
-                    idsString = idsString + ", " + ids[i];
+                    idsString = idsString + "," + ids[i];
                 }
             }
             output.write("file_ids=" + idsString);
@@ -263,7 +263,7 @@ public class PutioUtils {
         }
     }
 
-    public static void deleteFileAsync(Context context, final Integer... ids) {
+    public static void deleteFileAsync(Context context, final int... ids) {
         class deleteFileTask extends AsyncTask<Void, Void, Boolean> {
             protected Boolean doInBackground(Void... nothing) {
                 Boolean saved = postDelete(ids);
@@ -584,41 +584,43 @@ public class PutioUtils {
         return null;
     }
 
-    public void downloadFile(final Context context, final int id, final boolean isFolder, final String filename, final int actionWhenDone) {
+    public void downloadFile(final Context context, final int actionWhenDone, final PutioFileData... files) {
         class downloadFileTaskCompat extends AsyncTask<Void, Integer, Long> {
             private boolean resolveRedirect = false;
             private Dialog dialog;
 
             @Override
             protected Long doInBackground(Void... params) {
-                long dlId;
-                if (UIUtils.hasHoneycomb()) {
-                    if (isFolder) {
-                        int[] folder = new int[]{id};
-                        dlId = downloadZipWithoutUrl(context, folder, filename);
-                    } else {
-                        dlId = downloadFileWithoutUrl(context, id, filename);
-                        return dlId;
-                    }
-                } else {
-                    publishProgress(0);
-                    if (isFolder) {
-                        int[] folder = new int[]{id};
-                        dlId = downloadZipWithUrl(context, folder, filename,
-                                getZipDownloadUrl(folder).replace("https://", "http://"));
-                        return dlId;
-                    } else {
-                        try {
-                            dlId = downloadFileWithUrl(context, id, filename,
-                                    resolveRedirect(getFileDownloadUrl(id).replace("https://", "http://")));
-                            return dlId;
-                        } catch (ClientProtocolException ee) {
-                            ee.printStackTrace();
-                        } catch (IOException ee) {
-                            ee.printStackTrace();
-                        }
-                    }
-                }
+				for (PutioFileData file : files) {
+					long dlId;
+					if (UIUtils.hasHoneycomb()) {
+						if (file.isFolder) {
+							int[] folder = new int[]{file.id};
+							dlId = downloadZipWithoutUrl(context, folder, file.name);
+						} else {
+							dlId = downloadFileWithoutUrl(context, file.id, file.name);
+							return dlId;
+						}
+					} else {
+						publishProgress(0);
+						if (file.isFolder) {
+							int[] folder = new int[]{file.id};
+							dlId = downloadZipWithUrl(context, folder, file.name,
+									getZipDownloadUrl(folder).replace("https://", "http://"));
+							return dlId;
+						} else {
+							try {
+								dlId = downloadFileWithUrl(context, file.id, file.name,
+										resolveRedirect(getFileDownloadUrl(file.id).replace("https://", "http://")));
+								return dlId;
+							} catch (ClientProtocolException ee) {
+								ee.printStackTrace();
+							} catch (IOException ee) {
+								ee.printStackTrace();
+							}
+						}
+					}
+				}
                 return null;
             }
 
@@ -641,8 +643,8 @@ public class PutioUtils {
                     case ACTION_OPEN:
                         Intent serviceOpenIntent = new Intent(context, PutioOpenFileService.class);
                         serviceOpenIntent.putExtra("downloadId", (long) dlId);
-                        serviceOpenIntent.putExtra("id", id);
-                        serviceOpenIntent.putExtra("filename", filename);
+                        serviceOpenIntent.putExtra("id", files[0].id);
+                        serviceOpenIntent.putExtra("filename", files[0].name);
                         serviceOpenIntent.putExtra("mode", actionWhenDone);
                         context.startService(serviceOpenIntent);
                         Toast.makeText(context, "Your file will open as soon as it is finished downloading.",
@@ -651,8 +653,8 @@ public class PutioUtils {
                     case ACTION_SHARE:
                         Intent serviceShareIntent = new Intent(context, PutioOpenFileService.class);
                         serviceShareIntent.putExtra("downloadId", (long) dlId);
-                        serviceShareIntent.putExtra("id", id);
-                        serviceShareIntent.putExtra("filename", filename);
+                        serviceShareIntent.putExtra("id", files[0].id);
+                        serviceShareIntent.putExtra("filename", files[0].name);
                         serviceShareIntent.putExtra("mode", actionWhenDone);
                         context.startService(serviceShareIntent);
                         Toast.makeText(context, "Your file will be shared as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
@@ -1019,16 +1021,27 @@ public class PutioUtils {
         share(uri, context);
     }
 
-    public static void showDeleteFileDialog(final Context context, final int idToDelete, final boolean finish) {
-        final Dialog deleteDialog = PutioDialog(context, context.getString(R.string.deletetitle), R.layout.dialog_delete);
+    public static void showDeleteFilesDialog(final Context context, final boolean finish, final PutioFileData... filesToDelete) {
+        final Dialog deleteDialog = PutioDialog(context,
+				context.getResources().getQuantityString(
+						R.plurals.deletetitle, filesToDelete.length),
+				R.layout.dialog_delete);
+
+		TextView textDeleteBody = (TextView) deleteDialog.findViewById(R.id.text_delete_body);
+		textDeleteBody.setText(context.getResources()
+				.getQuantityString(R.plurals.deletebody, filesToDelete.length));
+
         deleteDialog.show();
 
         Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
         deleteDelete.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
-                deleteFileAsync(context, idToDelete);
+				int[] idsToDelete = new int[filesToDelete.length];
+				for (int i = 0; i < filesToDelete.length; i++) {
+					idsToDelete[i] = filesToDelete[i].id;
+				}
+                deleteFileAsync(context, idsToDelete);
                 Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
                 deleteDialog.dismiss();
 

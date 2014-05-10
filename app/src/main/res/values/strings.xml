@@ -34,8 +34,14 @@
     <string name="gettingstreamurltitle">Preparing to stream</string>
     <string name="gettingstreamurlbody">Just a second…</string>
     <string name="renametitle">Rename this file?</string>
-    <string name="deletetitle">Delete this file?</string>
-    <string name="deletebody">You can only get it back by adding it all over again.</string>
+    <plurals name="deletetitle">
+        <item quantity="one">Delete this file?</item>
+        <item quantity="other">Delete these files?</item>
+    </plurals>
+    <plurals name="deletebody">
+        <item quantity="one">You can only get it back by adding it all over again.</item>
+        <item quantity="other">You can only get them back by adding them all over again.</item>
+    </plurals>
     <string name="removetransfertitle">Remove this transfer?</string>
     <string name="removetransferbody">The download will be cancelled.</string>
     <string name="downloadfinishedopentitle">Open file?</string>

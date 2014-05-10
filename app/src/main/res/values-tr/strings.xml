@@ -34,6 +34,12 @@
     <string name="gettingstreamurltitle">Akış hazırlanıyor</string>
     <string name="gettingstreamurlbody">Az sonra…</string>
     <string name="renametitle">Dosya yeniden adlandırılsın mı?</string>
+    <plurals name="deletetitle">
+        <item quantity="other">Dosya silinsin mi?</item>
+    </plurals>
+    <plurals name="deletebody">
+        <item quantity="other">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
+    </plurals>
     <string name="deletetitle">Dosya silinsin mi?</string>
     <string name="deletebody">Ancak baştan ekleyerek geri getirebilirsiniz.</string>
     <string name="removetransfertitle">Bu transfer kaldırılsın mı?</string>
