@@ -789,6 +789,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		outState.putInt("origId", origId);
 		outState.putBoolean("isSearch", isSearch);
 		outState.putInt("parentParentId", parentParentId);
+		if (isInSubfolder()) fileLayouts.remove(0);
 		outState.putParcelableArrayList("fileLayouts", fileLayouts);
 		outState.putParcelableArray("fileData", fileData);
 		outState.putBoolean("hasUpdated", hasUpdated);
