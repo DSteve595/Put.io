@@ -121,11 +121,17 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		
 		try {
 			currentFolderId = savedInstanceState.getInt("currentFolderId");
+			origId = savedInstanceState.getInt("origId");
+			isSearch = savedInstanceState.getBoolean("isSearch");
+			parentParentId = savedInstanceState.getInt("parentParentId");
 			fileLayouts = savedInstanceState.getParcelableArrayList("fileLayouts");
 			fileData = (PutioFileData[]) savedInstanceState.getParcelableArray("fileData");
 			hasUpdated = savedInstanceState.getBoolean("hasUpdated");
 		} catch (NullPointerException e) {
 			currentFolderId = 0;
+			origId = 0;
+			isSearch = false;
+			parentParentId = 0;
 			fileLayouts = new ArrayList<PutioFileLayout>();
 			fileData = null;
 			hasUpdated = false;
@@ -226,6 +232,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			invalidateList();
 			setViewMode(VIEWMODE_LOADING);
 		} else {
+			addUpItemIfNeeded();
 			setViewMode(VIEWMODE_LISTORLOADING);
 		}
 		
@@ -432,14 +439,9 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		View v = listview.getChildAt(0);
 		int top = (v == null) ? 0 : v.getTop();
 		adapter.clear();
-		
-		if (currentFolderId != 0 || isSearch) {
-			adapter.add(new PutioFileLayout("Up",
-					"Go back to the previous folder",	
-					R.drawable.ic_back,
-					null));
-		}
-		
+
+		addUpItemIfNeeded();
+
 		if (file == null) {
 			setViewMode(VIEWMODE_EMPTY);
 			return;
@@ -489,6 +491,17 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			listview.requestFocus();
 			listview.setSelection(highlightPos);
 		} else {
+		}
+	}
+
+	private void addUpItemIfNeeded() {
+		if (currentFolderId != 0 || isSearch) {
+			adapter.insert(new PutioFileLayout(
+					"Up",
+					"Go back to the previous folder",
+					R.drawable.ic_back,
+					null
+			), 0);
 		}
 	}
 	
@@ -773,6 +786,9 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		super.onSaveInstanceState(outState);
 		
 		outState.putInt("currentFolderId", currentFolderId);
+		outState.putInt("origId", origId);
+		outState.putBoolean("isSearch", isSearch);
+		outState.putInt("parentParentId", parentParentId);
 		outState.putParcelableArrayList("fileLayouts", fileLayouts);
 		outState.putParcelableArray("fileData", fileData);
 		outState.putBoolean("hasUpdated", hasUpdated);
