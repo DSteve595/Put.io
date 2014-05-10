@@ -58,13 +58,13 @@ import java.util.ArrayList;
 
 public final class Files extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 	
-	private int viewMode = 1;
 	public static final int VIEWMODE_LIST = 1;
 	public static final int VIEWMODE_LISTOREMPTY = 2;
 	public static final int VIEWMODE_LOADING = -1;
 	public static final int VIEWMODE_EMPTY = -2;
 	public static final int VIEWMODE_LISTORLOADING = 3;
-	
+	private int viewMode = VIEWMODE_LIST;
+
 	public static Files newInstance() {
 		Files fragment = new Files();
 		
@@ -121,8 +121,20 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		
 		try {
 			currentFolderId = savedInstanceState.getInt("currentFolderId");
+			origId = savedInstanceState.getInt("origId");
+			isSearch = savedInstanceState.getBoolean("isSearch");
+			parentParentId = savedInstanceState.getInt("parentParentId");
+			fileLayouts = savedInstanceState.getParcelableArrayList("fileLayouts");
+			fileData = (PutioFileData[]) savedInstanceState.getParcelableArray("fileData");
+			hasUpdated = savedInstanceState.getBoolean("hasUpdated");
 		} catch (NullPointerException e) {
 			currentFolderId = 0;
+			origId = 0;
+			isSearch = false;
+			parentParentId = 0;
+			fileLayouts = new ArrayList<PutioFileLayout>();
+			fileData = null;
+			hasUpdated = false;
 		}
 
 		sharedPrefs = PreferenceManager
@@ -215,54 +227,57 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			}
 		});
 		emptySubView = view.findViewById(R.id.files_emptysub);
+
+		if (savedInstanceState == null) {
+			invalidateList();
+			setViewMode(VIEWMODE_LOADING);
+		} else {
+			addUpItemIfNeeded();
+			setViewMode(VIEWMODE_LISTORLOADING);
+		}
 		
-		invalidateList();
-		
-		setViewMode(VIEWMODE_LOADING);
 		return view;
 	}
 	
 	private void setViewMode(int mode) {
-		if (mode != viewMode) {
-			switch (mode) {
-			case VIEWMODE_LIST:
-				listview.setVisibility(View.VISIBLE);
-				loadingView.setVisibility(View.GONE);
+		switch (mode) {
+		case VIEWMODE_LIST:
+			listview.setVisibility(View.VISIBLE);
+			loadingView.setVisibility(View.GONE);
+			emptyView.setVisibility(View.GONE);
+			break;
+		case VIEWMODE_LOADING:
+			listview.setVisibility(View.INVISIBLE);
+			loadingView.setVisibility(View.VISIBLE);
+			emptyView.setVisibility(View.GONE);
+			break;
+		case VIEWMODE_EMPTY:
+			listview.setVisibility(View.INVISIBLE);
+			loadingView.setVisibility(View.GONE);
+			if (currentFolderId == 0) {
+				emptyView.setVisibility(View.VISIBLE);
+				emptySubView.setVisibility(View.GONE);
+			} else {
 				emptyView.setVisibility(View.GONE);
-				break;
-			case VIEWMODE_LOADING:
-				listview.setVisibility(View.INVISIBLE);
-				loadingView.setVisibility(View.VISIBLE);
-				emptyView.setVisibility(View.GONE);
-				break;
-			case VIEWMODE_EMPTY:
-				listview.setVisibility(View.INVISIBLE);
-				loadingView.setVisibility(View.GONE);
-				if (currentFolderId == 0) {
-					emptyView.setVisibility(View.VISIBLE);
-					emptySubView.setVisibility(View.GONE);
-				} else {
-					emptyView.setVisibility(View.GONE);
-					emptySubView.setVisibility(View.VISIBLE);
-				}
-				break;
-			case VIEWMODE_LISTOREMPTY:
-				if (fileData == null || fileData.length == 0) {
-					setViewMode(VIEWMODE_EMPTY);
-				} else {
-					setViewMode(VIEWMODE_LIST);
-				}
-				break;
-			case VIEWMODE_LISTORLOADING:
-				if ((fileData == null || fileData.length == 0) && !hasUpdated) {
-					setViewMode(VIEWMODE_LOADING);
-				} else {
-					setViewMode(VIEWMODE_LISTOREMPTY);
-				}
-				break;
+				emptySubView.setVisibility(View.VISIBLE);
 			}
-			viewMode = mode;
+			break;
+		case VIEWMODE_LISTOREMPTY:
+			if (fileData == null || fileData.length == 0) {
+				setViewMode(VIEWMODE_EMPTY);
+			} else {
+				setViewMode(VIEWMODE_LIST);
+			}
+			break;
+		case VIEWMODE_LISTORLOADING:
+			if ((fileData == null || fileData.length == 0) && !hasUpdated) {
+				setViewMode(VIEWMODE_LOADING);
+			} else {
+				setViewMode(VIEWMODE_LISTOREMPTY);
+			}
+			break;
 		}
+		viewMode = mode;
 	}
 	
     @Override
@@ -424,14 +439,9 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		View v = listview.getChildAt(0);
 		int top = (v == null) ? 0 : v.getTop();
 		adapter.clear();
-		
-		if (currentFolderId != 0 || isSearch) {
-			adapter.add(new PutioFileLayout("Up",
-					"Go back to the previous folder",	
-					R.drawable.ic_back,
-					null));
-		}
-		
+
+		addUpItemIfNeeded();
+
 		if (file == null) {
 			setViewMode(VIEWMODE_EMPTY);
 			return;
@@ -481,6 +491,17 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			listview.requestFocus();
 			listview.setSelection(highlightPos);
 		} else {
+		}
+	}
+
+	private void addUpItemIfNeeded() {
+		if (currentFolderId != 0 || isSearch) {
+			adapter.insert(new PutioFileLayout(
+					"Up",
+					"Go back to the previous folder",
+					R.drawable.ic_back,
+					null
+			), 0);
 		}
 	}
 	
@@ -765,6 +786,12 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		super.onSaveInstanceState(outState);
 		
 		outState.putInt("currentFolderId", currentFolderId);
+		outState.putInt("origId", origId);
+		outState.putBoolean("isSearch", isSearch);
+		outState.putInt("parentParentId", parentParentId);
+		outState.putParcelableArrayList("fileLayouts", fileLayouts);
+		outState.putParcelableArray("fileData", fileData);
+		outState.putBoolean("hasUpdated", hasUpdated);
 	}
 
 	@Override
