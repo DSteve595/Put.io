@@ -1,23 +1,26 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:visibility="gone"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:visibility="gone">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="44dp"
+        android:fontFamily="sans-serif-light"
         android:paddingBottom="64dp"
         android:text="Where&apos;s the internet?"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="14dp"
+        android:fontFamily="sans-serif-light"
         android:text="You need to be online to view your transfers."
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 </RelativeLayout>

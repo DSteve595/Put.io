@@ -129,13 +129,13 @@
 
     <style name="Putio.Dialog" parent="@style/Theme.Putio">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/dialog_putio</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:buttonBarStyle">@style/Putio.ButtonBar</item>
         <item name="android:textViewStyle">@android:style/Widget.TextView</item>
-        <item name="android:editTextStyle">@style/Putio.EditText</item>
     </style>
 
     <style name="TextAppearance.Putio.DialogWindowTitle" parent="@android:style/Widget">

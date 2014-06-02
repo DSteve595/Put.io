@@ -28,19 +28,17 @@ import org.apache.commons.io.FileUtils;
 import java.io.FileNotFoundException;
 
 public class AddTransfers extends FragmentActivity {
-	SectionsPagerAdapter mSectionsPagerAdapter;
-	ViewPager mViewPager;
-	PagerTitleStrip mPagerTitleStrip;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
+	private ViewPager mViewPager;
+	private PagerTitleStrip mPagerTitleStrip;
 	
-	int fragmentType;
+	private int fragmentType;
 	
-	AddTransferUrl urlFragment;
-	AddTransferFile fileFragment;
-	
-	SharedPreferences sharedPrefs;
-	
-	PutioUtils utils;
-	
+	private AddTransferUrl urlFragment;
+	private AddTransferFile fileFragment;
+
+	private SharedPreferences sharedPrefs;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,10 +46,15 @@ public class AddTransfers extends FragmentActivity {
 		setContentView(R.layout.dialog_addtransfer);
 		
 		if (getIntent().getAction() != null) {
-			if (getIntent().getScheme().matches("magnet")) {
-				fragmentType = PutioUtils.ADDTRANSFER_URL;
-			} else if (getIntent().getScheme().matches("file")) {
-				fragmentType = PutioUtils.ADDTRANSFER_FILE;
+			switch (getIntent().getScheme()) {
+				case "http":
+				case "https":
+				case "magnet":
+					fragmentType = PutioUtils.ADDTRANSFER_URL;
+					break;
+				case "file":
+					fragmentType = PutioUtils.ADDTRANSFER_FILE;
+					break;
 			}
 		}
 		
@@ -76,7 +79,6 @@ public class AddTransfers extends FragmentActivity {
 			startActivity(putioActivity);
 			finish();
 		}
-		utils = new PutioUtils(token, sharedPrefs);
 		
 		TextView textTitle = (TextView) findViewById(R.id.dialog_title);
 		Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
@@ -157,29 +159,31 @@ public class AddTransfers extends FragmentActivity {
 			case 0:
 				if (fragmentType == PutioUtils.ADDTRANSFER_URL) {
 					if (urlFragment == null) {
-						urlFragment = AddTransferUrl.newInstance();
 						Bundle bundle = new Bundle();
 						bundle.putString("url", getIntent().getDataString());
-						urlFragment.setArguments(bundle);
+						urlFragment = (AddTransferUrl) AddTransferUrl.instantiate(
+								AddTransfers.this, AddTransferUrl.class.getName(), bundle);
 					}
 					return urlFragment;
 				} else if (fragmentType == PutioUtils.ADDTRANSFER_FILE) {
 					if (fileFragment == null) {
-						fileFragment = AddTransferFile.newInstance();
 						Bundle bundle = new Bundle();
 						bundle.putString("filepath", getIntent().getDataString());
-						fileFragment.setArguments(bundle);
+						fileFragment = (AddTransferFile) AddTransferFile.instantiate(
+								AddTransfers.this, AddTransferFile.class.getName(), bundle);
 					}
 					return fileFragment;
 				} else {
 					if (urlFragment == null) {
-						urlFragment = AddTransferUrl.newInstance();
+						urlFragment = (AddTransferUrl) AddTransferUrl.instantiate(
+								AddTransfers.this, AddTransferUrl.class.getName());
 					}
 					return urlFragment;
 				}
 			case 1:
 				if (fileFragment == null) {
-					fileFragment = AddTransferFile.newInstance();
+					fileFragment = (AddTransferFile) AddTransferFile.instantiate(
+							AddTransfers.this, AddTransferFile.class.getName());
 				}
 				return fileFragment;
 			}

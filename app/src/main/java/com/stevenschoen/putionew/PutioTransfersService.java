@@ -34,11 +34,8 @@ public class PutioTransfersService extends Service {
 	}
 	
 	SharedPreferences sharedPrefs;
-	
-	private String token;
-	
+
 	updateTransfersTask update = new updateTransfersTask();
-	boolean paused = false;
 	
 	PutioUtils utils;
 
@@ -53,11 +50,9 @@ public class PutioTransfersService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		sharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		token = sharedPrefs.getString("token", null);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		utils = new PutioUtils(token, sharedPrefs);
+		utils = new PutioUtils(sharedPrefs);
 		
 		handler = new Handler();
 		updateTransfersRunnable = new Runnable() {
@@ -89,7 +84,7 @@ public class PutioTransfersService extends Service {
 			JSONObject json;
 			JSONArray array;
 			
-			InputStream is = null;
+			InputStream is;
 			
 			try {
 				try {
@@ -169,10 +164,6 @@ public class PutioTransfersService extends Service {
 	
 	public PutioTransferData[] getTransfers() {
 		return transfersInverted;
-	}
-	
-	public void setPaused(boolean paused) {
-		this.paused = paused;
 	}
 	
 	@Override

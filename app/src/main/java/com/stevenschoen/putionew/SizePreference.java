@@ -28,8 +28,6 @@ public final class SizePreference extends DialogPreference implements
 	private final int mMinValue;
 	// Current value
 	private int mCurrentValue;
-	// View elements
-	private SeekBar mSeekBar;
 	private TextView mValueText;
 
 	public SizePreference(Context context, AttributeSet attrs) {
@@ -57,7 +55,7 @@ public final class SizePreference extends DialogPreference implements
 //		((TextView) view.findViewById(R.id.max_value)).setText(Integer
 //				.toString(mMaxValue));
 		// Setup SeekBar
-		mSeekBar = (SeekBar) view.findViewById(R.id.item_sizeDialog_seekBar);
+		SeekBar mSeekBar = (SeekBar) view.findViewById(R.id.item_sizeDialog_seekBar);
 		mSeekBar.setMax(mMaxValue - mMinValue);
 		mSeekBar.setProgress(mCurrentValue - mMinValue);
 		mSeekBar.setOnSeekBarChangeListener(this);

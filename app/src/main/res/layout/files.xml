@@ -1,38 +1,56 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/filesSwipeRefresh"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/fileslist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:clipToPadding="false"
             android:fastScrollEnabled="true"
             android:listSelector="@drawable/putio_clickable_list"
-            android:scrollbarStyle="insideOverlay" />
+            android:scrollbarStyle="insideOverlay"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/holder_files_up"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@+id/files_up"
+            android:layout_alignRight="@+id/files_up"
+            android:background="@drawable/card_bg_r4_shadow"/>
+
+        <include layout="@layout/files_up"/>
+    </RelativeLayout>
 
     <include
         android:id="@+id/files_emptysub"
+        layout="@layout/filesemptysub"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_below="@id/filesSwipeRefresh"
         android:layout_marginLeft="@dimen/padding_large"
-        android:layout_marginRight="@dimen/padding_large"
-        layout="@layout/filesemptysub" />
+        android:layout_marginRight="@dimen/padding_large"/>
 
     <include
         android:id="@+id/files_empty"
-        layout="@layout/filesempty" />
+        layout="@layout/filesempty"/>
 
     <include
         android:id="@+id/files_loading"
-        layout="@layout/filesloading" />
-
+        layout="@layout/filesloading"/>
 </RelativeLayout>

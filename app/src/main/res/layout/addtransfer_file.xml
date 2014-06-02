@@ -1,32 +1,38 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
-    <de.ankri.views.AutoScaleTextView
-        android:id="@+id/text_addtransferfile_file"
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/putio_clickable_button_dark"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:text="@string/choosefile"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/text_addtransferfile_notatorrent"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/text_addtransferfile_file"
-        android:layout_below="@+id/text_addtransferfile_file"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/notatorrent"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/putio_lightred" />
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <de.ankri.views.AutoScaleTextView
+            android:id="@+id/text_addtransferfile_file"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/putio_clickable_button_dark"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:text="@string/choosefile"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/text_addtransferfile_notatorrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_addtransferfile_file"
+            android:layout_below="@+id/text_addtransferfile_file"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/notatorrent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/putio_lightred"/>
+
+    </RelativeLayout>
+</ScrollView>

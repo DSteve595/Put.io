@@ -2,9 +2,11 @@ package com.stevenschoen.putionew.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -17,15 +19,23 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 
 public class TransfersActivity extends FragmentActivity {
+
+	SharedPreferences sharedPrefs;
+
+	PutioUtils utils;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		utils = new PutioUtils(sharedPrefs);
 		
 		if (getIntent().getExtras() != null && getIntent().getIntExtra("mode", 0) != 0) {
 			int mode = getIntent().getIntExtra("mode", 0);
 			switch (mode) {
 			case PutioUtils.ADDTRANSFER_URL:
-                PutioUtils.addTransfersAsync(
+                utils.addTransfersAsync(
 					this,
 					mode,
 					getIntent(),
@@ -33,7 +43,7 @@ public class TransfersActivity extends FragmentActivity {
 					null);
                 break;
 			case PutioUtils.ADDTRANSFER_FILE:
-                PutioUtils.addTransfersAsync(
+				utils.addTransfersAsync(
 					this,
 					mode,
 					getIntent(),

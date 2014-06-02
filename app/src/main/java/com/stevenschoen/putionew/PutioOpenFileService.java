@@ -20,8 +20,6 @@ public class PutioOpenFileService extends Service {
 	String filename;
 	int mode;
 	
-	PutioUtils utils;
-	
 	IntentFilter intentFilter3 = new IntentFilter(Putio.fileDownloadUpdateIntent);
 
 	@Override
@@ -29,8 +27,6 @@ public class PutioOpenFileService extends Service {
 		super.onCreate();
 
 		downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-		
-		utils = new PutioUtils(null, null);
 	}
 
 	@Override

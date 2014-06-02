@@ -44,12 +44,8 @@ public class PutioFileData implements Parcelable {
 		this.iconUrl = iconUrl;
 		this.id = id;
 		this.size = size;
-		
-		if (contentType.matches("application/x-directory")) {
-			isFolder = true;
-		} else {
-			isFolder = false;
-		}
+
+		isFolder = contentType.matches("application/x-directory");
 	}
 
 	public static String[] contentTypesArray = new String[] { "file", "application/x-directory",

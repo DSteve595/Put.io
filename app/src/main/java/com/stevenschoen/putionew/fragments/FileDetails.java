@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -48,18 +47,18 @@ import java.net.URLConnection;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class FileDetails extends Fragment {
-    PutioFileData origFileData;
-    PutioFileData newFileData;
+    private PutioFileData origFileData;
+    private PutioFileData newFileData;
 
-    static final String MP4_NOT_AVAILABLE = "NOT_AVAILABLE";
-    static final String MP4_AVAILABLE = "COMPLETED";
-    static final String MP4_IN_QUEUE = "IN_QUEUE";
-    static final String MP4_CONVERTING = "CONVERTING";
-    String mp4Status;
+    private static final String MP4_NOT_AVAILABLE = "NOT_AVAILABLE";
+    private static final String MP4_AVAILABLE = "COMPLETED";
+    private static final String MP4_IN_QUEUE = "IN_QUEUE";
+    private static final String MP4_CONVERTING = "CONVERTING";
+    private String mp4Status;
 
-    TextView textPercent;
+    private TextView textPercent;
 
-    Bitmap imagePreviewBitmap;
+    private Bitmap imagePreviewBitmap;
 
     public interface Callbacks {
         public void onFDCancelled();
@@ -81,7 +80,8 @@ public class FileDetails extends Fragment {
     private Callbacks mCallbacks = sDummyCallbacks;
     private CastCallbacks mCastCallbacks = sDummyCastCallbacks;
 
-    SharedPreferences sharedPrefs;
+    private SharedPreferences sharedPrefs;
+	PutioUtils utils;
 
     public final String baseUrl = "https://api.put.io/v2/";
 
@@ -91,7 +91,6 @@ public class FileDetails extends Fragment {
     private TextView textFileCreatedDate;
     private TextView textFileCreatedTime;
 
-    PutioUtils utils;
     private EditText textFileName;
     private ImageView imagePreview;
 
@@ -108,12 +107,10 @@ public class FileDetails extends Fragment {
             origFileData = getArguments().getParcelable("fileData");
             newFileData = getArguments().getParcelable("fileData");
         }
+
         sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getActivity());
-        token = sharedPrefs.getString("token", null);
-        tokenWithStuff = "?oauth_token=" + token;
-
-        utils = new PutioUtils(token, sharedPrefs);
+        utils = new PutioUtils(sharedPrefs);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -487,35 +484,29 @@ public class FileDetails extends Fragment {
     }
 
     private void initDeleteFile() {
-        PutioUtils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), newFileData);
+        utils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), newFileData);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filedetails, menu);
-
-        MenuItem buttonShare = menu.findItem(R.id.menu_share);
-        buttonShare.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                initShareFile();
-                return false;
-            }
-        });
-
-        MenuItem buttonDelete = menu.findItem(R.id.menu_delete);
-        buttonDelete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                initDeleteFile();
-                return false;
-            }
-        });
     }
 
-    private void setBarGraphics(String status, View convertButton, View available, View converting) {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_share:
+				initShareFile();
+				return true;
+			case R.id.menu_delete:
+				initDeleteFile();
+				return true;
+		}
+
+		return false;
+	}
+
+	private void setBarGraphics(String status, View convertButton, View available, View converting) {
         if (isAdded()) {
             switch (status) {
                 case MP4_AVAILABLE:
@@ -585,7 +576,6 @@ public class FileDetails extends Fragment {
         outState.putParcelable("newFileData", newFileData);
         if (imagePreviewBitmap != null) {
             outState.putParcelable("imagePreviewBitmap", imagePreviewBitmap);
-        } else {
         }
 
         super.onSaveInstanceState(outState);

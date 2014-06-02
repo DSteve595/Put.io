@@ -45,8 +45,20 @@
                 android:value=".activities.Putio"/>
         </activity>
         <activity android:name=".activities.Setup"/>
-        <activity android:name=".activities.FileDetailsActivity"/>
-        <activity android:name=".activities.Preferences"/>
+        <activity
+            android:name=".activities.FileDetailsActivity"
+            android:parentActivityName=".activities.Putio">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.Putio"/>
+        </activity>
+        <activity
+            android:name=".activities.Preferences"
+            android:parentActivityName=".activities.Putio">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.Putio"/>
+        </activity>
         <activity
             android:name=".activities.FileFinished"
             android:theme="@style/Putio.Dialog"/>
@@ -104,7 +116,12 @@
         </activity>
         <activity
             android:name=".activities.AboutActivity"
-            android:theme="@style/Putio.DialogOrActivity"/>
+            android:parentActivityName=".activities.Putio"
+            android:theme="@style/Putio.DialogOrActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.Putio"/>
+        </activity>
 
         <activity
             android:name="com.google.sample.castcompanionlibrary.cast.player.VideoCastControllerActivity"

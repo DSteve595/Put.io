@@ -18,12 +18,10 @@ import java.util.List;
 public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 
 	Context context;
-	int layoutResourceId;
 	List<PutioTransferLayout> data = null;
 
-	public TransfersAdapter(Context context, int layoutResourceId, List<PutioTransferLayout> data) {
-		super(context, layoutResourceId, data);
-		this.layoutResourceId = layoutResourceId;
+	public TransfersAdapter(Context context, List<PutioTransferLayout> data) {
+		super(context, R.layout.transfer, data);
 		this.context = context;
 		this.data = data;
 	}
@@ -31,12 +29,12 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
-		TransferHolder holder = null;
+		TransferHolder holder;
 		
 		if (row == null) {
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			try {
-				row = inflater.inflate(layoutResourceId, parent, false);
+				row = inflater.inflate(R.layout.transfer, parent, false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -63,10 +61,10 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 		
 		holder.textName.setText(transfer.name);
 		
-		String[] downStrings = PutioUtils.humanReadableByteCountArray(data.get(position).downSpeed, true);
+		String[] downStrings = PutioUtils.humanReadableByteCountArray(data.get(position).downSpeed, false);
 		holder.textDownValue.setText(downStrings[0]);
 		holder.textDownUnit.setText(downStrings[1] + "/sec");
-		String[] upStrings = PutioUtils.humanReadableByteCountArray(data.get(position).upSpeed, true);
+		String[] upStrings = PutioUtils.humanReadableByteCountArray(data.get(position).upSpeed, false);
 		holder.textUpValue.setText(upStrings[0]);
 		holder.textUpUnit.setText(upStrings[1] + "/sec");
 		

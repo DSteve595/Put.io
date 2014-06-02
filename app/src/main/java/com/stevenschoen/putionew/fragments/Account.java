@@ -18,15 +18,9 @@ import com.stevenschoen.putionew.UIUtils;
 import java.net.SocketTimeoutException;
 
 public class Account extends Fragment {
-	public static Account newInstance() {
-		Account fragment = new Account();
-		
-		return fragment;
-	}
-	
-	SharedPreferences sharedPrefs;
-	
-	PutioUtils utils;
+
+	private SharedPreferences sharedPrefs;
+	private PutioUtils utils;
 
 	private TextView textDiskTotal;
 	private TextView textDiskFree;
@@ -37,9 +31,8 @@ public class Account extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());		
-		String token = sharedPrefs.getString("token", null);
-		utils = new PutioUtils(token, sharedPrefs);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		utils = new PutioUtils(sharedPrefs);
 	}
 	
 	@Override
@@ -84,7 +77,8 @@ public class Account extends Fragment {
 					textName.setText(info.username);
 					textEmail.setText(info.email);
 					textDiskFree.setText(PutioUtils.humanReadableByteCount(info.diskAvailable, false));
-					textDiskTotal.setText(PutioUtils.humanReadableByteCount(info.diskSize, false));
+					textDiskTotal.setText(getString(R.string.total_is,
+							PutioUtils.humanReadableByteCount(info.diskSize, false)));
 				}
 			}
 		}

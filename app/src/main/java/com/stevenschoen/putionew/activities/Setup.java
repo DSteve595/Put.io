@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew.activities;
 
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nineoldandroids.animation.Animator;
@@ -44,9 +42,8 @@ public class Setup extends ActionBarActivity {
     private View viewLoading;
 
     private View viewNoNetwork;
-    private TextView textNoConnection;
 
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setup);
@@ -70,10 +67,6 @@ public class Setup extends ActionBarActivity {
         viewNoNetwork = findViewById(R.id.view_setup_noconnection);
         viewNoNetwork.setVisibility(View.INVISIBLE);
         ViewHelper.setAlpha(viewNoNetwork, 0);
-
-        Typeface robotoLight = Typeface.createFromAsset(this.getAssets(), "Roboto-Light.ttf");
-        textNoConnection = (TextView) findViewById(R.id.text_setup_noconnection);
-        textNoConnection.setTypeface(robotoLight);
 
         setViewMode(VIEWMODE_LOADING);
     }
@@ -118,9 +111,8 @@ public class Setup extends ActionBarActivity {
                 String[] strings = url.split("code=");
                 String code = strings[1];
 
-                final String finalUrl = new String(
-						"https://api.put.io/v2/oauth2/access_token?client_id=83&client_secret=6xf3yaxu62uj1cjbzfvz&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
-                                + code);
+                final String finalUrl = "https://api.put.io/v2/oauth2/access_token?client_id=83&client_secret=6xf3yaxu62uj1cjbzfvz&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
+						+ code;
                 saveTokenFromWeb(finalUrl);
             } else if (url.contains("token=")) {
                 saveToken(url.substring(url.indexOf("token=") + 6));

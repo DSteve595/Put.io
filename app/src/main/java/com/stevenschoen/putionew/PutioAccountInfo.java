@@ -9,10 +9,6 @@ public class PutioAccountInfo implements Parcelable {
 	public long diskAvailable;
 	public long diskUsed;
 	public long diskSize;
-	
-	public PutioAccountInfo() {
-		super();
-	}
 
 	public PutioAccountInfo(String username, String email,
 			long diskAvailable, long diskUsed, long diskSize) {

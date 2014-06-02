@@ -12,7 +12,7 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 
 public class FileFinished extends ActionBarActivity {
-	int mode;
+	private int mode;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

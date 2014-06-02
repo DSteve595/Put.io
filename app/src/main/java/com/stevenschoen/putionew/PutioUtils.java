@@ -40,7 +40,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -73,15 +72,15 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class PutioUtils {
     public static final int TYPE_AUDIO = 1;
-    public static final int TYPE_VIDEO = -1;
+    public static final int TYPE_VIDEO = 2;
     public static final String[] streamingMediaTypes = new String[]{"audio", "video"};
 
     public static final int ACTION_NOTHING = -1;
     public static final int ACTION_OPEN = 1;
-    public static final int ACTION_SHARE = -2;
+    public static final int ACTION_SHARE = 2;
 
     public static final int ADDTRANSFER_FILE = 1;
-    public static final int ADDTRANSFER_URL = -1;
+    public static final int ADDTRANSFER_URL = 2;
 
     public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
 //    public static final String CAST_APPLICATION_ID = "C18ACC9E";
@@ -93,8 +92,8 @@ public class PutioUtils {
 
     private SharedPreferences sharedPrefs;
 
-    public PutioUtils(String token, SharedPreferences sharedPrefs) {
-        PutioUtils.token = token;
+    public PutioUtils(SharedPreferences sharedPrefs) {
+        PutioUtils.token = sharedPrefs.getString("token", null);
         PutioUtils.tokenWithStuff = "?oauth_token=" + token;
 
         this.sharedPrefs = sharedPrefs;
@@ -206,6 +205,31 @@ public class PutioUtils {
         return false;
     }
 
+	private static boolean postClearFinishedTransfers() {
+		URL url = null;
+		try {
+			url = new URL(baseUrl + "transfers/clean" + tokenWithStuff);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			connection.setConnectTimeout(8000);
+			connection.connect();
+
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
     private boolean postConvert(int id) {
         URL url = null;
         try {
@@ -240,19 +264,19 @@ public class PutioUtils {
             updateName = true;
         }
 
-        Boolean[] updates = new Boolean[]{Boolean.valueOf(updateName)};
+        Boolean[] updates = new Boolean[]{ updateName };
 
         boolean hasUpdates = false;
-        for (int i = 0; i < updates.length; i++) {
-            if (updates[i]) {
-                hasUpdates = true;
-            }
-        }
+		for (boolean update : updates) {
+			if (update) {
+				hasUpdates = true;
+			}
+		}
 
-        class saveFileTask extends AsyncTask<Boolean[], Void, Boolean> {
-            protected Boolean doInBackground(Boolean[]... updates) {
-                Boolean saved = postRename(id, newName);
-                return saved;
+        class saveFileTask extends AsyncTask<Boolean[], Void, Void> {
+            protected Void doInBackground(Boolean[]... updates) {
+                postRename(id, newName);
+                return null;
             }
         }
         new saveFileTask().execute(updates);
@@ -263,10 +287,10 @@ public class PutioUtils {
         }
     }
 
-    public static void deleteFileAsync(Context context, final int... ids) {
-        class deleteFileTask extends AsyncTask<Void, Void, Boolean> {
-            protected Boolean doInBackground(Void... nothing) {
-                Boolean saved = postDelete(ids);
+    public void deleteFileAsync(Context context, final int... ids) {
+        class deleteFileTask extends AsyncTask<Void, Void, Void> {
+            protected Void doInBackground(Void... nothing) {
+                postDelete(ids);
                 return null;
             }
         }
@@ -276,17 +300,27 @@ public class PutioUtils {
         context.sendBroadcast(invalidateListIntent);
     }
 
-    public static void removeTransferAsync(Context context, final Integer... ids) {
-        class RemoveTransferTask extends AsyncTask<Void, Void, Boolean> {
-            protected Boolean doInBackground(Void... nothing) {
-                Boolean saved = postRemoveTransfer(ids);
+    public void removeTransferAsync(Context context, final Integer... ids) {
+        class RemoveTransferTask extends AsyncTask<Void, Void, Void> {
+            protected Void doInBackground(Void... nothing) {
+                postRemoveTransfer(ids);
                 return null;
             }
         }
         new RemoveTransferTask().execute();
     }
 
-    public static void addTransfersAsync(final Context context, final int mode, final Intent retryIntent,
+	public void clearFinishedTransfersAsync(Context context) {
+		class ClearFinishedTransfersTask extends AsyncTask<Void, Void, Void> {
+			protected Void doInBackground(Void... nothing) {
+				postClearFinishedTransfers();
+				return null;
+			}
+		}
+		new ClearFinishedTransfersTask().execute();
+	}
+
+    public void addTransfersAsync(final Context context, final int mode, final Intent retryIntent,
                                          final String urls, final Uri torrentUri) {
         class AddTransfersTask extends AsyncTask<Void, Void, Void> {
             NotificationManager notifManager;
@@ -399,7 +433,8 @@ public class PutioUtils {
                 notifBuilder.setContentText("Fetching it now! Tap for info.");
                 notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
                 notifBuilder.setContentIntent(PendingIntent.getActivity(
-                        context, 0, new Intent(context, TransfersActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK));
+                        context, 0, new Intent(context, TransfersActivity.class),
+						PendingIntent.FLAG_ONE_SHOT));
 //				notifBuilder.addAction(R.drawable.ic_notif_watch, "Watch", null);
                 notifBuilder.setTicker("Uploaded torrent");
                 notifBuilder.setProgress(0, 0, false);
@@ -416,7 +451,7 @@ public class PutioUtils {
                 notifBuilder.setContentText("Try again?");
                 notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
                 PendingIntent retryNotifIntent = PendingIntent.getActivity(
-                        context, 0, retryIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context, 0, retryIntent, PendingIntent.FLAG_ONE_SHOT);
                 notifBuilder.addAction(R.drawable.ic_notif_retry, "Retry", retryNotifIntent);
                 notifBuilder.setContentIntent(retryNotifIntent);
                 notifBuilder.setTicker("Couldn't upload torrent");
@@ -613,8 +648,6 @@ public class PutioUtils {
 								dlId = downloadFileWithUrl(context, file.id, file.name,
 										resolveRedirect(getFileDownloadUrl(file.id).replace("https://", "http://")));
 								return dlId;
-							} catch (ClientProtocolException ee) {
-								ee.printStackTrace();
 							} catch (IOException ee) {
 								ee.printStackTrace();
 							}
@@ -704,7 +737,7 @@ public class PutioUtils {
             path += id + File.separator + filename;
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
-        boolean made = file.getParentFile().mkdirs();
+        file.getParentFile().mkdirs();
 
         request.setDescription("put.io");
         if (UIUtils.hasHoneycomb()) {
@@ -715,8 +748,7 @@ public class PutioUtils {
                 Environment.DIRECTORY_DOWNLOADS,
                 path);
 
-        long downloadId = manager.enqueue(request);
-        return downloadId;
+		return manager.enqueue(request);
     }
 
     public static void stream(Context context, String url, int type) {
@@ -767,8 +799,6 @@ public class PutioUtils {
             protected String doInBackground(String... params) {
                 try {
                     return PutioUtils.resolveRedirect(params[0]);
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -870,8 +900,6 @@ public class PutioUtils {
                 try {
                     return PutioUtils.resolveRedirect(baseUrl + "files/" + fileId[0] + "/download"
                             + tokenWithStuff);
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -906,7 +934,7 @@ public class PutioUtils {
         new GetDlLinkTask().execute(id);
     }
 
-    public static String resolveRedirect(String url) throws ClientProtocolException, IOException {
+    public static String resolveRedirect(String url) throws IOException {
         HttpParams httpParameters = new BasicHttpParams();
         HttpClientParams.setRedirecting(httpParameters, false);
 
@@ -1021,7 +1049,7 @@ public class PutioUtils {
         share(uri, context);
     }
 
-    public static void showDeleteFilesDialog(final Context context, final boolean finish, final PutioFileData... filesToDelete) {
+    public void showDeleteFilesDialog(final Context context, final boolean finish, final PutioFileData... filesToDelete) {
         final Dialog deleteDialog = PutioDialog(context,
 				context.getResources().getQuantityString(
 						R.plurals.deletetitle, filesToDelete.length),
@@ -1061,7 +1089,7 @@ public class PutioUtils {
         });
     }
 
-    public static void showRemoveTransferDialog(final Context context, final int idToDelete) {
+    public void showRemoveTransferDialog(final Context context, final int idToDelete) {
         final Dialog removeDialog = PutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
         removeDialog.show();
 
@@ -1185,7 +1213,7 @@ public class PutioUtils {
             return false;
         }
         return false;
-	};
+	}
 
     public static String[] separateIsoTime(String isoTime) {
         return isoTime.split("T");

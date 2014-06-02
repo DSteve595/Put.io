@@ -246,13 +246,13 @@ public class Putio extends BaseCastActivity implements
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    accountFragment = Account.newInstance();
+                    accountFragment = (Account) Account.instantiate(Putio.this, Account.class.getName());
                     return accountFragment;
                 case 1:
-                    filesFragment = Files.newInstance();
+                    filesFragment = (Files) Files.instantiate(Putio.this, Files.class.getName());
                     return filesFragment;
                 case 2:
-                    transfersFragment = Transfers.newInstance();
+                    transfersFragment = (Transfers) Transfers.instantiate(Putio.this, Transfers.class.getName());
                     return transfersFragment;
             }
             return null;
@@ -282,8 +282,7 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void init() {
-        String token = sharedPrefs.getString("token", null);
-        utils = new PutioUtils(token, sharedPrefs);
+        utils = new PutioUtils(sharedPrefs);
 
         if (UIUtils.isTablet(this)) {
             setupTabletLayout();
@@ -653,13 +652,12 @@ public class Putio extends BaseCastActivity implements
         int maxSize = sharedPrefs.getInt("maxCacheSizeMb", 20);
         File cache = getCacheDir();
         if (FileUtils.sizeOf(cache) >= (FileUtils.ONE_MB * maxSize)) {
-            File[] cached = cache.listFiles();
-
-            for (int i = 0; i < cached.length; i++) {
-                if (!cached[i].getName().matches("0")) {
-                    FileUtils.deleteQuietly(cached[i]);
-                }
-            }
+            File[] cacheFiles = cache.listFiles();
+			for (File file : cacheFiles) {
+				if (!file.getName().matches("0")) {
+					FileUtils.deleteQuietly(file);
+				}
+			}
         }
     }
 }

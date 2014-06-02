@@ -9,10 +9,6 @@ public class PutioFileLayout implements Parcelable {
 	public int iconRes;
 	public String iconUrl;
 
-	public PutioFileLayout() {
-		super();
-	}
-
 	public PutioFileLayout(String name, String description, int iconRes, String iconUrl) {
 		super();
 		this.name = name;
@@ -31,9 +27,6 @@ public class PutioFileLayout implements Parcelable {
 	}
 	
 	private void readFromParcel(Parcel in) {
-		// We just need to read back each
-		// field in the order that it was
-		// written to the parcel
 		this.name = in.readString();
 		this.description = in.readString();
 		this.iconRes = in.readInt();

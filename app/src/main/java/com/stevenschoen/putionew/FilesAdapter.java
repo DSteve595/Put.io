@@ -16,12 +16,10 @@ import java.util.List;
 public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 
 	Context context;
-	int layoutResourceId;
 	List<PutioFileLayout> data = null;
 
-	public FilesAdapter(Context context, int layoutResourceId, List<PutioFileLayout> data) {
-		super(context, layoutResourceId, data);
-		this.layoutResourceId = layoutResourceId;
+	public FilesAdapter(Context context, List<PutioFileLayout> data) {
+		super(context, R.layout.file_putio, data);
 		this.context = context;
 		this.data = data;
 	}
@@ -29,12 +27,12 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
-		FileHolder holder = null;
+		FileHolder holder;
 		
 		if (row == null) {
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			try {
-				row = inflater.inflate(layoutResourceId, parent, false);
+				row = inflater.inflate(R.layout.file_putio, parent, false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

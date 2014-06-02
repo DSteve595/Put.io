@@ -10,18 +10,8 @@ import android.widget.EditText;
 import com.stevenschoen.putionew.R;
 
 public class AddTransferUrl extends Fragment {
-	private EditText textUrls;
 
-	public static AddTransferUrl newInstance() {
-		AddTransferUrl fragment = new AddTransferUrl();
-		
-		return fragment;
-	}
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+	private EditText textUrls;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

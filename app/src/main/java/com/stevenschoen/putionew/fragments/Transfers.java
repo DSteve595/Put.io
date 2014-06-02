@@ -7,13 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,10 +40,13 @@ import java.util.ArrayList;
 public final class Transfers extends Fragment {
 	
 	private TransfersAdapter adapter;
-	private ArrayList<PutioTransferLayout> transferLayouts = new ArrayList<PutioTransferLayout>();
+	private ArrayList<PutioTransferLayout> transferLayouts = new ArrayList<>();
 	PutioTransferData[] transfersData;
 	private ListView listview;
-	
+
+	SharedPreferences sharedPrefs;
+
+	PutioUtils utils;
 	PutioTransfersService transfersService;
 	
 	private int viewMode = 1;
@@ -53,14 +60,7 @@ public final class Transfers extends Fragment {
 	private View emptyView;
 	private View noNetworkView;
 	
-	public static Transfers newInstance() {
-		Transfers fragment = new Transfers();
-		
-		return fragment;
-	}
-	
     public interface Callbacks {
-
     	public void transfersReady();
         public void onTransferSelected(int parentId, int id);
     }
@@ -77,6 +77,11 @@ public final class Transfers extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+		utils = new PutioUtils(sharedPrefs);
 		
 		Intent transfersServiceIntent = new Intent(getActivity(), PutioTransfersService.class);
 		getActivity().startService(transfersServiceIntent);
@@ -90,8 +95,7 @@ public final class Transfers extends Fragment {
 		
 		listview = (ListView) view.findViewById(R.id.transferslist);
 		
-		adapter = new TransfersAdapter(getActivity(), R.layout.transfer,
-				transferLayouts);
+		adapter = new TransfersAdapter(getActivity(), transferLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
@@ -157,8 +161,7 @@ public final class Transfers extends Fragment {
 	}
 	
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		
 		menu.setHeaderTitle(transfersData[info.position].name);
@@ -168,8 +171,7 @@ public final class Transfers extends Fragment {
 	
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.context_remove:
 				initRemoveTransfer((int) info.id);
@@ -178,12 +180,29 @@ public final class Transfers extends Fragment {
 				return super.onContextItemSelected(item);
 		}
 	}
-	
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+//		inflater.inflate(R.menu.transfers, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_clearfinished:
+				utils.clearFinishedTransfersAsync(getActivity());
+				return true;
+		}
+
+		return false;
+	}
+
 	private void initRemoveTransfer(int idInList) {
-		if(transfersData[idInList].status.matches("COMPLETED")) {
-			PutioUtils.removeTransferAsync(getActivity(), transfersData[idInList].id);
+		if (transfersData[idInList].status.matches("COMPLETED")) {
+			utils.removeTransferAsync(getActivity(), transfersData[idInList].id);
 		} else {
-			PutioUtils.showRemoveTransferDialog(getActivity(), transfersData[idInList].id);
+			utils.showRemoveTransferDialog(getActivity(), transfersData[idInList].id);
 		}
 	}
 	
@@ -263,13 +282,13 @@ public final class Transfers extends Fragment {
 		
 		if (isAdded()) {
 			transferLayouts.clear();
-			for (int i = 0; i < transfers.length; i++) {
+			for (PutioTransferData transfer : transfers) {
 				transferLayouts.add(new PutioTransferLayout(
-						transfers[i].name,
-						transfers[i].downSpeed,
-						transfers[i].upSpeed,
-						transfers[i].percentDone,
-						transfers[i].status));
+						transfer.name,
+						transfer.downSpeed,
+						transfer.upSpeed,
+						transfer.percentDone,
+						transfer.status));
 			}
 			adapter.notifyDataSetChanged();
 		}

@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.MediaRouteActionProvider;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +29,8 @@ import org.apache.commons.io.FilenameUtils;
 
 public class BaseCastActivity extends ActionBarActivity implements CastService.CastCallbacks {
 
-    CastService castService;
-    MediaRouteActionProvider mediaRouteActionProvider;
-    private MiniController castBar;
+    private CastService castService;
+	private MiniController castBar;
 
 	private boolean resumed = false;
 
@@ -43,7 +41,7 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
 
         Intent castServiceIntent = new Intent(this, CastService.class);
         startService(castServiceIntent);
-        bindService(castServiceIntent, castServiceConnection, Service.BIND_IMPORTANT);
+        bindService(castServiceIntent, castServiceConnection, Service.BIND_ABOVE_CLIENT);
     }
 
     @Override
@@ -51,8 +49,8 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
         getMenuInflater().inflate(R.menu.cast, menu);
 
         MenuItem buttonMediaRoute = menu.findItem(R.id.menu_cast);
-        mediaRouteActionProvider =
-                (MediaRouteActionProvider) MenuItemCompat.getActionProvider(buttonMediaRoute);
+		MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider)
+				MenuItemCompat.getActionProvider(buttonMediaRoute);
         if (castService != null) {
             mediaRouteActionProvider.setRouteSelector(castService.getMediaRouteSelector());
         }

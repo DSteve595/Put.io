@@ -1,20 +1,12 @@
 package com.stevenschoen.putionew.cast;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v7.media.MediaRouteSelector;
-import android.support.v7.media.MediaRouter;
-import android.support.v7.media.MediaRouter.RouteInfo;
-import android.util.Log;
 
-import com.google.android.gms.cast.Cast;
-import com.google.android.gms.cast.CastDevice;
-import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
 import com.google.sample.castcompanionlibrary.cast.exceptions.NoConnectionException;
 import com.google.sample.castcompanionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
@@ -22,7 +14,6 @@ import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,15 +49,12 @@ public class CastService extends Service {
     }
 
     public void loadAndPlayMedia(MediaInfo mediaInfo) {
-        this.mediaInfo = mediaInfo;
         try {
             videoCastManager.loadMedia(mediaInfo, true, 0);
-        } catch (TransientNetworkDisconnectionException e) {
-            e.printStackTrace();
-        } catch (NoConnectionException e) {
+        } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
             e.printStackTrace();
         }
-    }
+	}
 
     public boolean isCasting() {
         return videoCastManager.isConnected();

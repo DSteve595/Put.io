@@ -23,12 +23,7 @@ import com.stevenschoen.putionew.UIUtils;
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class AddTransferFile extends Fragment {
-	public static AddTransferFile newInstance() {
-		AddTransferFile fragment = new AddTransferFile();
-		
-		return fragment;
-	}
-	
+
 	private Uri chosenTorrentUri = null;
 	
 	private TextView textFile;
@@ -44,7 +39,6 @@ public class AddTransferFile extends Fragment {
 		textFile = (TextView) view.findViewById(R.id.text_addtransferfile_file);
 		textFile.setTypeface(robotoLight);
 		textFile.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
                 if (UIUtils.hasKitKat()) {

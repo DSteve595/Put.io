@@ -15,12 +15,7 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.activities.Putio;
 
 public class About extends Fragment {
-	public static About newInstance() {
-		About fragment = new About();
-		
-		return fragment;
-	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
