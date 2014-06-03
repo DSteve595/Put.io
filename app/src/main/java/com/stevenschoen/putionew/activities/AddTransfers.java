@@ -202,9 +202,9 @@ public class AddTransfers extends FragmentActivity {
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "URLs";
+				return getString(R.string.addtransfer_type_url);
 			case 1:
-				return "Torrent file";
+				return getString(R.string.addtransfer_type_file);
 			}
 			return null;
 		}

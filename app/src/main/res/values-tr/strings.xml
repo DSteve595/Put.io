@@ -78,15 +78,10 @@
     <string name="at">at</string>
     <string name="welcome">Hoşgeldiniz!</string>
     <string name="gotosite">Siteye git</string>
-    <string name="intro1">Farklı bir çevrimiçi depolama</string>
-    <string name="intro2">Put.io diğer depolama aygıtları gibi çalışır. Farkı dosyaları sizin özel çevrimiçi alanınıza indirebilmesidir.</string>
-    <string name="slogan1">ÇEVRİMİÇİ DEPOLAMA</string>
-    <string name="slogan2">YENİDEN DÜŞLENDİ</string>
     <string name="applychanges">%1$s\'de kaydedilmemiş değişiklikleriniz var.\nUygulansın mı?</string>
     <string name="tokenlogin">Eğer, bir nedenle, oturum açma jetonunuzu elle almak istiyorsanız, onu burada yapabilirsiniz.</string>
     <string name="entertoken">Jetonu gir</string>
     <string name="pasteurls">URLleri buraya yapıştırın</string>
-    <string name="title_activity_swipe">Kaydır</string>
     <string name="torrentadded">Torrent transferlere eklendi!</string>
     <string name="extractwhenfinished">Tamamlanınca aç</string>
     <string name="searchyourfiles">Dosyalarınızı arayın</string>

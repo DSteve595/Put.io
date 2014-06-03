@@ -408,9 +408,9 @@ public class PutioUtils {
             private void notifStart() {
                 NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
                 notifBuilder.setOngoing(true);
-                notifBuilder.setContentTitle("Uploading torrent");
+                notifBuilder.setContentTitle(context.getString(R.string.notification_title_uploading_torrent));
                 notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
-                notifBuilder.setTicker("Uploading torrent...");
+                notifBuilder.setTicker(context.getString(R.string.notification_ticker_uploading_torrent));
                 notifBuilder.setProgress(1, 0, true);
                 Notification notif = notifBuilder.build();
                 notif.ledARGB = Color.parseColor("#FFFFFF00");
@@ -429,14 +429,14 @@ public class PutioUtils {
                 NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
                 notifBuilder.setOngoing(false);
                 notifBuilder.setAutoCancel(true);
-                notifBuilder.setContentTitle("Uploaded torrent");
-                notifBuilder.setContentText("Fetching it now! Tap for info.");
+                notifBuilder.setContentTitle(context.getString(R.string.notification_title_uploaded_torrent));
+                notifBuilder.setContentText(context.getString(R.string.notification_body_uploaded_torrent));
                 notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
                 notifBuilder.setContentIntent(PendingIntent.getActivity(
                         context, 0, new Intent(context, TransfersActivity.class),
 						PendingIntent.FLAG_ONE_SHOT));
 //				notifBuilder.addAction(R.drawable.ic_notif_watch, "Watch", null);
-                notifBuilder.setTicker("Uploaded torrent");
+                notifBuilder.setTicker(context.getString(R.string.notification_ticker_uploaded_torrent));
                 notifBuilder.setProgress(0, 0, false);
                 Notification notif = notifBuilder.build();
                 notif.ledARGB = Color.parseColor("#FFFFFF00");
@@ -447,14 +447,14 @@ public class PutioUtils {
                 NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
                 notifBuilder.setOngoing(false);
                 notifBuilder.setAutoCancel(true);
-                notifBuilder.setContentTitle("Couldn't upload torrent");
-                notifBuilder.setContentText("Try again?");
+                notifBuilder.setContentTitle(context.getString(R.string.notification_title_error));
+                notifBuilder.setContentText(context.getString(R.string.notification_body_error));
                 notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
                 PendingIntent retryNotifIntent = PendingIntent.getActivity(
                         context, 0, retryIntent, PendingIntent.FLAG_ONE_SHOT);
-                notifBuilder.addAction(R.drawable.ic_notif_retry, "Retry", retryNotifIntent);
+                notifBuilder.addAction(R.drawable.ic_notif_retry, context.getString(R.string.notification_button_retry), retryNotifIntent);
                 notifBuilder.setContentIntent(retryNotifIntent);
-                notifBuilder.setTicker("Couldn't upload torrent");
+                notifBuilder.setTicker(context.getString(R.string.notification_ticker_error));
                 Notification notif = notifBuilder.build();
                 notif.ledARGB = Color.parseColor("#FFFFFF00");
                 notifManager.notify(1, notif);
@@ -661,7 +661,7 @@ public class PutioUtils {
             protected void onProgressUpdate(Integer... nothing) {
                 resolveRedirect = true;
 
-                dialog = PutioDialog(context, "Preparing to download", R.layout.dialog_loading);
+                dialog = PutioDialog(context, context.getString(R.string.downloadpreparing), R.layout.dialog_loading);
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
             }
@@ -680,7 +680,7 @@ public class PutioUtils {
                         serviceOpenIntent.putExtra("filename", files[0].name);
                         serviceOpenIntent.putExtra("mode", actionWhenDone);
                         context.startService(serviceOpenIntent);
-                        Toast.makeText(context, "Your file will open as soon as it is finished downloading.",
+                        Toast.makeText(context, context.getString(R.string.downloadwillopen),
                                 Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_SHARE:
@@ -690,10 +690,10 @@ public class PutioUtils {
                         serviceShareIntent.putExtra("filename", files[0].name);
                         serviceShareIntent.putExtra("mode", actionWhenDone);
                         context.startService(serviceShareIntent);
-                        Toast.makeText(context, "Your file will be shared as soon as it is finished downloading.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, context.getString(R.string.downloadwillshare), Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_NOTHING:
-                        Toast.makeText(context, "Download started.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -891,7 +891,7 @@ public class PutioUtils {
 
             @Override
             protected void onPreExecute() {
-                dialog = PutioUtils.PutioDialog(context, "Copying download link", R.layout.dialog_loading);
+                dialog = PutioUtils.PutioDialog(context, context.getString(R.string.copyingdownloadlink), R.layout.dialog_loading);
                 dialog.show();
             }
 
@@ -1013,7 +1013,7 @@ public class PutioUtils {
             Uri uri = Uri.fromFile(file);
             open(uri, context);
         } else {
-            Toast.makeText(context, "The file could not be found. Was it deleted?", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.filenotfound), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1037,7 +1037,7 @@ public class PutioUtils {
             Uri uri = Uri.fromFile(file);
             share(uri, context);
         } else {
-            Toast.makeText(context, "The file could not be found. Was it deleted?", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.filenotfound), Toast.LENGTH_LONG).show();
         }
     }
 

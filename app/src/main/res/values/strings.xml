@@ -44,9 +44,13 @@
     </plurals>
     <string name="removetransfertitle">Remove this transfer?</string>
     <string name="removetransferbody">The download will be cancelled.</string>
+    <string name="downloadwillopen">Your file will open as soon as it is finished downloading.</string>
+    <string name="downloadwillshare">Your file will be shared as soon as it is finished downloading.</string>
     <string name="downloadfinishedopentitle">Open file?</string>
     <string name="downloadfinishedsharetitle">Share file?</string>
     <string name="downloadfinishedbody">%1$s is done downloading.</string>
+    <string name="downloadpreparing">Preparing to download</string>
+    <string name="downloadstarted">Download started.</string>
     <string name="redownloadtitle">Re-download file?</string>
     <string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
     <string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
@@ -80,15 +84,10 @@
     <string name="at">at</string>
     <string name="welcome">Welcome!</string>
     <string name="gotosite">Go to site</string>
-    <string name="intro1">A different kind of online storage</string>
-    <string name="intro2">Put.io works like any other storage service. Except, it can also retrieve and put files into your personal, private online space.</string>
-    <string name="slogan1">ONLINE STORAGE</string>
-    <string name="slogan2">RE-IMAGINED</string>
     <string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
     <string name="tokenlogin">If, for whatever reason, you\'d like to provide your login token manually, you can do so here.</string>
     <string name="entertoken">Enter token</string>
     <string name="pasteurls">Paste URLs here</string>
-    <string name="title_activity_swipe">Swipe</string>
     <string name="torrentadded">Torrent added to transfers!</string>
     <string name="extractwhenfinished">Extract when finished</string>
     <string name="searchyourfiles">Search your files</string>
@@ -100,6 +99,21 @@
     <string name="choosefile">Choose a file</string>
     <string name="cachesize">Cache size</string>
     <string name="cacheexplanation">How much space should be used for the cache?\nThis won\'t affect your downloaded files.</string>
+    <string name="addtransfer_type_url">URLs</string>
+    <string name="addtransfer_type_file">Torrent file</string>
+    <string name="copyingdownloadlink">Copying download link</string>
+    <string name="filenotfound">The file could not be found. Was it deleted?</string>
+
+    <!-- Notification stuff -->
+    <string name="notification_title_uploading_torrent">Uploading torrent</string>
+    <string name="notification_ticker_uploading_torrent">Uploading torrent…</string>
+    <string name="notification_title_uploaded_torrent">Uploaded torrent</string>
+    <string name="notification_body_uploaded_torrent">Fetching it now! Tap for info.</string>
+    <string name="notification_ticker_uploaded_torrent">Uploaded torrent</string>
+    <string name="notification_title_error">Couldn\'t upload torrent</string>
+    <string name="notification_body_error">Try again?</string>
+    <string name="notification_ticker_error">Couldn\'t upload torrent</string>
+    <string name="notification_button_retry">Retry</string>
 
     <!-- About screen -->
     <string name="appbysteven">Android app by Steven Schoen.</string>
