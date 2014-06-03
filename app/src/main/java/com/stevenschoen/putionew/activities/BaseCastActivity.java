@@ -138,7 +138,7 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
 
     public void load(PutioFileData file, String url, PutioUtils utils) {
         if (castService == null || !castService.isCasting()) {
-            PutioUtils.getStreamUrlAndPlay(this, file, url);
+            utils.getStreamUrlAndPlay(this, file, url);
         } else {
             MediaMetadata metaData = new MediaMetadata(file.contentType.contains("video") ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);

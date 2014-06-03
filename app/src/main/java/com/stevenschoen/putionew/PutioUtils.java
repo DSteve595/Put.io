@@ -776,7 +776,7 @@ public class PutioUtils {
         }
     }
 
-    public static void getStreamUrlAndPlay(final Context context, final PutioFileData file, String url) {
+    public void getStreamUrlAndPlay(final Context context, final PutioFileData file, String url) {
         class GetStreamUrlAndPlay extends AsyncTask<String, Void, String> {
             Dialog gettingStreamDialog;
 
@@ -800,9 +800,9 @@ public class PutioUtils {
                 try {
                     return PutioUtils.resolveRedirect(params[0]);
                 } catch (IOException e) {
-                    e.printStackTrace();
+//                    No redirect
+					return params[0];
                 }
-                return null;
             }
 
             @Override

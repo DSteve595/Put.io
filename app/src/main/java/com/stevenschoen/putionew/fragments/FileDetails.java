@@ -115,7 +115,6 @@ public class FileDetails extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         int fileDetailsLayoutId = R.layout.filedetails;
         if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
             fileDetailsLayoutId = R.layout.filedetailsgbhori;
