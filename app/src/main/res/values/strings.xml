@@ -54,8 +54,7 @@
     <string name="redownloadtitle">Re-download file?</string>
     <string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
     <string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
-    <string name="sharetitle">It looks like this has already been downloaded. Download it anyway?</string>
-    <string name="sharebody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
+    <string name="redownloadforsharebody">It looks like this has already been downloaded. Do you want to share this copy or download it again?</string>
     <string name="addtransferstitle">Add transfers</string>
     <string name="applychangestitle">Apply changes?</string>
 

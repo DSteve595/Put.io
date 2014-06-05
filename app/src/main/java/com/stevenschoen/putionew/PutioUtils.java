@@ -87,14 +87,14 @@ public class PutioUtils {
 
     public final static String baseUrl = "https://api.put.io/v2/";
 
-    public static String token;
-    public static String tokenWithStuff;
+    public String token;
+    public String tokenWithStuff;
 
     private SharedPreferences sharedPrefs;
 
     public PutioUtils(SharedPreferences sharedPrefs) {
-        PutioUtils.token = sharedPrefs.getString("token", null);
-        PutioUtils.tokenWithStuff = "?oauth_token=" + token;
+        this.token = sharedPrefs.getString("token", null);
+        this.tokenWithStuff = "?oauth_token=" + token;
 
         this.sharedPrefs = sharedPrefs;
     }
@@ -129,7 +129,7 @@ public class PutioUtils {
         return false;
     }
 
-    private static boolean postDelete(int... ids) {
+    private boolean postDelete(int... ids) {
         URL url = null;
         try {
             url = new URL(baseUrl + "files/delete" + tokenWithStuff);
@@ -167,7 +167,7 @@ public class PutioUtils {
         return false;
     }
 
-    private static boolean postRemoveTransfer(Integer... ids) {
+    private boolean postRemoveTransfer(Integer... ids) {
         URL url = null;
         try {
             url = new URL(baseUrl + "transfers/cancel" + tokenWithStuff);
@@ -205,7 +205,7 @@ public class PutioUtils {
         return false;
     }
 
-	private static boolean postClearFinishedTransfers() {
+	private boolean postClearFinishedTransfers() {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "transfers/clean" + tokenWithStuff);
@@ -216,6 +216,7 @@ public class PutioUtils {
 		try {
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			connection.setConnectTimeout(8000);
+			connection.setDoOutput(true);
 			connection.connect();
 
 			int responseCode = connection.getResponseCode();
@@ -751,7 +752,7 @@ public class PutioUtils {
 		return manager.enqueue(request);
     }
 
-    public static void stream(Context context, String url, int type) {
+    public static void stream(Context context, String url, Uri[] subtitles, int type) {
         Intent streamIntent = new Intent();
         streamIntent.setAction(Intent.ACTION_VIEW);
         String typeString;
@@ -768,6 +769,9 @@ public class PutioUtils {
             return;
         }
         streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
+		if (subtitles != null && subtitles.length > 0) {
+			streamIntent.putExtra("subs", subtitles);
+		}
 
         try {
             context.startActivity(streamIntent);
@@ -818,7 +822,12 @@ public class PutioUtils {
                 } else {
                     type = PutioUtils.TYPE_VIDEO;
                 }
-                PutioUtils.stream(context, finalUrl, type);
+
+				String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id +
+						"/subtitles/default" + tokenWithStuff;
+				Uri[] subtitles = new Uri[] { Uri.parse(subtitleUrl) };
+
+                PutioUtils.stream(context, finalUrl, subtitles, type);
             }
         }
 

@@ -13,6 +13,8 @@ import com.google.sample.castcompanionlibrary.cast.exceptions.TransientNetworkDi
 import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioUtils;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,7 +38,8 @@ public class CastService extends Service {
         super.onCreate();
 
         videoCastManager = VideoCastManager.initialize(this, PutioUtils.CAST_APPLICATION_ID, null, null);
-        videoCastManager.enableFeatures(VideoCastManager.FEATURE_NOTIFICATION |
+        videoCastManager.enableFeatures(
+//				VideoCastManager.FEATURE_NOTIFICATION | // buggy
                 VideoCastManager.FEATURE_LOCKSCREEN |
                 VideoCastManager.FEATURE_DEBUGGING);
         videoCastManager.setStopOnDisconnect(true);
@@ -48,9 +51,10 @@ public class CastService extends Service {
         return Service.START_NOT_STICKY;
     }
 
-    public void loadAndPlayMedia(MediaInfo mediaInfo) {
+    public void loadAndPlayMedia(MediaInfo mediaInfo, JSONObject customData) {
         try {
             videoCastManager.loadMedia(mediaInfo, true, 0);
+//			videoCastManager.loadMedia(mediaInfo, true, 0, customData);
         } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
             e.printStackTrace();
         }

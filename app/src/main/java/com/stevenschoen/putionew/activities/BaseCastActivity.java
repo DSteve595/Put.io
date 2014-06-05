@@ -26,6 +26,9 @@ import com.stevenschoen.putionew.cast.CastService;
 import com.stevenschoen.putionew.cast.CastService.CastServiceBinder;
 
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class BaseCastActivity extends ActionBarActivity implements CastService.CastCallbacks {
 
@@ -147,13 +150,28 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
             metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
 
             String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id + "/subtitles/default" +
-					PutioUtils.tokenWithStuff + "&format=webvtt";
-            MediaInfo mediaInfo = new MediaInfo.Builder(url)
+					utils.tokenWithStuff + "&format=webvtt";
+			JSONObject customData = null;
+			try {
+				customData = new JSONObject();
+				JSONObject cc = new JSONObject();
+				JSONArray tracks = new JSONArray();
+				JSONObject src = new JSONObject();
+				src.put("src", subtitleUrl);
+				tracks.put(src);
+				cc.put("tracks", tracks);
+				cc.put("active", 0);
+				customData.put("cc", cc);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			MediaInfo mediaInfo = new MediaInfo.Builder(url)
                     .setContentType(file.contentType)
                     .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                     .setMetadata(metaData)
+//					.setCustomData(customData)
                     .build();
-            castService.loadAndPlayMedia(mediaInfo);
+            castService.loadAndPlayMedia(mediaInfo, customData);
         }
     }
 

@@ -85,9 +85,6 @@ public class FileDetails extends Fragment {
 
     public final String baseUrl = "https://api.put.io/v2/";
 
-    private String token;
-    private String tokenWithStuff;
-
     private TextView textFileCreatedDate;
     private TextView textFileCreatedTime;
 
@@ -263,7 +260,7 @@ public class FileDetails extends Fragment {
                 }
 
                 String url = baseUrl + "files/"
-                        + origFileData.id + streamOrStreamMp4 + tokenWithStuff;
+                        + origFileData.id + streamOrStreamMp4 + utils.tokenWithStuff;
                 mCastCallbacks.load(newFileData, url, utils);
             }
         };
@@ -434,6 +431,9 @@ public class FileDetails extends Fragment {
                 case PutioUtils.ACTION_OPEN:
                     textBody.setText(getString(R.string.redownloadforopenbody));
                     break;
+				case PutioUtils.ACTION_SHARE:
+					textBody.setText(getString(R.string.redownloadforsharebody));
+					break;
             }
 
             Button buttonOpen = (Button) dialog.findViewById(R.id.button_redownload_open);
