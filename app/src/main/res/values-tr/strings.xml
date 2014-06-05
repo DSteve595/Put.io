@@ -36,21 +36,28 @@
     <string name="renametitle">Dosya yeniden adlandırılsın mı?</string>
     <plurals name="deletetitle">
         <item quantity="other">Dosya silinsin mi?</item>
+        <item quantity="other">Dosyalar silinsin mi?</item>
     </plurals>
     <plurals name="deletebody">
         <item quantity="other">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
-    </plurals>
+        <item quantity="other">Ancak hepsini baştan ekleyerek geri getirebilirsiniz.</item>
+		</plurals>
     <string name="removetransfertitle">Bu transfer kaldırılsın mı?</string>
     <string name="removetransferbody">İndirme iptal edilecek.</string>
+    <string name="downloadwillopen">İndirme bitince dosya açılacak.</string>
+    <string name="downloadwillshare">İndirme bitince dosya paylaşıma açılacak.</string>
     <string name="downloadfinishedopentitle">Dosya açılsın mı?</string>
     <string name="downloadfinishedsharetitle">Dosya paylaşılsın mı?</string>
     <string name="downloadfinishedbody">İndirmenin %1$s\'i tamamlandı.</string>
+    <string name="downloadpreparing">İndirme hazırlanıyor.</string>
+    <string name="downloadstarted">İndirme başladı.</string>
     <string name="redownloadtitle">Dosya tekrar indirilsin mi?</string>
     <string name="redownloadfordlbody">Daha önce indirilmiş görünüyor. Yine de indirilsin mi?</string>
     <string name="redownloadforopenbody">Daha önce indirilmiş görünüyor. Bu kopyayı açmak mı, yeniden indirmek mi istersiniz?</string>
-    <string name="addtransferstitle">Transferleri ekle</string>
+    <string name="redownloadforsharebody">Daha önce indirilmiş görünüyor. Bu kopyayı paylaşmak mı, yeniden indirmek mi istersiniz?</string>
+    <string name="addtransferstitle">Transferleri ekle.</string>
     <string name="applychangestitle">Değişiklikler uygulansın mı?</string>
-
+	
     <!-- Errors (for users) -->
     <string name="cantopenbecausefuckyou">Dosya açılırken hata oluştu.</string>
     <string name="cantopenbecausetype">Bu türde dosyayı açacak uygulamanız yok.</string>
@@ -62,16 +69,18 @@
     <string name="couldntconnect">Put.io bağlantısı yapılamadı. Çevrimiçi misiniz?</string>
     <string name="notatorrent">Bu bir torrent dosyasına benzemiyor!</string>
     <string name="couldntgetdownloadlink">İndirme bağlantısını alırken hata oluştu.</string>
-
+    <string name="noactivityfound">Kurulu uygulamaların hiçbiri bu dosyayı açamıyor.</string>
+	
     <!-- Other stuff -->
     <string name="account">Hesap</string>
     <string name="files">Dosyalar</string>
     <string name="transfers">Transferler</string>
     <string name="loginsuccess">Başarıyla oturum açıldı!</string>
-    <string name="size_is">Boyut:</string>
+    <string name="total_is">Toplam: %s</string>    
+	<string name="size_is">Boyut:</string>
     <string name="loading">Yükleniyor…</string>
     <string name="created">Oluşturuldu:</string>
-    <string name="at">at</string>
+    <string name="at">.</string>
     <string name="welcome">Hoşgeldiniz!</string>
     <string name="gotosite">Siteye git</string>
     <string name="applychanges">%1$s\'de kaydedilmemiş değişiklikleriniz var.\nUygulansın mı?</string>
@@ -88,7 +97,22 @@
     <string name="readytopaste">İndirme bağlantısı yapıştırılmaya hazır.</string>
     <string name="choosefile">Dosya seçin</string>
     <string name="cachesize">Önbellek boyutu</string>
-    <string name="cacheexplanation">Ne kadar alan önbellek için kullanılmalıdır?\nBu indirilen dosyaları etkilemez.</string>
+    <string name="cacheexplanation">Ne kadar alan önbellek için kullanılsın?\nBu indirilen dosyaları etkilemez.</string>
+	<string name="addtransfer_type_url">URL\'ler</string>
+    <string name="addtransfer_type_file">Torrent dosyası</string>
+    <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
+    <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
+
+    <!-- Notification stuff -->
+    <string name="notification_title_uploading_torrent">Torrent yükleniyor.</string>
+    <string name="notification_ticker_uploading_torrent">Torrent yükleniyor…</string>
+    <string name="notification_title_uploaded_torrent">Torrent yüklendi</string>
+    <string name="notification_body_uploaded_torrent">Şimdi getiriliyor! Bilgi için dokunun.</string>
+    <string name="notification_ticker_uploaded_torrent">Torrent yüklendi</string>
+    <string name="notification_title_error">Torrent yüklenemedi</string>
+    <string name="notification_body_error">Tekrar denemek ister misiniz?</string>
+    <string name="notification_ticker_error">Torrent yüklenemedi</string>
+    <string name="notification_button_retry">Tekrar dene</string>
 
     <!-- About screen -->
     <string name="appbysteven">Steven Schoen tarafından geliştirilen Android uygulaması.</string>
