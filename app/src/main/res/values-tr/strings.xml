@@ -35,13 +35,13 @@
     <string name="gettingstreamurlbody">Az sonra…</string>
     <string name="renametitle">Dosya yeniden adlandırılsın mı?</string>
     <plurals name="deletetitle">
-        <item quantity="other">Dosya silinsin mi?</item>
+        <item quantity="one">Dosya silinsin mi?</item>
         <item quantity="other">Dosyalar silinsin mi?</item>
     </plurals>
     <plurals name="deletebody">
-        <item quantity="other">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
+        <item quantity="one">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
         <item quantity="other">Ancak hepsini baştan ekleyerek geri getirebilirsiniz.</item>
-		</plurals>
+	</plurals>
     <string name="removetransfertitle">Bu transfer kaldırılsın mı?</string>
     <string name="removetransferbody">İndirme iptal edilecek.</string>
     <string name="downloadwillopen">İndirme bitince dosya açılacak.</string>
