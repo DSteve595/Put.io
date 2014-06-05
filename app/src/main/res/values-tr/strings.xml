@@ -40,8 +40,6 @@
     <plurals name="deletebody">
         <item quantity="other">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
     </plurals>
-    <string name="deletetitle">Dosya silinsin mi?</string>
-    <string name="deletebody">Ancak baştan ekleyerek geri getirebilirsiniz.</string>
     <string name="removetransfertitle">Bu transfer kaldırılsın mı?</string>
     <string name="removetransferbody">İndirme iptal edilecek.</string>
     <string name="downloadfinishedopentitle">Dosya açılsın mı?</string>
@@ -50,8 +48,6 @@
     <string name="redownloadtitle">Dosya tekrar indirilsin mi?</string>
     <string name="redownloadfordlbody">Daha önce indirilmiş görünüyor. Yine de indirilsin mi?</string>
     <string name="redownloadforopenbody">Daha önce indirilmiş görünüyor. Bu kopyayı açmak mı, yeniden indirmek mi istersiniz?</string>
-    <string name="sharetitle">Daha önce indirilmiş görünüyor. Yine de indirilsin mi?</string>
-    <string name="sharebody">Daha önce indirilmiş görünüyor. Bu kopyayı açmak mı, yeniden indirmek mi istersiniz?</string>
     <string name="addtransferstitle">Transferleri ekle</string>
     <string name="applychangestitle">Değişiklikler uygulansın mı?</string>
 

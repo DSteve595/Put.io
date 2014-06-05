@@ -54,8 +54,6 @@
     <string name="redownloadtitle">Re-télécharger le fichier ?</string>
     <string name="redownloadfordlbody">Il semblerait que cela ait déjà été téléchargé. Continuer ?</string>
     <string name="redownloadforopenbody">Il semblerait que cela ait déjà été téléchargé. Voulez vous ouvrir cette copie ou télécharger à nouveau ?</string>
-    <string name="sharetitle">Il semblerait que cela ait déjà été téléchargé. Continuer?</string>
-    <string name="sharebody">Il semblerait que cela ait déjà été téléchargé. Voulez vous ouvrir cette copie ou télécharger à nouveau ?</string>
     <string name="addtransferstitle">Ajouter un transfert ?</string>
     <string name="applychangestitle">Appliquer les modifications ?</string>
 
