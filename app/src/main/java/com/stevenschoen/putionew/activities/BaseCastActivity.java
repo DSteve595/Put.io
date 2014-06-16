@@ -69,7 +69,7 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
 			castService.videoCastManager.addMiniController(castBar);
 		}
 
-		if (resumed) {
+		if (resumed && castService != null) {
 			castService.videoCastManager.incrementUiCounter();
 			resumed = false;
 		}

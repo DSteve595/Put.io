@@ -77,7 +77,7 @@
     <string name="transfers">Transferler</string>
     <string name="loginsuccess">Başarıyla oturum açıldı!</string>
     <string name="total_is">Toplam: %s</string>    
-	<string name="size_is">Boyut:</string>
+	<string name="size_is">Boyut: %s</string>
     <string name="loading">Yükleniyor…</string>
     <string name="created">Oluşturuldu:</string>
     <string name="at">.</string>

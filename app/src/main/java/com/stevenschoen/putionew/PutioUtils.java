@@ -84,6 +84,7 @@ public class PutioUtils {
 
     public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
 //    public static final String CAST_APPLICATION_ID = "C18ACC9E";
+//	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
 
     public final static String baseUrl = "https://api.put.io/v2/";
 
@@ -1184,11 +1185,8 @@ public class PutioUtils {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork == null) {
-            return false;
-        }
-        return activeNetwork.isConnected();
-    }
+		return activeNetwork != null && activeNetwork.isConnected();
+	}
 
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;

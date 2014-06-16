@@ -123,8 +123,8 @@
     </style>
 
     <declare-styleable name="com.stevenschoen.putio.SizePreference">
-        <attr name="minValue" format="integer" />
-        <attr name="maxValue" format="integer" />
+        <attr name="minValue" format="integer"/>
+        <attr name="maxValue" format="integer"/>
     </declare-styleable>
 
     <style name="Putio.Dialog" parent="@style/Theme.Putio">
@@ -139,7 +139,7 @@
     </style>
 
     <style name="TextAppearance.Putio.DialogWindowTitle" parent="@android:style/Widget">
-        <item name="android:textColor">@color/putio_dark_text</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">26sp</item>
     </style>
 
@@ -152,6 +152,7 @@
     </style>
 
     <style name="Putio.Button" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:background">@drawable/btn_putio</item>
     </style>
 
