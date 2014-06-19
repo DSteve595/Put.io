@@ -148,6 +148,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".OpenDownloadReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+            </intent-filter>
+        </receiver>
+
         <service android:name=".PutioOpenFileService"/>
         <service android:name=".PutioTransfersService"/>
         <service android:name=".model.PutioRestService"/>
