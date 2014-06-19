@@ -66,7 +66,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -122,19 +121,11 @@ public class PutioUtils {
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.create();
 
-		OkHttpClient okHttpClient = new OkHttpClient();
-//		try {
-//			Cache cache = new Cache(context.getCacheDir(), FileUtils.ONE_MB * 5);
-//			okHttpClient.setCache(cache);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		OkClient okClient = new OkClient(okHttpClient);
-
 		RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder()
 				.setEndpoint(baseUrl)
+//				.setLogLevel(RestAdapter.LogLevel.FULL)
 				.setConverter(new GsonConverter(gson))
-				.setClient(okClient)
+				.setClient(new OkClient(new OkHttpClient()))
 				.setRequestInterceptor(new RequestInterceptor() {
 					@Override
 					public void intercept(RequestFacade request) {
@@ -298,33 +289,6 @@ public class PutioUtils {
 		}
 		return false;
 	}
-
-    private boolean postConvert(int id) {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-            connection.setDoOutput(true);
-
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     public void applyFileToServer(final Context context, final int id,
                                   String origName, final String newName) {
@@ -530,19 +494,6 @@ public class PutioUtils {
             }
         }
         new AddTransfersTask().execute();
-    }
-
-    public void convertToMp4Async(int id) {
-        class convertToMp4 extends AsyncTask<Integer, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Integer... id) {
-                postConvert(id[0]);
-                return null;
-            }
-        }
-
-        new convertToMp4().execute(id);
     }
 
     public Dialog confirmChangesDialog(Context context, String filename) {
@@ -835,26 +786,6 @@ public class PutioUtils {
         }
 
         new GetStreamUrlAndPlay().execute(url);
-    }
-
-    public InputStream getMp4JsonData(int id) throws SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/" + id + "/mp4" + tokenWithStuff);
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            return connection.getInputStream();
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public InputStream getDefaultSubtitleData(int id) throws SocketTimeoutException {

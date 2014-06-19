@@ -37,9 +37,9 @@ public class PutioAccountInfo implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeString(this.username);
-		out.writeString(this.mail);
-		out.writeParcelable(this.disk, 0);
+		out.writeString(username);
+		out.writeString(mail);
+		out.writeParcelable(disk, 0);
 	}
 	
 	public static final Creator CREATOR = new Creator() {

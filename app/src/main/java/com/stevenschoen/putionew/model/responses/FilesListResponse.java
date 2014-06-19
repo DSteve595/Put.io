@@ -4,14 +4,9 @@ import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import java.util.List;
 
-public class FilesListResponse {
-	private String status;
+public class FilesListResponse extends BasePutioResponse {
 	private List<PutioFileData> files;
 	private PutioFileData parent;
-
-	public String getStatus() {
-		return status;
-	}
 
 	public List<PutioFileData> getFiles() {
 		return files;

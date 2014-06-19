@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="160dp"
     android:layout_height="140dp"
     android:paddingBottom="16dp"
@@ -14,18 +15,17 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/border"
         android:scaleType="fitCenter"
-        android:src="@drawable/filepreview" />
+        android:src="@drawable/filepreview"/>
 
     <LinearLayout
-        android:id="@+id/asdf"
+        android:id="@+id/buttonbar_filepreview_actions"
         style="@style/Putio.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/image_filepreview_image"
         android:layout_centerHorizontal="true"
         android:background="@color/putio_dark"
-        android:showDividers="middle"
-        android:weightSum="2" >
+        android:weightSum="2">
 
         <Button
             android:id="@+id/button_filepreview_download"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/putio_clickable_button_dark"
-            android:text="@string/download" />
+            android:text="@string/download"/>
 
         <Button
             android:id="@+id/button_filepreview_open"
@@ -43,68 +43,72 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/putio_clickable_button_dark"
-            android:text="@string/open" />
+            android:text="@string/open"/>
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/filepreview_convert"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:layout_alignBottom="@id/image_filepreview_image"
-        android:visibility="invisible" >
+        android:layout_below="@id/buttonbar_filepreview_actions">
 
-        <Button
-            android:id="@+id/button_filepreview_convert"
-            style="@style/Putio.ButtonBar.Button"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/putio_dark"
+            android:foreground="?attr/dividerVertical"/>
+
+        <TextView
+            android:id="@+id/button_filepreview_convert"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/putio_clickable_convert"
+            android:gravity="center"
             android:text="Convert to MP4"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:id="@+id/holder_filepreview_available"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@color/putio_dark"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="invisible" >
+            android:visibility="invisible">
 
             <ImageView
                 android:id="@+id/image_filepreview_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/putio_checkbox" />
+                android:src="@drawable/putio_checkbox"/>
 
             <TextView
                 android:id="@+id/text_filepreview_mp4ready"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="MP4 available"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/holder_filepreview_converting"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@color/putio_dark"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="invisible" >
+            android:visibility="invisible">
 
             <ProgressBar
                 android:id="@+id/item_filepreview_converting"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:padding="2dp"/>
 
             <TextView
                 android:id="@+id/text_filepreview_converting"
@@ -112,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:text="Converting to MP4…"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
     </RelativeLayout>
 

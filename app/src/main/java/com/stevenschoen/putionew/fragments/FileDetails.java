@@ -2,11 +2,11 @@ package com.stevenschoen.putionew.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,16 +31,17 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
+import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioMp4Status;
+import com.stevenschoen.putionew.model.responses.FileResponse;
+import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -54,8 +55,11 @@ public class FileDetails extends Fragment {
     private static final String MP4_AVAILABLE = "COMPLETED";
     private static final String MP4_IN_QUEUE = "IN_QUEUE";
     private static final String MP4_CONVERTING = "CONVERTING";
-    private String mp4Status;
+    private PutioMp4Status mp4Status;
 
+	private TextView mp4Convert;
+	private View mp4Available;
+	private View mp4Converting;
     private TextView textPercent;
 
     private Bitmap imagePreviewBitmap;
@@ -80,10 +84,17 @@ public class FileDetails extends Fragment {
     private Callbacks mCallbacks = sDummyCallbacks;
     private CastCallbacks mCastCallbacks = sDummyCastCallbacks;
 
-    private SharedPreferences sharedPrefs;
-	PutioUtils utils;
+	private PutioUtils utils;
 
-    public final String baseUrl = "https://api.put.io/v2/";
+    private Handler handler;
+	private Runnable updateMp4StatusRunnable = new Runnable() {
+		@Override
+		public void run() {
+			utils.getJobManager().addJobInBackground(new PutioRestInterface.GetMp4StatusJob(
+					utils, getFileId()));
+		}
+	};
+	private boolean startedMp4StatusCheck = false;
 
     private TextView textFileCreatedDate;
     private TextView textFileCreatedTime;
@@ -102,21 +113,28 @@ public class FileDetails extends Fragment {
             newFileData = savedInstanceState.getParcelable("newFileData");
         } else {
             origFileData = getArguments().getParcelable("fileData");
-            newFileData = getArguments().getParcelable("fileData");
+            newFileData = origFileData;
         }
+
 		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
-    }
+
+		utils.getEventBus().register(this);
+
+		handler = new Handler();
+	}
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int fileDetailsLayoutId = R.layout.filedetails;
-        if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
-            fileDetailsLayoutId = R.layout.filedetailsgbhori;
-        } else if (!UIUtils.hasHoneycomb() && PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
-            fileDetailsLayoutId = R.layout.filedetailsgbvert;
-        } else if (!UIUtils.hasHoneycomb()) {
-            fileDetailsLayoutId = R.layout.filedetailsgbvert;
-        }
+		if (!UIUtils.hasHoneycomb()) {
+			if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
+				fileDetailsLayoutId = R.layout.filedetailsgbhori;
+			} else if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
+				fileDetailsLayoutId = R.layout.filedetailsgbvert;
+			} else {
+				fileDetailsLayoutId = R.layout.filedetailsgbvert;
+			}
+		}
 
         final View view = inflater.inflate(fileDetailsLayoutId, container, false);
 
@@ -181,45 +199,7 @@ public class FileDetails extends Fragment {
             }
         });
 
-//        class updateFileTask extends AsyncTask<Void, Void, PutioFileData> {
-//            protected PutioFileData doInBackground(Void... nothing) {
-//                JSONObject obj;
-//                try {
-//                    InputStream is = utils.getFileJsonData(getFileId());
-//                    String string = PutioUtils.convertStreamToString(is);
-//                    obj = new JSONObject(string).getJSONObject("file");
-//
-//                    newFileData = new PutioFileData(
-//                            origFileData.isShared,
-//                            obj.getString("name"),
-//                            obj.getString("screenshot"),
-//                            obj.getString("created_at"),
-//                            obj.getInt("parent_id"),
-//                            origFileData.hasMp4,
-//                            obj.getString("content_type"),
-//                            obj.getString("icon"),
-//                            obj.getInt("id"),
-//                            obj.getLong("size"));
-//                    return newFileData;
-//                } catch (SocketTimeoutException e) {
-//                    return null;
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            public void onPostExecute(final PutioFileData file) {
-//                if (file != null) {
-//                    String[] created = PutioUtils.separateIsoTime(file.createdAt);
-//                    if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
-//                        textFileCreatedDate.setText(created[0]);
-//                        textFileCreatedTime.setText(created[1]);
-//                    }
-//                }
-//            }
-//        }
-//        new updateFileTask().execute();
+		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
 
         Button btnCancel = (Button) view.findViewById(R.id.button_filedetails_cancel);
         btnCancel.setOnClickListener(new OnClickListener() {
@@ -246,18 +226,25 @@ public class FileDetails extends Fragment {
 
         Button btnOpen = (Button) view.findViewById(R.id.button_filepreview_open);
         OnClickListener playMediaListener = new OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
                 String streamOrStreamMp4;
-                if (origFileData.isMp4Available) {
-                    streamOrStreamMp4 = "/mp4/stream";
-                } else {
-                    streamOrStreamMp4 = "/stream";
-                }
+				if (mp4Status == null) {
+					if (origFileData.isMp4Available) {
+						streamOrStreamMp4 = "/mp4/stream";
+					} else {
+						streamOrStreamMp4 = "/stream";
+					}
+				} else {
+					if (mp4Status.getStatus().equals(MP4_AVAILABLE)) {
+						streamOrStreamMp4 = "/mp4/stream";
+					} else {
+						streamOrStreamMp4 = "/stream";
+					}
+				}
 
-                String url = baseUrl + "files/"
-                        + origFileData.id + streamOrStreamMp4 + utils.tokenWithStuff;
+                String url = PutioUtils.baseUrl + "/files/"
+                        + getFileId() + streamOrStreamMp4 + utils.tokenWithStuff;
                 mCastCallbacks.load(newFileData, url, utils);
             }
         };
@@ -292,7 +279,7 @@ public class FileDetails extends Fragment {
             protected Bitmap doInBackground(Void... nothing) {
                 URL url = null;
                 try {
-                    url = new URL(origFileData.screenshot);
+                    url = new URL(newFileData.screenshot);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -338,7 +325,7 @@ public class FileDetails extends Fragment {
                 imagePreviewBitmap = bitmap;
             }
         }
-        if (!origFileData.screenshot.matches("null")) {
+        if (newFileData.screenshot != null && !newFileData.screenshot.matches("null")) {
             if (savedInstanceState != null && savedInstanceState.containsKey("imagePreviewBitmap")) {
                 imagePreviewBitmap = savedInstanceState.getParcelable("imagePreviewBitmap");
                 changeImagePreview(imagePreviewBitmap, false);
@@ -349,7 +336,7 @@ public class FileDetails extends Fragment {
 
         boolean isMedia = false;
         for (int i = 0; i < PutioUtils.streamingMediaTypes.length; i++) {
-            if (origFileData.contentType.contains(PutioUtils.streamingMediaTypes[i])) {
+            if (newFileData.contentType.contains(PutioUtils.streamingMediaTypes[i])) {
                 isMedia = true;
 
                 btnOpen.setOnClickListener(playMediaListener);
@@ -360,57 +347,26 @@ public class FileDetails extends Fragment {
             btnOpen.setOnClickListener(openFileListener);
         }
 
-        final Button buttonConvert = (Button) view.findViewById(R.id.button_filepreview_convert);
-        buttonConvert.setOnClickListener(new OnClickListener() {
+		mp4Convert = (TextView) view.findViewById(R.id.button_filepreview_convert);
+		mp4Convert.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostConvertToMp4Job(
+						utils, getFileId()));
+				v.setEnabled(false);
 
-            @Override
-            public void onClick(View v) {
-                utils.convertToMp4Async(getFileId());
-            }
-        });
+				if (!startedMp4StatusCheck) {
+					handler.post(updateMp4StatusRunnable);
+					startedMp4StatusCheck = true;
+				}
+			}
+		});
 
-        if (newFileData.contentType.contains("video")) {
-            if (newFileData.isMp4Available) {
-                setBarGraphics(MP4_AVAILABLE, buttonConvert,
-                        view.findViewById(R.id.holder_filepreview_available),
-                        view.findViewById(R.id.holder_filepreview_converting));
-            } else {
-                setBarGraphics(MP4_NOT_AVAILABLE, buttonConvert,
-                        view.findViewById(R.id.holder_filepreview_available),
-                        view.findViewById(R.id.holder_filepreview_converting));
-            }
+		mp4Available = view.findViewById(R.id.holder_filepreview_available);
+		mp4Converting = view.findViewById(R.id.holder_filepreview_converting);
 
-            class updateMp4Task extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... nothing) {
-                    JSONObject obj;
-                    try {
-                        InputStream is = utils.getMp4JsonData(getFileId());
-                        String string = PutioUtils.convertStreamToString(is);
-                        obj = new JSONObject(string).getJSONObject("mp4");
-                        mp4Status = obj.getString("status");
-
-                        return null;
-                    } catch (SocketTimeoutException e) {
-                        setBarGraphics(MP4_NOT_AVAILABLE, buttonConvert,
-                                view.findViewById(R.id.holder_filepreview_available),
-                                view.findViewById(R.id.holder_filepreview_converting));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    return null;
-                }
-
-                @Override
-                public void onPostExecute(Void nothing) {
-                    setBarGraphics(mp4Status, buttonConvert,
-                            view.findViewById(R.id.holder_filepreview_available),
-                            view.findViewById(R.id.holder_filepreview_converting));
-                }
-            }
-            new updateMp4Task().execute();
-        }
+		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetMp4StatusJob(
+				utils, getFileId()));
 
         return view;
     }
@@ -502,28 +458,28 @@ public class FileDetails extends Fragment {
 		return false;
 	}
 
-	private void setBarGraphics(String status, View convertButton, View available, View converting) {
+	private void updateMp4Bar() {
         if (isAdded()) {
-            switch (status) {
+            switch (mp4Status.getStatus()) {
                 case MP4_AVAILABLE:
-                    convertButton.setVisibility(View.INVISIBLE);
-                    available.setVisibility(View.VISIBLE);
-                    converting.setVisibility(View.INVISIBLE);
+                    mp4Convert.setVisibility(View.INVISIBLE);
+                    mp4Available.setVisibility(View.VISIBLE);
+                    mp4Converting.setVisibility(View.INVISIBLE);
                     break;
                 case MP4_CONVERTING:
-                    convertButton.setVisibility(View.INVISIBLE);
-                    available.setVisibility(View.INVISIBLE);
-                    converting.setVisibility(View.VISIBLE);
+					mp4Convert.setVisibility(View.INVISIBLE);
+					mp4Available.setVisibility(View.INVISIBLE);
+					mp4Converting.setVisibility(View.VISIBLE);
                     break;
                 case MP4_IN_QUEUE:
-                    convertButton.setVisibility(View.INVISIBLE);
-                    available.setVisibility(View.INVISIBLE);
-                    converting.setVisibility(View.VISIBLE);
+					mp4Convert.setVisibility(View.INVISIBLE);
+					mp4Available.setVisibility(View.INVISIBLE);
+					mp4Converting.setVisibility(View.VISIBLE);
                     break;
                 case MP4_NOT_AVAILABLE:
-                    convertButton.setVisibility(View.VISIBLE);
-                    available.setVisibility(View.INVISIBLE);
-                    converting.setVisibility(View.INVISIBLE);
+					mp4Convert.setVisibility(View.VISIBLE);
+					mp4Available.setVisibility(View.INVISIBLE);
+					mp4Converting.setVisibility(View.INVISIBLE);
                     break;
             }
         }
@@ -553,6 +509,34 @@ public class FileDetails extends Fragment {
     public void updatePercent(int percent) {
         textPercent.setText(Integer.toString(percent));
     }
+
+	public void onEventMainThread(Mp4StatusResponse result) {
+		mp4Status = result.getMp4Status();
+		updateMp4Bar();
+
+		if (!startedMp4StatusCheck && shouldCheckForMp4Updates()) {
+			handler.postDelayed(updateMp4StatusRunnable, 5000);
+			startedMp4StatusCheck = true;
+		}
+	}
+
+	public void onEventMainThread(FileResponse result) {
+		if (result != null) {
+			newFileData = result.getFile();
+
+			String[] created = PutioUtils.separateIsoTime(newFileData.createdAt);
+			if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
+				textFileCreatedDate.setText(created[0]);
+				textFileCreatedTime.setText(created[1]);
+			}
+		}
+	}
+
+	private boolean shouldCheckForMp4Updates() {
+		return (mp4Status.getStatus().equals(MP4_IN_QUEUE) ||
+						mp4Status.getStatus().equals(MP4_CONVERTING));
+
+	}
 
     public int getFileId() {
         return origFileData.id;
@@ -595,8 +579,16 @@ public class FileDetails extends Fragment {
         mCastCallbacks = sDummyCastCallbacks;
     }
 
-    public void applyFileToServerAndFinish() {
-        utils.applyFileToServer(getActivity(), newFileData.id, origFileData.name, newFileData.name);
+	@Override
+	public void onDestroy() {
+		utils.getEventBus().unregister(this);
+		handler.removeCallbacks(updateMp4StatusRunnable);
+
+		super.onDestroy();
+	}
+
+	public void applyFileToServerAndFinish() {
+        utils.applyFileToServer(getActivity(), getFileId(), origFileData.name, newFileData.name);
         if (!UIUtils.isTablet(getActivity())) {
             getActivity().finish();
         } else {
