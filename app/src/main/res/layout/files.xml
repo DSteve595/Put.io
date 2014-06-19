@@ -5,7 +5,7 @@
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/filesSwipeRefresh"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ListView
@@ -16,26 +16,18 @@
             android:clipToPadding="false"
             android:fastScrollEnabled="true"
             android:listSelector="@drawable/putio_clickable_list"
+            android:nextFocusDown="@+id/files_up"
             android:scrollbarStyle="insideOverlay"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <RelativeLayout
-        android:id="@+id/holder_files_up"
+    <include
+        layout="@layout/files_up"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible">
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignLeft="@+id/files_up"
-            android:layout_alignRight="@+id/files_up"
-            android:background="@drawable/card_bg_r4_shadow"/>
-
-        <include layout="@layout/files_up"/>
-    </RelativeLayout>
+        android:nextFocusUp="@id/fileslist"
+        android:visibility="invisible"/>
 
     <include
         android:id="@+id/files_emptysub"

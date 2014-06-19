@@ -36,6 +36,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewHelper;
+import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioNotification;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
@@ -148,7 +149,9 @@ public class Putio extends BaseCastActivity implements
 
     private void handleIntent(Intent intent) {
         if (intent.getAction() != null) {
-            if (intent.getAction().matches(Intent.ACTION_SEARCH) && sharedPrefs.getBoolean("loggedIn", false)) {
+            if (intent.getAction().matches(Intent.ACTION_SEARCH) &&
+					sharedPrefs.getBoolean("loggedIn", false) &&
+					filesFragment != null) {
                 String query = intent.getStringExtra(SearchManager.QUERY);
                 filesFragment.initSearch(query);
             }
@@ -282,7 +285,7 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void init() {
-        utils = new PutioUtils(sharedPrefs);
+		this.utils = ((PutioApplication) getApplication()).getPutioUtils();
 
         if (UIUtils.isTablet(this)) {
             setupTabletLayout();
@@ -402,7 +405,7 @@ public class Putio extends BaseCastActivity implements
     private void setupPhoneLayout() {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         ViewHelper.setAlpha(tabs, 0);
         tabs.setShouldExpand(true);
         tabs.setTabBackground(R.drawable.putio_tab_indicator);
@@ -597,9 +600,7 @@ public class Putio extends BaseCastActivity implements
         }
     };
 
-    private PagerSlidingTabStrip tabs;
-
-    @Override
+	@Override
     public void onBackPressed() {
         if (UIUtils.isTablet(this)) {
             if (filesFragment.getCurrentFolderId() == 0) {
@@ -609,11 +610,9 @@ public class Putio extends BaseCastActivity implements
             }
         } else {
             if (hasWindowFocus()) {
-                if (filesFragment.getCurrentFolderId() == 0) {
-                    super.onBackPressed();
-                } else {
-                    filesFragment.goBack();
-                }
+                if (!filesFragment.goBack()) {
+					super.onBackPressed();
+				}
             }
         }
     }

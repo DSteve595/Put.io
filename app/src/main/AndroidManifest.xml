@@ -13,6 +13,7 @@
 
     <application
         android:debuggable="false"
+        android:name=".PutioApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/putio"
         android:theme="@style/Theme.Putio"
@@ -149,6 +150,7 @@
 
         <service android:name=".PutioOpenFileService"/>
         <service android:name=".PutioTransfersService"/>
+        <service android:name=".model.PutioRestService"/>
         <service android:name="com.stevenschoen.putionew.cast.CastService"/>
         <service
             android:name="com.google.sample.castcompanionlibrary.notification.VideoCastNotificationService"

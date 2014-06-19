@@ -38,10 +38,13 @@ android {
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
     }
 }
 
@@ -54,7 +57,12 @@ dependencies {
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
-    compile 'com.squareup.picasso:picasso:2.2.+'
+    compile 'com.squareup.retrofit:retrofit:1.6.0'
+    compile 'com.path:android-priority-jobqueue:1.1.2'
+    compile 'com.squareup.okhttp:okhttp:2.0.+'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.+'
+    compile 'de.greenrobot:eventbus:2.2.1'
+    compile 'com.squareup.picasso:picasso:2.3.+'
     compile project(':libraries:aFileChooser')
     compile project(':libraries:CastCompanionLibrary-android')
 }

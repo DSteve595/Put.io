@@ -19,11 +19,11 @@ import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.common.images.WebImage;
 import com.google.sample.castcompanionlibrary.widgets.MiniController;
-import com.stevenschoen.putionew.PutioFileData;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.cast.CastService;
 import com.stevenschoen.putionew.cast.CastService.CastServiceBinder;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -146,7 +146,7 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
             MediaMetadata metaData = new MediaMetadata(file.contentType.contains("video") ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
             metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(file.name));
-            metaData.addImage(new WebImage(Uri.parse(file.iconUrl)));
+            metaData.addImage(new WebImage(Uri.parse(file.icon)));
             metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
 
             String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id + "/subtitles/default" +

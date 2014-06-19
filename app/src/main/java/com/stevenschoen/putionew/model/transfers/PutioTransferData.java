@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew;
+package com.stevenschoen.putionew.model.transfers;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -17,10 +17,6 @@ public class PutioTransferData implements Parcelable {
 	public String status;
 	public String statusMessage;
 	public int saveParentId;
-	
-	public PutioTransferData() {
-		super();
-	}
 
 	public PutioTransferData(int id, int fileId, long size, String name,
 			String estimatedTime, String createdTime, boolean extract,

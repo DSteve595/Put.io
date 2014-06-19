@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
@@ -29,7 +30,7 @@ public class TransfersActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		utils = new PutioUtils(sharedPrefs);
+		this.utils = ((PutioApplication) getApplication()).getPutioUtils();
 		
 		if (getIntent().getExtras() != null && getIntent().getIntExtra("mode", 0) != 0) {
 			int mode = getIntent().getIntExtra("mode", 0);

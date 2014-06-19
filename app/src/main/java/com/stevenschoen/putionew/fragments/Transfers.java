@@ -7,10 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -25,7 +23,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.stevenschoen.putionew.PutioTransferData;
+import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioTransferLayout;
 import com.stevenschoen.putionew.PutioTransfersService;
 import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder;
@@ -34,17 +32,17 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.Putio;
+import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Transfers extends Fragment {
 	
 	private TransfersAdapter adapter;
 	private ArrayList<PutioTransferLayout> transferLayouts = new ArrayList<>();
-	PutioTransferData[] transfersData;
+	private List<PutioTransferData> transfersData;
 	private ListView listview;
-
-	SharedPreferences sharedPrefs;
 
 	PutioUtils utils;
 	PutioTransfersService transfersService;
@@ -59,8 +57,8 @@ public final class Transfers extends Fragment {
 	private View loadingView;
 	private View emptyView;
 	private View noNetworkView;
-	
-    public interface Callbacks {
+
+	public interface Callbacks {
     	public void transfersReady();
         public void onTransferSelected(int parentId, int id);
     }
@@ -79,9 +77,7 @@ public final class Transfers extends Fragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-		utils = new PutioUtils(sharedPrefs);
+		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
 		
 		Intent transfersServiceIntent = new Intent(getActivity(), PutioTransfersService.class);
 		getActivity().startService(transfersServiceIntent);
@@ -107,8 +103,8 @@ public final class Transfers extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> a, View view, int position,
 					long id) {
-				if (transfersData[position].status.matches("COMPLETED") || transfersData[position].status.matches("SEEDING")) {
-					mCallbacks.onTransferSelected(transfersData[position].saveParentId, transfersData[position].fileId);
+				if (transfersData.get(position).status.matches("COMPLETED") || transfersData.get(position).status.matches("SEEDING")) {
+					mCallbacks.onTransferSelected(transfersData.get(position).saveParentId, transfersData.get(position).fileId);
 				}
 			}
 		});
@@ -149,7 +145,7 @@ public final class Transfers extends Fragment {
 				noNetworkView.setVisibility(View.VISIBLE);
 				break;
 			case VIEWMODE_LISTOREMPTY:
-				if (transfersData == null || transfersData.length == 0) {
+				if (transfersData == null || transfersData.isEmpty()) {
 					setViewMode(VIEWMODE_EMPTY);
 				} else {
 					setViewMode(VIEWMODE_LIST);
@@ -164,7 +160,7 @@ public final class Transfers extends Fragment {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		
-		menu.setHeaderTitle(transfersData[info.position].name);
+		menu.setHeaderTitle(transfersData.get(info.position).name);
 	    MenuInflater inflater = getActivity().getMenuInflater();
 	    inflater.inflate(R.menu.context_transfers, menu);
 	}
@@ -199,10 +195,10 @@ public final class Transfers extends Fragment {
 	}
 
 	private void initRemoveTransfer(int idInList) {
-		if (transfersData[idInList].status.matches("COMPLETED")) {
-			utils.removeTransferAsync(getActivity(), transfersData[idInList].id);
+		if (transfersData.get(idInList).status.matches("COMPLETED")) {
+			utils.removeTransferAsync(getActivity(), transfersData.get(idInList).id);
 		} else {
-			utils.showRemoveTransferDialog(getActivity(), transfersData[idInList].id);
+			utils.showRemoveTransferDialog(getActivity(), transfersData.get(idInList).id);
 		}
 	}
 	
@@ -238,8 +234,8 @@ public final class Transfers extends Fragment {
         getActivity().unregisterReceiver(transfersAvailableReceiver);
     }
 	
-	public void updateTransfers(PutioTransferData[] transfers) {
-		if (transfers == null || transfers.length == 0) {
+	public void updateTransfers(List<PutioTransferData> transfers) {
+		if (transfers == null || transfers.isEmpty()) {
 			setViewMode(VIEWMODE_EMPTY);
 			transfersData = null;
 			return;

@@ -23,6 +23,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
@@ -33,8 +34,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.path.android.jobqueue.JobManager;
+import com.squareup.okhttp.OkHttpClient;
 import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.activities.TransfersActivity;
+import com.stevenschoen.putionew.model.PutioRestInterface;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -52,8 +60,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,6 +75,12 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import de.greenrobot.event.EventBus;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.client.OkClient;
+import retrofit.converter.GsonConverter;
 
 public class PutioUtils {
     public static final int TYPE_AUDIO = 1;
@@ -86,19 +98,74 @@ public class PutioUtils {
 //    public static final String CAST_APPLICATION_ID = "C18ACC9E";
 //	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
 
-    public final static String baseUrl = "https://api.put.io/v2/";
+	private PutioRestInterface putioRestInterface;
+	private FilesCache filesCache;
+	private JobManager jobManager;
+	private EventBus eventBus;
 
     public String token;
     public String tokenWithStuff;
 
+	public static final String baseUrl = "https://api.put.io/v2";
+
     private SharedPreferences sharedPrefs;
 
-    public PutioUtils(SharedPreferences sharedPrefs) {
+    public PutioUtils(Context context) throws NoTokenException {
+		this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         this.token = sharedPrefs.getString("token", null);
+		if (this.token == null) {
+			throw new NoTokenException();
+		}
         this.tokenWithStuff = "?oauth_token=" + token;
 
-        this.sharedPrefs = sharedPrefs;
-    }
+		Gson gson = new GsonBuilder()
+				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+				.create();
+
+		OkHttpClient okHttpClient = new OkHttpClient();
+//		try {
+//			Cache cache = new Cache(context.getCacheDir(), FileUtils.ONE_MB * 5);
+//			okHttpClient.setCache(cache);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		OkClient okClient = new OkClient(okHttpClient);
+
+		RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder()
+				.setEndpoint(baseUrl)
+				.setConverter(new GsonConverter(gson))
+				.setClient(okClient)
+				.setRequestInterceptor(new RequestInterceptor() {
+					@Override
+					public void intercept(RequestFacade request) {
+						request.addQueryParam("oauth_token", token);
+					}
+				});
+		RestAdapter restAdapter = restAdapterBuilder.build();
+		this.putioRestInterface = restAdapter.create(PutioRestInterface.class);
+
+		this.filesCache = new FilesCache(context);
+		this.jobManager = new JobManager(context);
+		this.eventBus = new EventBus();
+	}
+
+	public PutioRestInterface getRestInterface() {
+		return putioRestInterface;
+	}
+
+	public FilesCache getFilesCache() {
+		return filesCache;
+	}
+
+	public JobManager getJobManager() {
+		return jobManager;
+	}
+
+	public EventBus getEventBus() {
+		return eventBus;
+	}
+
+	public class NoTokenException extends Exception { }
 
     private boolean postRename(int id, String newName) {
         URL url = null;
@@ -536,71 +603,6 @@ public class PutioUtils {
         return null;
     }
 
-    public InputStream getFilesListJsonData(int id) throws SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/list" + tokenWithStuff);
-            if (id != 0) {
-                url = new URL(url + "&parent_id=" + id);
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            return connection.getInputStream();
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public InputStream getFilesSearchJsonData(String query)
-            throws UnsupportedEncodingException, SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/search/" + URLEncoder.encode(query, "UTF-8") + "/page/-1"
-                    + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            return connection.getInputStream();
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public InputStream getFileJsonData(int id) throws SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/" + id + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            return connection.getInputStream();
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public InputStream getNotificationsJsonData() throws SocketTimeoutException {
         URL url = null;
         try {
@@ -631,7 +633,7 @@ public class PutioUtils {
 				for (PutioFileData file : files) {
 					long dlId;
 					if (UIUtils.hasHoneycomb()) {
-						if (file.isFolder) {
+						if (file.isFolder()) {
 							int[] folder = new int[]{file.id};
 							dlId = downloadZipWithoutUrl(context, folder, file.name);
 						} else {
@@ -640,7 +642,7 @@ public class PutioUtils {
 						}
 					} else {
 						publishProgress(0);
-						if (file.isFolder) {
+						if (file.isFolder()) {
 							int[] folder = new int[]{file.id};
 							dlId = downloadZipWithUrl(context, folder, file.name,
 									getZipDownloadUrl(folder).replace("https://", "http://"));
@@ -833,26 +835,6 @@ public class PutioUtils {
         }
 
         new GetStreamUrlAndPlay().execute(url);
-    }
-
-    public InputStream getTransfersListJsonData() throws SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "transfers/list" + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            return connection.getInputStream();
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public InputStream getMp4JsonData(int id) throws SocketTimeoutException {
@@ -1122,63 +1104,6 @@ public class PutioUtils {
                 removeDialog.cancel();
             }
         });
-    }
-
-    public PutioAccountInfo getAccountInfo() throws SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "account/info" + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            String string = convertStreamToString(connection.getInputStream());
-            try {
-                JSONObject json = new JSONObject(string).getJSONObject("info");
-                JSONObject disk = json.getJSONObject("disk");
-                String username = null;
-                String mail = null;
-                long avail = 0;
-                long used = 0;
-                long size = 0;
-                try {
-                    username = json.getString("username");
-                } catch (JSONException e) {
-                }
-                try {
-                    mail = json.getString("mail");
-                } catch (JSONException e) {
-                }
-                try {
-                    avail = disk.getLong("avail");
-                } catch (JSONException e) {
-                }
-                try {
-                    used = disk.getLong("used");
-                } catch (JSONException e) {
-                }
-                try {
-                    size = disk.getLong("size");
-                } catch (JSONException e) {
-                }
-                return new PutioAccountInfo(
-                        username,
-                        mail,
-                        avail,
-                        used,
-                        size);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public boolean isConnected(Context context) {

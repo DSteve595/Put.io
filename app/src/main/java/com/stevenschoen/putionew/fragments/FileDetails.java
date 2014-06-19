@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,11 +26,12 @@ import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.FlushedInputStream;
-import com.stevenschoen.putionew.PutioFileData;
+import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONObject;
@@ -104,10 +104,7 @@ public class FileDetails extends Fragment {
             origFileData = getArguments().getParcelable("fileData");
             newFileData = getArguments().getParcelable("fileData");
         }
-
-        sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(getActivity());
-        utils = new PutioUtils(sharedPrefs);
+		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -161,7 +158,7 @@ public class FileDetails extends Fragment {
 
         });
 
-        String[] created = PutioUtils.separateIsoTime(origFileData.createdTime);
+        String[] created = PutioUtils.separateIsoTime(origFileData.createdAt);
         TextView textFileCreatedCreated = (TextView) view.findViewById(R.id.text_fileDetailsCreatedStatic);
         textFileCreatedCreated.setText(getString(R.string.created) + " ");
 
@@ -184,45 +181,45 @@ public class FileDetails extends Fragment {
             }
         });
 
-        class updateFileTask extends AsyncTask<Void, Void, PutioFileData> {
-            protected PutioFileData doInBackground(Void... nothing) {
-                JSONObject obj;
-                try {
-                    InputStream is = utils.getFileJsonData(getFileId());
-                    String string = PutioUtils.convertStreamToString(is);
-                    obj = new JSONObject(string).getJSONObject("file");
-
-                    newFileData = new PutioFileData(
-                            origFileData.isShared,
-                            obj.getString("name"),
-                            obj.getString("screenshot"),
-                            obj.getString("created_at"),
-                            obj.getInt("parent_id"),
-                            origFileData.hasMp4,
-                            obj.getString("content_type"),
-                            obj.getString("icon"),
-                            obj.getInt("id"),
-                            obj.getLong("size"));
-                    return newFileData;
-                } catch (SocketTimeoutException e) {
-                    return null;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            public void onPostExecute(final PutioFileData file) {
-                if (file != null) {
-                    String[] created = PutioUtils.separateIsoTime(file.createdTime);
-                    if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
-                        textFileCreatedDate.setText(created[0]);
-                        textFileCreatedTime.setText(created[1]);
-                    }
-                }
-            }
-        }
-        new updateFileTask().execute();
+//        class updateFileTask extends AsyncTask<Void, Void, PutioFileData> {
+//            protected PutioFileData doInBackground(Void... nothing) {
+//                JSONObject obj;
+//                try {
+//                    InputStream is = utils.getFileJsonData(getFileId());
+//                    String string = PutioUtils.convertStreamToString(is);
+//                    obj = new JSONObject(string).getJSONObject("file");
+//
+//                    newFileData = new PutioFileData(
+//                            origFileData.isShared,
+//                            obj.getString("name"),
+//                            obj.getString("screenshot"),
+//                            obj.getString("created_at"),
+//                            obj.getInt("parent_id"),
+//                            origFileData.hasMp4,
+//                            obj.getString("content_type"),
+//                            obj.getString("icon"),
+//                            obj.getInt("id"),
+//                            obj.getLong("size"));
+//                    return newFileData;
+//                } catch (SocketTimeoutException e) {
+//                    return null;
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
+//
+//            public void onPostExecute(final PutioFileData file) {
+//                if (file != null) {
+//                    String[] created = PutioUtils.separateIsoTime(file.createdAt);
+//                    if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
+//                        textFileCreatedDate.setText(created[0]);
+//                        textFileCreatedTime.setText(created[1]);
+//                    }
+//                }
+//            }
+//        }
+//        new updateFileTask().execute();
 
         Button btnCancel = (Button) view.findViewById(R.id.button_filedetails_cancel);
         btnCancel.setOnClickListener(new OnClickListener() {
@@ -253,7 +250,7 @@ public class FileDetails extends Fragment {
             @Override
             public void onClick(View arg0) {
                 String streamOrStreamMp4;
-                if (origFileData.hasMp4) {
+                if (origFileData.isMp4Available) {
                     streamOrStreamMp4 = "/mp4/stream";
                 } else {
                     streamOrStreamMp4 = "/stream";
@@ -373,7 +370,7 @@ public class FileDetails extends Fragment {
         });
 
         if (newFileData.contentType.contains("video")) {
-            if (newFileData.hasMp4) {
+            if (newFileData.isMp4Available) {
                 setBarGraphics(MP4_AVAILABLE, buttonConvert,
                         view.findViewById(R.id.holder_filepreview_available),
                         view.findViewById(R.id.holder_filepreview_converting));

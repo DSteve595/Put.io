@@ -6,16 +6,9 @@ import android.os.Build;
 
 public class UIUtils {
 
-	public static boolean isGoogleTV(Context context) {
+	public static boolean isTV(Context context) {
 		return context.getPackageManager().hasSystemFeature(
-				"com.google.android.tv");
-	}
-
-	public static boolean hasFroyo() {
-		// Can use static final constants like FROYO, declared in later versions
-		// of the OS since they are inlined at compile time. This is guaranteed
-		// behavior.
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+				"android.hardware.type.television");
 	}
 
 	public static boolean hasGingerbread() {
@@ -44,9 +37,5 @@ public class UIUtils {
 
 	public static boolean isTablet(Context context) {
 		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-	}
-
-	public static boolean isHoneycombTablet(Context context) {
-		return hasHoneycomb() && isTablet(context);
 	}
 }

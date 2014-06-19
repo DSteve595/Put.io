@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/card_bg_r4_clickable">
+    android:background="@drawable/card_bg_r4_clickable_withshadow"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/image_up"
