@@ -42,6 +42,7 @@ import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.CachedFilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
@@ -398,7 +399,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		
 		ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
 		btnUndoName.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				textFileName.setText(fileData.get(index).name);
@@ -407,11 +407,11 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		
 		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
 		saveRename.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View arg0) {
-				utils.applyFileToServer(getActivity(),
-						fileData.get(index).id, fileData.get(index).name, textFileName.getText().toString());
+				PutioFileData file = fileData.get(index);
+				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
+						utils, file.id, textFileName.getText().toString()));
 				renameDialog.dismiss();
 			}
 		});
@@ -604,6 +604,12 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			state.isSearch = true;
 			populateList(result.getFiles(), -1, -2);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
+		}
+	}
+
+	public void onEventMainThread(BasePutioResponse.FileChangingResponse result) {
+		if (result.getStatus().equals("OK")) {
+			invalidateList();
 		}
 	}
 	

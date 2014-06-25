@@ -18,6 +18,7 @@ import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.model.PutioRestInterface;
 
 public class TransfersActivity extends FragmentActivity {
 
@@ -36,20 +37,12 @@ public class TransfersActivity extends FragmentActivity {
 			int mode = getIntent().getIntExtra("mode", 0);
 			switch (mode) {
 			case PutioUtils.ADDTRANSFER_URL:
-                utils.addTransfersAsync(
-					this,
-					mode,
-					getIntent(),
-					getIntent().getStringExtra("url"),
-					null);
+				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostAddTransferJob(
+						utils, getIntent().getStringExtra("url"), this, getIntent()));
                 break;
 			case PutioUtils.ADDTRANSFER_FILE:
-				utils.addTransfersAsync(
-					this,
-					mode,
-					getIntent(),
-					null,
-                    (Uri) getIntent().getParcelableExtra("torrenturi"));
+				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostUploadFileJob(
+						utils, this, getIntent(), (Uri) getIntent().getParcelableExtra("torrenturi")));
                 break;
 			}
 			

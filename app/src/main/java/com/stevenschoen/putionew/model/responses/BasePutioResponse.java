@@ -6,4 +6,6 @@ public class BasePutioResponse {
 	public String getStatus() {
 		return status;
 	}
+
+	public class FileChangingResponse extends BasePutioResponse { }
 }

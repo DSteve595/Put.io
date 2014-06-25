@@ -46,6 +46,7 @@ import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
+import com.stevenschoen.putionew.model.PutioRestInterface;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -149,7 +150,7 @@ public class Putio extends BaseCastActivity implements
 
     private void handleIntent(Intent intent) {
         if (intent.getAction() != null) {
-            if (intent.getAction().matches(Intent.ACTION_SEARCH) &&
+            if (intent.getAction().equals(Intent.ACTION_SEARCH) &&
 					sharedPrefs.getBoolean("loggedIn", false) &&
 					filesFragment != null) {
                 String query = intent.getStringExtra(SearchManager.QUERY);
@@ -544,10 +545,10 @@ public class Putio extends BaseCastActivity implements
             apply.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    utils.applyFileToServer(Putio.this,
-                            fileDetailsFragment.getFileId(),
-                            fileDetailsFragment.getOldFilename(),
-                            fileDetailsFragment.getNewFilename());
+					utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
+							utils,
+							fileDetailsFragment.getFileId(),
+							fileDetailsFragment.getNewFilename()));
                     confirmChangesDialog.dismiss();
                 }
             });
@@ -653,7 +654,7 @@ public class Putio extends BaseCastActivity implements
         if (FileUtils.sizeOf(cache) >= (FileUtils.ONE_MB * maxSize)) {
             File[] cacheFiles = cache.listFiles();
 			for (File file : cacheFiles) {
-				if (!file.getName().matches("0")) {
+				if (!file.getName().equals("0")) {
 					FileUtils.deleteQuietly(file);
 				}
 			}

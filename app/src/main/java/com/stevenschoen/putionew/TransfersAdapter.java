@@ -70,8 +70,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 		
 		int percentInt = data.get(position).percentDone;
 		String percentString = Integer.toString(percentInt);
-		
-		if (data.get(position).status.matches("COMPLETED")) {
+
+		if (data.get(position).status.equals("COMPLETED")) {
 			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
 			holder.imgStatusIcon.setVisibility(View.VISIBLE);
 			holder.statusLoading.setVisibility(View.INVISIBLE);
@@ -82,7 +82,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			ViewHelper.setPivotX(holder.greenBar, 0);
 			ViewHelper.setScaleX(holder.greenBar, 1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
-		} else if (data.get(position).status.matches("SEEDING")) {
+		} else if (data.get(position).status.equals("SEEDING")) {
 			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
 			holder.imgStatusIcon.setVisibility(View.VISIBLE);
 			holder.statusLoading.setVisibility(View.INVISIBLE);
@@ -93,7 +93,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			ViewHelper.setPivotX(holder.greenBar, 0);
 			ViewHelper.setScaleX(holder.greenBar, 1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
-		} else if (data.get(position).status.matches("ERROR")) {
+		} else if (data.get(position).status.equals("ERROR")) {
 			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_failed);
 			holder.imgStatusIcon.setVisibility(View.VISIBLE);
 			holder.statusLoading.setVisibility(View.INVISIBLE);

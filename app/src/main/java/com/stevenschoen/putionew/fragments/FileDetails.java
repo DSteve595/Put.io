@@ -195,7 +195,7 @@ public class FileDetails extends Fragment {
             @Override
             public void onClick(View arg0) {
                 newFileData.name = textFileName.getText().toString();
-                applyFileToServerAndFinish();
+                renameAndFinish();
             }
         });
 
@@ -325,7 +325,7 @@ public class FileDetails extends Fragment {
                 imagePreviewBitmap = bitmap;
             }
         }
-        if (newFileData.screenshot != null && !newFileData.screenshot.matches("null")) {
+        if (newFileData.screenshot != null && !newFileData.screenshot.equals("null")) {
             if (savedInstanceState != null && savedInstanceState.containsKey("imagePreviewBitmap")) {
                 imagePreviewBitmap = savedInstanceState.getParcelable("imagePreviewBitmap");
                 changeImagePreview(imagePreviewBitmap, false);
@@ -525,7 +525,7 @@ public class FileDetails extends Fragment {
 			newFileData = result.getFile();
 
 			String[] created = PutioUtils.separateIsoTime(newFileData.createdAt);
-			if (!created[0].matches(textFileCreatedDate.getText().toString()) || !created[1].matches(textFileCreatedTime.getText().toString())) {
+			if (!created[0].equals(textFileCreatedDate.getText().toString()) || !created[1].equals(textFileCreatedTime.getText().toString())) {
 				textFileCreatedDate.setText(created[0]);
 				textFileCreatedTime.setText(created[1]);
 			}
@@ -535,7 +535,6 @@ public class FileDetails extends Fragment {
 	private boolean shouldCheckForMp4Updates() {
 		return (mp4Status.getStatus().equals(MP4_IN_QUEUE) ||
 						mp4Status.getStatus().equals(MP4_CONVERTING));
-
 	}
 
     public int getFileId() {
@@ -549,6 +548,16 @@ public class FileDetails extends Fragment {
     public String getNewFilename() {
         return textFileName.getText().toString();
     }
+
+	public void renameAndFinish() {
+		utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
+				utils, getFileId(), getNewFilename()));
+		if (!UIUtils.isTablet(getActivity())) {
+			getActivity().finish();
+		} else {
+			mCallbacks.onFDFinished();
+		}
+	}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -586,13 +595,4 @@ public class FileDetails extends Fragment {
 
 		super.onDestroy();
 	}
-
-	public void applyFileToServerAndFinish() {
-        utils.applyFileToServer(getActivity(), getFileId(), origFileData.name, newFileData.name);
-        if (!UIUtils.isTablet(getActivity())) {
-            getActivity().finish();
-        } else {
-            mCallbacks.onFDFinished();
-        }
-    }
 }

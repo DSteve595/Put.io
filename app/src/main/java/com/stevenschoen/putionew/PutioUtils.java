@@ -5,9 +5,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
@@ -16,7 +13,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
-import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -39,22 +34,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.path.android.jobqueue.JobManager;
 import com.squareup.okhttp.OkHttpClient;
-import com.stevenschoen.putionew.activities.Putio;
-import com.stevenschoen.putionew.activities.TransfersActivity;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -62,15 +50,12 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -158,345 +143,7 @@ public class PutioUtils {
 
 	public class NoTokenException extends Exception { }
 
-    private boolean postRename(int id, String newName) {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/rename" + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-            connection.setDoOutput(true);
-
-            OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-            output.write("file_id=" + id + "&name=" + URLEncoder.encode(newName, "UTF-8"));
-            output.flush();
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    private boolean postDelete(int... ids) {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "files/delete" + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-            connection.setDoOutput(true);
-
-            OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-            String idsString = null;
-            for (int i = 0; i < ids.length; i++) {
-                if (i == 0) {
-                    idsString = Integer.toString(ids[i]);
-                } else {
-                    idsString = idsString + "," + ids[i];
-                }
-            }
-            output.write("file_ids=" + idsString);
-            output.flush();
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    private boolean postRemoveTransfer(Integer... ids) {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "transfers/cancel" + tokenWithStuff);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-            connection.setDoOutput(true);
-
-            OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-            String idsString = null;
-            for (int i = 0; i < ids.length; i++) {
-                if (i == 0) {
-                    idsString = Integer.toString(ids[i]);
-                } else {
-                    idsString = idsString + ", " + ids[i];
-                }
-            }
-            output.write("transfer_ids=" + idsString);
-            output.flush();
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-	private boolean postClearFinishedTransfers() {
-		URL url = null;
-		try {
-			url = new URL(baseUrl + "transfers/clean" + tokenWithStuff);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setConnectTimeout(8000);
-			connection.setDoOutput(true);
-			connection.connect();
-
-			int responseCode = connection.getResponseCode();
-			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-    public void applyFileToServer(final Context context, final int id,
-                                  String origName, final String newName) {
-        boolean updateName = false;
-        if (!newName.matches(origName)) {
-            updateName = true;
-        }
-
-        Boolean[] updates = new Boolean[]{ updateName };
-
-        boolean hasUpdates = false;
-		for (boolean update : updates) {
-			if (update) {
-				hasUpdates = true;
-			}
-		}
-
-        class saveFileTask extends AsyncTask<Boolean[], Void, Void> {
-            protected Void doInBackground(Boolean[]... updates) {
-                postRename(id, newName);
-                return null;
-            }
-        }
-        new saveFileTask().execute(updates);
-
-        if (hasUpdates) {
-            Intent invalidateListIntent = new Intent(Putio.invalidateListIntent);
-            context.sendBroadcast(invalidateListIntent);
-        }
-    }
-
-    public void deleteFileAsync(Context context, final int... ids) {
-        class deleteFileTask extends AsyncTask<Void, Void, Void> {
-            protected Void doInBackground(Void... nothing) {
-                postDelete(ids);
-                return null;
-            }
-        }
-        new deleteFileTask().execute();
-
-        Intent invalidateListIntent = new Intent(Putio.invalidateListIntent);
-        context.sendBroadcast(invalidateListIntent);
-    }
-
-    public void removeTransferAsync(Context context, final Integer... ids) {
-        class RemoveTransferTask extends AsyncTask<Void, Void, Void> {
-            protected Void doInBackground(Void... nothing) {
-                postRemoveTransfer(ids);
-                return null;
-            }
-        }
-        new RemoveTransferTask().execute();
-    }
-
-	public void clearFinishedTransfersAsync(Context context) {
-		class ClearFinishedTransfersTask extends AsyncTask<Void, Void, Void> {
-			protected Void doInBackground(Void... nothing) {
-				postClearFinishedTransfers();
-				return null;
-			}
-		}
-		new ClearFinishedTransfersTask().execute();
-	}
-
-    public void addTransfersAsync(final Context context, final int mode, final Intent retryIntent,
-                                         final String urls, final Uri torrentUri) {
-        class AddTransfersTask extends AsyncTask<Void, Void, Void> {
-            NotificationManager notifManager;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-                notifManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notifStart();
-            }
-
-            protected Void doInBackground(Void... nothing) {
-                URL url = null;
-
-                if (mode == ADDTRANSFER_URL) {
-                    try {
-                        url = new URL(baseUrl + "transfers/add" + tokenWithStuff);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-                        connection.setConnectTimeout(8000);
-                        connection.setDoOutput(true);
-
-                        OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-                        output.write("url=" + urls);
-                        output.flush();
-                        connection.connect();
-
-                        int responseCode = connection.getResponseCode();
-                        if (responseCode == HttpsURLConnection.HTTP_OK) {
-                            notifSucceeded();
-                        } else {
-                            notifFailed();
-                        }
-                    } catch (IOException e) {
-                        notifFailed();
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        url = new URL(baseUrl + "files/upload" + tokenWithStuff);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost(url.toString());
-
-                    MultipartEntityBuilder mpBuilder = MultipartEntityBuilder.create();
-                    try {
-                        InputStream in = getInputStreamFromUri(context, torrentUri);
-                        byte[] bytes = IOUtils.toByteArray(in);
-                        mpBuilder.addPart("file", new ByteArrayBody(
-                                bytes,
-                                ContentType.create("application/x-bittorrent"),
-                                getNameFromUri(context, torrentUri)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    httppost.setEntity(mpBuilder.build());
-
-                    HttpResponse response;
-                    try {
-                        response = httpclient.execute(httppost);
-                        int responseCode = response.getStatusLine().getStatusCode();
-                        if (responseCode == HttpsURLConnection.HTTP_OK) {
-                            notifSucceeded();
-                        } else {
-                            notifFailed();
-                        }
-                    } catch (IOException e) {
-                        notifFailed();
-                        e.printStackTrace();
-                    }
-                }
-
-                return null;
-            }
-
-            private void notifStart() {
-                NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
-                notifBuilder.setOngoing(true);
-                notifBuilder.setContentTitle(context.getString(R.string.notification_title_uploading_torrent));
-                notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
-                notifBuilder.setTicker(context.getString(R.string.notification_ticker_uploading_torrent));
-                notifBuilder.setProgress(1, 0, true);
-                Notification notif = notifBuilder.build();
-                notif.ledARGB = Color.parseColor("#FFFFFF00");
-                try {
-                    notifManager.notify(1, notif);
-                } catch (IllegalArgumentException e) {
-                    notifBuilder.setContentIntent(PendingIntent.getActivity(
-                            context, 0, new Intent(context, Putio.class), 0));
-                    notif = notifBuilder.build();
-                    notif.ledARGB = Color.parseColor("#FFFFFF00");
-                    notifManager.notify(1, notif);
-                }
-            }
-
-            private void notifSucceeded() {
-                NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
-                notifBuilder.setOngoing(false);
-                notifBuilder.setAutoCancel(true);
-                notifBuilder.setContentTitle(context.getString(R.string.notification_title_uploaded_torrent));
-                notifBuilder.setContentText(context.getString(R.string.notification_body_uploaded_torrent));
-                notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
-                notifBuilder.setContentIntent(PendingIntent.getActivity(
-                        context, 0, new Intent(context, TransfersActivity.class),
-						PendingIntent.FLAG_ONE_SHOT));
-//				notifBuilder.addAction(R.drawable.ic_notif_watch, "Watch", null);
-                notifBuilder.setTicker(context.getString(R.string.notification_ticker_uploaded_torrent));
-                notifBuilder.setProgress(0, 0, false);
-                Notification notif = notifBuilder.build();
-                notif.ledARGB = Color.parseColor("#FFFFFF00");
-                notifManager.notify(1, notif);
-            }
-
-            private void notifFailed() {
-                NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
-                notifBuilder.setOngoing(false);
-                notifBuilder.setAutoCancel(true);
-                notifBuilder.setContentTitle(context.getString(R.string.notification_title_error));
-                notifBuilder.setContentText(context.getString(R.string.notification_body_error));
-                notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
-                PendingIntent retryNotifIntent = PendingIntent.getActivity(
-                        context, 0, retryIntent, PendingIntent.FLAG_ONE_SHOT);
-                notifBuilder.addAction(R.drawable.ic_notif_retry, context.getString(R.string.notification_button_retry), retryNotifIntent);
-                notifBuilder.setContentIntent(retryNotifIntent);
-                notifBuilder.setTicker(context.getString(R.string.notification_ticker_error));
-                Notification notif = notifBuilder.build();
-                notif.ledARGB = Color.parseColor("#FFFFFF00");
-                notifManager.notify(1, notif);
-            }
-        }
-        new AddTransfersTask().execute();
-    }
-
-    public Dialog confirmChangesDialog(Context context, String filename) {
+	public Dialog confirmChangesDialog(Context context, String filename) {
         Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(R.layout.dialog_confirmchanges);
@@ -529,15 +176,10 @@ public class PutioUtils {
         }
     }
 
-    public static InputStream getInputStreamFromUri(Context context, Uri uri)
-            throws FileNotFoundException {
-        return context.getContentResolver().openInputStream(uri);
-    }
-
     public static String getNameFromUri(Context context, Uri uri) {
-        if (uri.getScheme().matches("file")) {
+        if (uri.getScheme().equals("file")) {
             return new File(uri.getPath()).getName();
-        } else if (uri.getScheme().matches("content")) {
+        } else if (uri.getScheme().equals("content")) {
             Cursor cursor = context.getContentResolver()
                     .query(uri, null, null, null, null, null);
 
@@ -777,7 +419,7 @@ public class PutioUtils {
                     type = PutioUtils.TYPE_VIDEO;
                 }
 
-				String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id +
+				String subtitleUrl = PutioUtils.baseUrl + "/files/" + file.id +
 						"/subtitles/default" + tokenWithStuff;
 				Uri[] subtitles = new Uri[] { Uri.parse(subtitleUrl) };
 
@@ -791,7 +433,7 @@ public class PutioUtils {
     public InputStream getDefaultSubtitleData(int id) throws SocketTimeoutException {
         URL url = null;
         try {
-            url = new URL(baseUrl + "files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
+            url = new URL(baseUrl + "/files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
@@ -821,7 +463,7 @@ public class PutioUtils {
             @Override
             protected String doInBackground(Integer... fileId) {
                 try {
-                    return PutioUtils.resolveRedirect(baseUrl + "files/" + fileId[0] + "/download"
+                    return PutioUtils.resolveRedirect(baseUrl + "/files/" + fileId[0] + "/download"
                             + tokenWithStuff);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -876,7 +518,7 @@ public class PutioUtils {
     }
 
     public String getFileDownloadUrl(int id) {
-        return baseUrl + "files/" + id + "/download" + tokenWithStuff;
+        return baseUrl + "/files/" + id + "/download" + tokenWithStuff;
     }
 
     public String getZipDownloadUrl(int[] id) {
@@ -884,7 +526,7 @@ public class PutioUtils {
         for (int i = 1; i < id.length; i++) {
             ids += "," + Integer.toString(id[i]);
         }
-        return baseUrl + "files/zip?file_ids=" + ids + tokenWithStuff.replace("?", "&"); // TODO hacky
+        return baseUrl + "/files/zip?file_ids=" + ids + tokenWithStuff.replace("?", "&"); // TODO hacky
     }
 
     public static boolean idIsDownloaded(int id) {
@@ -992,7 +634,8 @@ public class PutioUtils {
 				for (int i = 0; i < filesToDelete.length; i++) {
 					idsToDelete[i] = filesToDelete[i].id;
 				}
-                deleteFileAsync(context, idsToDelete);
+				getJobManager().addJobInBackground(new PutioRestInterface.PostDeleteFilesJob(
+						PutioUtils.this, idsToDelete));
                 Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
                 deleteDialog.dismiss();
 
@@ -1012,7 +655,7 @@ public class PutioUtils {
         });
     }
 
-    public void showRemoveTransferDialog(final Context context, final int idToDelete) {
+    public void showRemoveTransferDialog(final Context context, final int... idsToDelete) {
         final Dialog removeDialog = PutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
         removeDialog.show();
 
@@ -1021,7 +664,8 @@ public class PutioUtils {
 
             @Override
             public void onClick(View arg0) {
-                removeTransferAsync(context, idToDelete);
+                getJobManager().addJobInBackground(new PutioRestInterface.PostCancelTransferJob(
+						PutioUtils.this, idsToDelete));
                 Toast.makeText(context, context.getString(R.string.transferremoved), Toast.LENGTH_SHORT).show();
                 removeDialog.dismiss();
             }
@@ -1069,13 +713,24 @@ public class PutioUtils {
         return one.split(" ");
     }
 
-    public Boolean stringToBooleanHack(String value) {
-        if (value.matches("true")) {
+    public static Boolean stringToBooleanHack(String value) {
+        if (value.equals("true")) {
             return true;
-        } else if (value.matches("false")) {
+        } else if (value.equals("false")) {
             return false;
         }
         return false;
+	}
+
+	public static String intsToString(int... ints) {
+		StringBuilder string = new StringBuilder();
+		for (int i = 0; i < ints.length; i++) {
+			int anInt = ints[i];
+			string.append(anInt);
+			if (i + 1 < ints.length) string.append(",");
+		}
+
+		return string.toString();
 	}
 
     public static String[] separateIsoTime(String isoTime) {
@@ -1085,7 +740,6 @@ public class PutioUtils {
     public static float dpFromPx(Context context, float px) {
         return px / context.getResources().getDisplayMetrics().density;
     }
-
 
     public static float pxFromDp(Context context, float dp) {
         return dp * context.getResources().getDisplayMetrics().density;

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.FileChooserActivity;
@@ -81,10 +82,14 @@ public class AddTransferFile extends Fragment {
 						textFile.setText(PutioUtils.getNameFromUri(getActivity(), uri));
                         ContentResolver cr = getActivity().getContentResolver();
                         String mimetype = cr.getType(uri);
-                        if (!mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) == 0) {
-							animate(textNotATorrent).alpha(1);
-						} else if (mimetype.matches("application/x-bittorrent") && ViewHelper.getAlpha(textNotATorrent) != 0) {
+						if (mimetype == null) {
+							mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+									MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
+						}
+						if (mimetype.equals("application/x-bittorrent")) {
 							animate(textNotATorrent).alpha(0);
+						} else {
+							animate(textNotATorrent).alpha(1);
 						}
 					} catch (Exception e) {
 						Log.d("asdf", "File select error", e);

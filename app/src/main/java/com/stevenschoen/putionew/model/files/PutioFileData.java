@@ -21,7 +21,7 @@ public class PutioFileData implements Parcelable {
 	public long size;
 
 	public boolean isFolder() {
-		return contentType.matches("application/x-directory");
+		return contentType.equals("application/x-directory");
 	}
 
 	public static Map<String, Integer> contentTypes = new HashMap<>();

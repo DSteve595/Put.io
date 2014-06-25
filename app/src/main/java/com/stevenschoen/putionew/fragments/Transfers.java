@@ -32,6 +32,7 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.Putio;
+import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public final class Transfers extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> a, View view, int position,
 					long id) {
-				if (transfersData.get(position).status.matches("COMPLETED") || transfersData.get(position).status.matches("SEEDING")) {
+				if (transfersData.get(position).status.equals("COMPLETED") || transfersData.get(position).status.equals("SEEDING")) {
 					mCallbacks.onTransferSelected(transfersData.get(position).saveParentId, transfersData.get(position).fileId);
 				}
 			}
@@ -187,7 +188,8 @@ public final class Transfers extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_clearfinished:
-				utils.clearFinishedTransfersAsync(getActivity());
+				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostCleanTransfersJob(
+						utils));
 				return true;
 		}
 
@@ -195,8 +197,9 @@ public final class Transfers extends Fragment {
 	}
 
 	private void initRemoveTransfer(int idInList) {
-		if (transfersData.get(idInList).status.matches("COMPLETED")) {
-			utils.removeTransferAsync(getActivity(), transfersData.get(idInList).id);
+		if (transfersData.get(idInList).status.equals("COMPLETED")) {
+			utils.getJobManager().addJobInBackground(new PutioRestInterface.PostCancelTransferJob(
+					utils, transfersData.get(idInList).id));
 		} else {
 			utils.showRemoveTransferDialog(getActivity(), transfersData.get(idInList).id);
 		}
