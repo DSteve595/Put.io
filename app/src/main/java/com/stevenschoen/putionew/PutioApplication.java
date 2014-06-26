@@ -9,10 +9,14 @@ public class PutioApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 
+		buildUtils();
+	}
+
+	public void buildUtils() {
 		try {
 			this.utils = new PutioUtils(this);
 		} catch (PutioUtils.NoTokenException e) {
-			e.printStackTrace();
+//			User not logged in yet
 		}
 	}
 

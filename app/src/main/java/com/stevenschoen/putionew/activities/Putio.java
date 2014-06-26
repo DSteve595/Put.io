@@ -286,6 +286,7 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void init() {
+		((PutioApplication) getApplication()).buildUtils();
 		this.utils = ((PutioApplication) getApplication()).getPutioUtils();
 
         if (UIUtils.isTablet(this)) {
