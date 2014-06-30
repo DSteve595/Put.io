@@ -1,6 +1,5 @@
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/files_up"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@drawable/card_bg_r4_clickable_withshadow"
@@ -13,7 +12,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_back"/>
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:src="@drawable/ic_back" />
 
     <de.ankri.views.AutoScaleTextView
         android:layout_width="wrap_content"
@@ -23,6 +24,7 @@
         android:layout_marginRight="8dp"
         android:layout_toEndOf="@id/image_up"
         android:layout_toRightOf="@id/image_up"
-        android:text="Go back to the previous folder"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:text="@string/go_to_previous_folder"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="14sp" />
 </RelativeLayout>

@@ -1,11 +1,13 @@
 package com.stevenschoen.putionew.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -13,9 +15,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 
@@ -28,9 +27,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URI;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-public class Setup extends ActionBarActivity {
+public class Setup extends Activity {
     public SharedPreferences sharedPrefs;
     private WebView loginWebView;
 
@@ -66,7 +63,7 @@ public class Setup extends ActionBarActivity {
 
         viewNoNetwork = findViewById(R.id.view_setup_noconnection);
         viewNoNetwork.setVisibility(View.INVISIBLE);
-        ViewHelper.setAlpha(viewNoNetwork, 0);
+        viewNoNetwork.setAlpha(0);
 
         setViewMode(VIEWMODE_LOADING);
     }
@@ -153,17 +150,11 @@ public class Setup extends ActionBarActivity {
                         break;
                 }
                 final View viewToRemove2 = viewToRemove;
-                animate(viewToRemove).setDuration(500).alpha(0).setListener(new AnimatorListener() {
-                    @Override
-					public void onAnimationStart(Animator animation) {}
-                    @Override
-					public void onAnimationRepeat(Animator animation) {}
+                viewToRemove.animate().setDuration(500).alpha(0).setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         viewToRemove2.setVisibility(View.INVISIBLE);
                     }
-                    @Override
-					public void onAnimationCancel(Animator animation) {}
                 });
             }
 
@@ -179,9 +170,9 @@ public class Setup extends ActionBarActivity {
                     viewToAdd = viewNoNetwork;
                     break;
             }
-            ViewHelper.setAlpha(viewToAdd, 0);
+            viewToAdd.setAlpha(0);
             viewToAdd.setVisibility(View.VISIBLE);
-            animate(viewToAdd).setDuration(500).alpha(1);
+            viewToAdd.animate().setDuration(500).alpha(1);
 
             viewMode = mode;
         }

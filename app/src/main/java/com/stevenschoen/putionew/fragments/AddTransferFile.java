@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.fragments;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,12 +15,9 @@ import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.FileChooserActivity;
-import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class AddTransferFile extends Fragment {
 
@@ -35,10 +31,7 @@ public class AddTransferFile extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.addtransfer_file, container, false);
 		
-		Typeface robotoLight = Typeface.createFromAsset(getActivity().getAssets(), "Roboto-Light.ttf");
-		
 		textFile = (TextView) view.findViewById(R.id.text_addtransferfile_file);
-		textFile.setTypeface(robotoLight);
 		textFile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -55,7 +48,7 @@ public class AddTransferFile extends Fragment {
 		});
 		
 		textNotATorrent = (TextView) view.findViewById(R.id.text_addtransferfile_notatorrent);
-		ViewHelper.setAlpha(textNotATorrent, 0);
+        textNotATorrent.setAlpha(0);
 		
 		if (getArguments() != null && getArguments().getString("filepath") != null) {
 			Intent fileIntent = new Intent();
@@ -87,9 +80,9 @@ public class AddTransferFile extends Fragment {
 									MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
 						}
 						if (mimetype.equals("application/x-bittorrent")) {
-							animate(textNotATorrent).alpha(0);
+                            textNotATorrent.animate().alpha(0);
 						} else {
-							animate(textNotATorrent).alpha(1);
+                            textNotATorrent.animate().alpha(1);
 						}
 					} catch (Exception e) {
 						Log.d("asdf", "File select error", e);

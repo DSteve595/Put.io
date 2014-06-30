@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/context_download"
         android:icon="@android:drawable/ic_menu_save"
-        app:showAsAction="ifRoom"
-        android:title="@string/download"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/download" />
     <item
         android:id="@+id/context_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/delete"/>
+        android:title="@string/delete" />
 
 </menu>

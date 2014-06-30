@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -81,8 +80,6 @@ public class AddTransfers extends FragmentActivity {
 		}
 		
 		TextView textTitle = (TextView) findViewById(R.id.dialog_title);
-		Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-		textTitle.setTypeface(robotoLight);
 		textTitle.setText(getString(R.string.addtransferstitle));
 		
 		Button addButton = (Button) findViewById(R.id.button_addtransfer_add);

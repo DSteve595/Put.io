@@ -3,14 +3,12 @@ package com.stevenschoen.putionew.fragments;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.SearchView;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -31,8 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SearchView;
 
-import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.FilesAdapter;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioFileLayout;
@@ -49,8 +47,6 @@ import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public final class Files extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 	
@@ -274,7 +270,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			buttonUpFolder.post(new Runnable() {
 				@Override
 				public void run() {
-					ViewHelper.setTranslationY(buttonUpFolder, buttonUpFolder.getHeight());
+                    buttonUpFolder.setTranslationY(buttonUpFolder.getHeight());
 				}
 			});
 			invalidateList();
@@ -452,9 +448,18 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		
 		MenuItem buttonSearch = menu.findItem(R.id.menu_search);
 		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(buttonSearch);
+		SearchView searchView = (SearchView) buttonSearch.getActionView();
 		searchView.setIconifiedByDefault(true);
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        try {
+            int searchPlateId = searchView.getContext().getResources().getIdentifier(
+                    "android:id/search_plate", null, null);
+            View searchPlate = searchView.findViewById(searchPlateId);
+            searchPlate.setBackgroundResource(R.drawable.edit_text_search_putio);
+        } catch (Exception e) {
+//            SearchView couldn't be styled
+        }
 	}
 	
 	public void initSearch(String query) {
@@ -522,13 +527,13 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		buttonUpFolder.post(new Runnable() {
 			@Override
 			public void run() {
-				if (state.id != 0 || state.isSearch) {
-					animate(buttonUpFolder).translationY(0);
+				if (isInSubfolder() || state.isSearch) {
+                    buttonUpFolder.animate().translationY(0);
 					listview.setPadding(0, 0, 0, buttonUpFolder.getHeight());
 					buttonUpFolder.setEnabled(true);
 					buttonUpFolder.setFocusable(true);
 				} else {
-					animate(buttonUpFolder).translationY(buttonUpFolder.getHeight());
+                    buttonUpFolder.animate().translationY(buttonUpFolder.getHeight());
 					listview.setPadding(0, 0, 0, 0);
 					buttonUpFolder.setEnabled(false);
 					buttonUpFolder.setFocusable(false);

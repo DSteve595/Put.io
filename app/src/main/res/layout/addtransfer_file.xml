@@ -1,5 +1,4 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,7 +19,8 @@
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="@string/choosefile"
-            android:textSize="20sp"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/text_addtransferfile_notatorrent"
@@ -32,7 +32,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/notatorrent"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/putio_lightred"/>
+            android:textColor="@color/putio_lightred" />
 
     </RelativeLayout>
 </ScrollView>

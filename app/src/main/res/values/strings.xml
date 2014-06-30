@@ -102,6 +102,7 @@
     <string name="addtransfer_type_file">Torrent file</string>
     <string name="copyingdownloadlink">Copying download link</string>
     <string name="filenotfound">The file could not be found. Was it deleted?</string>
+    <string name="go_to_previous_folder">Go back to the previous folder</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Uploading torrent</string>

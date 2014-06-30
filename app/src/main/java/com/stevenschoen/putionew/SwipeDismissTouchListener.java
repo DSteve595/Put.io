@@ -1,17 +1,13 @@
 package com.stevenschoen.putionew;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.view.ViewHelper;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class SwipeDismissTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
@@ -107,7 +103,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
                 }
                 if (dismiss) {
                     // dismiss
-                    animate(mView)
+                    mView.animate()
                             .translationX(dismissRight ? mViewWidth : -mViewWidth)
                             .alpha(0)
                             .setDuration(mAnimationTime)
@@ -120,7 +116,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
                             });
                 } else {
                     // cancel
-                    animate(mView)
+                    mView.animate()
                             .translationX(0)
                             .alpha(1)
                             .setDuration(mAnimationTime)
@@ -153,9 +149,9 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
 
                 if (mSwiping) {
                     mTranslationX = deltaX;
-                    ViewHelper.setTranslationX(mView, deltaX);
+                    mView.setTranslationX(deltaX);
                     // TODO: use an ease-out interpolator or such
-                    ViewHelper.setAlpha(mView, Math.max(0f, Math.min(1f,
+                    mView.setAlpha(Math.max(0f, Math.min(1f,
                             1f - 2f * Math.abs(deltaX) / mViewWidth)));
                     return true;
                 }
@@ -180,8 +176,8 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
             public void onAnimationEnd(Animator animation) {
                 mCallback.onDismiss(mView, mToken);
                 // Reset view presentation
-                ViewHelper.setAlpha(mView, 1f);
-                ViewHelper.setTranslationX(mView, 0);
+                mView.setAlpha(1f);
+                mView.setTranslationX(0);
                 lp.height = originalHeight;
                 mView.setLayoutParams(lp);
             }

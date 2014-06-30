@@ -13,7 +13,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -156,14 +155,11 @@ public class PutioUtils {
     }
 
     public static Dialog PutioDialog(Context context, String title, int contentViewId) {
-        Typeface robotoLight = Typeface.createFromAsset(context.getAssets(), "Roboto-Light.ttf");
-
         Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(contentViewId);
         TextView textTitle = (TextView) dialog.findViewById(R.id.dialog_title);
         textTitle.setText(title);
-        textTitle.setTypeface(robotoLight);
 
         return dialog;
     }

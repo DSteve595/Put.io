@@ -1,15 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ListView
         android:id="@+id/transferslist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:choiceMode="multipleChoice"
-        android:listSelector="@drawable/putio_clickable_list" >
-    </ListView>
+        android:choiceMode="multipleChoice" />
 
     <include
         android:id="@+id/transfers_loading"

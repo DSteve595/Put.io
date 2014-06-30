@@ -2,18 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="320dp"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/putio_dark" >
+        android:background="@color/putio_dark">
 
         <TextView
             android:id="@+id/transfersactivity_text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-light"
             android:text="@string/transfers"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 

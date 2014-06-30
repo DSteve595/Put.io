@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center" >
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,25 +11,24 @@
         android:layout_marginBottom="32dp"
         android:orientation="vertical"
         android:paddingLeft="28dp"
-        android:paddingRight="28dp" >
+        android:paddingRight="28dp">
 
         <include
-            android:layout_width="100dp"
-            layout="@layout/filename" />
+            layout="@layout/filename"
+            android:layout_width="100dp" />
 
         <LinearLayout
             android:id="@+id/createdHolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/text_fileDetailsCreatedStatic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/created" >
-            </TextView>
+                android:text="@string/created" />
 
             <TextView
                 android:id="@+id/text_fileDetailsCreatedDate"
@@ -42,8 +41,7 @@
                 android:id="@+id/text_fileDetailsCreatedStaticAt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/at" >
-            </TextView>
+                android:text="@string/at" />
 
             <TextView
                 android:id="@+id/text_fileDetailsCreatedTime"
@@ -54,6 +52,12 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/buttonbar"
+        android:background="?android:attr/dividerHorizontal" />
+
     <LinearLayout
         android:id="@+id/buttonbar"
         style="@style/Putio.ButtonBar.Transparent"
@@ -61,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:showDividers="middle" >
+        android:showDividers="middle">
 
         <Button
             android:id="@+id/button_filedetails_cancel"
@@ -80,16 +84,10 @@
             android:text="@string/apply" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/buttonbar"
-        android:background="?attr/dividerVertical" />
-
     <include
         android:id="@+id/filedetailspreview"
+        layout="@layout/filepreview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/filepreview" />
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

@@ -1,8 +1,6 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="64dp"
-    android:background="@drawable/putio_clickable_list"
     android:paddingLeft="@dimen/file_rowpadding"
     android:paddingRight="@dimen/file_rowpadding">
 
@@ -14,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/ic_launcher" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +31,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="File name"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/text_fileListDesc"
@@ -41,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
-            android:text="File description"/>
+            android:text="File description" />
     </LinearLayout>
 
 </RelativeLayout>

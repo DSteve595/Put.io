@@ -57,7 +57,7 @@
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
             android:background="@color/putio_dark"
-            android:foreground="?attr/dividerVertical"/>
+            android:foreground="?android:attr/dividerHorizontal"/>
 
         <TextView
             android:id="@+id/button_filepreview_convert"

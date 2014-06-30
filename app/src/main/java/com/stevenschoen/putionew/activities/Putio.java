@@ -1,8 +1,14 @@
 package com.stevenschoen.putionew.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,13 +22,8 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,9 +34,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioNotification;
 import com.stevenschoen.putionew.PutioUtils;
@@ -55,8 +53,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.InputStream;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
 public class Putio extends BaseCastActivity implements
         ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
 
@@ -69,7 +65,6 @@ public class Putio extends BaseCastActivity implements
 
     Bundle savedInstanceState;
 
-    public static final String invalidateListIntent = "com.stevenschoen.putionew.invalidatelist";
     public static final String checkCacheSizeIntent = "com.stevenschoen.putionew.checkcachesize";
     public static final String fileDownloadUpdateIntent = "com.stevenschoen.putionew.filedownloadupdate";
     public static final String transfersAvailableIntent = "com.stevenschoen.putionew.transfersavailable";
@@ -107,7 +102,7 @@ public class Putio extends BaseCastActivity implements
         this.savedInstanceState = savedInstanceState;
 
         if (UIUtils.isTablet(this)) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getActionBar().setDisplayShowTitleEnabled(false);
         }
 
         titleAccount = getString(R.string.account);
@@ -126,8 +121,6 @@ public class Putio extends BaseCastActivity implements
             handleIntent(getIntent());
         }
 
-        IntentFilter invalidateListIntentFilter = new IntentFilter(
-                Putio.invalidateListIntent);
         IntentFilter checkCacheSizeIntentFilter = new IntentFilter(
                 Putio.checkCacheSizeIntent);
         IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(
@@ -135,7 +128,6 @@ public class Putio extends BaseCastActivity implements
         IntentFilter noNetworkIntentFilter = new IntentFilter(
                 Putio.noNetworkIntent);
 
-        registerReceiver(invalidateReceiver, invalidateListIntentFilter);
         registerReceiver(checkCacheSizeReceiver, checkCacheSizeIntentFilter);
         if (UIUtils.isTablet(this)) {
             registerReceiver(fileDownloadUpdateReceiver, fileDownloadUpdateIntentFilter);
@@ -160,33 +152,47 @@ public class Putio extends BaseCastActivity implements
     }
 
     @Override
-	public void onTabUnselected(Tab tab, FragmentTransaction fragmentTransaction) { }
-
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction fragmentTransaction) {
+	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         switch (tab.getPosition()) {
             case 0:
-                setContentView(tabletAccountView);
+                accountFragment.setMenuVisibility(false);
                 break;
             case 1:
-                setContentView(tabletFilesView);
+                filesFragment.setMenuVisibility(false);
                 break;
             case 2:
-                setContentView(tabletTransfersView);
+                transfersFragment.setMenuVisibility(false);
                 break;
         }
     }
 
     @Override
-    public void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        switch (tab.getPosition()) {
+            case 0:
+                setContentView(tabletAccountView);
+                accountFragment.setMenuVisibility(true);
+                break;
+            case 1:
+                setContentView(tabletFilesView);
+                filesFragment.setMenuVisibility(true);
+                break;
+            case 2:
+                setContentView(tabletTransfersView);
+                transfersFragment.setMenuVisibility(true);
+                break;
+        }
     }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) { }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         try {
-            outState.putInt("currentTab", getSupportActionBar().getSelectedTab().getPosition());
+            outState.putInt("currentTab", getActionBar().getSelectedTab().getPosition());
 		} catch (NullPointerException e) { }
     }
 
@@ -350,7 +356,7 @@ public class Putio extends BaseCastActivity implements
 
                                 @Override
                                 public void onClick(View v) {
-                                    animate(notifView)
+                                    notifView.animate()
                                             .translationX(notifView.getWidth())
                                             .alpha(0)
                                             .setDuration(getResources().getInteger(
@@ -405,21 +411,21 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void setupPhoneLayout() {
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
 		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        ViewHelper.setAlpha(tabs, 0);
+        tabs.setAlpha(0);
         tabs.setShouldExpand(true);
         tabs.setTabBackground(R.drawable.putio_tab_indicator);
         tabs.setTextColor(Color.BLACK);
         tabs.setIndicatorColorResource(R.color.putio_accent);
 
         String accountFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
-        accountFragment = (Account) getSupportFragmentManager().findFragmentByTag(accountFragmentName);
+        accountFragment = (Account) getFragmentManager().findFragmentByTag(accountFragmentName);
         String filesFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 1);
-        filesFragment = (Files) getSupportFragmentManager().findFragmentByTag(filesFragmentName);
+        filesFragment = (Files) getFragmentManager().findFragmentByTag(filesFragmentName);
         String transfersFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 2);
-        transfersFragment = (Transfers) getSupportFragmentManager().findFragmentByTag(transfersFragmentName);
+        transfersFragment = (Transfers) getFragmentManager().findFragmentByTag(transfersFragmentName);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -427,28 +433,28 @@ public class Putio extends BaseCastActivity implements
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabs.setViewPager(mViewPager);
-        animate(tabs).alpha(1).setDuration(200);
+        tabs.animate().alpha(1).setDuration(200);
         selectTab(1);
     }
 
     private void setupTabletLayout() {
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Account
         tabletAccountView = getLayoutInflater().inflate(R.layout.tablet_account, null);
         accountId = R.id.fragment_account;
 
-        accountFragment = (Account) getSupportFragmentManager().findFragmentById(R.id.fragment_account);
+        accountFragment = (Account) getFragmentManager().findFragmentById(R.id.fragment_account);
 
         // Files
         tabletFilesView = getLayoutInflater().inflate(R.layout.tablet_files, null);
         filesId = R.id.fragment_files;
         fileDetailsId = tabletFilesView.findViewById(R.id.fragment_details).getId();
 
-        filesFragment = (Files) getSupportFragmentManager().findFragmentById(R.id.fragment_files);
+        filesFragment = (Files) getFragmentManager().findFragmentById(R.id.fragment_files);
 
-        if (getSupportFragmentManager().findFragmentById(R.id.fragment_details) != null) {
-            fileDetailsFragment = (FileDetails) getSupportFragmentManager()
+        if (getFragmentManager().findFragmentById(R.id.fragment_details) != null) {
+            fileDetailsFragment = (FileDetails) getFragmentManager()
                     .findFragmentById(R.id.fragment_details);
         }
 
@@ -456,11 +462,15 @@ public class Putio extends BaseCastActivity implements
         tabletTransfersView = getLayoutInflater().inflate(R.layout.tablet_transfers, null);
         transfersId = R.id.fragment_transfers;
 
-        transfersFragment = (Transfers) getSupportFragmentManager().findFragmentById(R.id.fragment_transfers);
+        transfersFragment = (Transfers) getFragmentManager().findFragmentById(R.id.fragment_transfers);
 
         // Other
+        accountFragment.setMenuVisibility(false);
+        filesFragment.setMenuVisibility(false);
+        transfersFragment.setMenuVisibility(false);
+
         for (int i = 0; i < 3; i++) {
-            getSupportActionBar().addTab(getSupportActionBar().newTab()
+            getActionBar().addTab(getActionBar().newTab()
                     .setText(titles[i])
                     .setTabListener(this));
         }
@@ -479,7 +489,7 @@ public class Putio extends BaseCastActivity implements
             fileDetailsFragment = (FileDetails) FileDetails.instantiate(
                     this, FileDetails.class.getName(), fileDetailsBundle);
 
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_left,
                             R.anim.slide_out_right)
@@ -520,7 +530,7 @@ public class Putio extends BaseCastActivity implements
 
     private void removeFD(int exitAnim) {
         filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_left, exitAnim)
                 .remove(fileDetailsFragment).commit();
     }
@@ -568,14 +578,6 @@ public class Putio extends BaseCastActivity implements
         }
     }
 
-    private BroadcastReceiver invalidateReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            filesFragment.invalidateList();
-        }
-    };
-
     private BroadcastReceiver checkCacheSizeReceiver = new BroadcastReceiver() {
 
         @Override
@@ -621,7 +623,7 @@ public class Putio extends BaseCastActivity implements
 
     private void selectTab(int position) {
         if (UIUtils.isTablet(this)) {
-            getSupportActionBar().setSelectedNavigationItem(position);
+            getActionBar().setSelectedNavigationItem(position);
         } else {
             if (mViewPager.getCurrentItem() != position) mViewPager.setCurrentItem(position, false);
         }
@@ -629,7 +631,6 @@ public class Putio extends BaseCastActivity implements
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(invalidateReceiver);
         unregisterReceiver(checkCacheSizeReceiver);
         if (UIUtils.isTablet(this)) {
             unregisterReceiver(fileDownloadUpdateReceiver);

@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nineoldandroids.view.ViewHelper;
-
 import java.util.List;
 
 public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
@@ -79,8 +77,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.speedHolder.setVisibility(View.VISIBLE);
 			holder.textPercent.setText(percentString + "%");
 			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
-			ViewHelper.setPivotX(holder.greenBar, 0);
-			ViewHelper.setScaleX(holder.greenBar, 1f);
+            holder.greenBar.setPivotX(0);
+            holder.greenBar.setScaleX(1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
 		} else if (data.get(position).status.equals("SEEDING")) {
 			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
@@ -90,8 +88,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.speedHolder.setVisibility(View.VISIBLE);
 			holder.textPercent.setText(percentString + "%");
 			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
-			ViewHelper.setPivotX(holder.greenBar, 0);
-			ViewHelper.setScaleX(holder.greenBar, 1f);
+            holder.greenBar.setPivotX(0);
+            holder.greenBar.setScaleX(1f);
 			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
 		} else if (data.get(position).status.equals("ERROR")) {
 			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_failed);
@@ -102,8 +100,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.speedHolder.setVisibility(View.GONE);
 			holder.textPercent.setText(":(");
 			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_error));
-			ViewHelper.setPivotX(holder.greenBar, 0);
-			ViewHelper.setScaleX(holder.greenBar, 1f);
+            holder.greenBar.setPivotX(0);
+            holder.greenBar.setScaleX(1f);
 			holder.textPercent.setTextColor(Color.RED);
 		} else {
 			holder.imgStatusIcon.setVisibility(View.INVISIBLE);
@@ -112,8 +110,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.speedHolder.setVisibility(View.VISIBLE);
 			holder.textPercent.setText(percentString + "%");
 			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
-			ViewHelper.setPivotX(holder.greenBar, 0);
-			ViewHelper.setScaleX(holder.greenBar, (float) data.get(position).percentDone / 100);
+            holder.greenBar.setPivotX(0);
+            holder.greenBar.setScaleX((float) data.get(position).percentDone / 100);
 			holder.textPercent.setTextColor(Color.BLACK);
 		}
 

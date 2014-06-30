@@ -1,13 +1,15 @@
 package com.stevenschoen.putionew.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,14 +19,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nineoldandroids.view.ViewHelper;
 import com.stevenschoen.putionew.FlushedInputStream;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class FileDetails extends Fragment {
     private PutioFileData origFileData;
@@ -125,42 +123,34 @@ public class FileDetails extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int fileDetailsLayoutId = R.layout.filedetails;
-		if (!UIUtils.hasHoneycomb()) {
-			if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
-				fileDetailsLayoutId = R.layout.filedetailsgbhori;
-			} else if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
-				fileDetailsLayoutId = R.layout.filedetailsgbvert;
-			} else {
-				fileDetailsLayoutId = R.layout.filedetailsgbvert;
-			}
-		}
 
-        final View view = inflater.inflate(fileDetailsLayoutId, container, false);
+        final View view = inflater.inflate(R.layout.filedetails, container, false);
 
         if (UIUtils.isTablet(getActivity())) {
             view.setBackgroundResource(R.drawable.card_bg_r8);
+            
+//            view.setElevation(PutioUtils.pxFromDp(getActivity(), 16)); // For L
 
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (PutioUtils.dpFromPx(getActivity(), view.getHeight()) > 560) {
-                        view.getLayoutParams().height =
-                                (int) PutioUtils.pxFromDp(getActivity(), 560);
-                    }
-
-                    if (PutioUtils.dpFromPx(getActivity(), view.getWidth()) > 400) {
-                        view.getLayoutParams().width =
-                                (int) PutioUtils.pxFromDp(getActivity(), 400);
-                    }
-
-                    View parent = (View) view.getParent();
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) parent.getLayoutParams();
-                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    parent.setLayoutParams(params);
-                }
-            });
+//            view.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (PutioUtils.dpFromPx(getActivity(), view.getHeight()) > 560) {
+//                        view.getLayoutParams().height =
+//                                (int) PutioUtils.pxFromDp(getActivity(), 560);
+//                    }
+//
+//                    if (PutioUtils.dpFromPx(getActivity(), view.getWidth()) > 400) {
+//                        view.getLayoutParams().width =
+//                                (int) PutioUtils.pxFromDp(getActivity(), 400);
+//                    }
+//
+//                    View parent = (View) view.getParent();
+//                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) parent.getLayoutParams();
+//                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//                    parent.setLayoutParams(params);
+//                }
+//            });
         }
 
         textFileName = (EditText) view.findViewById(R.id.editText_fileName);
@@ -487,19 +477,18 @@ public class FileDetails extends Fragment {
 
     private void changeImagePreview(final Bitmap bitmap, boolean animate) {
         if (animate) {
-            animate(imagePreview).setDuration(250).rotationX(90f);
-            imagePreview.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    changeImagePreview(bitmap, false);
-                    ViewHelper.setRotationX(imagePreview, 270f);
-                    animate(imagePreview).setDuration(250).rotationXBy(90f);
-                    imagePreviewBitmap = bitmap;
-                }
-
-            }
-                    , 500);
+            imagePreview.animate()
+                    .setDuration(250)
+                    .rotationX(90f)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            changeImagePreview(bitmap, false);
+                            imagePreview.setRotationX(270f);
+                            imagePreview.animate().setDuration(250).rotationXBy(90f).setListener(null);
+                            imagePreviewBitmap = bitmap;
+                        }
+                    });
         } else {
             imagePreview.setScaleType(ScaleType.CENTER);
             imagePreview.setImageBitmap(bitmap);

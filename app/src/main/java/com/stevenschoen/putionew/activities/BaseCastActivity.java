@@ -1,6 +1,6 @@
 package com.stevenschoen.putionew.activities;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -8,13 +8,11 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.MediaRouteActionProvider;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.commonsware.cwac.mediarouter.MediaRouteActionProvider;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.common.images.WebImage;
@@ -30,14 +28,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BaseCastActivity extends ActionBarActivity implements CastService.CastCallbacks {
+public abstract class BaseCastActivity extends Activity implements CastService.CastCallbacks {
 
     private CastService castService;
 	private MiniController castBar;
 
 	private boolean resumed = false;
 
-    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +50,7 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
 
         MenuItem buttonMediaRoute = menu.findItem(R.id.menu_cast);
 		MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider)
-				MenuItemCompat.getActionProvider(buttonMediaRoute);
+                buttonMediaRoute.getActionProvider();
         if (castService != null) {
             mediaRouteActionProvider.setRouteSelector(castService.getMediaRouteSelector());
         }
@@ -62,10 +59,9 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
     }
 
     protected void initCast() {
-        supportInvalidateOptionsMenu();
+        invalidateOptionsMenu();
         castBar = (MiniController) findViewById(R.id.castbar_holder);
 		if (castBar != null && castService != null) {
-			castService.videoCastManager.setContext(this);
 			castService.videoCastManager.addMiniController(castBar);
 		}
 
@@ -146,8 +142,8 @@ public class BaseCastActivity extends ActionBarActivity implements CastService.C
             MediaMetadata metaData = new MediaMetadata(file.contentType.contains("video") ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
             metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(file.name));
-            metaData.addImage(new WebImage(Uri.parse(file.icon)));
-            metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
+            if (file.icon != null) metaData.addImage(new WebImage(Uri.parse(file.icon)));
+            if (file.screenshot != null) metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
 
             String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id + "/subtitles/default" +
 					utils.tokenWithStuff + "&format=webvtt";

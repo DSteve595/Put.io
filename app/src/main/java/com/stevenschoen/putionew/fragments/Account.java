@@ -1,7 +1,7 @@
 package com.stevenschoen.putionew.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.account.PutioAccountInfo;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
@@ -36,22 +35,7 @@ public class Account extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		int accountLayoutId = R.layout.account;
-		if (!UIUtils.hasHoneycomb()) {
-			if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) < 400) {
-				accountLayoutId = R.layout.accountgbhori;
-			} else if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
-				accountLayoutId = R.layout.accountgbvert;
-			} else if (!UIUtils.hasHoneycomb()) {
-				accountLayoutId = R.layout.accountgbvert;
-			} else if (PutioUtils.dpFromPx(getActivity(), getResources().getDisplayMetrics().heightPixels) >= 400) {
-				accountLayoutId = R.layout.accountgbvert;
-			} else {
-				accountLayoutId = R.layout.accountgbvert;
-			}
-		}
-		final View view = inflater.inflate(accountLayoutId, container, false);
+		final View view = inflater.inflate(R.layout.account, container, false);
 		
 		textName = (TextView) view.findViewById(R.id.text_behind_accountname);
 		textEmail = (TextView) view.findViewById(R.id.text_behind_accountemail);

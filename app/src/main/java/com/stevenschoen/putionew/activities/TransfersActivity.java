@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -51,7 +50,6 @@ public class TransfersActivity extends FragmentActivity {
 			setContentView(R.layout.transfersactivity);
 			
 			TextView textTitle = (TextView) findViewById(R.id.transfersactivity_text_title);
-			textTitle.setTypeface(Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf"));
 			
 			ImageButton buttonMaximize = (ImageButton) findViewById(R.id.transfersactivity_button_maximize);
 			buttonMaximize.setOnClickListener(new OnClickListener() {

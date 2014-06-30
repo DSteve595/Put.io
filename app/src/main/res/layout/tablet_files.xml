@@ -3,16 +3,19 @@
     android:id="@+id/layout_main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/padding_large">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:baselineAligned="false"
+        android:clipChildren="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingRight="@dimen/padding_large">
+        android:orientation="horizontal">
 
         <fragment
             android:id="@+id/fragment_files"
@@ -26,7 +29,6 @@
             android:id="@+id/fragment_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="4dp"
             android:layout_weight="@integer/weight_filedetails" />
     </LinearLayout>
 

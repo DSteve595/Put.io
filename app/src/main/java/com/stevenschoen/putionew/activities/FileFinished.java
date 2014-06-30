@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -20,10 +19,7 @@ public class FileFinished extends ActionBarActivity {
 		this.setTheme(R.style.Putio_Dialog);
 		setContentView(R.layout.filefinished);
 		
-		Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-		
 		TextView textTitle = (TextView) findViewById(R.id.dialog_title);
-		textTitle.setTypeface(robotoLight);
 		
 		TextView textBody = (TextView) findViewById(R.id.text_downloadfinished_body);
 		textBody.setText(String.format(getString(R.string.downloadfinishedbody), getIntent().getExtras().getString("filename")));

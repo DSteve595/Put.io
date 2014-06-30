@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_menu_share"
         android:orderInCategory="2"
-        android:title="@string/menu_share"
-        app:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_share" />
     <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/ic_action_delete"
         android:orderInCategory="3"
-        android:title="@string/menu_delete"
-        app:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_delete" />
 
 </menu>
