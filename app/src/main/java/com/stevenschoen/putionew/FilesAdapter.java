@@ -50,11 +50,15 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 		holder.textName.setText(file.name);
 		holder.textDescription.setText(file.description);
 		if (file.iconUrl == null) {
-			Picasso.with(context).cancelRequest(holder.imgIcon);
+            if (!UIUtils.hasL()) {
+                Picasso.with(context).cancelRequest(holder.imgIcon);
+            }
 			holder.imgIcon.setImageResource(file.iconRes);
 		} else {
 			holder.imgIcon.setImageResource(0);
-			Picasso.with(context).load(file.iconUrl).into(holder.imgIcon);
+            if (!UIUtils.hasL()) {
+                Picasso.with(context).load(file.iconUrl).into(holder.imgIcon);
+            }
 		}
 
 		return row;

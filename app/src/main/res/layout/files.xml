@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,18 +15,18 @@
             android:clipToPadding="false"
             android:fastScrollEnabled="true"
             android:nextFocusDown="@+id/files_up"
-            android:scrollbarStyle="insideOverlay"/>
+            android:scrollbarStyle="insideOverlay" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <include
         layout="@layout/files_up"
-        android:layout_width="wrap_content"
+        android:layout_width="224dp"
         android:layout_height="56dp"
-        android:paddingBottom="8dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:nextFocusUp="@id/fileslist"
-        android:visibility="invisible"/>
+        android:paddingBottom="8dp"
+        android:visibility="invisible" />
 
     <include
         android:id="@+id/files_emptysub"
@@ -36,13 +35,13 @@
         android:layout_height="64dp"
         android:layout_below="@id/filesSwipeRefresh"
         android:layout_marginLeft="@dimen/padding_large"
-        android:layout_marginRight="@dimen/padding_large"/>
+        android:layout_marginRight="@dimen/padding_large" />
 
     <include
         android:id="@+id/files_empty"
-        layout="@layout/filesempty"/>
+        layout="@layout/filesempty" />
 
     <include
         android:id="@+id/files_loading"
-        layout="@layout/filesloading"/>
+        layout="@layout/filesloading" />
 </RelativeLayout>

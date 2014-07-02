@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/files_up"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/roundrect"
+    android:focusable="true">
+    <!-- L developer preview
+    elevation="4dp"
+    -->
+
+    <ImageView
+        android:id="@+id/image_up"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:src="@drawable/ic_back" />
+
+    <de.ankri.views.AutoScaleTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="6dp"
+        android:layout_toEndOf="@id/image_up"
+        android:layout_toRightOf="@id/image_up"
+        android:gravity="center_vertical"
+        android:text="@string/go_to_previous_folder"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="14sp" />
+</RelativeLayout>

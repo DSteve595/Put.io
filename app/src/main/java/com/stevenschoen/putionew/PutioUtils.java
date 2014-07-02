@@ -62,6 +62,8 @@ import javax.net.ssl.HttpsURLConnection;
 import de.greenrobot.event.EventBus;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.android.AndroidApacheClient;
+import retrofit.client.Client;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
@@ -105,11 +107,18 @@ public class PutioUtils {
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.create();
 
+        Client client;
+        if (UIUtils.hasL()) {
+            client = new AndroidApacheClient();
+        } else {
+            client = new OkClient(new OkHttpClient());
+        }
+
 		RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder()
 				.setEndpoint(baseUrl)
 //				.setLogLevel(RestAdapter.LogLevel.FULL)
 				.setConverter(new GsonConverter(gson))
-				.setClient(new OkClient(new OkHttpClient()))
+				.setClient(client)
 				.setRequestInterceptor(new RequestInterceptor() {
 					@Override
 					public void intercept(RequestFacade request) {

@@ -1,7 +1,7 @@
 package com.stevenschoen.putionew.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 
-public class FileFinished extends ActionBarActivity {
+public class FileFinished extends Activity {
 	private int mode;
 	
 	@Override

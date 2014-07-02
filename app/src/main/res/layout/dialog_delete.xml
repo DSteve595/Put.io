@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/nameHolder"
-            android:background="?attr/dividerVertical"/>
+            android:background="?android:attr/dividerHorizontal"/>
 
         <LinearLayout
             android:id="@+id/buttonbar"

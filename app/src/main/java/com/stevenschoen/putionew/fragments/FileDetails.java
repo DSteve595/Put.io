@@ -128,7 +128,7 @@ public class FileDetails extends Fragment {
 
         if (UIUtils.isTablet(getActivity())) {
             view.setBackgroundResource(R.drawable.card_bg_r8);
-            
+
 //            view.setElevation(PutioUtils.pxFromDp(getActivity(), 16)); // For L
 
 //            view.post(new Runnable() {

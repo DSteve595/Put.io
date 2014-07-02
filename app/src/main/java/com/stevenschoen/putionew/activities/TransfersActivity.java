@@ -37,7 +37,10 @@ public class TransfersActivity extends FragmentActivity {
 			switch (mode) {
 			case PutioUtils.ADDTRANSFER_URL:
 				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostAddTransferJob(
-						utils, getIntent().getStringExtra("url"), this, getIntent()));
+						utils,
+                        getIntent().getStringExtra("url"),
+                        getIntent().getBooleanExtra("extract", false),
+                        this, getIntent()));
                 break;
 			case PutioUtils.ADDTRANSFER_FILE:
 				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostUploadFileJob(

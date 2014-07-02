@@ -10,12 +10,13 @@
 
         <de.ankri.views.AutoScaleTextView
             android:id="@+id/text_addtransferfile_file"
+            style="?android:buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/putio_clickable_button_dark"
+            android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:text="@string/choosefile"

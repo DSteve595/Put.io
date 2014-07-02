@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew.fragments;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -28,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 
@@ -126,7 +126,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		utils.getEventBus().register(this);
 	}
 
-	@TargetApi(11)
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.files, container, false);
@@ -254,7 +253,22 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				goBack();
 			}
 		});
-		
+//        L developer preview
+//        if (UIUtils.hasL()) {
+//            buttonUpFolder.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Outline outline = new Outline();
+//                    outline.setRoundRect(0, 0,
+//                            buttonUpFolder.getWidth(),
+//                            buttonUpFolder.getHeight(),
+//                            PutioUtils.pxFromDp(getActivity(), 6));
+//                    buttonUpFolder.setOutline(outline);
+//                    buttonUpFolder.setClipToOutline(true);
+//                }
+//            });
+//        }
+
 		loadingView = view.findViewById(R.id.files_loading);
 		emptyView = view.findViewById(R.id.files_empty);
 		ImageButton buttonRefresh = (ImageButton) emptyView.findViewById(R.id.button_filesempty_refresh);
@@ -469,11 +483,12 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
 	
-	private void populateList(final List<PutioFileData> files, int newId, int origIdBefore) {
-		populateList(files, newId, origIdBefore, 0);
+	private void populateList(final List<PutioFileData> files, int newId, int parentId, int origIdBefore) {
+		populateList(files, newId, parentId, origIdBefore, 0);
 	}
 	
-	private void populateList(final List<PutioFileData> files, int newId, int origIdBefore, int highlightId) {
+	private void populateList(final List<PutioFileData> files, int newId, int parentId, int origIdBefore, int highlightId) {
+        state.parentId = parentId;
 		hasUpdated = true;
 		int index = listview.getFirstVisiblePosition();
 		View v = listview.getChildAt(0);
@@ -527,13 +542,18 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		buttonUpFolder.post(new Runnable() {
 			@Override
 			public void run() {
+                int hideY = buttonUpFolder.getHeight();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
+                        buttonUpFolder.getLayoutParams();
+                hideY += params.bottomMargin;
+
 				if (isInSubfolder() || state.isSearch) {
                     buttonUpFolder.animate().translationY(0);
-					listview.setPadding(0, 0, 0, buttonUpFolder.getHeight());
+					listview.setPadding(0, 0, 0, hideY);
 					buttonUpFolder.setEnabled(true);
 					buttonUpFolder.setFocusable(true);
 				} else {
-                    buttonUpFolder.animate().translationY(buttonUpFolder.getHeight());
+                    buttonUpFolder.animate().translationY(hideY);
 					listview.setPadding(0, 0, 0, 0);
 					buttonUpFolder.setEnabled(false);
 					buttonUpFolder.setFocusable(false);
@@ -592,7 +612,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	public void onEventMainThread(FilesListResponse result) {
 		if (result != null) {
 			state.isSearch = false;
-			populateList(result.getFiles(), result.getParent().id, origId);
+			populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 		}
 	}
@@ -600,14 +620,14 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	public void onEventMainThread(CachedFilesListResponse result) {
 		if (result != null) {
 			state.isSearch = false;
-			populateList(result.getFiles(), result.getParent().id, origId);
+			populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
 		}
 	}
 
 	public void onEventMainThread(FilesSearchResponse result) {
 		if (result != null) {
 			state.isSearch = true;
-			populateList(result.getFiles(), -1, -2);
+			populateList(result.getFiles(), -1, -2, -3);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 		}
 	}
