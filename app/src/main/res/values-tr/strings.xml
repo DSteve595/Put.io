@@ -102,6 +102,7 @@
     <string name="addtransfer_type_file">Torrent dosyası</string>
     <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
     <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
+    <string name="go_to_previous_folder">Önceki klasöre dön</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Torrent yükleniyor.</string>

@@ -54,6 +54,7 @@
     <string name="redownloadtitle">Re-télécharger le fichier ?</string>
     <string name="redownloadfordlbody">Il semblerait que cela ait déjà été téléchargé. Continuer ?</string>
     <string name="redownloadforopenbody">Il semblerait que cela ait déjà été téléchargé. Voulez vous ouvrir cette copie ou télécharger à nouveau ?</string>
+    <string name="redownloadforsharebody">Il semblerait que ceci ait déjà été téléchargé. Voulez-vous partager cette copie ou télécharger à nouveau?</string>
     <string name="addtransferstitle">Ajouter un transfert ?</string>
     <string name="applychangestitle">Appliquer les modifications ?</string>
 
@@ -101,6 +102,7 @@
     <string name="addtransfer_type_file">Fichier torrent</string>
     <string name="copyingdownloadlink">Lien de téléchagement en cours de copie</string>
     <string name="filenotfound">Le fichier n\'a pu être trouvé. A-t-il été supprimé ?</string>
+    <string name="go_to_previous_folder">Retourner au dossier précédent</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Envoi du torrent</string>
