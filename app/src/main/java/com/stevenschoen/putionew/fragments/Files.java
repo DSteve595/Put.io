@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Outline;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.SparseBooleanArray;
@@ -253,21 +254,20 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				goBack();
 			}
 		});
-//        L developer preview
-//        if (UIUtils.hasL()) {
-//            buttonUpFolder.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Outline outline = new Outline();
-//                    outline.setRoundRect(0, 0,
-//                            buttonUpFolder.getWidth(),
-//                            buttonUpFolder.getHeight(),
-//                            PutioUtils.pxFromDp(getActivity(), 6));
-//                    buttonUpFolder.setOutline(outline);
-//                    buttonUpFolder.setClipToOutline(true);
-//                }
-//            });
-//        }
+        if (UIUtils.hasL()) {
+            buttonUpFolder.post(new Runnable() {
+                @Override
+                public void run() {
+                    Outline outline = new Outline();
+                    outline.setRoundRect(0, 0,
+                            buttonUpFolder.getWidth(),
+                            buttonUpFolder.getHeight(),
+                            PutioUtils.pxFromDp(getActivity(), 6));
+                    buttonUpFolder.setOutline(outline);
+                    buttonUpFolder.setClipToOutline(true);
+                }
+            });
+        }
 
 		loadingView = view.findViewById(R.id.files_loading);
 		emptyView = view.findViewById(R.id.files_empty);

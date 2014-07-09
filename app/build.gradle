@@ -17,11 +17,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 'android-L'
     buildToolsVersion '20.0.0'
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
+        minSdkVersion 'L'
+        targetSdkVersion 'L'
         versionCode 60
         versionName '2.0.0-beta3'
     }
@@ -50,7 +50,7 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:19.+'
     compile 'com.android.support:support-v13:19.+'
-    compile 'com.google.android.gms:play-services:4.4.+'
+    compile 'com.google.android.gms:play-services:5.0.+'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.httpcomponents:httpmime:4.3.+'
     compile 'org.apache.httpcomponents:httpcore:4.3.+'

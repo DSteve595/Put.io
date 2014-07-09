@@ -2,11 +2,9 @@
     android:id="@+id/files_up"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/roundrect"
+    android:background="@drawable/roundrect_clickable"
+    android:elevation="4dp"
     android:focusable="true">
-    <!-- L developer preview
-    elevation="4dp"
-    -->
 
     <ImageView
         android:id="@+id/image_up"

@@ -127,30 +127,12 @@ public class FileDetails extends Fragment {
         final View view = inflater.inflate(R.layout.filedetails, container, false);
 
         if (UIUtils.isTablet(getActivity())) {
-            view.setBackgroundResource(R.drawable.card_bg_r8);
-
-//            view.setElevation(PutioUtils.pxFromDp(getActivity(), 16)); // For L
-
-//            view.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (PutioUtils.dpFromPx(getActivity(), view.getHeight()) > 560) {
-//                        view.getLayoutParams().height =
-//                                (int) PutioUtils.pxFromDp(getActivity(), 560);
-//                    }
-//
-//                    if (PutioUtils.dpFromPx(getActivity(), view.getWidth()) > 400) {
-//                        view.getLayoutParams().width =
-//                                (int) PutioUtils.pxFromDp(getActivity(), 400);
-//                    }
-//
-//                    View parent = (View) view.getParent();
-//                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) parent.getLayoutParams();
-//                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                    parent.setLayoutParams(params);
-//                }
-//            });
+            if (UIUtils.hasL()) {
+                view.setBackgroundResource(R.drawable.roundrect);
+                view.setElevation(PutioUtils.pxFromDp(getActivity(), 12));
+            } else {
+                view.setBackgroundResource(R.drawable.card_bg_r8);
+            }
         }
 
         textFileName = (EditText) view.findViewById(R.id.editText_fileName);

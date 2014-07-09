@@ -21,9 +21,10 @@
     <include
         layout="@layout/files_up"
         android:layout_width="224dp"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/padding_small"
         android:nextFocusUp="@id/fileslist"
         android:paddingBottom="8dp"
         android:visibility="invisible" />

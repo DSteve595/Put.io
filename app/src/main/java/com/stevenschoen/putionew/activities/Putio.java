@@ -491,8 +491,8 @@ public class Putio extends BaseCastActivity implements
 
             getFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_left,
-                            R.anim.slide_out_right)
+                    .setCustomAnimations(R.animator.slide_in_left,
+                            R.animator.slide_out_right)
                     .replace(fileDetailsId, fileDetailsFragment).commit();
         }
     }
@@ -508,12 +508,12 @@ public class Putio extends BaseCastActivity implements
 
     @Override
     public void onFDCancelled() {
-        removeFD(R.anim.slide_out_right);
+        removeFD(R.animator.slide_out_right);
     }
 
     @Override
     public void onFDFinished() {
-        removeFD(R.anim.slide_out_left);
+        removeFD(R.animator.slide_out_left);
     }
 
     @Override
@@ -531,7 +531,7 @@ public class Putio extends BaseCastActivity implements
     private void removeFD(int exitAnim) {
         filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
         getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_left, exitAnim)
+                .setCustomAnimations(R.animator.slide_in_left, exitAnim)
                 .remove(fileDetailsFragment).commit();
     }
 
@@ -541,14 +541,14 @@ public class Putio extends BaseCastActivity implements
             confirmChangesDialog.setOnDismissListener(new OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface arg0) {
-                    removeFD(R.anim.slide_out_left);
+                    removeFD(R.animator.slide_out_left);
                 }
             });
 
             confirmChangesDialog.setOnCancelListener(new OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface arg0) {
-                    removeFD(R.anim.slide_out_right);
+                    removeFD(R.animator.slide_out_right);
                 }
             });
 
@@ -574,7 +574,7 @@ public class Putio extends BaseCastActivity implements
 
             confirmChangesDialog.show();
         } else {
-            removeFD(R.anim.slide_out_right);
+            removeFD(R.animator.slide_out_right);
         }
     }
 
