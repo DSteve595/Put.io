@@ -129,7 +129,7 @@ public class FileDetails extends Fragment {
         if (UIUtils.isTablet(getActivity())) {
             if (UIUtils.hasL()) {
                 view.setBackgroundResource(R.drawable.roundrect);
-                view.setElevation(PutioUtils.pxFromDp(getActivity(), 12));
+                view.setElevation(PutioUtils.pxFromDp(getActivity(), 8));
             } else {
                 view.setBackgroundResource(R.drawable.card_bg_r8);
             }

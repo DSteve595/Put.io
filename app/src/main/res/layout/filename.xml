@@ -2,7 +2,7 @@
     android:id="@+id/layout_nameHolder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal" >
+    android:layout_gravity="center_horizontal">
 
     <ImageButton
         android:id="@+id/button_undoName"
@@ -11,11 +11,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
-        android:background="@drawable/putio_clickable_button"
+        android:background="?android:attr/selectableItemBackground"
         android:contentDescription="@string/undo"
         android:padding="12dp"
-        android:src="@drawable/ic_menu_revert" >
-    </ImageButton>
+        android:src="@drawable/ic_menu_revert" />
 
     <EditText
         android:id="@+id/editText_fileName"
@@ -27,7 +26,6 @@
         android:gravity="top|start"
         android:hint="File name"
         android:inputType="textMultiLine|textNoSuggestions"
-        android:maxLines="3" >
-    </EditText>
+        android:maxLines="3" />
 
 </RelativeLayout>

@@ -16,6 +16,7 @@
         <item name="android:editTextStyle">@style/Putio.EditText</item>
         <item name="android:checkboxStyle">@style/Putio.CheckBox</item>
         <item name="android:listViewStyle">@style/Putio.ListView</item>
+        <item name="android:selectableItemBackground">@drawable/putio_clickable_button</item>
     </style>
 
     <style name="Theme.Putio.Dark" parent="@android:Theme.Holo">
@@ -91,7 +92,7 @@
     <style name="Putio.ButtonBar.Dialog" parent="@style/Putio.ButtonBar.Transparent" />
 
     <style name="Putio.ButtonBar.Button" parent="@style/Widget.Putio">
-        <item name="android:background">@drawable/putio_clickable_button</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
