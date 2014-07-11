@@ -531,10 +531,13 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void removeFD(int exitAnim) {
-        filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.slide_in_left, exitAnim)
-                .remove(fileDetailsFragment).commit();
+        if (fileDetailsFragment != null && fileDetailsFragment.isAdded()) {
+            filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
+            getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.slide_in_left, exitAnim)
+                    .remove(fileDetailsFragment)
+                    .commit();
+        }
     }
 
     private void removeFD(boolean askIfSave) {
@@ -613,6 +616,7 @@ public class Putio extends BaseCastActivity implements
                 super.onBackPressed();
             } else {
                 filesFragment.goBack();
+                removeFD(true);
             }
         } else {
             if (hasWindowFocus()) {
