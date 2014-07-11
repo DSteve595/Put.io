@@ -301,6 +301,8 @@ public class Putio extends BaseCastActivity implements
             setupPhoneLayout();
         }
 
+        initCastBar();
+
         int navItem = 1;
         if (savedInstanceState != null) {
             navItem = savedInstanceState.getInt("currentTab");

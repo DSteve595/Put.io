@@ -154,8 +154,6 @@
 
         <service android:name=".PutioOpenFileService" />
         <service android:name=".PutioTransfersService" />
-        <service android:name=".model.PutioRestService" />
-        <service android:name="com.stevenschoen.putionew.cast.CastService" />
         <service
             android:name="com.google.sample.castcompanionlibrary.notification.VideoCastNotificationService"
             android:exported="false">

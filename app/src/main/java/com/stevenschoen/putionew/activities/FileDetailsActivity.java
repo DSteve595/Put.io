@@ -23,6 +23,8 @@ public class FileDetailsActivity extends BaseCastActivity {
 
         setContentView(R.layout.filedetailsphone);
 
+        initCastBar();
+
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager

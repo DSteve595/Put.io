@@ -27,10 +27,10 @@ import android.widget.TextView;
 
 import com.stevenschoen.putionew.FlushedInputStream;
 import com.stevenschoen.putionew.PutioApplication;
+import com.stevenschoen.putionew.PutioApplication.CastCallbacks;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
-import com.stevenschoen.putionew.cast.CastService.CastCallbacks;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 import com.stevenschoen.putionew.model.files.PutioMp4Status;
