@@ -60,6 +60,7 @@ public class TransfersActivity extends FragmentActivity {
 				@Override
 				public void onClick(View v) {
 					Intent putioIntent = new Intent(TransfersActivity.this, Putio.class);
+                    putioIntent.putExtra("goToTab", Putio.TAB_TRANSFERS);
 					if (UIUtils.hasJellyBean()) {
                         View content = findViewById(android.R.id.content);
 						Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(

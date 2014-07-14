@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,9 +49,9 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	
 	private static final int VIEWMODE_LIST = 1;
 	private static final int VIEWMODE_LISTOREMPTY = 2;
-	private static final int VIEWMODE_LOADING = -1;
-	private static final int VIEWMODE_EMPTY = -2;
-	private static final int VIEWMODE_LISTORLOADING = 3;
+	private static final int VIEWMODE_LOADING = 3;
+	private static final int VIEWMODE_EMPTY = 4;
+	private static final int VIEWMODE_LISTORLOADING = 5;
 	private int viewMode = VIEWMODE_LIST;
 
 	private View buttonUpFolder;
@@ -82,7 +79,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	
 	private View loadingView;
 	private View emptyView;
-	private View emptySubView;
+	private View emptySubfolderView;
 	
 	private boolean hasUpdated = false;
 
@@ -90,6 +87,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 	static class State {
 		boolean isSearch;
+        String searchQuery;
 		int id;
 		int parentId;
 	}
@@ -213,7 +211,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				public void onDestroyActionMode(ActionMode mode) { }
 			});
 		}
-		registerForContextMenu(listview);
 		if (UIUtils.isTablet(getActivity())) {
 			listview.setVerticalFadingEdgeEnabled(true);
 			listview.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_INSET);
@@ -253,21 +250,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				goBack();
 			}
 		});
-//        L developer preview
-//        if (UIUtils.hasL()) {
-//            buttonUpFolder.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Outline outline = new Outline();
-//                    outline.setRoundRect(0, 0,
-//                            buttonUpFolder.getWidth(),
-//                            buttonUpFolder.getHeight(),
-//                            PutioUtils.pxFromDp(getActivity(), 6));
-//                    buttonUpFolder.setOutline(outline);
-//                    buttonUpFolder.setClipToOutline(true);
-//                }
-//            });
-//        }
 
 		loadingView = view.findViewById(R.id.files_loading);
 		emptyView = view.findViewById(R.id.files_empty);
@@ -278,7 +260,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				invalidateList();
 			}
 		});
-		emptySubView = view.findViewById(R.id.files_emptysub);
+		emptySubfolderView = view.findViewById(R.id.files_empty_subfolder);
 
 		if (savedInstanceState == null) {
 			buttonUpFolder.post(new Runnable() {
@@ -303,21 +285,23 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			listview.setVisibility(View.VISIBLE);
 			loadingView.setVisibility(View.GONE);
 			emptyView.setVisibility(View.GONE);
+            emptySubfolderView.setVisibility(View.GONE);
 			break;
 		case VIEWMODE_LOADING:
 			listview.setVisibility(View.INVISIBLE);
 			loadingView.setVisibility(View.VISIBLE);
 			emptyView.setVisibility(View.GONE);
+            emptySubfolderView.setVisibility(View.GONE);
 			break;
 		case VIEWMODE_EMPTY:
 			listview.setVisibility(View.INVISIBLE);
 			loadingView.setVisibility(View.GONE);
-			if (state.id == 0) {
+			if (state.id == 0 && !state.isSearch) {
 				emptyView.setVisibility(View.VISIBLE);
-				emptySubView.setVisibility(View.GONE);
+				emptySubfolderView.setVisibility(View.GONE);
 			} else {
 				emptyView.setVisibility(View.GONE);
-				emptySubView.setVisibility(View.VISIBLE);
+				emptySubfolderView.setVisibility(View.VISIBLE);
 			}
 			break;
 		case VIEWMODE_LISTOREMPTY:
@@ -351,41 +335,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
         mCallbacks = sDummyCallbacks;
     }
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-		if ((info.id != 0) || (state.id == 0)) {
-			if (v.getId() == R.id.fileslist) {
-				menu.setHeaderTitle(fileData.get(info.position).name);
-			    MenuInflater inflater = getActivity().getMenuInflater();
-			    inflater.inflate(R.menu.context_files, menu);
-			}
-		}
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
-		switch (item.getItemId()) {
-			case R.id.context_download:
-				initDownloadFiles((int) info.id);
-				return true;
-			case R.id.context_copydownloadlink:
-				initCopyFileDownloadLink((int) info.id);
-				return true;
-			case R.id.context_rename:
-				initRenameFile((int) info.id);
-				return true;
-			case R.id.context_delete:
-				initDeleteFile((int) info.id);
-				return true;
-			default:
-				return super.onContextItemSelected(item);
-		}
-	}
 	
 	private void initDownloadFiles(final int... indeces) {
 		PutioFileData[] files = new PutioFileData[indeces.length];
@@ -458,13 +407,13 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.search, menu);
-		
-		MenuItem buttonSearch = menu.findItem(R.id.menu_search);
-		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) buttonSearch.getActionView();
-		searchView.setIconifiedByDefault(true);
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        inflater.inflate(R.menu.search, menu);
+        MenuItem buttonSearch = menu.findItem(R.id.menu_search);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) buttonSearch.getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
         try {
             int searchPlateId = searchView.getContext().getResources().getIdentifier(
@@ -475,8 +424,10 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 //            SearchView couldn't be styled
         }
 	}
-	
-	public void initSearch(String query) {
+
+    public void initSearch(String query) {
+        state.searchQuery = query;
+
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesSearchJob(
 				utils, query));
 
@@ -625,7 +576,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	}
 
 	public void onEventMainThread(FilesSearchResponse result) {
-		if (result != null) {
+		if (result != null && state.searchQuery.equals(result.getQuery())) {
 			state.isSearch = true;
 			populateList(result.getFiles(), -1, -2, -3);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);

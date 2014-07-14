@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/dialog_title_putio"/>
+    <include layout="@layout/dialog_title_putio" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/nameHolder"
-            android:background="?android:attr/dividerHorizontal"/>
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:id="@+id/buttonbar"

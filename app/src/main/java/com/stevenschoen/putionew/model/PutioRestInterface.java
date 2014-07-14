@@ -47,7 +47,7 @@ public interface PutioRestInterface {
 	@GET("/files/list")
 	FilesListResponse files(@Query("parent_id") int parentId);
 
-	@GET("/files/searchFiles/{query}/page/-1")
+	@GET("/files/search/{query}/page/-1")
 	FilesSearchResponse searchFiles(@Path("query") String query);
 
 	@GET("/files/{id}")
@@ -239,6 +239,7 @@ public interface PutioRestInterface {
 		@Override
 		public void onRun() throws Throwable {
 			FilesSearchResponse networkResponse = getUtils().getRestInterface().searchFiles(query);
+            networkResponse.setQuery(query);
 			getUtils().getEventBus().post(networkResponse);
 		}
 	}

@@ -29,13 +29,8 @@
         android:visibility="invisible" />
 
     <include
-        android:id="@+id/files_emptysub"
-        layout="@layout/filesemptysub"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_below="@id/filesSwipeRefresh"
-        android:layout_marginLeft="@dimen/padding_large"
-        android:layout_marginRight="@dimen/padding_large" />
+        android:id="@+id/files_empty_subfolder"
+        layout="@layout/filesempty_subfolder" />
 
     <include
         android:id="@+id/files_empty"

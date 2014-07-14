@@ -56,6 +56,12 @@ import java.io.InputStream;
 public class Putio extends BaseCastActivity implements
         ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
 
+    public static final int TAB_ACCOUNT = 0;
+    public static final int TAB_FILES = 1;
+    public static final int TAB_TRANSFERS = 2;
+
+    private boolean init = false;
+
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
@@ -141,12 +147,18 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void handleIntent(Intent intent) {
-        if (intent.getAction() != null) {
-            if (intent.getAction().equals(Intent.ACTION_SEARCH) &&
-					sharedPrefs.getBoolean("loggedIn", false) &&
-					filesFragment != null) {
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                filesFragment.initSearch(query);
+        if (init) {
+            int goToTab = intent.getIntExtra("goToTab", -1);
+            if (goToTab != -1) {
+                selectTab(goToTab);
+            }
+
+            if (intent.getAction() != null) {
+                if (intent.getAction().equals(Intent.ACTION_SEARCH) &&
+                        filesFragment != null) {
+                    String query = intent.getStringExtra(SearchManager.QUERY);
+                    filesFragment.initSearch(query);
+                }
             }
         }
     }
@@ -154,13 +166,13 @@ public class Putio extends BaseCastActivity implements
     @Override
 	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         switch (tab.getPosition()) {
-            case 0:
+            case TAB_ACCOUNT:
                 accountFragment.setMenuVisibility(false);
                 break;
-            case 1:
+            case TAB_FILES:
                 filesFragment.setMenuVisibility(false);
                 break;
-            case 2:
+            case TAB_TRANSFERS:
                 transfersFragment.setMenuVisibility(false);
                 break;
         }
@@ -169,15 +181,15 @@ public class Putio extends BaseCastActivity implements
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         switch (tab.getPosition()) {
-            case 0:
+            case TAB_ACCOUNT:
                 setContentView(tabletAccountView);
                 accountFragment.setMenuVisibility(true);
                 break;
-            case 1:
+            case TAB_FILES:
                 setContentView(tabletFilesView);
                 filesFragment.setMenuVisibility(true);
                 break;
-            case 2:
+            case TAB_TRANSFERS:
                 setContentView(tabletTransfersView);
                 transfersFragment.setMenuVisibility(true);
                 break;
@@ -255,13 +267,13 @@ public class Putio extends BaseCastActivity implements
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
+                case TAB_ACCOUNT:
                     accountFragment = (Account) Account.instantiate(Putio.this, Account.class.getName());
                     return accountFragment;
-                case 1:
+                case TAB_FILES:
                     filesFragment = (Files) Files.instantiate(Putio.this, Files.class.getName());
                     return filesFragment;
-                case 2:
+                case TAB_TRANSFERS:
                     transfersFragment = (Transfers) Transfers.instantiate(Putio.this, Transfers.class.getName());
                     return transfersFragment;
             }
@@ -280,11 +292,11 @@ public class Putio extends BaseCastActivity implements
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
+                case TAB_ACCOUNT:
                     return titleAccount;
-                case 1:
+                case TAB_FILES:
                     return titleFiles;
-                case 2:
+                case TAB_TRANSFERS:
                     return titleTransfers;
             }
             return null;
@@ -292,6 +304,8 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void init() {
+        init = true;
+
 		((PutioApplication) getApplication()).buildUtils();
 		this.utils = ((PutioApplication) getApplication()).getPutioUtils();
 

@@ -7,7 +7,17 @@ import java.util.List;
 public class FilesSearchResponse extends BasePutioResponse {
 	private List<PutioFileData> files;
 
+    private String query;
+
 	public List<PutioFileData> getFiles() {
 		return files;
 	}
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public String getQuery() {
+        return query;
+    }
 }

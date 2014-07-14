@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:visibility="gone" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,13 +24,13 @@
 
     <ImageButton
         android:id="@+id/button_filesempty_refresh"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_below="@id/text_filesempty_addstuff"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:background="@drawable/putio_clickable_button_round"
-        android:padding="2dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_refresh"
         android:text="@string/refresh" />
 
