@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="64dp">
 
@@ -7,7 +6,7 @@
         android:id="@+id/transfer_greenbar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="#4000FF00"/>
+        android:background="#4000FF00" />
 
     <ImageView
         android:id="@+id/img_transfer_icon"
@@ -19,7 +18,7 @@
         android:adjustViewBounds="true"
         android:padding="6dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/ic_launcher" />
 
     <ProgressBar
         android:id="@+id/transfer_statusLoading"
@@ -29,7 +28,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/padding_small"
-        android:padding="4dp"/>
+        android:padding="4dp" />
 
     <TextView
         android:id="@+id/text_transfer_percent"
@@ -40,7 +39,7 @@
         android:layout_marginLeft="2dp"
         android:paddingRight="12dp"
         android:text="0"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,7 +58,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="Transfer name"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/text_transfer_message"
@@ -68,7 +67,7 @@
             android:layout_marginLeft="4dp"
             android:text="Other message"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/transfer_speedHolder"
@@ -80,30 +79,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+                android:alpha="0.9"
+                android:padding="1dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_putio_download"/>
+                android:src="@drawable/ic_putio_download" />
 
             <TextView
                 android:id="@+id/text_transfer_downValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2sp"
-                android:text="0"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/text_transfer_downUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2sp"
-                android:text="0"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
                 android:adjustViewBounds="true"
+                android:alpha="0.9"
+                android:padding="1dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_upload"/>
+                android:src="@drawable/ic_upload" />
 
             <TextView
                 android:id="@+id/text_transfer_upValue"
@@ -111,15 +116,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2sp"
                 android:layout_marginRight="2sp"
-                android:text="0"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/text_transfer_upUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2sp"
-                android:text="0"/>
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>
