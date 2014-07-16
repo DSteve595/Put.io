@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="64dp"
+    android:background="@drawable/putio_clickable_list"
     android:paddingLeft="@dimen/file_rowpadding"
     android:paddingRight="@dimen/file_rowpadding">
 

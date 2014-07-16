@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:clipToPadding="false"
+            android:divider="@drawable/divider_files"
             android:fastScrollEnabled="true"
             android:nextFocusDown="@+id/files_up"
             android:scrollbarStyle="insideOverlay" />
