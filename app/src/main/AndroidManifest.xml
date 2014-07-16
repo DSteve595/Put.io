@@ -27,6 +27,7 @@
 
         <activity
             android:name=".activities.Putio"
+            android:label="@string/putio"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

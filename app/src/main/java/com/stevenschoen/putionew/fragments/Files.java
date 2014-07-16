@@ -58,7 +58,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
     private int highlightFileId = -1;
 
-    private boolean buttonUpFolderShown = false;
+    private boolean buttonUpFolderShown;
 
 	private View buttonUpFolder;
 
@@ -258,6 +258,19 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			}
 		});
 
+        buttonUpFolderShown = false;
+
+        buttonUpFolder.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isInSubfolderOrSearch()) {
+                    upButtonShow(false);
+                } else {
+                    upButtonHide(false);
+                }
+            }
+        });
+
 		loadingView = view.findViewById(R.id.files_loading);
 		emptyView = view.findViewById(R.id.files_empty);
 		ImageButton buttonRefresh = (ImageButton) emptyView.findViewById(R.id.button_filesempty_refresh);
@@ -279,7 +292,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			invalidateList();
 			setViewMode(VIEWMODE_LOADING);
 		} else {
-			addUpButtonIfNeeded();
 			setViewMode(VIEWMODE_LISTORLOADING);
 		}
 		
@@ -444,7 +456,11 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		View v = listview.getChildAt(0);
 		int top = (v == null) ? 0 : v.getTop();
 
-		addUpButtonIfNeeded();
+		if (isInSubfolderOrSearch()) {
+            upButtonShow(true);
+        } else {
+            upButtonHide(true);
+        }
 
 		if (files == null) {
 			setViewMode(VIEWMODE_EMPTY);
@@ -490,41 +506,58 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 	}
 
-	private void addUpButtonIfNeeded() {
-		buttonUpFolder.post(new Runnable() {
-			@Override
-			public void run() {
-                int hideY = buttonUpFolder.getHeight();
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
-                        buttonUpFolder.getLayoutParams();
-                hideY += params.bottomMargin;
+    private void upButtonHide(boolean animate) {
+        int hideY = getUpButtonHideY();
 
-				if (isInSubfolderOrSearch() && !buttonUpFolderShown) {
-                    buttonUpFolder.animate()
-                            .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                            .setInterpolator(new DecelerateInterpolator())
-                            .translationY(0);
-					listview.setPadding(0, 0, 0, hideY);
-					buttonUpFolder.setEnabled(true);
-					buttonUpFolder.setFocusable(true);
+        if (animate) {
+            if (buttonUpFolderShown) {
+                buttonUpFolder.setVisibility(View.VISIBLE);
+                buttonUpFolder.animate()
+                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setInterpolator(new AccelerateInterpolator())
+                        .translationY(hideY);
+            }
+        } else {
+            buttonUpFolder.setTranslationY(hideY);
+        }
 
-                    buttonUpFolderShown = true;
-				} else if (!isInSubfolderOrSearch() && buttonUpFolderShown) {
-                    buttonUpFolder.animate()
-                            .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                            .setInterpolator(new AccelerateInterpolator())
-                            .translationY(hideY);
-					listview.setPadding(0, 0, 0, 0);
-					buttonUpFolder.setEnabled(false);
-					buttonUpFolder.setFocusable(false);
+        listview.setPadding(0, 0, 0, 0);
+        buttonUpFolder.setEnabled(false);
+        buttonUpFolder.setFocusable(false);
 
-                    buttonUpFolderShown = false;
-				}
+        buttonUpFolderShown = false;
+    }
 
-				buttonUpFolder.setVisibility(View.VISIBLE);
-			}
-		});
-	}
+    private void upButtonShow(boolean animate) {
+        int hideY = getUpButtonHideY();
+
+        if (animate) {
+            if (!buttonUpFolderShown) {
+                buttonUpFolder.animate()
+                        .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                        .setInterpolator(new DecelerateInterpolator())
+                        .translationY(0);
+            }
+        } else {
+            buttonUpFolder.setTranslationY(0);
+        }
+
+        listview.setPadding(0, 0, 0, hideY);
+        buttonUpFolder.setEnabled(true);
+        buttonUpFolder.setFocusable(true);
+        buttonUpFolder.setVisibility(View.VISIBLE);
+
+        buttonUpFolderShown = true;
+    }
+
+    private int getUpButtonHideY() {
+        int hideY = buttonUpFolder.getHeight();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
+                buttonUpFolder.getLayoutParams();
+        hideY += params.bottomMargin;
+
+        return hideY;
+    }
 	
 	public int getIndexFromFileId(int fileId) {
 		for (int i = 0; i < fileData.size(); i++) {
