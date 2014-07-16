@@ -499,7 +499,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
                         buttonUpFolder.getLayoutParams();
                 hideY += params.bottomMargin;
 
-				if ((isInSubfolder() || state.isSearch) && !buttonUpFolderShown) {
+				if (isInSubfolderOrSearch() && !buttonUpFolderShown) {
                     buttonUpFolder.animate()
                             .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                             .setInterpolator(new DecelerateInterpolator())
@@ -509,7 +509,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 					buttonUpFolder.setFocusable(true);
 
                     buttonUpFolderShown = true;
-				} else if ((!isInSubfolder() && !state.isSearch) && buttonUpFolderShown) {
+				} else if (!isInSubfolderOrSearch() && buttonUpFolderShown) {
                     buttonUpFolder.animate()
                             .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                             .setInterpolator(new AccelerateInterpolator())
@@ -544,7 +544,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	}
 	
 	public boolean goBack() {
-		if (state.isSearch || isInSubfolder()) {
+		if (isInSubfolderOrSearch()) {
 			if (state.isSearch) {
 				state.isSearch = false;
 				state.id = 0;
@@ -559,8 +559,8 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 	}
 	
-	public boolean isInSubfolder() {
-		return (state.id != 0);
+	public boolean isInSubfolderOrSearch() {
+		return (state.id != 0 || state.isSearch);
 	}
 	
 	public void highlightFile(int parentId, int id) {

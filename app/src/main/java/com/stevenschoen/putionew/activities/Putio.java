@@ -538,8 +538,12 @@ public class Putio extends BaseCastActivity implements
         showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId);
     }
 
+    private boolean isFDShown() {
+        return (fileDetailsFragment != null && fileDetailsFragment.isAdded());
+    }
+
     private void removeFD(int exitAnim) {
-        if (fileDetailsFragment != null && fileDetailsFragment.isAdded()) {
+        if (isFDShown()) {
             filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
             getFragmentManager().beginTransaction()
                     .setCustomAnimations(R.animator.slide_in_left, exitAnim)
@@ -549,44 +553,46 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void removeFD(boolean askIfSave) {
-        if (askIfSave && !fileDetailsFragment.getOldFilename().equals(fileDetailsFragment.getNewFilename())) {
-            final Dialog confirmChangesDialog = utils.confirmChangesDialog(this, fileDetailsFragment.getOldFilename());
-            confirmChangesDialog.setOnDismissListener(new OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface arg0) {
-                    removeFD(R.animator.slide_out_left);
-                }
-            });
+        if (askIfSave)
+            if (isFDShown() && !fileDetailsFragment.getOldFilename().equals(fileDetailsFragment.getNewFilename())) {
+                final Dialog confirmChangesDialog = utils.confirmChangesDialog(this, fileDetailsFragment.getOldFilename());
+                confirmChangesDialog.setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface arg0) {
+                        removeFD(R.animator.slide_out_left);
+                    }
+                });
 
-            confirmChangesDialog.setOnCancelListener(new OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface arg0) {
-                    removeFD(R.animator.slide_out_right);
-                }
-            });
+                confirmChangesDialog.setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface arg0) {
+                        removeFD(R.animator.slide_out_right);
+                    }
+                });
 
-            Button apply = (Button) confirmChangesDialog.findViewById(R.id.button_confirm_apply);
-            apply.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-					utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
-							utils,
-							fileDetailsFragment.getFileId(),
-							fileDetailsFragment.getNewFilename()));
-                    confirmChangesDialog.dismiss();
-                }
-            });
+                Button apply = (Button) confirmChangesDialog.findViewById(R.id.button_confirm_apply);
+                apply.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
+                                utils,
+                                fileDetailsFragment.getFileId(),
+                                fileDetailsFragment.getNewFilename()));
+                        confirmChangesDialog.dismiss();
+                    }
+                });
 
-            Button cancel = (Button) confirmChangesDialog.findViewById(R.id.button_confirm_cancel);
-            cancel.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    confirmChangesDialog.cancel();
-                }
-            });
+                Button cancel = (Button) confirmChangesDialog.findViewById(R.id.button_confirm_cancel);
+                cancel.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        confirmChangesDialog.cancel();
+                    }
+                });
 
-            confirmChangesDialog.show();
-        } else {
+                confirmChangesDialog.show();
+            }
+        else {
             removeFD(R.animator.slide_out_right);
         }
     }
@@ -620,10 +626,9 @@ public class Putio extends BaseCastActivity implements
 	@Override
     public void onBackPressed() {
         if (UIUtils.isTablet(this)) {
-            if (filesFragment.getCurrentFolderId() == 0) {
+            if (!filesFragment.goBack()) {
                 super.onBackPressed();
             } else {
-                filesFragment.goBack();
                 removeFD(true);
             }
         } else {

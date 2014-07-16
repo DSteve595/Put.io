@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,8 +41,7 @@ public class About extends Fragment {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
 			Intent homeIntent = new Intent(getActivity(), Putio.class);
-			homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(homeIntent);
+			NavUtils.navigateUpTo(getActivity(), homeIntent);
 			return true;
 		}
 		return (super.onOptionsItemSelected(menuItem));
