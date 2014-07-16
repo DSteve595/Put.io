@@ -77,7 +77,7 @@
     <string name="transfers">Transfers</string>
     <string name="loginsuccess">Successfully logged in!</string>
     <string name="total_is">Total: %s</string>
-    <string name="size_is">Size: %s</string>
+    <string name="size_is">%s</string>
     <string name="loading">Loading…</string>
     <string name="created">Created:</string>
     <string name="at">at</string>

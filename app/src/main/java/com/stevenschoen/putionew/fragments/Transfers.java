@@ -60,15 +60,12 @@ public final class Transfers extends Fragment {
 	private View noNetworkView;
 
 	public interface Callbacks {
-    	public void transfersReady();
-        public void onTransferSelected(int parentId, int id);
+        public void onTransferSelected(PutioTransferData transfer);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
-    	@Override
-    	public void transfersReady() { }
         @Override
-        public void onTransferSelected(int parentId, int id) { }
+        public void onTransferSelected(PutioTransferData transfer) { }
     };
 	
     private Callbacks mCallbacks = sDummyCallbacks;
@@ -100,12 +97,10 @@ public final class Transfers extends Fragment {
 			listview.setVerticalFadingEdgeEnabled(true);
 		}
 		listview.setOnItemClickListener(new OnItemClickListener() {
-			
 			@Override
-			public void onItemClick(AdapterView<?> a, View view, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> a, View view, int position, long id) {
 				if (transfersData.get(position).status.equals("COMPLETED") || transfersData.get(position).status.equals("SEEDING")) {
-					mCallbacks.onTransferSelected(transfersData.get(position).saveParentId, transfersData.get(position).fileId);
+					mCallbacks.onTransferSelected(transfersData.get(position));
 				}
 			}
 		});
@@ -222,7 +217,6 @@ public final class Transfers extends Fragment {
         } catch (ClassCastException e) {
         	mCallbacks = sDummyCallbacks;
         }
-    	mCallbacks.transfersReady();
     	
     	getActivity().registerReceiver(
 				transfersAvailableReceiver, new IntentFilter(Putio.transfersAvailableIntent));

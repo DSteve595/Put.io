@@ -45,6 +45,7 @@ import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
 import com.stevenschoen.putionew.model.PutioRestInterface;
+import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -493,7 +494,7 @@ public class Putio extends BaseCastActivity implements
     }
 
     public void showFilesAndHighlightFile(int parentId, int id) {
-        selectTab(1);
+        selectTab(TAB_FILES);
         filesFragment.highlightFile(parentId, id);
     }
 
@@ -533,15 +534,8 @@ public class Putio extends BaseCastActivity implements
     }
 
     @Override
-    public void transfersReady() {
-//		if (!isTransfersServiceRunning()) {
-//			startService(new Intent(this, PutioTransfersService.class));
-//		}
-    }
-
-    @Override
-    public void onTransferSelected(int parentId, int id) {
-        showFilesAndHighlightFile(parentId, id);
+    public void onTransferSelected(PutioTransferData transfer) {
+        showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId);
     }
 
     private void removeFD(int exitAnim) {

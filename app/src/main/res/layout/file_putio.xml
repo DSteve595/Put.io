@@ -32,7 +32,8 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="File name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_fileListDesc"
@@ -41,7 +42,8 @@
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:text="File description"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </RelativeLayout>

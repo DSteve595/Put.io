@@ -58,7 +58,8 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="Transfer name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_transfer_message"

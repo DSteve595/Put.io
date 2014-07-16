@@ -54,9 +54,11 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	private static final int VIEWMODE_LISTORLOADING = 5;
 	private int viewMode = VIEWMODE_LIST;
 
+    private int highlightFileId = -1;
+
 	private View buttonUpFolder;
 
-	public interface Callbacks {
+    public interface Callbacks {
         public void onFileSelected(int id);
         public void onSomethingSelected();
     }
@@ -392,12 +394,8 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		utils.showDeleteFilesDialog(getActivity(), false, files);
 	}
-
-	public void invalidateList() {
-		invalidateList(0);
-	}
 	
-	public void invalidateList(int highlightId) {
+	public void invalidateList() {
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesListJob(
 				utils, getCurrentFolderId(), !UIUtils.isTV(getActivity())));
 		
@@ -435,10 +433,6 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	}
 	
 	private void populateList(final List<PutioFileData> files, int newId, int parentId, int origIdBefore) {
-		populateList(files, newId, parentId, origIdBefore, 0);
-	}
-	
-	private void populateList(final List<PutioFileData> files, int newId, int parentId, int origIdBefore, int highlightId) {
         state.parentId = parentId;
 		hasUpdated = true;
 		int index = listview.getFirstVisiblePosition();
@@ -481,11 +475,13 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 		listview.setSelectionFromTop(index, top);
 		
-		if (highlightId != 0) {
-			int highlightPos = getIndexFromFileId(highlightId);
+		if (highlightFileId != -1) {
+			final int highlightPos = getIndexFromFileId(highlightFileId);
 			
 			listview.requestFocus();
-			listview.setSelection(highlightPos);
+            listview.smoothScrollToPosition(highlightPos);
+
+            highlightFileId = -1;
 		}
 	}
 
@@ -553,7 +549,8 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	
 	public void highlightFile(int parentId, int id) {
 		state.id = parentId;
-		invalidateList(id);
+        highlightFileId = id;
+		invalidateList();
 	}
 	
 	public void setFileChecked(int fileId, boolean checked) {
