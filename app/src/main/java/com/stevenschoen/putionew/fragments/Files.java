@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -55,6 +57,8 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	private int viewMode = VIEWMODE_LIST;
 
     private int highlightFileId = -1;
+
+    private boolean buttonUpFolderShown = false;
 
 	private View buttonUpFolder;
 
@@ -106,6 +110,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		try {
 			state.id = savedInstanceState.getInt("currentFolderId");
 			state.isSearch = savedInstanceState.getBoolean("isSearch");
+            state.searchQuery = savedInstanceState.getString("searchQuery");
 			state.parentId = savedInstanceState.getInt("parentId");
 			origId = savedInstanceState.getInt("origId");
 			fileLayouts = savedInstanceState.getParcelableArrayList("fileLayouts");
@@ -134,7 +139,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
         if (!UIUtils.isTV(getActivity())) {
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
             swipeRefreshLayout.setOnRefreshListener(this);
-			swipeRefreshLayout.setColorScheme(
+			swipeRefreshLayout.setColorSchemeResources(
 					R.color.putio_accent,
 					R.color.putio_accent_dark,
 					R.color.putio_accent,
@@ -494,17 +499,28 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
                         buttonUpFolder.getLayoutParams();
                 hideY += params.bottomMargin;
 
-				if (isInSubfolder() || state.isSearch) {
-                    buttonUpFolder.animate().translationY(0);
+				if ((isInSubfolder() || state.isSearch) && !buttonUpFolderShown) {
+                    buttonUpFolder.animate()
+                            .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                            .setInterpolator(new DecelerateInterpolator())
+                            .translationY(0);
 					listview.setPadding(0, 0, 0, hideY);
 					buttonUpFolder.setEnabled(true);
 					buttonUpFolder.setFocusable(true);
-				} else {
-                    buttonUpFolder.animate().translationY(hideY);
+
+                    buttonUpFolderShown = true;
+				} else if ((!isInSubfolder() && !state.isSearch) && buttonUpFolderShown) {
+                    buttonUpFolder.animate()
+                            .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                            .setInterpolator(new AccelerateInterpolator())
+                            .translationY(hideY);
 					listview.setPadding(0, 0, 0, 0);
 					buttonUpFolder.setEnabled(false);
 					buttonUpFolder.setFocusable(false);
+
+                    buttonUpFolderShown = false;
 				}
+
 				buttonUpFolder.setVisibility(View.VISIBLE);
 			}
 		});
@@ -593,6 +609,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		outState.putInt("currentFolderId", state.id);
 		outState.putInt("origId", origId);
 		outState.putBoolean("isSearch", state.isSearch);
+        outState.putString("searchQuery", state.searchQuery);
 		outState.putInt("parentId", state.parentId);
 		outState.putParcelableArrayList("fileLayouts", fileLayouts);
 		outState.putParcelableArrayList("fileData", fileData);
