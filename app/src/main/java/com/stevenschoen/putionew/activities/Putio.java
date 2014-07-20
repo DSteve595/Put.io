@@ -218,14 +218,19 @@ public class Putio extends BaseCastActivity implements
         getMenuInflater().inflate(R.menu.putio, menu);
 
         MenuItem buttonAdd = menu.findItem(R.id.menu_addtransfers);
-        buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        if (UIUtils.isFireTv()) {
+            buttonAdd.setVisible(false);
+            buttonAdd.setEnabled(false);
+        } else {
+            buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class);
-                startActivity(addTransferActivityIntent);
-                return false;
-            }
-        });
+                public boolean onMenuItemClick(MenuItem item) {
+                    Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class);
+                    startActivity(addTransferActivityIntent);
+                    return false;
+                }
+            });
+        }
 
         MenuItem buttonSettings = menu.findItem(R.id.menu_settings);
         buttonSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

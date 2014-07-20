@@ -11,6 +11,11 @@ public class UIUtils {
 				"android.hardware.type.television");
 	}
 
+    public static boolean isFireTv() {
+        return (android.os.Build.MANUFACTURER.equalsIgnoreCase("Amazon")
+                && android.os.Build.MODEL.equalsIgnoreCase("AFTB"));
+    }
+
 	public static boolean hasGingerbread() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
 	}
