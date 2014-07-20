@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew;
 
 import android.app.Application;
-import android.content.Context;
 import android.support.v7.media.MediaRouteSelector;
 
 import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
@@ -39,11 +38,9 @@ public class PutioApplication extends Application {
                         VideoCastManager.FEATURE_DEBUGGING
         );
         videoCastManager.setStopOnDisconnect(true);
-        videoCastManager.setContext(this);
     }
 
-    public VideoCastManager getVideoCastManager(Context context) {
-        videoCastManager.setContext(context);
+    public VideoCastManager getVideoCastManager() {
         return videoCastManager;
     }
 

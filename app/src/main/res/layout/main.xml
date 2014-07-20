@@ -2,6 +2,7 @@
     android:id="@+id/layout_main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     android:orientation="vertical">
 
     <com.astuetz.PagerSlidingTabStrip
@@ -15,11 +16,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.sample.castcompanionlibrary.widgets.MiniController
-        android:id="@+id/castbar_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#F0F0F0"
-        android:visibility="gone" />
+    <include layout="@layout/castbar" />
 
 </LinearLayout>

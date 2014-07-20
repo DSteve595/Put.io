@@ -27,10 +27,11 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
+        android:id="@+id/text_about_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="Version 2.0"
+        android:text="Version unknown"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="12sp" />
 </LinearLayout>

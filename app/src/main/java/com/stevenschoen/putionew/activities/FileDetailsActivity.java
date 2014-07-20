@@ -54,4 +54,9 @@ public class FileDetailsActivity extends BaseCastActivity {
 
         return super.onOptionsItemSelected(menuItem);
     }
+
+    @Override
+    public boolean shouldUpdateCastContext() {
+        return (!getCastManager().hasContext());
+    }
 }

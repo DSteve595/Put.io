@@ -2,6 +2,7 @@ package com.stevenschoen.putionew.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.activities.Putio;
@@ -32,6 +34,15 @@ public class About extends Fragment {
 				startActivity(goToSiteIntent);
 			}
 		});
+
+        TextView textVersion = (TextView) view.findViewById(R.id.text_about_version);
+        try {
+            String version = getActivity().getPackageManager().getPackageInfo(
+                    getActivity().getPackageName(), 0).versionName;
+            textVersion.setText("Version " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 		
 		return view;
 	}

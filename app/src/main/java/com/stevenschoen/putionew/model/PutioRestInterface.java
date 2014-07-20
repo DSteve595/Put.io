@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
@@ -321,8 +320,6 @@ public interface PutioRestInterface {
 			} else {
 				file = new File(fileUri.getPath());
 			}
-			Log.d("asdf", "uri: " + fileUri);
-			Log.d("asdf", "file size: " + file.length());
 
 			try {
 				getUtils().getRestInterface().uploadFile(

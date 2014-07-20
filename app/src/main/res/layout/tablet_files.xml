@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/padding_large">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +14,9 @@
         android:baselineAligned="false"
         android:clipChildren="false"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/padding_large"
+        android:paddingRight="16dp">
 
         <fragment
             android:id="@+id/fragment_files"
@@ -31,12 +32,5 @@
             android:layout_height="match_parent"
             android:layout_weight="@integer/weight_filedetails" />
     </LinearLayout>
-
-    <com.google.sample.castcompanionlibrary.widgets.MiniController
-        android:id="@+id/castbar_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#F0F0F0"
-        android:visibility="gone" />
 
 </LinearLayout>

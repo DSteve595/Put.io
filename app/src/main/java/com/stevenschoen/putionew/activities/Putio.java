@@ -31,9 +31,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.sample.castcompanionlibrary.widgets.MiniController;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioNotification;
 import com.stevenschoen.putionew.PutioUtils;
@@ -316,8 +318,6 @@ public class Putio extends BaseCastActivity implements
             setupPhoneLayout();
         }
 
-        initCastBar();
-
         int navItem = 1;
         if (savedInstanceState != null) {
             navItem = savedInstanceState.getInt("currentTab");
@@ -428,6 +428,8 @@ public class Putio extends BaseCastActivity implements
     }
 
     private void setupPhoneLayout() {
+        initCastBar();
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
 		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -480,6 +482,22 @@ public class Putio extends BaseCastActivity implements
         transfersId = R.id.fragment_transfers;
 
         transfersFragment = (Transfers) getFragmentManager().findFragmentById(R.id.fragment_transfers);
+
+        // Cast bars
+        MiniController accountCastBar = (MiniController)
+                getLayoutInflater().inflate(R.layout.castbar, (ViewGroup) tabletAccountView, false);
+        ((ViewGroup) tabletAccountView).addView(accountCastBar);
+        getCastManager().addMiniController(accountCastBar);
+
+        MiniController filesCastBar = (MiniController)
+                getLayoutInflater().inflate(R.layout.castbar, (ViewGroup) tabletFilesView, false);
+        ((ViewGroup) tabletFilesView).addView(filesCastBar);
+        getCastManager().addMiniController(filesCastBar);
+
+        MiniController transfersCastBar = (MiniController)
+                getLayoutInflater().inflate(R.layout.castbar, (ViewGroup) tabletTransfersView, false);
+        ((ViewGroup) tabletTransfersView).addView(transfersCastBar);
+        getCastManager().addMiniController(transfersCastBar);
 
         // Other
         accountFragment.setMenuVisibility(false);
@@ -595,6 +613,11 @@ public class Putio extends BaseCastActivity implements
         else {
             removeFD(R.animator.slide_out_right);
         }
+    }
+
+    @Override
+    public boolean shouldUpdateCastContext() {
+        return true;
     }
 
     private BroadcastReceiver checkCacheSizeReceiver = new BroadcastReceiver() {

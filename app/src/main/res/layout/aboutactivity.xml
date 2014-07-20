@@ -1,13 +1,18 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:orientation="vertical">
 
     <fragment
         android:name="com.stevenschoen.putionew.fragments.About"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:tag="about"
         tools:layout="@layout/about" />
 
-</FrameLayout>
+    <include layout="@layout/castbar" />
+
+</LinearLayout>

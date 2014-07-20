@@ -32,8 +32,18 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
         super.onCreate(savedInstanceState);
 
         PutioApplication application = (PutioApplication) getApplication();
-        videoCastManager = application.getVideoCastManager(this);
+        videoCastManager = application.getVideoCastManager();
+
+        if (shouldUpdateCastContext()) {
+            videoCastManager.setContext(this);
+        }
     }
+
+    protected VideoCastManager getCastManager() {
+        return videoCastManager;
+    }
+
+    public abstract boolean shouldUpdateCastContext();
 
     protected void initCastBar() {
         castBar = (MiniController) findViewById(R.id.castbar_holder);
@@ -101,6 +111,11 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (shouldUpdateCastContext()) {
+            videoCastManager.setContext(this);
+        }
+
         if (videoCastManager != null) {
             videoCastManager.incrementUiCounter();
         }
