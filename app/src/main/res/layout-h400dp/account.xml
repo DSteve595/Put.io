@@ -20,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:fontFamily="sans-serif-light"
-            android:text="Available Storage"
+            android:text="@string/available_storage"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Logged in as"
+            android:text="@string/logged_in_as"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView

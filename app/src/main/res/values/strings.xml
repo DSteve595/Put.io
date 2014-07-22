@@ -75,6 +75,9 @@
     <string name="account">Account</string>
     <string name="files">Files</string>
     <string name="transfers">Transfers</string>
+    <string name="storage">Storage</string>
+    <string name="available_storage">Available Storage</string>
+    <string name="logged_in_as">Logged in as</string>
     <string name="loginsuccess">Successfully logged in!</string>
     <string name="total_is">Total: %s</string>
     <string name="size_is">%s</string>
@@ -93,6 +96,7 @@
     <string name="nofilesfound">No files were found.</string>
     <string name="filedeleted">File deleted!</string>
     <string name="transferremoved">Transfer removed!</string>
+    <string name="clear_finished_transferts">Clear finished transfers</string>
     <string name="hey">Hey!</string>
     <string name="readytopaste">The download link is ready to be pasted.</string>
     <string name="choosefile">Choose a file</string>

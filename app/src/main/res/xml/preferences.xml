@@ -3,11 +3,11 @@
     xmlns:sizePreference="http://schemas.android.com/apk/res/com.stevenschoen.putionew" >
 
     <PreferenceCategory
-        android:summary="Storage"
-        android:title="Storage" >
+        android:summary="@string/storage"
+        android:title="@string/storage" >
         <com.stevenschoen.putionew.SizePreference
             android:defaultValue="5"
-            android:dialogTitle="Cache size"
+            android:dialogTitle="@string/cachesize"
             android:key="maxCacheSizeMb"
             android:persistent="true"
             android:summary="@string/cacheexplanation"

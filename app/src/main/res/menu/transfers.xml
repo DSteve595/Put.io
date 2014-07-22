@@ -4,5 +4,5 @@
         android:id="@+id/menu_clearfinished"
         android:icon="@drawable/ic_action_clearfinished"
         android:showAsAction="ifRoom"
-        android:title="Clear finished transfers" />
+        android:title="@string/clear_finished_transferts" />
 </menu>
