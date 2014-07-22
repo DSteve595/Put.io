@@ -96,7 +96,7 @@
     <string name="nofilesfound">Aucun fichier trouvé.</string>
     <string name="filedeleted">Fichier supprimé !</string>
     <string name="transferremoved">Transfert effacé !</string>
-    <string name="clear_finished_transferts">Effacer les transfers terminés</string>
+    <string name="clear_finished_transfers">Effacer les transferts terminés</string>
     <string name="hey">Hey !</string>
     <string name="readytopaste">Le lien de téléchargement est prêt a être collé.</string>
     <string name="choosefile">Sélectionner un fichier</string>
