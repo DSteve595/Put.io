@@ -66,8 +66,9 @@ public interface PutioRestInterface {
 	@POST("/files/upload")
 	void uploadFile(@Part("file") TypedFile file, Callback<Response> callback);
 
+    @FormUrlEncoded
 	@POST("/files/rename")
-	BasePutioResponse.FileChangingResponse renameFile(@Query("file_id") int id, @Query("name") String name);
+	BasePutioResponse.FileChangingResponse renameFile(@Field("file_id") int id, @Field("name") String name);
 
 	@FormUrlEncoded
 	@POST("/files/delete")
