@@ -52,12 +52,12 @@ public class PutioOpenFileService extends Service {
 			Cursor cursor = downloadManager.query(query);
 
 			if (cursor.moveToFirst()) {
-				int columnIndex = cursor
+				int indexStatus = cursor
 						.getColumnIndex(DownloadManager.COLUMN_STATUS);
-				int status = cursor.getInt(columnIndex);
-				int columnReason = cursor
+				int status = cursor.getInt(indexStatus);
+				int indexReason = cursor
 						.getColumnIndex(DownloadManager.COLUMN_REASON);
-				int reason = cursor.getInt(columnReason);
+				int reason = cursor.getInt(indexReason);
 
 				if (status == DownloadManager.STATUS_SUCCESSFUL) {
 //					ParcelFileDescriptor file;

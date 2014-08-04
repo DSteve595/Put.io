@@ -171,6 +171,18 @@
             android:excludeFromRecents="true"
             android:taskAffinity="com.stevenschoen.putio.transfersdialog"
             android:theme="@style/Putio.Dialog" />
+
+        <provider
+            android:name="com.stevenschoen.putionew.storageprovider.PutioStorageProvider"
+            android:authorities="com.stevenschoen.putionew.storageprovider.documents"
+            android:grantUriPermissions="true"
+            android:exported="true"
+            android:permission="android.permission.MANAGE_DOCUMENTS"
+            android:enabled="@bool/hasKitKat">
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+            </intent-filter>
+        </provider>
     </application>
 
 </manifest>

@@ -324,7 +324,7 @@ public class PutioUtils {
     }
 
     @TargetApi(11)
-    private long download(Context context, int id, boolean isZip, String filename, Uri uri) {
+    public long download(Context context, int id, boolean isZip, String filename, Uri uri) {
         if (idIsDownloaded(id) && !isZip) {
             deleteId(id);
         }
