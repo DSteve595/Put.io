@@ -97,6 +97,8 @@
                     android:id="@+id/text_transfer_downValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2sp"
+                    android:layout_marginStart="2sp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -130,6 +132,8 @@
                     android:id="@+id/text_transfer_upValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2sp"
+                    android:layout_marginStart="2sp"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
