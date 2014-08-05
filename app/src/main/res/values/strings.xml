@@ -93,6 +93,7 @@
     <string name="nofilesfound">No files were found.</string>
     <string name="filedeleted">File deleted!</string>
     <string name="transferremoved">Transfer removed!</string>
+    <string name="ratio_is">Ratio: %s</string>
     <string name="hey">Hey!</string>
     <string name="readytopaste">The download link is ready to be pasted.</string>
     <string name="choosefile">Choose a file</string>

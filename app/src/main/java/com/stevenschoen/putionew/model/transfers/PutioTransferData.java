@@ -11,6 +11,7 @@ public class PutioTransferData implements Parcelable {
 	public String estimatedTime;
 	public String createdTime;
 	public boolean extract;
+    public float ratio;
 	public long downSpeed;
 	public long upSpeed;
 	public int percentDone;
@@ -18,27 +19,7 @@ public class PutioTransferData implements Parcelable {
 	public String statusMessage;
 	public int saveParentId;
 
-	public PutioTransferData(int id, int fileId, long size, String name,
-			String estimatedTime, String createdTime, boolean extract,
-			long downSpeed, long upSpeed, int percentDone, String status,
-			String statusMessage, int saveParentId) {
-		super();
-		this.id = id;
-		this.fileId = fileId;
-		this.size = size;
-		this.name = name;
-		this.estimatedTime = estimatedTime;
-		this.createdTime = createdTime;
-		this.extract = extract;
-		this.downSpeed = downSpeed;
-		this.upSpeed = upSpeed;
-		this.percentDone = percentDone;
-		this.status = status;
-		this.statusMessage = statusMessage;
-		this.saveParentId = saveParentId;
-	}
-	
-	@Override
+    @Override
 	public int describeContents() {
 		return 0;
 	}
@@ -48,9 +29,6 @@ public class PutioTransferData implements Parcelable {
 	}
 	
 	private void readFromParcel(Parcel in) {
-		// We just need to read back each
-		// field in the order that it was
-		// written to the parcel
 		this.id = in.readInt();
 		this.fileId = in.readInt();
 		this.size = in.readLong();
@@ -58,6 +36,7 @@ public class PutioTransferData implements Parcelable {
 		this.estimatedTime = in.readString();
 		this.createdTime = in.readString();
 		this.extract = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
+        this.ratio = in.readFloat();
 		this.downSpeed = in.readLong();
 		this.upSpeed = in.readLong();
 		this.percentDone = in.readInt();
@@ -75,6 +54,7 @@ public class PutioTransferData implements Parcelable {
 		out.writeString(this.estimatedTime);
 		out.writeString(this.createdTime);
 		out.writeValue(this.extract);
+        out.writeFloat(this.ratio);
 		out.writeLong(this.downSpeed);
 		out.writeLong(this.upSpeed);
 		out.writeInt(this.percentDone);

@@ -1,7 +1,11 @@
 package com.stevenschoen.putionew;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 public class PutioFileLayout implements Parcelable {
 	public String name;
@@ -9,13 +13,15 @@ public class PutioFileLayout implements Parcelable {
 	public int iconRes;
 	public String iconUrl;
 
-	public PutioFileLayout(String name, String description, int iconRes, String iconUrl) {
-		super();
-		this.name = name;
-		this.description = description;
-		this.iconRes = iconRes;
-		this.iconUrl = iconUrl;
-	}
+    public PutioFileLayout(Resources resources, PutioFileData data) {
+        name = data.name;
+        description = resources.getString(R.string.size_is, PutioUtils.humanReadableByteCount(
+                data.size, false));
+        Integer iconResource = PutioFileData.contentTypes.get(data.contentType);
+        if (iconResource == null) iconResource = R.drawable.ic_putio_file;
+        iconRes = iconResource;
+        iconUrl = data.icon;
+    }
 
 	@Override
 	public int describeContents() {

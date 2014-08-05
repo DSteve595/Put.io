@@ -240,48 +240,12 @@ public final class Transfers extends Fragment {
 			setViewMode(VIEWMODE_LIST);
 		}
 		
-//		final ArrayList<PutioTransferLayout> transferLayoutsTemp = new ArrayList<PutioTransferLayout>();
-//		for (int i = 0; i < transfers.length; i++) {
-//			if (isAdded()) {
-//				transferLayoutsTemp.add(new PutioTransferLayout(
-//						transfers[i].name,
-//						transfers[i].downSpeed,
-//						transfers[i].upSpeed,
-//						transfers[i].percentDone,
-//						transfers[i].status));
-//			}
-//		}
-//		
-//		int index = listview.getFirstVisiblePosition();
-//		View v = listview.getChildAt(0);
-//		int top = (v == null) ? 0 : v.getTop();
-//		
-//		listview.setSelectionFromTop(index, top);
-//		
-//		while (transferLayouts.size() > transferLayoutsTemp.size()) {
-//			transferLayouts.remove(transferLayouts.size() - 1);
-//		}
-//		
-//		for (int i = 0; i < transferLayoutsTemp.size(); i++) {
-//			if (transferLayouts.size() <= i) {
-//				transferLayouts.add(transferLayoutsTemp.get(i));
-//			} else {
-//				transferLayouts.set(i, transferLayoutsTemp.get(i));
-//			}
-//			adapter.notifyDataSetChanged();
-//		}
-		
 		transfersData = transfers;
 		
 		if (isAdded()) {
 			transferLayouts.clear();
 			for (PutioTransferData transfer : transfers) {
-				transferLayouts.add(new PutioTransferLayout(
-						transfer.name,
-						transfer.downSpeed,
-						transfer.upSpeed,
-						transfer.percentDone,
-						transfer.status));
+				transferLayouts.add(new PutioTransferLayout(transfer));
 			}
 			adapter.notifyDataSetChanged();
 		}
