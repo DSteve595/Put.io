@@ -475,15 +475,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		fileLayouts.clear();
 		if (isAdded()) {
 			for (PutioFileData file : files) {
-				Integer iconResource = PutioFileData.contentTypes.get(file.contentType);
-				if (iconResource == null) iconResource = R.drawable.ic_putio_file;
-				fileLayouts.add(new PutioFileLayout(
-						file.name,
-						getString(R.string.size_is, PutioUtils.humanReadableByteCount(
-								file.size, false)),
-						iconResource,
-						file.icon
-				));
+				fileLayouts.add(new PutioFileLayout(getResources(), file));
 			}
 		}
 		adapter.notifyDataSetChanged();

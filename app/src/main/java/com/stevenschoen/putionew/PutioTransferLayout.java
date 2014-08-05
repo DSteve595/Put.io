@@ -3,25 +3,24 @@ package com.stevenschoen.putionew;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.stevenschoen.putionew.model.transfers.PutioTransferData;
+
 public class PutioTransferLayout implements Parcelable {
 	public String name;
 	public long downSpeed;
 	public long upSpeed;
+    public String ratio;
 	public int percentDone;
 	public String status;
 
-	public PutioTransferLayout() {
-		super();
-	}
-
-	public PutioTransferLayout(String name, long downSpeed, long upSpeed, int percentDone, String status) {
-		super();
-		this.name = name;
-		this.downSpeed = downSpeed;
-		this.upSpeed = upSpeed;
-		this.percentDone = percentDone;
-		this.status = status;
-	}
+    public PutioTransferLayout(PutioTransferData data) {
+        name = data.name;
+        downSpeed = data.downSpeed;
+        upSpeed = data.upSpeed;
+        ratio = data.currentRatio;
+        percentDone = data.percentDone;
+        status = data.status;
+    }
 
 	@Override
 	public int describeContents() {
@@ -33,12 +32,10 @@ public class PutioTransferLayout implements Parcelable {
 	}
 	
 	private void readFromParcel(Parcel in) {
-		// We just need to read back each
-		// field in the order that it was
-		// written to the parcel
 		this.name = in.readString();
 		this.downSpeed = in.readLong();
 		this.upSpeed = in.readLong();
+        this.ratio = in.readString();
 		this.percentDone = in.readInt();
 		this.status = in.readString();
 	}
@@ -48,6 +45,7 @@ public class PutioTransferLayout implements Parcelable {
 		out.writeString(this.name);
 		out.writeLong(this.downSpeed);
 		out.writeLong(this.upSpeed);
+        out.writeString(this.ratio);
 		out.writeInt(this.percentDone);
 		out.writeString(this.status);
 	}

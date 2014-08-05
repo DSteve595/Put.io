@@ -42,13 +42,16 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder.textDownUnit = (TextView) row.findViewById(R.id.text_transfer_downUnit);
 			holder.textUpValue = (TextView) row.findViewById(R.id.text_transfer_upValue);
 			holder.textUpUnit = (TextView) row.findViewById(R.id.text_transfer_upUnit);
+            holder.textRatio = (TextView) row.findViewById(R.id.text_transfer_ratio);
 			holder.textPercent = (TextView) row.findViewById(R.id.text_transfer_percent);
 			holder.imgStatusIcon = (ImageView) row.findViewById(R.id.img_transfer_icon);
 			holder.statusLoading = (ProgressBar) row.findViewById(R.id.transfer_statusLoading);
 			
 			holder.greenBar = row.findViewById(R.id.transfer_greenbar);
 			holder.textMessage = (TextView) row.findViewById(R.id.text_transfer_message);
-			holder.speedHolder = row.findViewById(R.id.transfer_speedHolder);
+			holder.downHolder = row.findViewById(R.id.holder_transfer_down);
+            holder.upHolder = row.findViewById(R.id.holder_transfer_up);
+            holder.ratioHolder = row.findViewById(R.id.holder_transfer_ratio);
 
 			row.setTag(holder);
 		} else {
@@ -59,61 +62,65 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 		
 		holder.textName.setText(transfer.name);
 		
-		String[] downStrings = PutioUtils.humanReadableByteCountArray(data.get(position).downSpeed, false);
+		String[] downStrings = PutioUtils.humanReadableByteCountArray(transfer.downSpeed, false);
 		holder.textDownValue.setText(downStrings[0]);
 		holder.textDownUnit.setText(downStrings[1] + "/sec");
-		String[] upStrings = PutioUtils.humanReadableByteCountArray(data.get(position).upSpeed, false);
+		String[] upStrings = PutioUtils.humanReadableByteCountArray(transfer.upSpeed, false);
 		holder.textUpValue.setText(upStrings[0]);
 		holder.textUpUnit.setText(upStrings[1] + "/sec");
 		
-		int percentInt = data.get(position).percentDone;
+		int percentInt = transfer.percentDone;
 		String percentString = Integer.toString(percentInt);
 
-		if (data.get(position).status.equals("COMPLETED")) {
-			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
-			holder.imgStatusIcon.setVisibility(View.VISIBLE);
-			holder.statusLoading.setVisibility(View.INVISIBLE);
-			holder.textMessage.setVisibility(View.GONE);
-			holder.speedHolder.setVisibility(View.VISIBLE);
-			holder.textPercent.setText(percentString + "%");
-			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
-            holder.greenBar.setPivotX(0);
-            holder.greenBar.setScaleX(1f);
-			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
-		} else if (data.get(position).status.equals("SEEDING")) {
-			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
-			holder.imgStatusIcon.setVisibility(View.VISIBLE);
-			holder.statusLoading.setVisibility(View.INVISIBLE);
-			holder.textMessage.setVisibility(View.GONE);
-			holder.speedHolder.setVisibility(View.VISIBLE);
-			holder.textPercent.setText(percentString + "%");
-			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
-            holder.greenBar.setPivotX(0);
-            holder.greenBar.setScaleX(1f);
-			holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
-		} else if (data.get(position).status.equals("ERROR")) {
-			holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_failed);
-			holder.imgStatusIcon.setVisibility(View.VISIBLE);
-			holder.statusLoading.setVisibility(View.INVISIBLE);
-			holder.textMessage.setText(context.getString(R.string.transferfailed));
-			holder.textMessage.setVisibility(View.VISIBLE);
-			holder.speedHolder.setVisibility(View.GONE);
-			holder.textPercent.setText(":(");
-			holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_error));
-            holder.greenBar.setPivotX(0);
-            holder.greenBar.setScaleX(1f);
-			holder.textPercent.setTextColor(Color.RED);
-		} else {
-			holder.imgStatusIcon.setVisibility(View.INVISIBLE);
-			holder.statusLoading.setVisibility(View.VISIBLE);
-			holder.textMessage.setVisibility(View.GONE);
-			holder.speedHolder.setVisibility(View.VISIBLE);
-			holder.textPercent.setText(percentString + "%");
-			holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
-            holder.greenBar.setPivotX(0);
-            holder.greenBar.setScaleX((float) data.get(position).percentDone / 100);
-			holder.textPercent.setTextColor(Color.BLACK);
-		}
+        switch (transfer.status) {
+            case "COMPLETED":
+            case "SEEDING":
+                holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_done);
+                holder.imgStatusIcon.setVisibility(View.VISIBLE);
+                holder.statusLoading.setVisibility(View.INVISIBLE);
+                holder.textMessage.setVisibility(View.GONE);
+                holder.downHolder.setVisibility(View.GONE);
+                holder.upHolder.setVisibility(View.VISIBLE);
+                if (Float.valueOf(transfer.ratio) != 0) {
+                    holder.textRatio.setText(getContext().getString(R.string.ratio_is, transfer.ratio));
+                    holder.ratioHolder.setVisibility(View.VISIBLE);
+                } else {
+                    holder.ratioHolder.setVisibility(View.GONE);
+                }
+                holder.textPercent.setText(percentString + "%");
+                holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
+                holder.greenBar.setPivotX(0);
+                holder.greenBar.setScaleX(1f);
+                holder.textPercent.setTextColor(context.getResources().getColor(R.color.putio_green));
+                break;
+            case "ERROR":
+                holder.imgStatusIcon.setImageResource(R.drawable.ic_transfer_failed);
+                holder.imgStatusIcon.setVisibility(View.VISIBLE);
+                holder.statusLoading.setVisibility(View.INVISIBLE);
+                holder.textMessage.setText(context.getString(R.string.transferfailed));
+                holder.textMessage.setVisibility(View.VISIBLE);
+                holder.downHolder.setVisibility(View.GONE);
+                holder.upHolder.setVisibility(View.GONE);
+                holder.ratioHolder.setVisibility(View.GONE);
+                holder.textPercent.setText(":(");
+                holder.greenBar.setBackgroundColor(context.getResources().getColor(R.color.putio_error));
+                holder.greenBar.setPivotX(0);
+                holder.greenBar.setScaleX(1f);
+                holder.textPercent.setTextColor(Color.RED);
+                break;
+            default:
+                holder.imgStatusIcon.setVisibility(View.INVISIBLE);
+                holder.statusLoading.setVisibility(View.VISIBLE);
+                holder.textMessage.setVisibility(View.GONE);
+                holder.downHolder.setVisibility(View.VISIBLE);
+                holder.upHolder.setVisibility(View.VISIBLE);
+                holder.ratioHolder.setVisibility(View.GONE);
+                holder.textPercent.setText(percentString + "%");
+                holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
+                holder.greenBar.setPivotX(0);
+                holder.greenBar.setScaleX((float) data.get(position).percentDone / 100);
+                holder.textPercent.setTextColor(Color.BLACK);
+        }
 
 		return row;
 	}
@@ -124,12 +131,15 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 		TextView textDownUnit;
 		TextView textUpValue;
 		TextView textUpUnit;
+        TextView textRatio;
 		TextView textPercent;
 		ImageView imgStatusIcon;
 		ProgressBar statusLoading;
 		
 		View greenBar;
 		TextView textMessage;
-		View speedHolder;
+		View downHolder;
+        View upHolder;
+        View ratioHolder;
 	}
 }
