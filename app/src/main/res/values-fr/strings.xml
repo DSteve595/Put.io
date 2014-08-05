@@ -93,6 +93,7 @@
     <string name="nofilesfound">Aucun fichier trouvé.</string>
     <string name="filedeleted">Fichier supprimé !</string>
     <string name="transferremoved">Transfert effacé!</string>
+    <string name="ratio_is">Ratio: %s</string>
     <string name="hey">Hey !</string>
     <string name="readytopaste">Le lien de téléchargement est prêt a être collé.</string>
     <string name="choosefile">Sélectionner un fichier</string>

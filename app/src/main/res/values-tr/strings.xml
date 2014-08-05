@@ -93,6 +93,7 @@
     <string name="nofilesfound">Dosya bulunamadı.</string>
     <string name="filedeleted">Dosya silindi!</string>
     <string name="transferremoved">Transfer kaldırıldı!</string>
+    <string name="ratio_is">Oran: %s</string>
     <string name="hey">Hey!</string>
     <string name="readytopaste">İndirme bağlantısı yapıştırılmaya hazır.</string>
     <string name="choosefile">Dosya seçin</string>
