@@ -81,8 +81,12 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
                 holder.textMessage.setVisibility(View.GONE);
                 holder.downHolder.setVisibility(View.GONE);
                 holder.upHolder.setVisibility(View.VISIBLE);
-                holder.ratioHolder.setVisibility(View.VISIBLE);
-                holder.textRatio.setText(getContext().getString(R.string.ratio_is, String.valueOf(transfer.ratio)));
+                if (Float.valueOf(transfer.ratio) != 0) {
+                    holder.textRatio.setText(getContext().getString(R.string.ratio_is, transfer.ratio));
+                    holder.ratioHolder.setVisibility(View.VISIBLE);
+                } else {
+                    holder.ratioHolder.setVisibility(View.GONE);
+                }
                 holder.textPercent.setText(percentString + "%");
                 holder.greenBar.setBackgroundColor(Color.parseColor("#2000FF00"));
                 holder.greenBar.setPivotX(0);

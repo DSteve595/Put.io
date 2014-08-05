@@ -11,7 +11,7 @@ public class PutioTransferData implements Parcelable {
 	public String estimatedTime;
 	public String createdTime;
 	public boolean extract;
-    public float ratio;
+    public String currentRatio;
 	public long downSpeed;
 	public long upSpeed;
 	public int percentDone;
@@ -36,7 +36,7 @@ public class PutioTransferData implements Parcelable {
 		this.estimatedTime = in.readString();
 		this.createdTime = in.readString();
 		this.extract = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
-        this.ratio = in.readFloat();
+        this.currentRatio = in.readString();
 		this.downSpeed = in.readLong();
 		this.upSpeed = in.readLong();
 		this.percentDone = in.readInt();
@@ -54,7 +54,7 @@ public class PutioTransferData implements Parcelable {
 		out.writeString(this.estimatedTime);
 		out.writeString(this.createdTime);
 		out.writeValue(this.extract);
-        out.writeFloat(this.ratio);
+        out.writeString(this.currentRatio);
 		out.writeLong(this.downSpeed);
 		out.writeLong(this.upSpeed);
 		out.writeInt(this.percentDone);
