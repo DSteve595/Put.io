@@ -9,7 +9,7 @@ public class PutioTransferLayout implements Parcelable {
 	public String name;
 	public long downSpeed;
 	public long upSpeed;
-    public String ratio;
+    public float ratio;
 	public int percentDone;
 	public String status;
 
@@ -35,7 +35,7 @@ public class PutioTransferLayout implements Parcelable {
 		this.name = in.readString();
 		this.downSpeed = in.readLong();
 		this.upSpeed = in.readLong();
-        this.ratio = in.readString();
+        this.ratio = in.readFloat();
 		this.percentDone = in.readInt();
 		this.status = in.readString();
 	}
@@ -45,7 +45,7 @@ public class PutioTransferLayout implements Parcelable {
 		out.writeString(this.name);
 		out.writeLong(this.downSpeed);
 		out.writeLong(this.upSpeed);
-        out.writeString(this.ratio);
+        out.writeFloat(this.ratio);
 		out.writeInt(this.percentDone);
 		out.writeString(this.status);
 	}

@@ -81,7 +81,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
                 holder.textMessage.setVisibility(View.GONE);
                 holder.downHolder.setVisibility(View.GONE);
                 holder.upHolder.setVisibility(View.VISIBLE);
-                if (Float.valueOf(transfer.ratio) != 0) {
+                if (transfer.ratio != 0) {
                     holder.textRatio.setText(getContext().getString(R.string.ratio_is, transfer.ratio));
                     holder.ratioHolder.setVisibility(View.VISIBLE);
                 } else {
