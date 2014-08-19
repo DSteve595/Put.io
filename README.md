@@ -15,12 +15,20 @@ Other languages (please contribute translations!)
 
 ###Libraries used:
 
-NineOldAndroids by Jake Wharton: http://nineoldandroids.com/
+Picasso by Square: http://square.github.io/picasso/
 
-Picasso by Square: https://github.com/square/picasso
+Retrofit by Square: http://square.github.io/retrofit/
+
+Android Priority Job Queue: https://github.com/path/android-priority-jobqueue
+
+EventBus by greenrobot: http://greenrobot.github.io/EventBus/
 	
 PagerSlidingTabStrip by Andreas Stuetz: https://github.com/astuetz/PagerSlidingTabStrip
 	
 aFileChooser by Paul Burke: https://github.com/iPaulPro/aFileChooser
+
+CWAC-MediaRouter by CommonsWare: https://github.com/commonsguy/cwac-mediarouter
+
+Play Services by GOogle: https://developer.android.com/google/play-services/index.html
 	
 Android Support Library by Google: http://developer.android.com/tools/support-library/index.html
