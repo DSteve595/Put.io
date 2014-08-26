@@ -5,6 +5,6 @@
         android:id="@+id/context_remove"
         android:icon="@android:drawable/ic_menu_delete"
         android:showAsAction="ifRoom"
-        android:title="Remove" />
+        android:title="@string/remove" />
 
 </menu>

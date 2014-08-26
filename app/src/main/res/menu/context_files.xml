@@ -10,7 +10,7 @@
         android:id="@+id/context_copydownloadlink"
         android:icon="@drawable/ic_action_copy"
         android:showAsAction="never"
-        android:title="Copy download link" />
+        android:title="@string/copy_dl_link" />
     <item
         android:id="@+id/context_rename"
         android:icon="@android:drawable/ic_menu_edit"

@@ -29,6 +29,7 @@
     <string name="browse">Browse</string>
     <string name="remove">Remove</string>
     <string name="undo">Undo</string>
+    <string name="storage">Storage</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Preparing to stream</string>
@@ -101,9 +102,14 @@
     <string name="cacheexplanation">How much space should be used for the cache?\nThis won\'t affect your downloaded files.</string>
     <string name="addtransfer_type_url">URLs</string>
     <string name="addtransfer_type_file">Torrent file</string>
+    <string name="copy_dl_link">Copy download link</string>
     <string name="copyingdownloadlink">Copying download link</string>
     <string name="filenotfound">The file could not be found. Was it deleted?</string>
     <string name="go_to_previous_folder">Go back to the previous folder</string>
+    <string name="clear_finished_transfers">Clear finished transfers</string>
+    <string name="convert_mp4">Convert to MP4</string>
+    <string name="converting_mp4">Converting to MP4…</string>
+    <string name="mp4_available">MP4 available</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Uploading torrent</string>
@@ -115,6 +121,10 @@
     <string name="notification_body_error">Try again?</string>
     <string name="notification_ticker_error">Couldn\'t upload torrent</string>
     <string name="notification_button_retry">Retry</string>
+
+    <!-- Account screen -->
+    <string name="logged_in_as">Logged in as</string>
+    <string name="available_storage">Available Storage</string>
 
     <!-- About screen -->
     <string name="appbysteven">Android app by Steven Schoen.</string>
