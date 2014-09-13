@@ -45,7 +45,9 @@ public class TransfersActivity extends FragmentActivity {
                 break;
 			case PutioUtils.ADDTRANSFER_FILE:
 				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostUploadFileJob(
-						utils, this, getIntent(), (Uri) getIntent().getParcelableExtra("torrenturi")));
+						utils, this, getIntent(),
+                        (Uri) getIntent().getParcelableExtra("torrenturi"),
+                        getIntent().getIntExtra("parentId", 0)));
                 break;
 			}
 			

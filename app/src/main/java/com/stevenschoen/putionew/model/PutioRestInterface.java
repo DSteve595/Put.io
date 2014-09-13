@@ -64,7 +64,7 @@ public interface PutioRestInterface {
 
 	@Multipart
 	@POST("/files/upload")
-	void uploadFile(@Part("file") TypedFile file, Callback<Response> callback);
+	void uploadFile(@Part("file") TypedFile file, @Field("parent_id") int parentId, Callback<Response> callback);
 
     @FormUrlEncoded
 	@POST("/files/rename")
@@ -304,10 +304,12 @@ public interface PutioRestInterface {
 
 	public static class PostUploadFileJob extends PutioUploadJob {
 		private Uri fileUri;
+        private int parentId;
 
-		public PostUploadFileJob(PutioUtils utils, Context context, Intent retryIntent, Uri fileUri) {
+		public PostUploadFileJob(PutioUtils utils, Context context, Intent retryIntent, Uri fileUri, int parentId) {
 			super(new Params(0).requireNetwork(), utils, context, retryIntent);
 			this.fileUri = fileUri;
+            this.parentId = parentId;
 		}
 
 		@Override
@@ -324,7 +326,7 @@ public interface PutioRestInterface {
 
 			try {
 				getUtils().getRestInterface().uploadFile(
-						new TypedFile("application/x-bittorrent", file), this);
+						new TypedFile("application/x-bittorrent", file), parentId, this);
 			} catch (Exception e) {
 				file.delete();
 				throw e;

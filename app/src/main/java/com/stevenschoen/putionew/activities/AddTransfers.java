@@ -22,7 +22,6 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.AddTransferFile;
 import com.stevenschoen.putionew.fragments.AddTransferUrl;
 import com.stevenschoen.putionew.fragments.Files;
-import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FileUtils;
 
@@ -40,9 +39,11 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 
 	private SharedPreferences sharedPrefs;
 
-    private int mDestinationFileId = 0;
+    private int mDestinationFolderId = 0;
+    private Button buttonDestination;
+    private DestinationFilesDialog mFilesDialogFragment;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Putio_Dialog);
@@ -111,6 +112,15 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 				finish();
 			}
 		});
+
+        buttonDestination = (Button) findViewById(R.id.button_addtransfer_destination);
+        buttonDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFilesDialogFragment = (DestinationFilesDialog) DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
+                mFilesDialogFragment.show(getFragmentManager(), "dialog");
+            }
+        });
 	}
 	
 	private void addUrl() {
@@ -119,7 +129,7 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 			addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_URL);
 			addTransferIntent.putExtra("url", urlFragment.getEnteredUrls());
             addTransferIntent.putExtra("extract", urlFragment.getExtract());
-            addTransferIntent.putExtra("saveParentId", mDestinationFileId);
+            addTransferIntent.putExtra("saveParentId", mDestinationFolderId);
 			startActivity(addTransferIntent);
 			finish();
 		} else {
@@ -137,6 +147,7 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
                     Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
                     addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_FILE);
                     addTransferIntent.putExtra("torrenturi", fileFragment.getChosenTorrentUri());
+                    addTransferIntent.putExtra("parentId", mDestinationFolderId);
                     startActivity(addTransferIntent);
                     finish();
                 } else {
@@ -157,12 +168,14 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 
     @Override
     public void onSomethingSelected() {
-        urlFragment.onSomethingSelected();
+
     }
 
     @Override
     public void onDestinationFolderSelected() {
-        mDestinationFileId = urlFragment.onDestinationFolderSelected();
+        mDestinationFolderId = mFilesDialogFragment.getCurrentFolderId();
+        // TODO buttonDestination.setText(mFilesDialogFragment.getCurrentFolderName());
+        buttonDestination.setText(Integer.toString(mDestinationFolderId));
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

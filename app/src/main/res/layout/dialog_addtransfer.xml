@@ -47,6 +47,15 @@
             android:textColor="#fff" />
     </android.support.v4.view.ViewPager>
 
+
+    <Button
+        android:id="@+id/button_addtransfer_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_large"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:text="@string/destination"/>
+
     <View
         android:id="@+id/buttonbarSeparator"
         android:layout_width="match_parent"
