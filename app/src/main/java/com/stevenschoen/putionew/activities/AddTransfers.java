@@ -174,8 +174,7 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
     @Override
     public void onDestinationFolderSelected() {
         mDestinationFolderId = mFilesDialogFragment.getCurrentFolderId();
-        // TODO buttonDestination.setText(mFilesDialogFragment.getCurrentFolderName());
-        buttonDestination.setText(Integer.toString(mDestinationFolderId));
+        buttonDestination.setText(mFilesDialogFragment.getCurrentFolderName());
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

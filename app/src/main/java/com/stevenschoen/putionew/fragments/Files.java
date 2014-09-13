@@ -61,6 +61,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     private boolean buttonUpFolderShown;
 
 	private View buttonUpFolder;
+    private String mCurrentFolderName;
 
     public interface Callbacks {
         public void onFileSelected(int id);
@@ -572,7 +573,11 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		return state.id;
 	}
 
-	public boolean goBack() {
+    public String getCurrentFolderName() {
+        return mCurrentFolderName;
+    }
+
+    public boolean goBack() {
 		if (isInSubfolderOrSearch()) {
 			if (state.isSearch) {
 				state.isSearch = false;
@@ -605,7 +610,8 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	public void onEventMainThread(FilesListResponse result) {
 		if (result != null) {
 			state.isSearch = false;
-			populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
+            mCurrentFolderName = result.getParent().name;
+            populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 		}
 	}
@@ -613,6 +619,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	public void onEventMainThread(CachedFilesListResponse result) {
 		if (result != null) {
 			state.isSearch = false;
+            mCurrentFolderName = result.getParent().name;
 			populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
 		}
 	}
