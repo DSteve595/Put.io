@@ -21,12 +21,14 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.AddTransferFile;
 import com.stevenschoen.putionew.fragments.AddTransferUrl;
+import com.stevenschoen.putionew.fragments.Files;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.FileNotFoundException;
 
-public class AddTransfers extends Activity {
+public class AddTransfers extends Activity implements Files.Callbacks, DestinationFilesDialog.Callbacks {
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 	private PagerTitleStrip mPagerTitleStrip;
@@ -37,6 +39,8 @@ public class AddTransfers extends Activity {
 	private AddTransferFile fileFragment;
 
 	private SharedPreferences sharedPrefs;
+
+    private int mDestinationFileId = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,7 @@ public class AddTransfers extends Activity {
 			addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_URL);
 			addTransferIntent.putExtra("url", urlFragment.getEnteredUrls());
             addTransferIntent.putExtra("extract", urlFragment.getExtract());
+            addTransferIntent.putExtra("saveParentId", mDestinationFileId);
 			startActivity(addTransferIntent);
 			finish();
 		} else {
@@ -144,8 +149,23 @@ public class AddTransfers extends Activity {
 			Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 		}
 	}
-	
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+    @Override
+    public void onFileSelected(int id) {
+
+    }
+
+    @Override
+    public void onSomethingSelected() {
+        urlFragment.onSomethingSelected();
+    }
+
+    @Override
+    public void onDestinationFolderSelected() {
+        mDestinationFileId = urlFragment.onDestinationFolderSelected();
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);

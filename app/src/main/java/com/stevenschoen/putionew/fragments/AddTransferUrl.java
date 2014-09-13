@@ -5,17 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.stevenschoen.putionew.R;
+import com.stevenschoen.putionew.activities.DestinationFilesDialog;
 
 public class AddTransferUrl extends Fragment {
 
 	private EditText textUrls;
     private CheckBox checkBoxExtract;
+    private Button buttonDestination;
+    private DestinationFilesDialog mFilesDialogFragment;
 
-	@Override
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.addtransfer_url, container, false);
@@ -27,7 +31,16 @@ public class AddTransferUrl extends Fragment {
 
         checkBoxExtract = (CheckBox) view.findViewById(R.id.checkbox_addtransfer_extract);
 
-		return view;
+        buttonDestination = (Button) view.findViewById(R.id.button_addtransfer_destination);
+        buttonDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFilesDialogFragment = (DestinationFilesDialog) DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
+                mFilesDialogFragment.show(getFragmentManager(), "dialog");
+            }
+        });
+
+        return view;
 	}
 	
 	public String getEnteredUrls() {
@@ -36,5 +49,16 @@ public class AddTransferUrl extends Fragment {
 
     public boolean getExtract() {
         return checkBoxExtract.isChecked();
+    }
+
+    public int onDestinationFolderSelected() {
+        int selectedFolderId = mFilesDialogFragment.getCurrentFolderId();
+        // TODO buttonDestination.setText(mFilesDialogFragment.getCurrentFolderName());
+        buttonDestination.setText(Integer.toString(selectedFolderId));
+        return selectedFolderId;
+    }
+
+    public void onSomethingSelected() {
+
     }
 }

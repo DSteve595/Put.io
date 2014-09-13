@@ -2,7 +2,7 @@ package com.stevenschoen.putionew.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
+import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -47,8 +47,8 @@ import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Files extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-	
+public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefreshListener {
+
 	private static final int VIEWMODE_LIST = 1;
 	private static final int VIEWMODE_LISTOREMPTY = 2;
 	private static final int VIEWMODE_LOADING = 3;
@@ -66,14 +66,14 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
         public void onFileSelected(int id);
         public void onSomethingSelected();
     }
-    
+
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void onFileSelected(int id) { }
         @Override
         public void onSomethingSelected() { }
     };
-	
+
     private Callbacks mCallbacks = sDummyCallbacks;
 
 	private PutioUtils utils;
@@ -82,11 +82,11 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	private ArrayList<PutioFileLayout> fileLayouts;
 	private ListView listview;
 	private SwipeRefreshLayout swipeRefreshLayout;
-	
+
 	private View loadingView;
 	private View emptyView;
 	private View emptySubfolderView;
-	
+
 	private boolean hasUpdated = false;
 
 	private ArrayList<PutioFileData> fileData;
@@ -101,7 +101,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	State state = new State();
 
 	private int origId;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -133,8 +133,8 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.files, container, false);
-		
+		View view = inflater.inflate(getLayoutResId(), container, false);
+
 		listview = (ListView) view.findViewById(R.id.fileslist);
         if (!UIUtils.isTV(getActivity())) {
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
@@ -145,7 +145,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 					R.color.putio_accent,
 					R.color.putio_accent_dark);
 		}
-		
+
 		adapter = new FilesAdapter(getActivity(), fileLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -294,11 +294,15 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		} else {
 			setViewMode(VIEWMODE_LISTORLOADING);
 		}
-		
+
 		return view;
 	}
-	
-	private void setViewMode(int mode) {
+
+    protected int getLayoutResId() {
+        return R.layout.files;
+    }
+
+    private void setViewMode(int mode) {
 		switch (mode) {
 		case VIEWMODE_LIST:
 			listview.setVisibility(View.VISIBLE);
@@ -340,30 +344,30 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		viewMode = mode;
 	}
-	
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         mCallbacks = (Callbacks) activity;
     }
-    
+
     @Override
     public void onDetach() {
         super.onDetach();
 
         mCallbacks = sDummyCallbacks;
     }
-	
+
 	private void initDownloadFiles(final int... indeces) {
 		PutioFileData[] files = new PutioFileData[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = fileData.get(indeces[i]);
 		}
-		
+
 		utils.downloadFile(getActivity(), PutioUtils.ACTION_NOTHING, files);
 	}
-	
+
 	private void initCopyFileDownloadLink(int index) {
 		utils.copyDownloadLink(getActivity(), fileData.get(index).id);
 	}
@@ -371,10 +375,10 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	private void initRenameFile(final int index) {
 		final Dialog renameDialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
 		renameDialog.show();
-		
+
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
 		textFileName.setText(fileData.get(index).name);
-		
+
 		ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
 		btnUndoName.setOnClickListener(new OnClickListener() {
 			@Override
@@ -382,7 +386,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				textFileName.setText(fileData.get(index).name);
 			}
 		});
-		
+
 		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
 		saveRename.setOnClickListener(new OnClickListener() {
 			@Override
@@ -393,7 +397,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				renameDialog.dismiss();
 			}
 		});
-		
+
 		Button cancelRename = (Button) renameDialog.findViewById(R.id.button_rename_cancel);
 		cancelRename.setOnClickListener(new OnClickListener() {
 
@@ -403,7 +407,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			}
 		});
 	}
-	
+
 	private void initDeleteFile(int... indeces) {
 		PutioFileData[] files = new PutioFileData[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
@@ -411,14 +415,14 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		utils.showDeleteFilesDialog(getActivity(), false, files);
 	}
-	
+
 	public void invalidateList() {
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesListJob(
 				utils, getCurrentFolderId(), !UIUtils.isTV(getActivity())));
-		
+
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -448,7 +452,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
-	
+
 	private void populateList(final List<PutioFileData> files, int newId, int parentId, int origIdBefore) {
         state.parentId = parentId;
 		hasUpdated = true;
@@ -469,7 +473,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 		fileData.clear();
 		fileData.addAll(files);
-		
+
 		setViewMode(VIEWMODE_LISTOREMPTY);
 
 		fileLayouts.clear();
@@ -487,10 +491,10 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 
 		listview.setSelectionFromTop(index, top);
-		
+
 		if (highlightFileId != -1) {
 			final int highlightPos = getIndexFromFileId(highlightFileId);
-			
+
 			listview.requestFocus();
             listview.smoothScrollToPosition(highlightPos);
 
@@ -550,7 +554,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
         return hideY;
     }
-	
+
 	public int getIndexFromFileId(int fileId) {
 		for (int i = 0; i < fileData.size(); i++) {
 			if (fileData.get(i).id == fileId) {
@@ -559,15 +563,15 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		return -1;
 	}
-	
+
 	public PutioFileData getFileAtId(int id) {
 		return fileData.get(id);
 	}
-	
+
 	public int getCurrentFolderId() {
 		return state.id;
 	}
-	
+
 	public boolean goBack() {
 		if (isInSubfolderOrSearch()) {
 			if (state.isSearch) {
@@ -583,17 +587,17 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			return false;
 		}
 	}
-	
+
 	public boolean isInSubfolderOrSearch() {
 		return (state.id != 0 || state.isSearch);
 	}
-	
+
 	public void highlightFile(int parentId, int id) {
 		state.id = parentId;
         highlightFileId = id;
 		invalidateList();
 	}
-	
+
 	public void setFileChecked(int fileId, boolean checked) {
 		listview.setItemChecked(getIndexFromFileId(fileId), checked);
 	}
@@ -626,11 +630,11 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			invalidateList();
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+
 		outState.putInt("currentFolderId", state.id);
 		outState.putInt("origId", origId);
 		outState.putBoolean("isSearch", state.isSearch);

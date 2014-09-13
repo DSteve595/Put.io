@@ -40,6 +40,7 @@ public class TransfersActivity extends FragmentActivity {
 						utils,
                         getIntent().getStringExtra("url"),
                         getIntent().getBooleanExtra("extract", false),
+                        getIntent().getIntExtra("saveParentId", 0),
                         this, getIntent()));
                 break;
 			case PutioUtils.ADDTRANSFER_FILE:

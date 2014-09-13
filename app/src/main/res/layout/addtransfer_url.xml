@@ -23,5 +23,14 @@
             android:layout_marginLeft="@dimen/padding_large"
             android:text="@string/extractwhenfinished" />
 
+        <Button
+            android:id="@+id/button_addtransfer_destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkbox_addtransfer_extract"
+            android:layout_marginTop="@dimen/padding_large"
+            android:layout_marginLeft="@dimen/padding_large"
+            android:text="@string/destination"/>
+
     </RelativeLayout>
 </ScrollView>

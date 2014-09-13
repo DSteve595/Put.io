@@ -79,7 +79,7 @@ public interface PutioRestInterface {
 
 	@FormUrlEncoded
 	@POST("/transfers/add")
-	void addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, Callback<Response> callback);
+	void addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, @Field("save_parent_id") int saveParentId, Callback<Response> callback);
 
 	@FormUrlEncoded
 	@POST("/transfers/cancel")
@@ -376,17 +376,19 @@ public interface PutioRestInterface {
 	public static class PostAddTransferJob extends PutioUploadJob {
 		private String url;
         private boolean extract;
+        private int saveParentId;
 
-		public PostAddTransferJob(PutioUtils utils, String url, boolean extract, Context context, Intent retryIntent) {
+		public PostAddTransferJob(PutioUtils utils, String url, boolean extract, int saveParentId, Context context, Intent retryIntent) {
 			super(new Params(0).requireNetwork(), utils, context, retryIntent);
 			this.url = url;
             this.extract = extract;
+            this.saveParentId = saveParentId;
 		}
 
 		@Override
 		public void onRun() throws Throwable {
 			super.onRun();
-			getUtils().getRestInterface().addTransferUrl(url, extract, this);
+			getUtils().getRestInterface().addTransferUrl(url, extract, saveParentId, this);
 		}
 	}
 
