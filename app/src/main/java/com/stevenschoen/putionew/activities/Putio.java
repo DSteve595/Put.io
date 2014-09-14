@@ -57,7 +57,7 @@ import java.io.File;
 import java.io.InputStream;
 
 public class Putio extends BaseCastActivity implements
-        ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
+        ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks, DestinationFilesDialog.Callbacks {
 
     public static final int TAB_ACCOUNT = 0;
     public static final int TAB_FILES = 1;
@@ -262,6 +262,11 @@ public class Putio extends BaseCastActivity implements
         });
 
         return true;
+    }
+
+    @Override
+    public void onDestinationFolderSelected() {
+        filesFragment.onDestinationFolderSelected();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

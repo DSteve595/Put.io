@@ -74,6 +74,11 @@ public interface PutioRestInterface {
 	@POST("/files/delete")
 	BasePutioResponse.FileChangingResponse deleteFile(@Field("file_ids") String ids);
 
+
+    @FormUrlEncoded
+    @POST("/files/move")
+    BasePutioResponse.FileChangingResponse moveFile(@Field("file_ids") String ids, @Field("parent_id") String newParentId);
+
 	@GET("/transfers/list")
 	TransfersListResponse transfers();
 
@@ -363,6 +368,22 @@ public interface PutioRestInterface {
 			getUtils().getEventBus().post(getUtils().getRestInterface().deleteFile(PutioUtils.intsToString(ids)));
 		}
 	}
+
+    public static class PostMoveFilesJob extends PutioJob {
+        private int newParentId;
+        private int[] ids;
+
+        public PostMoveFilesJob(PutioUtils utils, int newParentId, int... ids) {
+            super(new Params(0).requireNetwork(), utils);
+            this.newParentId = newParentId;
+            this.ids = ids;
+        }
+
+        @Override
+        public void onRun() throws Throwable {
+            getUtils().getEventBus().post(getUtils().getRestInterface().moveFile(PutioUtils.intsToString(ids), Integer.toString(newParentId)));
+        }
+    }
 
 	public static class GetTransfersJob extends PutioJob {
 		public GetTransfersJob(PutioUtils utils) {

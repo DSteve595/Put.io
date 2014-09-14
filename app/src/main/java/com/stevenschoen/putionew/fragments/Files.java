@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.stevenschoen.putionew.FilesAdapter;
 import com.stevenschoen.putionew.PutioApplication;
@@ -36,6 +37,7 @@ import com.stevenschoen.putionew.PutioFileLayout;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.activities.DestinationFilesDialog;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
@@ -62,6 +64,8 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
 	private View buttonUpFolder;
     private String mCurrentFolderName;
+    private int[] mIdsToMove;
+    private DestinationFilesDialog mFilesDialogFragment;
 
     public interface Callbacks {
         public void onFileSelected(int id);
@@ -210,6 +214,9 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 						case R.id.context_delete:
 							initDeleteFile(checkedPositionsArray);
 							return true;
+                        case R.id.context_move:
+                            initMoveFile(checkedPositionsArray);
+                            return true;
 					}
 
 					return false;
@@ -416,6 +423,15 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		}
 		utils.showDeleteFilesDialog(getActivity(), false, files);
 	}
+
+    private void initMoveFile(int... indeces) {
+        mFilesDialogFragment = (DestinationFilesDialog) DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
+        mFilesDialogFragment.show(getFragmentManager(), "dialog");
+        mIdsToMove = new int[indeces.length];
+        for (int i = 0; i < indeces.length; i++) {
+            mIdsToMove[i] = fileData.get(indeces[i]).id;
+        }
+    }
 
 	public void invalidateList() {
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesListJob(
@@ -663,4 +679,12 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	public void onRefresh() {
 		invalidateList();
 	}
+
+
+    public void onDestinationFolderSelected() {
+        // TODO confirmation popup?
+        int selectedFolderId = mFilesDialogFragment.getCurrentFolderId();
+        utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
+        Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
+    }
 }
