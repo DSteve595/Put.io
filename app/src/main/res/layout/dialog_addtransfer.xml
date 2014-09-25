@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -21,46 +22,199 @@
             android:paddingLeft="16dip"
             android:paddingRight="16dip"
             android:paddingTop="12dp"
+            android:text="@string/addtransferstitle"
             android:textAppearance="@style/TextAppearance.Putio.DialogWindowTitle" />
 
         <View
             android:id="@+id/titleDivider"
             android:layout_width="match_parent"
             android:layout_height="2dip"
-            android:background="@color/putio_accent"
-            android:visibility="gone" />
+            android:background="@color/putio_accent" />
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/addtransfer_pager"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp">
-
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/addtransfer_pager_title_strip"
-            style="@style/PagerTitleStrip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:textColor="#fff" />
-    </android.support.v4.view.ViewPager>
-
-    <de.ankri.views.AutoScaleTextView
-        android:id="@+id/button_addtransfer_destination"
-        style="?android:buttonStyle"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginStart="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_small"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:text="@string/destination_is"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <de.ankri.views.AutoScaleTextView
+            android:id="@+id/button_addtransfer_destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/putio_clickable_button"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_addtransfer_selecttype"
+        android:layout_width="256dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
-        android:layout_marginTop="@dimen/padding_large"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-light"
-        android:singleLine="true"
-        android:text="@string/destination"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="20sp" />
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/button_addtransfer_chooseurl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/putio_clickable_button"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:contentDescription="@string/addtransfer_type_url"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_magnet" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/addtransfer_type_url" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/putio_divider" />
+
+        <RelativeLayout
+            android:id="@+id/button_addtransfer_choosefile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/putio_clickable_button"
+            android:paddingBottom="8dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:contentDescription="@string/addtransfer_type_file"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_file" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:text="@string/addtransfer_type_file" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/holder_addtransfer_url"
+        android:layout_width="256dp"
+        android:layout_height="92dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large">
+
+        <EditText
+            android:id="@+id/text_addtransfer_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/button_addtransfer_cancelurl"
+            android:layout_toStartOf="@id/button_addtransfer_cancelurl"
+            android:hint="@string/pasteurls"
+            android:inputType="textUri" />
+
+        <ImageButton
+            android:id="@id/button_addtransfer_cancelurl"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/putio_clickable_button"
+            android:contentDescription="@string/cancel"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/holder_addtransfer_file"
+        android:layout_width="256dp"
+        android:layout_height="92dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/button_addtransfer_cancelfile"
+            android:layout_toStartOf="@id/button_addtransfer_cancelfile">
+
+            <de.ankri.views.AutoScaleTextView
+                android:id="@+id/text_addtransfer_filename"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="middle"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:paddingLeft="16dp"
+                android:text="file name.torrent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="20sp"
+                app:minTextSize="16sp" />
+
+            <de.ankri.views.AutoScaleTextView
+                android:id="@+id/text_addtransfer_notatorrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom"
+                android:text="@string/notatorrent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/putio_lightred" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@id/button_addtransfer_cancelfile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/putio_clickable_button"
+            android:contentDescription="@string/cancel"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/buttonbarSeparator"

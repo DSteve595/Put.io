@@ -46,6 +46,7 @@ import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
 import com.stevenschoen.putionew.model.PutioRestInterface;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 
 import org.apache.commons.io.FileUtils;
@@ -264,8 +265,8 @@ public class Putio extends BaseCastActivity implements
     }
 
     @Override
-    public void onDestinationFolderSelected() {
-        filesFragment.onDestinationFolderSelected();
+    public void onDestinationFolderSelected(PutioFileData folder) {
+        filesFragment.onDestinationFolderSelected(folder);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

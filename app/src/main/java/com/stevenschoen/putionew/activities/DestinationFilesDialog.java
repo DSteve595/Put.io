@@ -15,7 +15,7 @@ public class DestinationFilesDialog extends Files {
     private DestinationFilesDialog.Callbacks mCallbacks;
 
     public interface Callbacks {
-        public void onDestinationFolderSelected();
+        public void onDestinationFolderSelected(PutioFileData folder);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class DestinationFilesDialog extends Files {
         view.findViewById(R.id.button_destination_choose).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallbacks.onDestinationFolderSelected();
+                mCallbacks.onDestinationFolderSelected(getState().currentFolder);
                 getDialog().dismiss();
             }
         });

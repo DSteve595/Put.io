@@ -1,79 +1,61 @@
 package com.stevenschoen.putionew.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
-import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.fragments.AddTransferFile;
-import com.stevenschoen.putionew.fragments.AddTransferUrl;
-import com.stevenschoen.putionew.fragments.Files;
+import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.FileNotFoundException;
 
-public class AddTransfers extends Activity implements Files.Callbacks, DestinationFilesDialog.Callbacks {
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
-	private PagerTitleStrip mPagerTitleStrip;
-	
-	private int fragmentType;
-	
-	private AddTransferUrl urlFragment;
-	private AddTransferFile fileFragment;
+public class AddTransfers extends Activity implements DestinationFilesDialog.Callbacks {
+    public static final int TYPE_SELECTING = -1;
+    public static final int TYPE_URL = 1;
+    public static final int TYPE_FILE = 2;
+
+    int selectedType = TYPE_SELECTING;
+
+    private Uri selectedFileUri;
+    private String selectedUrl;
 
 	private SharedPreferences sharedPrefs;
 
-    private int mDestinationFolderId = 0;
-    private Button buttonDestination;
-    private DestinationFilesDialog mFilesDialogFragment;
+    Button addButton;
+
+    View holderSelectType, holderUrl, holderFile;
+    ImageButton cancelUrl, cancelFile;
+
+    private EditText textUrl;
+
+    private TextView textFilename, textNotATorrent;
+
+    private int destinationFolderId = 0;
+    private TextView buttonDestination;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Putio_Dialog);
 		setContentView(R.layout.dialog_addtransfer);
-		
-		if (getIntent().getAction() != null) {
-			switch (getIntent().getScheme()) {
-				case "http":
-				case "https":
-				case "magnet":
-					fragmentType = PutioUtils.ADDTRANSFER_URL;
-					break;
-				case "file":
-					fragmentType = PutioUtils.ADDTRANSFER_FILE;
-					break;
-			}
-		}
-		
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getFragmentManager());
-
-		mViewPager = (ViewPager) findViewById(R.id.addtransfer_pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
-		mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.addtransfer_pager_title_strip);
-		mPagerTitleStrip.setTextColor(Color.BLACK);
-		if (fragmentType != 0) {
-			mPagerTitleStrip.setVisibility(View.GONE);
-			findViewById(R.id.titleDivider).setVisibility(View.VISIBLE);
-		}
 		
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -83,24 +65,12 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 			startActivity(putioActivity);
 			finish();
 		}
-		
-		TextView textTitle = (TextView) findViewById(R.id.dialog_title);
-		textTitle.setText(getString(R.string.addtransferstitle));
-		
-		Button addButton = (Button) findViewById(R.id.button_addtransfer_add);
-		addButton.setOnClickListener(new OnClickListener() {
+
+        addButton = (Button) findViewById(R.id.button_addtransfer_add);
+        addButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				if (fragmentType == 0) {
-					switch (mViewPager.getCurrentItem()) {
-					case 0: addUrl(); break;
-					case 1: addFile(); break;
-					}
-				} else if (mSectionsPagerAdapter.getItem(0) instanceof AddTransferUrl) {
-					addUrl();
-				} else if (mSectionsPagerAdapter.getItem(0) instanceof AddTransferFile) {
-					addFile();
-				}
+                add();
 			}
 		});
 		
@@ -113,23 +83,132 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 			}
 		});
 
-        buttonDestination = (Button) findViewById(R.id.button_addtransfer_destination);
+        buttonDestination = (TextView) findViewById(R.id.button_addtransfer_destination);
         buttonDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFilesDialogFragment = (DestinationFilesDialog) DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
-                mFilesDialogFragment.show(getFragmentManager(), "dialog");
+                DestinationFilesDialog destinationDialog = (DestinationFilesDialog) DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
+                destinationDialog.show(getFragmentManager(), "dialog");
             }
         });
+        destinationFolderId = sharedPrefs.getInt("destinationFolderId", 0);
+        String destinationFolderName = sharedPrefs.getString("destinationFolderName", null);
+        if (destinationFolderName != null && !destinationFolderName.isEmpty()) {
+            buttonDestination.setText(destinationFolderName);
+        } else {
+            buttonDestination.setText("Your Files");
+        }
+
+        View buttonChooseUrl = findViewById(R.id.button_addtransfer_chooseurl);
+        buttonChooseUrl.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedType = TYPE_URL;
+                updateView();
+            }
+        });
+        View buttonChooseFile = findViewById(R.id.button_addtransfer_choosefile);
+        buttonChooseFile.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UIUtils.hasKitKat()) {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.setType("application/x-bittorrent");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    startActivityForResult(intent, 0);
+                } else {
+                    Intent intent = new Intent(AddTransfers.this, FileChooserActivity.class);
+                    startActivityForResult(intent, 0);
+                }
+            }
+        });
+
+        holderSelectType = findViewById(R.id.holder_addtransfer_selecttype);
+        holderUrl = findViewById(R.id.holder_addtransfer_url);
+        holderFile = findViewById(R.id.holder_addtransfer_file);
+
+        cancelUrl = (ImageButton) findViewById(R.id.button_addtransfer_cancelurl);
+        cancelUrl.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedType = TYPE_SELECTING;
+                updateView();
+            }
+        });
+        cancelFile = (ImageButton) findViewById(R.id.button_addtransfer_cancelfile);
+        cancelFile.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedType = TYPE_SELECTING;
+                updateView();
+            }
+        });
+
+        textUrl = (EditText) findViewById(R.id.text_addtransfer_url);
+
+        textFilename = (TextView) findViewById(R.id.text_addtransfer_filename);
+        textNotATorrent = (TextView) findViewById(R.id.text_addtransfer_notatorrent);
+
+        if (getIntent().getAction() != null) {
+            switch (getIntent().getScheme()) {
+                case "http":
+                case "https":
+                case "magnet":
+                    selectedType = TYPE_URL;
+                    textUrl.setText(getIntent().getDataString());
+                    break;
+                case "file":
+                    selectedType = TYPE_FILE;
+                    onActivityResult(0, Activity.RESULT_OK, getIntent());
+                    break;
+            }
+        }
+
+        updateView();
 	}
+
+    private void updateView() {
+        switch (selectedType) {
+            case TYPE_SELECTING:
+                addButton.setEnabled(false);
+                holderSelectType.setVisibility(View.VISIBLE);
+                holderUrl.setVisibility(View.GONE);
+                holderFile.setVisibility(View.GONE);
+                break;
+            case TYPE_URL:
+                addButton.setEnabled(true);
+                holderSelectType.setVisibility(View.GONE);
+                holderUrl.setVisibility(View.VISIBLE);
+                holderFile.setVisibility(View.GONE);
+                break;
+            case TYPE_FILE:
+                addButton.setEnabled(true);
+                holderSelectType.setVisibility(View.GONE);
+                holderUrl.setVisibility(View.GONE);
+                holderFile.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void add() {
+        switch (selectedType) {
+            case TYPE_URL:
+                selectedUrl = textUrl.getText().toString();
+                addUrl();
+                break;
+            case TYPE_FILE:
+                addFile();
+                break;
+        }
+    }
 	
 	private void addUrl() {
-		if (!urlFragment.getEnteredUrls().isEmpty()) {
+		if (!selectedUrl.isEmpty()) {
 			Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
-			addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_URL);
-			addTransferIntent.putExtra("url", urlFragment.getEnteredUrls());
-            addTransferIntent.putExtra("extract", urlFragment.getExtract());
-            addTransferIntent.putExtra("saveParentId", mDestinationFolderId);
+			addTransferIntent.putExtra("mode", TYPE_URL);
+			addTransferIntent.putExtra("url", selectedUrl);
+//            addTransferIntent.putExtra("extract", extract); TODO
+            addTransferIntent.putExtra("saveParentId", destinationFolderId);
 			startActivity(addTransferIntent);
 			finish();
 		} else {
@@ -138,16 +217,16 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 	}
 	
 	private void addFile() {
-		if (fileFragment != null && fileFragment.getChosenTorrentUri() != null) {
+		if (selectedFileUri != null) {
             try {
                 long size = getContentResolver()
-                        .openFileDescriptor(fileFragment.getChosenTorrentUri(), "r").getStatSize();
+                        .openFileDescriptor(selectedFileUri, "r").getStatSize();
 
                 if (size <= FileUtils.ONE_MB) {
                     Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
-                    addTransferIntent.putExtra("mode", PutioUtils.ADDTRANSFER_FILE);
-                    addTransferIntent.putExtra("torrenturi", fileFragment.getChosenTorrentUri());
-                    addTransferIntent.putExtra("parentId", mDestinationFolderId);
+                    addTransferIntent.putExtra("mode", TYPE_FILE);
+                    addTransferIntent.putExtra("torrenturi", selectedFileUri);
+                    addTransferIntent.putExtra("parentId", destinationFolderId);
                     startActivity(addTransferIntent);
                     finish();
                 } else {
@@ -162,81 +241,45 @@ public class AddTransfers extends Activity implements Files.Callbacks, Destinati
 	}
 
     @Override
-    public void onFileSelected(int id) {
+    public void onDestinationFolderSelected(PutioFileData folder) {
+        destinationFolderId = folder.id;
+        buttonDestination.setText(folder.name);
 
+        sharedPrefs.edit()
+                .putInt("destinationFolderId", folder.id)
+                .putString("destinationFolderName", folder.name)
+                .apply();
     }
 
     @Override
-    public void onSomethingSelected() {
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        final Uri uri = data.getData();
+                        try {
+                            selectedFileUri = uri;
+                            textFilename.setText(PutioUtils.getNameFromUri(AddTransfers.this, uri));
+                            ContentResolver cr = getContentResolver();
+                            String mimetype = cr.getType(uri);
+                            if (mimetype == null) {
+                                mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                                        MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
+                            }
+                            if (mimetype.equals("application/x-bittorrent")) {
+                                textNotATorrent.animate().alpha(0);
+                            } else {
+                                textNotATorrent.animate().alpha(1);
+                            }
+                            selectedType = TYPE_FILE;
+                            updateView();
+                        } catch (Exception e) {
+                            Log.d("asdf", "File select error", e);
+                        }
+                    }
+                }
+                break;
+        }
     }
-
-    @Override
-    public void onDestinationFolderSelected() {
-        mDestinationFolderId = mFilesDialogFragment.getCurrentFolderId();
-        buttonDestination.setText(mFilesDialogFragment.getCurrentFolderName());
-    }
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			switch (position) {
-			case 0:
-				if (fragmentType == PutioUtils.ADDTRANSFER_URL) {
-					if (urlFragment == null) {
-						Bundle bundle = new Bundle();
-						bundle.putString("url", getIntent().getDataString());
-						urlFragment = (AddTransferUrl) AddTransferUrl.instantiate(
-								AddTransfers.this, AddTransferUrl.class.getName(), bundle);
-					}
-					return urlFragment;
-				} else if (fragmentType == PutioUtils.ADDTRANSFER_FILE) {
-					if (fileFragment == null) {
-						Bundle bundle = new Bundle();
-						bundle.putString("filepath", getIntent().getDataString());
-						fileFragment = (AddTransferFile) AddTransferFile.instantiate(
-								AddTransfers.this, AddTransferFile.class.getName(), bundle);
-					}
-					return fileFragment;
-				} else {
-					if (urlFragment == null) {
-						urlFragment = (AddTransferUrl) AddTransferUrl.instantiate(
-								AddTransfers.this, AddTransferUrl.class.getName());
-					}
-					return urlFragment;
-				}
-			case 1:
-				if (fileFragment == null) {
-					fileFragment = (AddTransferFile) AddTransferFile.instantiate(
-							AddTransfers.this, AddTransferFile.class.getName());
-				}
-				return fileFragment;
-			}
-			return null;
-		}
-
-		@Override
-		public int getCount() {
-			if (fragmentType != 0) {
-				return 1;
-			}
-			return 2;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			switch (position) {
-			case 0:
-				return getString(R.string.addtransfer_type_url);
-			case 1:
-				return getString(R.string.addtransfer_type_file);
-			}
-			return null;
-		}
-	}
 }

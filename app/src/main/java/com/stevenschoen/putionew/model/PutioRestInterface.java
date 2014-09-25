@@ -74,7 +74,6 @@ public interface PutioRestInterface {
 	@POST("/files/delete")
 	BasePutioResponse.FileChangingResponse deleteFile(@Field("file_ids") String ids);
 
-
     @FormUrlEncoded
     @POST("/files/move")
     BasePutioResponse.FileChangingResponse moveFile(@Field("file_ids") String ids, @Field("parent_id") String newParentId);

@@ -100,7 +100,7 @@
     <string name="choosefile">Sélectionner un fichier</string>
     <string name="cachesize">Taille du cache</string>
     <string name="cacheexplanation">Combien d\'espace devrait être utilisé pour le cache ? \nCela n\'affectera pas les fichiers téléchargés.</string>
-    <string name="addtransfer_type_url">URLs</string>
+    <string name="addtransfer_type_url">URL</string>
     <string name="addtransfer_type_file">Fichier torrent</string>
     <string name="copy_dl_link">Copier le lien de téléchargement</string>
     <string name="copyingdownloadlink">Lien de téléchagement en cours de copie</string>
@@ -110,7 +110,8 @@
     <string name="convert_mp4">Convertir en MP4</string>
     <string name="converting_mp4">Convertion en MP4…</string>
     <string name="mp4_available">MP4 disponible</string>
-    <string name="destination">Destination</string>
+    <string name="Destination">Destination</string>
+    <string name="destination_is">Destination :\ </string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Envoi du torrent</string>

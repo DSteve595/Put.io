@@ -61,7 +61,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     private int highlightFileId = -1;
 
     private int[] mIdsToMove;
-    private DestinationFilesDialog mFilesDialogFragment;
 
     private boolean buttonUpFolderShown;
 	private View buttonUpFolder;
@@ -95,14 +94,14 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
 	private ArrayList<PutioFileData> fileData;
 
-	static class State {
-		boolean isSearch;
-        String searchQuery;
-        PutioFileData currentFolder;
-        int requestedId;
+	public static class State {
+		public boolean isSearch;
+        public String searchQuery;
+        public PutioFileData currentFolder;
+        public int requestedId;
 	}
 
-	State state = new State();
+	protected State state = new State();
 
 	private int origId;
 
@@ -312,43 +311,43 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
     private void setViewMode(int mode) {
 		switch (mode) {
-		case VIEWMODE_LIST:
-			listview.setVisibility(View.VISIBLE);
-			loadingView.setVisibility(View.GONE);
-			emptyView.setVisibility(View.GONE);
-            emptySubfolderView.setVisibility(View.GONE);
-			break;
-		case VIEWMODE_LOADING:
-			listview.setVisibility(View.INVISIBLE);
-			loadingView.setVisibility(View.VISIBLE);
-			emptyView.setVisibility(View.GONE);
-            emptySubfolderView.setVisibility(View.GONE);
-			break;
-		case VIEWMODE_EMPTY:
-			listview.setVisibility(View.INVISIBLE);
-			loadingView.setVisibility(View.GONE);
-			if (state.currentFolder.id == 0 && !state.isSearch) {
-				emptyView.setVisibility(View.VISIBLE);
-				emptySubfolderView.setVisibility(View.GONE);
-			} else {
-				emptyView.setVisibility(View.GONE);
-				emptySubfolderView.setVisibility(View.VISIBLE);
-			}
-			break;
-		case VIEWMODE_LISTOREMPTY:
-			if (fileData == null || fileData.isEmpty()) {
-				setViewMode(VIEWMODE_EMPTY);
-			} else {
-				setViewMode(VIEWMODE_LIST);
-			}
-			break;
-		case VIEWMODE_LISTORLOADING:
-			if ((fileData == null || fileData.isEmpty()) && !hasUpdated) {
-				setViewMode(VIEWMODE_LOADING);
-			} else {
-				setViewMode(VIEWMODE_LISTOREMPTY);
-			}
-			break;
+            case VIEWMODE_LIST:
+                listview.setVisibility(View.VISIBLE);
+                loadingView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.GONE);
+                emptySubfolderView.setVisibility(View.GONE);
+                break;
+            case VIEWMODE_LOADING:
+                listview.setVisibility(View.INVISIBLE);
+                loadingView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                emptySubfolderView.setVisibility(View.GONE);
+                break;
+            case VIEWMODE_EMPTY:
+                listview.setVisibility(View.INVISIBLE);
+                loadingView.setVisibility(View.GONE);
+                if (state.currentFolder.id == 0 && !state.isSearch) {
+                    emptyView.setVisibility(View.VISIBLE);
+                    emptySubfolderView.setVisibility(View.GONE);
+                } else {
+                    emptyView.setVisibility(View.GONE);
+                    emptySubfolderView.setVisibility(View.VISIBLE);
+                }
+                break;
+            case VIEWMODE_LISTOREMPTY:
+                if (fileData == null || fileData.isEmpty()) {
+                    setViewMode(VIEWMODE_EMPTY);
+                } else {
+                    setViewMode(VIEWMODE_LIST);
+                }
+                break;
+            case VIEWMODE_LISTORLOADING:
+                if ((fileData == null || fileData.isEmpty()) && !hasUpdated) {
+                    setViewMode(VIEWMODE_LOADING);
+                } else {
+                    setViewMode(VIEWMODE_LISTOREMPTY);
+                }
+                break;
 		}
 		viewMode = mode;
 	}
@@ -357,7 +356,9 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mCallbacks = (Callbacks) activity;
+        if (activity instanceof Callbacks) {
+            mCallbacks = (Callbacks) activity;
+        }
     }
 
     @Override
@@ -425,9 +426,9 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
     private void initMoveFile(int... indeces) {
-        mFilesDialogFragment = (DestinationFilesDialog)
+        DestinationFilesDialog destinationFilesDialog = (DestinationFilesDialog)
                 DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
-        mFilesDialogFragment.show(getFragmentManager(), "dialog");
+        destinationFilesDialog.show(getFragmentManager(), "dialog");
         mIdsToMove = new int[indeces.length];
         for (int i = 0; i < indeces.length; i++) {
             mIdsToMove[i] = fileData.get(indeces[i]).id;
@@ -573,6 +574,10 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         return hideY;
     }
 
+    protected State getState() {
+        return state;
+    }
+
 	public int getIndexFromFileId(int fileId) {
 		for (int i = 0; i < fileData.size(); i++) {
 			if (fileData.get(i).id == fileId) {
@@ -684,9 +689,9 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
 
-    public void onDestinationFolderSelected() {
+    public void onDestinationFolderSelected(PutioFileData folder) {
         // TODO confirmation popup?
-        int selectedFolderId = mFilesDialogFragment.getCurrentFolderId();
+        int selectedFolderId = folder.id;
         utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
         Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
     }
