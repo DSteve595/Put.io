@@ -31,7 +31,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -530,7 +529,7 @@ public class Putio extends BaseCastActivity implements
     public void onFileSelected(int id) {
         if (UIUtils.isTablet(this)) {
             Bundle fileDetailsBundle = new Bundle();
-            fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtId(id));
+            fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtPosition(id));
             fileDetailsFragment = (FileDetails) FileDetails.instantiate(
                     this, FileDetails.class.getName(), fileDetailsBundle);
 

@@ -22,7 +22,5 @@
             android:layout_below="@id/edittext_addtransfer_urls"
             android:layout_marginLeft="@dimen/padding_large"
             android:text="@string/extractwhenfinished" />
-
-
     </RelativeLayout>
 </ScrollView>

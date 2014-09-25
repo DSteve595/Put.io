@@ -20,6 +20,10 @@ public class PutioFileData implements Parcelable {
 	public int id;
 	public long size;
 
+    public PutioFileData() {
+
+    }
+
 	public boolean isFolder() {
 		return contentType.equals("application/x-directory");
 	}

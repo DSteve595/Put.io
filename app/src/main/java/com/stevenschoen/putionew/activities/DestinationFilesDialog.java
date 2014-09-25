@@ -10,9 +10,6 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 
-/**
- * Created by simon_xomo on 2014-09-13.
- */
 public class DestinationFilesDialog extends Files {
 
     private DestinationFilesDialog.Callbacks mCallbacks;
@@ -51,6 +48,7 @@ public class DestinationFilesDialog extends Files {
                 getDialog().dismiss();
             }
         });
+
         return view;
     }
 }
