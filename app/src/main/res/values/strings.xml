@@ -113,7 +113,7 @@
     <string name="converting_mp4">Converting to MP4…</string>
     <string name="mp4_available">MP4 available</string>
     <string name="destination">Destination</string>
-    <string name="destination_is">Destination:\ </string>
+    <string name="destination_is">Destination:</string>
     <string name="choose_destination">Choose folder</string>
 
     <!-- Notification stuff -->

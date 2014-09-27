@@ -34,8 +34,10 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginEnd="@dimen/padding_large"
         android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
         android:layout_marginStart="@dimen/padding_large"
         android:layout_marginTop="@dimen/padding_small"
         android:gravity="center_vertical"
@@ -43,21 +45,20 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif-light"
-            android:gravity="center_vertical"
             android:text="@string/destination_is"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <de.ankri.views.AutoScaleTextView
+        <TextView
             android:id="@+id/button_addtransfer_destination"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/putio_clickable_button"
             android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:padding="4dp"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
@@ -141,11 +142,12 @@
             android:id="@+id/text_addtransfer_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="8dp"
             android:layout_toLeftOf="@+id/button_addtransfer_cancelurl"
             android:layout_toStartOf="@id/button_addtransfer_cancelurl"
             android:hint="@string/pasteurls"
-            android:inputType="textUri" />
+            android:inputType="textUri"
+            android:singleLine="true" />
 
         <ImageButton
             android:id="@id/button_addtransfer_cancelurl"
@@ -159,6 +161,15 @@
             android:background="@drawable/putio_clickable_button"
             android:contentDescription="@string/cancel"
             android:src="@drawable/ic_close" />
+
+        <CheckBox
+            android:id="@+id/checkbox_addtransfer_extract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/extractwhenfinished" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -196,6 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:alpha="0"
                 android:gravity="bottom"
                 android:text="@string/notatorrent"
                 android:textAppearance="?android:attr/textAppearanceSmall"

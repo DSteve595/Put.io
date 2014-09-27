@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
     ImageButton cancelUrl, cancelFile;
 
     private EditText textUrl;
+    private CheckBox checkBoxExtract;
 
     private TextView textFilename, textNotATorrent;
 
@@ -56,9 +58,9 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Putio_Dialog);
 		setContentView(R.layout.dialog_addtransfer);
-		
+
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		String token = sharedPrefs.getString("token", null);
 		if (token == null || token.isEmpty()) {
 			Intent putioActivity = new Intent(this, Putio.class);
@@ -73,7 +75,7 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
                 add();
 			}
 		});
-		
+
 		Button cancelButton = (Button) findViewById(R.id.button_addtransfer_cancel);
 		cancelButton.setOnClickListener(new OnClickListener() {
 
@@ -145,6 +147,7 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
         });
 
         textUrl = (EditText) findViewById(R.id.text_addtransfer_url);
+        checkBoxExtract = (CheckBox) findViewById(R.id.checkbox_addtransfer_extract);
 
         textFilename = (TextView) findViewById(R.id.text_addtransfer_filename);
         textNotATorrent = (TextView) findViewById(R.id.text_addtransfer_notatorrent);
@@ -201,13 +204,13 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
                 break;
         }
     }
-	
+
 	private void addUrl() {
 		if (!selectedUrl.isEmpty()) {
 			Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
 			addTransferIntent.putExtra("mode", TYPE_URL);
 			addTransferIntent.putExtra("url", selectedUrl);
-//            addTransferIntent.putExtra("extract", extract); TODO
+            addTransferIntent.putExtra("extract", checkBoxExtract.isChecked());
             addTransferIntent.putExtra("saveParentId", destinationFolderId);
 			startActivity(addTransferIntent);
 			finish();
@@ -215,7 +218,7 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
 			Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 		}
 	}
-	
+
 	private void addFile() {
 		if (selectedFileUri != null) {
             try {

@@ -64,7 +64,7 @@ public interface PutioRestInterface {
 
 	@Multipart
 	@POST("/files/upload")
-	void uploadFile(@Part("file") TypedFile file, @Field("parent_id") int parentId, Callback<Response> callback);
+	void uploadFile(@Part("file") TypedFile file, @Part("parent_id") int parentId, Callback<Response> callback);
 
     @FormUrlEncoded
 	@POST("/files/rename")
