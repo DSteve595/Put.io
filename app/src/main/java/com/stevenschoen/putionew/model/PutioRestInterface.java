@@ -24,6 +24,7 @@ import com.stevenschoen.putionew.model.responses.FileResponse;
 import com.stevenschoen.putionew.model.responses.FilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
+import com.stevenschoen.putionew.model.responses.SubtitlesListResponse;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 
 import org.apache.commons.io.FileUtils;
@@ -51,6 +52,9 @@ public interface PutioRestInterface {
 
 	@GET("/files/{id}")
 	FileResponse file(@Path("id") int id);
+
+    @GET("/files/{id}/subtitles")
+    SubtitlesListResponse subtitles(@Path("id") int id);
 
 	@FormUrlEncoded
 	@GET("/files/zip")
@@ -277,11 +281,25 @@ public interface PutioRestInterface {
 		}
 	}
 
+    public static class GetSubtitlesJob extends PutioJob {
+        private int id;
+
+        public GetSubtitlesJob(PutioUtils utils, int id) {
+            super(new Params(0).requireNetwork(), utils);
+            this.id = id;
+        }
+
+        @Override
+        public void onRun() throws Throwable {
+            getUtils().getEventBus().post(getUtils().getRestInterface().subtitles(id));
+        }
+    }
+
 	public static class GetMp4StatusJob extends PutioJob {
 		private int id;
 
 		public GetMp4StatusJob(PutioUtils utils, int id) {
-			super(new Params(0), utils);
+			super(new Params(0).requireNetwork(), utils);
 			this.id = id;
 		}
 

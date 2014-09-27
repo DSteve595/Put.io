@@ -1,7 +1,11 @@
 package com.stevenschoen.putionew.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -10,6 +14,7 @@ import android.view.MenuItem;
 import com.commonsware.cwac.mediarouter.MediaRouteActionProvider;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.MediaTrack;
 import com.google.android.gms.common.images.WebImage;
 import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
 import com.google.sample.castcompanionlibrary.cast.exceptions.NoConnectionException;
@@ -19,13 +24,16 @@ import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioSubtitle;
 
 import org.apache.commons.io.FilenameUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseCastActivity extends Activity implements PutioApplication.CastCallbacks {
 
     private VideoCastManager videoCastManager;
-	private MiniController castBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +54,7 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
     public abstract boolean shouldUpdateCastContext();
 
     protected void initCastBar() {
-        castBar = (MiniController) findViewById(R.id.castbar_holder);
+        MiniController castBar = (MiniController) findViewById(R.id.castbar_holder);
         if (castBar != null && videoCastManager != null) {
             videoCastManager.addMiniController(castBar);
         }
@@ -69,15 +77,6 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                try {
-                    if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
-                        videoCastManager.updateVolume(1);
-                        return true;
-                    }
-                } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
-                    return super.onKeyDown(keyCode, event);
-                }
-                return super.onKeyDown(keyCode, event);
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 try {
                     if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
@@ -133,25 +132,98 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
         if (videoCastManager == null || !videoCastManager.isConnected()) {
             utils.getStreamUrlAndPlay(this, file, url);
         } else {
-            MediaMetadata metaData = new MediaMetadata(file.contentType.contains("video") ?
+            GetSubtitlesAndPlayParams params = new GetSubtitlesAndPlayParams(this, videoCastManager, utils, file, url);
+            new GetSubtitlesAndPlayTask(params).execute();
+        }
+    }
+
+    static class GetSubtitlesAndPlayTask extends AsyncTask<Void, Void, MediaInfo> {
+        private GetSubtitlesAndPlayParams params;
+
+        private boolean shouldGetSubtitles;
+        private Dialog gettingStreamDialog;
+
+        public GetSubtitlesAndPlayTask(GetSubtitlesAndPlayParams params) {
+            this.params = params;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            shouldGetSubtitles = (params.file.contentType.contains("video"));
+            if (shouldGetSubtitles) {
+                gettingStreamDialog = PutioUtils.PutioDialog(params.context,
+                        params.context.getString(R.string.gettingstreamurltitle),
+                        R.layout.dialog_loading);
+                gettingStreamDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        GetSubtitlesAndPlayTask.this.cancel(true);
+                    }
+                });
+                gettingStreamDialog.show();
+            }
+        }
+
+        @Override
+        protected MediaInfo doInBackground(Void... nothing) {
+            MediaMetadata metaData = new MediaMetadata(params.file.contentType.contains("video") ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-            metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(file.name));
-            if (file.icon != null) metaData.addImage(new WebImage(Uri.parse(file.icon)));
-            if (file.screenshot != null) metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
+            metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(params.file.name));
+            if (params.file.icon != null) metaData.addImage(new WebImage(Uri.parse(params.file.icon)));
+            if (params.file.screenshot != null) metaData.addImage(new WebImage(Uri.parse(params.file.screenshot)));
 
-            String subtitleUrl = PutioUtils.baseUrl + "files/" + file.id + "/subtitles/default" +
-					utils.tokenWithStuff + "&format=webvtt";
+            List<PutioSubtitle> subtitles = params.utils.getRestInterface().subtitles(params.file.id).getSubtitles();
+            List<MediaTrack> tracks = new ArrayList<>();
+            for (PutioSubtitle subtitle : subtitles) {
+                tracks.add(new MediaTrack.Builder(0, MediaTrack.TYPE_TEXT)
+                        .setSubtype(MediaTrack.SUBTYPE_CAPTIONS)
+                        .setContentId(subtitle.getUrl(params.file.id, params.utils.tokenWithStuff))
+                        .setLanguage(subtitle.getLanguage())
+                        .build());
+            }
 
-			MediaInfo mediaInfo = new MediaInfo.Builder(url)
-                    .setContentType(file.contentType)
+            return new MediaInfo.Builder(params.url)
+                    .setContentType(params.file.contentType)
                     .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+//                    .setMediaTracks(tracks) // Not ready yet
                     .setMetadata(metaData)
                     .build();
+        }
+
+        @Override
+        protected void onPostExecute(MediaInfo mediaInfo) {
+            if (shouldGetSubtitles && gettingStreamDialog != null) {
+                gettingStreamDialog.dismiss();
+            }
+
             try {
-                videoCastManager.loadMedia(mediaInfo, true, 0);
+                if (mediaInfo != null
+                        && params.videoCastManager != null && params.videoCastManager.isConnected()) {
+                    params.videoCastManager.loadMedia(mediaInfo, true, 0);
+                }
             } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    static class GetSubtitlesAndPlayParams {
+        Context context;
+        VideoCastManager videoCastManager;
+        PutioUtils utils;
+        PutioFileData file;
+        String url;
+
+        GetSubtitlesAndPlayParams(Context context, VideoCastManager videoCastManager,
+                                  PutioUtils utils, PutioFileData file, String url) {
+            this.context = context;
+            this.videoCastManager = videoCastManager;
+            this.utils = utils;
+            this.file = file;
+            this.url = url;
         }
     }
 }

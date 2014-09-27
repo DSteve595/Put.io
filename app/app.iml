@@ -88,7 +88,7 @@
     <orderEntry type="library" exported="" name="android-priority-jobqueue-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.7.0" level="project" />
     <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-5.0.89" level="project" />
+    <orderEntry type="library" exported="" name="play-services-5.2.08" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.3.5" level="project" />

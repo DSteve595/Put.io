@@ -36,6 +36,7 @@ import com.path.android.jobqueue.JobManager;
 import com.squareup.okhttp.OkHttpClient;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioSubtitle;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
@@ -56,6 +57,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -351,7 +353,7 @@ public class PutioUtils {
 		return manager.enqueue(request);
     }
 
-    public static void stream(Context context, String url, Uri[] subtitles, int type) {
+    public void stream(Context context, int fileId, String url, List<PutioSubtitle> subtitles, int type) {
         Intent streamIntent = new Intent();
         streamIntent.setAction(Intent.ACTION_VIEW);
         String typeString;
@@ -368,8 +370,19 @@ public class PutioUtils {
             return;
         }
         streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
-		if (subtitles != null && subtitles.length > 0) {
-			streamIntent.putExtra("subs", subtitles);
+
+		if (subtitles != null && !subtitles.isEmpty()) {
+            Uri[] subtitleUris = new Uri[subtitles.size()];
+            String[] subtitleNames = new String[subtitles.size()];
+
+            for (int i = 0; i < subtitles.size(); i++) {
+                PutioSubtitle subtitle = subtitles.get(i);
+                subtitleUris[i] = Uri.parse(subtitle.getUrl(fileId, tokenWithStuff));
+                subtitleNames[i] = subtitle.getLanguage();
+            }
+
+			streamIntent.putExtra("subs", subtitleUris);
+            streamIntent.putExtra("subs.name", subtitleNames);
 		}
 
         try {
@@ -380,7 +393,7 @@ public class PutioUtils {
     }
 
     public void getStreamUrlAndPlay(final Context context, final PutioFileData file, String url) {
-        class GetStreamUrlAndPlay extends AsyncTask<String, Void, String> {
+        class GetStreamUrlAndPlay extends AsyncTask<String, Void, GetStreamUrlAndPlayResult> {
             Dialog gettingStreamDialog;
 
             @Override
@@ -399,17 +412,24 @@ public class PutioUtils {
             }
 
             @Override
-            protected String doInBackground(String... params) {
+            protected GetStreamUrlAndPlayResult doInBackground(String... params) {
+                GetStreamUrlAndPlayResult result = new GetStreamUrlAndPlayResult();
+
+                String finalUrl = params[0];
                 try {
-                    return PutioUtils.resolveRedirect(params[0]);
+                    finalUrl = resolveRedirect(params[0]);
                 } catch (IOException e) {
 //                    No redirect
-					return params[0];
                 }
+                result.url = finalUrl;
+
+                result.subtitles = getRestInterface().subtitles(file.id).getSubtitles();
+
+                return result;
             }
 
             @Override
-            public void onPostExecute(String finalUrl) {
+            public void onPostExecute(GetStreamUrlAndPlayResult result) {
                 try {
                     if (gettingStreamDialog.isShowing()) {
                         gettingStreamDialog.dismiss();
@@ -426,35 +446,16 @@ public class PutioUtils {
                     type = PutioUtils.TYPE_VIDEO;
                 }
 
-				String subtitleUrl = PutioUtils.baseUrl + "/files/" + file.id +
-						"/subtitles/default" + tokenWithStuff;
-				Uri[] subtitles = new Uri[] { Uri.parse(subtitleUrl) };
-
-                PutioUtils.stream(context, finalUrl, subtitles, type);
+                stream(context, file.id, result.url, result.subtitles, type);
             }
         }
 
         new GetStreamUrlAndPlay().execute(url);
     }
 
-    public InputStream getDefaultSubtitleData(int id) throws SocketTimeoutException {
-        URL url = null;
-        try {
-            url = new URL(baseUrl + "/files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        }
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-            connection.setConnectTimeout(8000);
-
-            return connection.getInputStream();
-        } catch (SocketTimeoutException e) {
-            throw new SocketTimeoutException();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    private static class GetStreamUrlAndPlayResult {
+        String url;
+        List<PutioSubtitle> subtitles;
     }
 
     public void copyDownloadLink(final Context context, int id) {
