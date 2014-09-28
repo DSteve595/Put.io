@@ -20,7 +20,7 @@ public class PutioOpenFileService extends Service {
 	String filename;
 	int mode;
 	
-	IntentFilter intentFilter3 = new IntentFilter(Putio.fileDownloadUpdateIntent);
+	IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(Putio.fileDownloadUpdateIntent);
 
 	@Override
 	public void onCreate() {
@@ -60,8 +60,6 @@ public class PutioOpenFileService extends Service {
 				int reason = cursor.getInt(columnReason);
 
 				if (status == DownloadManager.STATUS_SUCCESSFUL) {
-//					ParcelFileDescriptor file;
-//					file = downloadManager.openDownloadedFile(downloadId);
 					Intent finishedIntent = new Intent(PutioOpenFileService.this, FileFinished.class);
 					finishedIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					finishedIntent.putExtra("downloadId", downloadId);
