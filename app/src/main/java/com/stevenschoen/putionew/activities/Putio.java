@@ -654,16 +654,18 @@ public class Putio extends BaseCastActivity implements
 	@Override
     public void onBackPressed() {
         if (UIUtils.isTablet(this)) {
-            if (!filesFragment.goBack()) {
-                super.onBackPressed();
+            if (getActionBar().getSelectedNavigationIndex() == TAB_FILES) {
+                if (filesFragment.goBack()) {
+                    super.onBackPressed();
+                } else {
+                    removeFD(true);
+                }
             } else {
-                removeFD(true);
+                super.onBackPressed();
             }
         } else {
-            if (hasWindowFocus()) {
-                if (!filesFragment.goBack()) {
-					super.onBackPressed();
-				}
+            if (mViewPager.getCurrentItem() == TAB_FILES && !filesFragment.goBack()) {
+                super.onBackPressed();
             }
         }
     }
