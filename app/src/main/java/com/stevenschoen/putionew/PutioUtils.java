@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -412,8 +413,12 @@ public class PutioUtils {
 
             @Override
             public void onPostExecute(String finalUrl) {
-                if (gettingStreamDialog.isShowing()) {
-                    gettingStreamDialog.dismiss();
+                try {
+                    if (gettingStreamDialog.isShowing()) {
+                        gettingStreamDialog.dismiss();
+                    }
+                } catch (IllegalArgumentException e) {
+                    Log.d("asdf", "context null: " + (context == null), e);
                 }
                 int type;
                 if (file.contentType.contains("audio")) {
