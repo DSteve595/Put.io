@@ -35,26 +35,27 @@ public class TransfersActivity extends FragmentActivity {
 		if (getIntent().getExtras() != null && getIntent().getIntExtra("mode", 0) != 0) {
 			int mode = getIntent().getIntExtra("mode", 0);
 			switch (mode) {
-			case PutioUtils.ADDTRANSFER_URL:
+			case AddTransfers.TYPE_URL:
 				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostAddTransferJob(
 						utils,
                         getIntent().getStringExtra("url"),
                         getIntent().getBooleanExtra("extract", false),
+                        getIntent().getIntExtra("saveParentId", 0),
                         this, getIntent()));
                 break;
-			case PutioUtils.ADDTRANSFER_FILE:
+			case AddTransfers.TYPE_FILE:
 				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostUploadFileJob(
-						utils, this, getIntent(), (Uri) getIntent().getParcelableExtra("torrenturi")));
+						utils, this, getIntent(),
+                        (Uri) getIntent().getParcelableExtra("torrenturi"),
+                        getIntent().getIntExtra("parentId", 0)));
                 break;
 			}
 			
 			finish();
 		} else {
 			setContentView(R.layout.transfersactivity);
-			
-			TextView textTitle = (TextView) findViewById(R.id.transfersactivity_text_title);
-			
-			ImageButton buttonMaximize = (ImageButton) findViewById(R.id.transfersactivity_button_maximize);
+
+            ImageButton buttonMaximize = (ImageButton) findViewById(R.id.transfersactivity_button_maximize);
 			buttonMaximize.setOnClickListener(new OnClickListener() {
 				@SuppressLint("NewApi")
 				@Override

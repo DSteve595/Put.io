@@ -20,5 +20,9 @@
         android:id="@+id/context_delete"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/delete" />
-
+    <item
+        android:id="@+id/context_move"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:showAsAction="ifRoom"
+        android:title="@string/move" />
 </menu>

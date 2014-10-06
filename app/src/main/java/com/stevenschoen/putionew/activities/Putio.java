@@ -31,7 +31,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -47,6 +46,7 @@ import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.Transfers;
 import com.stevenschoen.putionew.model.PutioRestInterface;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 
 import org.apache.commons.io.FileUtils;
@@ -57,7 +57,7 @@ import java.io.File;
 import java.io.InputStream;
 
 public class Putio extends BaseCastActivity implements
-        ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks {
+        ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks, DestinationFilesDialog.Callbacks {
 
     public static final int TAB_ACCOUNT = 0;
     public static final int TAB_FILES = 1;
@@ -262,6 +262,11 @@ public class Putio extends BaseCastActivity implements
         });
 
         return true;
+    }
+
+    @Override
+    public void onDestinationFolderSelected(PutioFileData folder) {
+        filesFragment.onDestinationFolderSelected(folder);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -525,7 +530,7 @@ public class Putio extends BaseCastActivity implements
     public void onFileSelected(int id) {
         if (UIUtils.isTablet(this)) {
             Bundle fileDetailsBundle = new Bundle();
-            fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtId(id));
+            fileDetailsBundle.putParcelable("fileData", filesFragment.getFileAtPosition(id));
             fileDetailsFragment = (FileDetails) FileDetails.instantiate(
                     this, FileDetails.class.getName(), fileDetailsBundle);
 

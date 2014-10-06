@@ -64,7 +64,7 @@ public interface PutioRestInterface {
 
 	@Multipart
 	@POST("/files/upload")
-	void uploadFile(@Part("file") TypedFile file, Callback<Response> callback);
+	void uploadFile(@Part("file") TypedFile file, @Part("parent_id") int parentId, Callback<Response> callback);
 
     @FormUrlEncoded
 	@POST("/files/rename")
@@ -74,12 +74,16 @@ public interface PutioRestInterface {
 	@POST("/files/delete")
 	BasePutioResponse.FileChangingResponse deleteFile(@Field("file_ids") String ids);
 
+    @FormUrlEncoded
+    @POST("/files/move")
+    BasePutioResponse.FileChangingResponse moveFile(@Field("file_ids") String ids, @Field("parent_id") String newParentId);
+
 	@GET("/transfers/list")
 	TransfersListResponse transfers();
 
 	@FormUrlEncoded
 	@POST("/transfers/add")
-	void addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, Callback<Response> callback);
+	void addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, @Field("save_parent_id") int saveParentId, Callback<Response> callback);
 
 	@FormUrlEncoded
 	@POST("/transfers/cancel")
@@ -304,10 +308,12 @@ public interface PutioRestInterface {
 
 	public static class PostUploadFileJob extends PutioUploadJob {
 		private Uri fileUri;
+        private int parentId;
 
-		public PostUploadFileJob(PutioUtils utils, Context context, Intent retryIntent, Uri fileUri) {
+		public PostUploadFileJob(PutioUtils utils, Context context, Intent retryIntent, Uri fileUri, int parentId) {
 			super(new Params(0).requireNetwork(), utils, context, retryIntent);
 			this.fileUri = fileUri;
+            this.parentId = parentId;
 		}
 
 		@Override
@@ -324,7 +330,7 @@ public interface PutioRestInterface {
 
 			try {
 				getUtils().getRestInterface().uploadFile(
-						new TypedFile("application/x-bittorrent", file), this);
+						new TypedFile("application/x-bittorrent", file), parentId, this);
 			} catch (Exception e) {
 				file.delete();
 				throw e;
@@ -362,6 +368,22 @@ public interface PutioRestInterface {
 		}
 	}
 
+    public static class PostMoveFilesJob extends PutioJob {
+        private int newParentId;
+        private int[] ids;
+
+        public PostMoveFilesJob(PutioUtils utils, int newParentId, int... ids) {
+            super(new Params(0).requireNetwork(), utils);
+            this.newParentId = newParentId;
+            this.ids = ids;
+        }
+
+        @Override
+        public void onRun() throws Throwable {
+            getUtils().getEventBus().post(getUtils().getRestInterface().moveFile(PutioUtils.intsToString(ids), Integer.toString(newParentId)));
+        }
+    }
+
 	public static class GetTransfersJob extends PutioJob {
 		public GetTransfersJob(PutioUtils utils) {
 			super(new Params(0).requireNetwork().groupBy("gettransfers"), utils);
@@ -376,17 +398,19 @@ public interface PutioRestInterface {
 	public static class PostAddTransferJob extends PutioUploadJob {
 		private String url;
         private boolean extract;
+        private int saveParentId;
 
-		public PostAddTransferJob(PutioUtils utils, String url, boolean extract, Context context, Intent retryIntent) {
+		public PostAddTransferJob(PutioUtils utils, String url, boolean extract, int saveParentId, Context context, Intent retryIntent) {
 			super(new Params(0).requireNetwork(), utils, context, retryIntent);
 			this.url = url;
             this.extract = extract;
+            this.saveParentId = saveParentId;
 		}
 
 		@Override
 		public void onRun() throws Throwable {
 			super.onRun();
-			getUtils().getRestInterface().addTransferUrl(url, extract, this);
+			getUtils().getRestInterface().addTransferUrl(url, extract, saveParentId, this);
 		}
 	}
 

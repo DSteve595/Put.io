@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <string name="putio">Put.io</string>
 
@@ -30,6 +30,7 @@
     <string name="remove">Remove</string>
     <string name="undo">Undo</string>
     <string name="storage">Storage</string>
+    <string name="move">Move</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Preparing to stream</string>
@@ -93,6 +94,7 @@
     <string name="searchyourfiles">Search your files</string>
     <string name="nofilesfound">No files were found.</string>
     <string name="filedeleted">File deleted!</string>
+    <string name="filemoved">File moved!</string>
     <string name="transferremoved">Transfer removed!</string>
     <string name="ratio_is">Ratio: %s</string>
     <string name="hey">Hey!</string>
@@ -100,7 +102,7 @@
     <string name="choosefile">Choose a file</string>
     <string name="cachesize">Cache size</string>
     <string name="cacheexplanation">How much space should be used for the cache?\nThis won\'t affect your downloaded files.</string>
-    <string name="addtransfer_type_url">URLs</string>
+    <string name="addtransfer_type_url">URL</string>
     <string name="addtransfer_type_file">Torrent file</string>
     <string name="copy_dl_link">Copy download link</string>
     <string name="copyingdownloadlink">Copying download link</string>
@@ -110,6 +112,9 @@
     <string name="convert_mp4">Convert to MP4</string>
     <string name="converting_mp4">Converting to MP4…</string>
     <string name="mp4_available">MP4 available</string>
+    <string name="destination">Destination</string>
+    <string name="destination_is">Destination:</string>
+    <string name="choose_destination">Choose folder</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Uploading torrent</string>

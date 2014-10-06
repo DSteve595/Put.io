@@ -2,7 +2,7 @@ package com.stevenschoen.putionew.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
+import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.stevenschoen.putionew.FilesAdapter;
 import com.stevenschoen.putionew.PutioApplication;
@@ -36,6 +37,7 @@ import com.stevenschoen.putionew.PutioFileLayout;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.activities.DestinationFilesDialog;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
@@ -47,8 +49,8 @@ import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Files extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-	
+public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefreshListener {
+
 	private static final int VIEWMODE_LIST = 1;
 	private static final int VIEWMODE_LISTOREMPTY = 2;
 	private static final int VIEWMODE_LOADING = 3;
@@ -58,22 +60,23 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
     private int highlightFileId = -1;
 
-    private boolean buttonUpFolderShown;
+    private int[] mIdsToMove;
 
+    private boolean buttonUpFolderShown;
 	private View buttonUpFolder;
 
     public interface Callbacks {
         public void onFileSelected(int id);
         public void onSomethingSelected();
     }
-    
+
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void onFileSelected(int id) { }
         @Override
         public void onSomethingSelected() { }
     };
-	
+
     private Callbacks mCallbacks = sDummyCallbacks;
 
 	private PutioUtils utils;
@@ -82,44 +85,45 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	private ArrayList<PutioFileLayout> fileLayouts;
 	private ListView listview;
 	private SwipeRefreshLayout swipeRefreshLayout;
-	
+
 	private View loadingView;
 	private View emptyView;
 	private View emptySubfolderView;
-	
+
 	private boolean hasUpdated = false;
 
 	private ArrayList<PutioFileData> fileData;
 
-	static class State {
-		boolean isSearch;
-        String searchQuery;
-		int id;
-		int parentId;
+	public static class State {
+		public boolean isSearch;
+        public String searchQuery;
+        public PutioFileData currentFolder;
+        public int requestedId;
 	}
 
-	State state = new State();
+	protected State state = new State();
 
 	private int origId;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
 		try {
-			state.id = savedInstanceState.getInt("currentFolderId");
+            state.requestedId = savedInstanceState.getInt("requestedId");
+			state.currentFolder = savedInstanceState.getParcelable("currentFolder");
 			state.isSearch = savedInstanceState.getBoolean("isSearch");
             state.searchQuery = savedInstanceState.getString("searchQuery");
-			state.parentId = savedInstanceState.getInt("parentId");
 			origId = savedInstanceState.getInt("origId");
 			fileLayouts = savedInstanceState.getParcelableArrayList("fileLayouts");
 			fileData =  savedInstanceState.getParcelableArrayList("fileData");
 			hasUpdated = savedInstanceState.getBoolean("hasUpdated");
 		} catch (NullPointerException e) {
-			state.id = 0;
+            state.requestedId = 0;
+			state.currentFolder = new PutioFileData();
+            state.currentFolder.id = 0;
 			state.isSearch = false;
-			state.parentId = 0;
 			origId = 0;
 			fileLayouts = new ArrayList<>();
 			fileData = new ArrayList<>();
@@ -133,8 +137,8 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.files, container, false);
-		
+		View view = inflater.inflate(getLayoutResId(), container, false);
+
 		listview = (ListView) view.findViewById(R.id.fileslist);
         if (!UIUtils.isTV(getActivity())) {
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
@@ -145,7 +149,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 					R.color.putio_accent,
 					R.color.putio_accent_dark);
 		}
-		
+
 		adapter = new FilesAdapter(getActivity(), fileLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -209,6 +213,9 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 						case R.id.context_delete:
 							initDeleteFile(checkedPositionsArray);
 							return true;
+                        case R.id.context_move:
+                            initMoveFile(checkedPositionsArray);
+                            return true;
 					}
 
 					return false;
@@ -244,7 +251,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 						mCallbacks.onFileSelected(position);
 					}
 				} else {
-					state.id = file.id;
+					state.requestedId = file.id;
 					invalidateList();
 				}
 			}
@@ -294,76 +301,82 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		} else {
 			setViewMode(VIEWMODE_LISTORLOADING);
 		}
-		
+
 		return view;
 	}
-	
-	private void setViewMode(int mode) {
+
+    protected int getLayoutResId() {
+        return R.layout.files;
+    }
+
+    private void setViewMode(int mode) {
 		switch (mode) {
-		case VIEWMODE_LIST:
-			listview.setVisibility(View.VISIBLE);
-			loadingView.setVisibility(View.GONE);
-			emptyView.setVisibility(View.GONE);
-            emptySubfolderView.setVisibility(View.GONE);
-			break;
-		case VIEWMODE_LOADING:
-			listview.setVisibility(View.INVISIBLE);
-			loadingView.setVisibility(View.VISIBLE);
-			emptyView.setVisibility(View.GONE);
-            emptySubfolderView.setVisibility(View.GONE);
-			break;
-		case VIEWMODE_EMPTY:
-			listview.setVisibility(View.INVISIBLE);
-			loadingView.setVisibility(View.GONE);
-			if (state.id == 0 && !state.isSearch) {
-				emptyView.setVisibility(View.VISIBLE);
-				emptySubfolderView.setVisibility(View.GONE);
-			} else {
-				emptyView.setVisibility(View.GONE);
-				emptySubfolderView.setVisibility(View.VISIBLE);
-			}
-			break;
-		case VIEWMODE_LISTOREMPTY:
-			if (fileData == null || fileData.isEmpty()) {
-				setViewMode(VIEWMODE_EMPTY);
-			} else {
-				setViewMode(VIEWMODE_LIST);
-			}
-			break;
-		case VIEWMODE_LISTORLOADING:
-			if ((fileData == null || fileData.isEmpty()) && !hasUpdated) {
-				setViewMode(VIEWMODE_LOADING);
-			} else {
-				setViewMode(VIEWMODE_LISTOREMPTY);
-			}
-			break;
+            case VIEWMODE_LIST:
+                listview.setVisibility(View.VISIBLE);
+                loadingView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.GONE);
+                emptySubfolderView.setVisibility(View.GONE);
+                break;
+            case VIEWMODE_LOADING:
+                listview.setVisibility(View.INVISIBLE);
+                loadingView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                emptySubfolderView.setVisibility(View.GONE);
+                break;
+            case VIEWMODE_EMPTY:
+                listview.setVisibility(View.INVISIBLE);
+                loadingView.setVisibility(View.GONE);
+                if (state.currentFolder.id == 0 && !state.isSearch) {
+                    emptyView.setVisibility(View.VISIBLE);
+                    emptySubfolderView.setVisibility(View.GONE);
+                } else {
+                    emptyView.setVisibility(View.GONE);
+                    emptySubfolderView.setVisibility(View.VISIBLE);
+                }
+                break;
+            case VIEWMODE_LISTOREMPTY:
+                if (fileData == null || fileData.isEmpty()) {
+                    setViewMode(VIEWMODE_EMPTY);
+                } else {
+                    setViewMode(VIEWMODE_LIST);
+                }
+                break;
+            case VIEWMODE_LISTORLOADING:
+                if ((fileData == null || fileData.isEmpty()) && !hasUpdated) {
+                    setViewMode(VIEWMODE_LOADING);
+                } else {
+                    setViewMode(VIEWMODE_LISTOREMPTY);
+                }
+                break;
 		}
 		viewMode = mode;
 	}
-	
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mCallbacks = (Callbacks) activity;
+        if (activity instanceof Callbacks) {
+            mCallbacks = (Callbacks) activity;
+        }
     }
-    
+
     @Override
     public void onDetach() {
         super.onDetach();
 
         mCallbacks = sDummyCallbacks;
     }
-	
+
 	private void initDownloadFiles(final int... indeces) {
 		PutioFileData[] files = new PutioFileData[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = fileData.get(indeces[i]);
 		}
-		
+
 		utils.downloadFile(getActivity(), PutioUtils.ACTION_NOTHING, files);
 	}
-	
+
 	private void initCopyFileDownloadLink(int index) {
 		utils.copyDownloadLink(getActivity(), fileData.get(index).id);
 	}
@@ -371,10 +384,10 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	private void initRenameFile(final int index) {
 		final Dialog renameDialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
 		renameDialog.show();
-		
+
 		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
 		textFileName.setText(fileData.get(index).name);
-		
+
 		ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
 		btnUndoName.setOnClickListener(new OnClickListener() {
 			@Override
@@ -382,7 +395,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				textFileName.setText(fileData.get(index).name);
 			}
 		});
-		
+
 		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
 		saveRename.setOnClickListener(new OnClickListener() {
 			@Override
@@ -393,7 +406,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 				renameDialog.dismiss();
 			}
 		});
-		
+
 		Button cancelRename = (Button) renameDialog.findViewById(R.id.button_rename_cancel);
 		cancelRename.setOnClickListener(new OnClickListener() {
 
@@ -403,7 +416,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			}
 		});
 	}
-	
+
 	private void initDeleteFile(int... indeces) {
 		PutioFileData[] files = new PutioFileData[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
@@ -411,14 +424,24 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		utils.showDeleteFilesDialog(getActivity(), false, files);
 	}
-	
+
+    private void initMoveFile(int... indeces) {
+        DestinationFilesDialog destinationFilesDialog = (DestinationFilesDialog)
+                DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
+        destinationFilesDialog.show(getFragmentManager(), "dialog");
+        mIdsToMove = new int[indeces.length];
+        for (int i = 0; i < indeces.length; i++) {
+            mIdsToMove[i] = fileData.get(indeces[i]).id;
+        }
+    }
+
 	public void invalidateList() {
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesListJob(
-				utils, getCurrentFolderId(), !UIUtils.isTV(getActivity())));
-		
+				utils, state.requestedId, !UIUtils.isTV(getActivity())));
+
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -448,9 +471,9 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
-	
-	private void populateList(final List<PutioFileData> files, int newId, int parentId, int origIdBefore) {
-        state.parentId = parentId;
+
+	private void populateList(final List<PutioFileData> files, PutioFileData folder, int origIdBefore) {
+        state.currentFolder = folder;
 		hasUpdated = true;
 		int index = listview.getFirstVisiblePosition();
 		View v = listview.getChildAt(0);
@@ -469,7 +492,7 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
 		fileData.clear();
 		fileData.addAll(files);
-		
+
 		setViewMode(VIEWMODE_LISTOREMPTY);
 
 		fileLayouts.clear();
@@ -480,17 +503,17 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		adapter.notifyDataSetChanged();
 
-		if (newId != origIdBefore) {
-			for (int i = 0; i < listview.getCount(); i++) {
-				listview.setItemChecked(i, false);
-			}
-		}
+        if (folder.id == origIdBefore) {
+            listview.setSelectionFromTop(index, top);
+        } else {
+            for (int i = 0; i < listview.getCount(); i++) {
+                listview.setItemChecked(i, false);
+            }
+        }
 
-		listview.setSelectionFromTop(index, top);
-		
 		if (highlightFileId != -1) {
 			final int highlightPos = getIndexFromFileId(highlightFileId);
-			
+
 			listview.requestFocus();
             listview.smoothScrollToPosition(highlightPos);
 
@@ -550,7 +573,11 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 
         return hideY;
     }
-	
+
+    protected State getState() {
+        return state;
+    }
+
 	public int getIndexFromFileId(int fileId) {
 		for (int i = 0; i < fileData.size(); i++) {
 			if (fileData.get(i).id == fileId) {
@@ -559,22 +586,30 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 		}
 		return -1;
 	}
-	
-	public PutioFileData getFileAtId(int id) {
-		return fileData.get(id);
+
+	public PutioFileData getFileAtPosition(int position) {
+		return fileData.get(position);
 	}
-	
+
 	public int getCurrentFolderId() {
-		return state.id;
+		return state.currentFolder.id;
 	}
-	
-	public boolean goBack() {
+
+    public String getCurrentFolderName() {
+        if (state.currentFolder.name == null || state.currentFolder.id == 0) {
+            return getString(R.string.files);
+        } else {
+            return state.currentFolder.name;
+        }
+    }
+
+    public boolean goBack() {
 		if (isInSubfolderOrSearch()) {
 			if (state.isSearch) {
 				state.isSearch = false;
-				state.id = 0;
+				state.requestedId = 0;
 			} else {
-				state.id = state.parentId;
+				state.requestedId = state.currentFolder.parentId;
 			}
 			invalidateList();
 
@@ -583,40 +618,40 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			return false;
 		}
 	}
-	
+
 	public boolean isInSubfolderOrSearch() {
-		return (state.id != 0 || state.isSearch);
+		return (state.currentFolder.id != 0 || state.isSearch);
 	}
-	
+
 	public void highlightFile(int parentId, int id) {
-		state.id = parentId;
+		state.requestedId = parentId;
         highlightFileId = id;
 		invalidateList();
 	}
-	
+
 	public void setFileChecked(int fileId, boolean checked) {
 		listview.setItemChecked(getIndexFromFileId(fileId), checked);
 	}
 
 	public void onEventMainThread(FilesListResponse result) {
-		if (result != null) {
+        if (result != null && result.getParent().id == state.requestedId) {
 			state.isSearch = false;
-			populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
+            populateList(result.getFiles(), result.getParent(), origId);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 
 	public void onEventMainThread(CachedFilesListResponse result) {
-		if (result != null) {
+		if (result != null && result.getParent().id == state.requestedId) {
 			state.isSearch = false;
-			populateList(result.getFiles(), result.getParent().id, result.getParent().parentId, origId);
+			populateList(result.getFiles(), result.getParent(), origId);
 		}
 	}
 
 	public void onEventMainThread(FilesSearchResponse result) {
 		if (result != null && state.searchQuery.equals(result.getQuery())) {
 			state.isSearch = true;
-			populateList(result.getFiles(), -1, -2, -3);
+			populateList(result.getFiles(), null, -1);
 			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 		}
 	}
@@ -626,16 +661,16 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 			invalidateList();
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
-		outState.putInt("currentFolderId", state.id);
+
+        outState.putInt("requestedId", state.requestedId);
+		outState.putParcelable("currentFolder", state.currentFolder);
 		outState.putInt("origId", origId);
 		outState.putBoolean("isSearch", state.isSearch);
         outState.putString("searchQuery", state.searchQuery);
-		outState.putInt("parentId", state.parentId);
 		outState.putParcelableArrayList("fileLayouts", fileLayouts);
 		outState.putParcelableArrayList("fileData", fileData);
 		outState.putBoolean("hasUpdated", hasUpdated);
@@ -652,4 +687,12 @@ public final class Files extends Fragment implements SwipeRefreshLayout.OnRefres
 	public void onRefresh() {
 		invalidateList();
 	}
+
+
+    public void onDestinationFolderSelected(PutioFileData folder) {
+        // TODO confirmation popup?
+        int selectedFolderId = folder.id;
+        utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
+        Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
+    }
 }

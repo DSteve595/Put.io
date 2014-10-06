@@ -99,7 +99,7 @@
     <string name="choosefile">Dosya seçin</string>
     <string name="cachesize">Önbellek boyutu</string>
     <string name="cacheexplanation">Ne kadar alan önbellek için kullanılsın?\nBu indirilen dosyaları etkilemez.</string>
-	<string name="addtransfer_type_url">URL\'ler</string>
+	<string name="addtransfer_type_url">URL</string>
     <string name="addtransfer_type_file">Torrent dosyası</string>
     <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
     <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
