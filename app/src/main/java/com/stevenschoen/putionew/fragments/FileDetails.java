@@ -229,12 +229,14 @@ public class FileDetails extends Fragment {
 
             @Override
             public void run() {
-                if (PutioUtils.dpFromPx(getActivity(), filePreviewBox.getWidth()) > 460) {
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                            (int) PutioUtils.pxFromDp(getActivity(), 460),
-                            filePreviewBox.getHeight());
-                    params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                    filePreviewBox.setLayoutParams(params);
+                if (isAdded()) {
+                    if (PutioUtils.dpFromPx(getActivity(), filePreviewBox.getWidth()) > 460) {
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                (int) PutioUtils.pxFromDp(getActivity(), 460),
+                                filePreviewBox.getHeight());
+                        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                        filePreviewBox.setLayoutParams(params);
+                    }
                 }
             }
         });
