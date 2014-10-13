@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:0.13.0'
     }
 }
 
@@ -56,7 +56,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
     compile 'com.commonsware.cwac:mediarouter:0.1.+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
-    compile 'com.squareup.retrofit:retrofit:1.6.+'
+    compile 'com.squareup.retrofit:retrofit:1.7.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.squareup.okhttp:okhttp:2.0.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.+'
