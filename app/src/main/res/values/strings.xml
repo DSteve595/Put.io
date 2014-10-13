@@ -27,6 +27,7 @@
     <string name="delete">Delete</string>
     <string name="search">Search</string>
     <string name="browse">Browse</string>
+    <string name="retry">Retry</string>
     <string name="remove">Remove</string>
     <string name="undo">Undo</string>
     <string name="storage">Storage</string>

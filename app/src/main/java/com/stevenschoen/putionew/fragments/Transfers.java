@@ -159,6 +159,16 @@ public final class Transfers extends Fragment {
 		menu.setHeaderTitle(transfersData.get(info.position).name);
 	    MenuInflater inflater = getActivity().getMenuInflater();
 	    inflater.inflate(R.menu.context_transfers, menu);
+
+        MenuItem itemRetry = menu.findItem(R.id.context_retry);
+        PutioTransferData transfer = transfersData.get(info.position);
+        if (transfer.status.equals("FAILED")) { // Need to find the actual status string
+            itemRetry.setVisible(true);
+            itemRetry.setEnabled(true);
+        } else {
+            itemRetry.setVisible(false);
+            itemRetry.setEnabled(false);
+        }
 	}
 	
 	@Override
@@ -166,8 +176,10 @@ public final class Transfers extends Fragment {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.context_remove:
-				initRemoveTransfer((int) info.id);
+				initRemoveTransfer(info.position);
 				return true;
+            case R.id.context_retry:
+                initRetryTransfer(info.position);
 			default:
 				return super.onContextItemSelected(item);
 		}
@@ -190,6 +202,11 @@ public final class Transfers extends Fragment {
 
 		return false;
 	}
+
+    private void initRetryTransfer(int idInList) {
+        utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRetryTransferJob(
+                utils, transfersData.get(idInList).id));
+    }
 
 	private void initRemoveTransfer(int idInList) {
 		if (transfersData.get(idInList).status.equals("COMPLETED")) {
