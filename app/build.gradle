@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
+        classpath 'com.android.tools.build:gradle:0.13.2'
     }
 }
 
@@ -22,8 +22,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 69
-        versionName '2.1 beta 1'
+        versionCode 70
+        versionName '2.1 beta 2'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
