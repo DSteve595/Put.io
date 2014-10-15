@@ -162,7 +162,7 @@ public final class Transfers extends Fragment {
 
         MenuItem itemRetry = menu.findItem(R.id.context_retry);
         PutioTransferData transfer = transfersData.get(info.position);
-        if (transfer.status.equals("FAILED")) { // Need to find the actual status string
+        if (transfer.status.equals("ERROR")) {
             itemRetry.setVisible(true);
             itemRetry.setEnabled(true);
         } else {
