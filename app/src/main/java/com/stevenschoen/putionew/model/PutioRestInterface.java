@@ -85,6 +85,10 @@ public interface PutioRestInterface {
 	@POST("/transfers/add")
 	void addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, @Field("save_parent_id") int saveParentId, Callback<Response> callback);
 
+    @FormUrlEncoded
+    @POST("/transfers/retry")
+    BasePutioResponse retryTransfer(@Field("id") int id);
+
 	@FormUrlEncoded
 	@POST("/transfers/cancel")
 	BasePutioResponse cancelTransfer(@Field("transfer_ids") String ids);
@@ -413,6 +417,20 @@ public interface PutioRestInterface {
 			getUtils().getRestInterface().addTransferUrl(url, extract, saveParentId, this);
 		}
 	}
+
+    public static class PostRetryTransferJob extends PutioJob {
+        private int id;
+
+        public PostRetryTransferJob(PutioUtils utils, int id) {
+            super(new Params(0).requireNetwork(), utils);
+            this.id = id;
+        }
+
+        @Override
+        public void onRun() throws Throwable {
+            getUtils().getRestInterface().retryTransfer(id);
+        }
+    }
 
 	public static class PostCancelTransferJob extends PutioJob {
 		private int[] ids;
