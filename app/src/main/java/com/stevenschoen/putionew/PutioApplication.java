@@ -35,7 +35,8 @@ public class PutioApplication extends Application {
         videoCastManager.enableFeatures(
                 VideoCastManager.FEATURE_NOTIFICATION |
                         VideoCastManager.FEATURE_LOCKSCREEN |
-                        VideoCastManager.FEATURE_DEBUGGING
+                        VideoCastManager.FEATURE_DEBUGGING |
+                        VideoCastManager.FEATURE_CAPTIONS_PREFERENCE
         );
         videoCastManager.setStopOnDisconnect(true);
     }

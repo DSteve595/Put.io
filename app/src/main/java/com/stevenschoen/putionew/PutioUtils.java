@@ -79,8 +79,8 @@ public class PutioUtils {
     public static final int ACTION_OPEN = 1;
     public static final int ACTION_SHARE = 2;
 
-    public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
-//    public static final String CAST_APPLICATION_ID = "C18ACC9E";
+//    public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
+    public static final String CAST_APPLICATION_ID = "C18ACC9E";
 //	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
 
 	private PutioRestInterface putioRestInterface;
@@ -377,7 +377,7 @@ public class PutioUtils {
 
             for (int i = 0; i < subtitles.size(); i++) {
                 PutioSubtitle subtitle = subtitles.get(i);
-                subtitleUris[i] = Uri.parse(subtitle.getUrl(fileId, tokenWithStuff));
+                subtitleUris[i] = Uri.parse(subtitle.getUrl(PutioSubtitle.FORMAT_SRT, fileId, tokenWithStuff));
                 subtitleNames[i] = subtitle.getLanguage();
             }
 

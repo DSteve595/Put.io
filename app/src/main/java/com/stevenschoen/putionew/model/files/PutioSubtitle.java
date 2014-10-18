@@ -3,6 +3,9 @@ package com.stevenschoen.putionew.model.files;
 import com.stevenschoen.putionew.PutioUtils;
 
 public class PutioSubtitle {
+    public static final String FORMAT_SRT = "srt";
+    public static final String FORMAT_WEBVTT = "webvtt";
+
     private String key;
     private String language;
     private String name;
@@ -24,7 +27,8 @@ public class PutioSubtitle {
         return source;
     }
 
-    public String getUrl(int fileId, String tokenWithStuff) {
-        return PutioUtils.baseUrl + "/files/" + fileId + "/subtitles/" + getKey() + tokenWithStuff;
+    public String getUrl(String format, int fileId, String tokenWithStuff) {
+        return PutioUtils.baseUrl + "/files/" + fileId + "/subtitles/" + getKey() + tokenWithStuff
+                + "&format=" + format;
     }
 }

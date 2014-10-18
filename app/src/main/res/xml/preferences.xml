@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:sizePreference="http://schemas.android.com/apk/res/com.stevenschoen.putionew" >
+    xmlns:sizePreference="http://schemas.android.com/apk/res/com.stevenschoen.putionew">
 
     <PreferenceCategory
         android:summary="@string/storage"
-        android:title="@string/storage" >
+        android:title="@string/storage">
         <com.stevenschoen.putionew.SizePreference
             android:defaultValue="5"
             android:dialogTitle="@string/cachesize"

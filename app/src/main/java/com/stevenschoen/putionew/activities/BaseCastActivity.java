@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -177,18 +178,24 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
 
             List<PutioSubtitle> subtitles = params.utils.getRestInterface().subtitles(params.file.id).getSubtitles();
             List<MediaTrack> tracks = new ArrayList<>();
-            for (PutioSubtitle subtitle : subtitles) {
-                tracks.add(new MediaTrack.Builder(0, MediaTrack.TYPE_TEXT)
-                        .setSubtype(MediaTrack.SUBTYPE_CAPTIONS)
-                        .setContentId(subtitle.getUrl(params.file.id, params.utils.tokenWithStuff))
-                        .setLanguage(subtitle.getLanguage())
+            for (int i = 0; i < subtitles.size(); i++) {
+                PutioSubtitle subtitle = subtitles.get(i);
+                tracks.add(new MediaTrack.Builder(i, MediaTrack.TYPE_TEXT)
+                        .setName(subtitle.getLanguage() + " - " + subtitle.getName())
+                        .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
+                        .setContentId(subtitle.getUrl(PutioSubtitle.FORMAT_WEBVTT, params.file.id, params.utils.tokenWithStuff))
+//                        .setLanguage(subtitle.getLanguage())
                         .build());
+            }
+
+            for (MediaTrack track : tracks) {
+                Log.d("asdf", "url: " + track.getContentId());
             }
 
             return new MediaInfo.Builder(params.url)
                     .setContentType(params.file.contentType)
                     .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-//                    .setMediaTracks(tracks) // Not ready yet
+                    .setMediaTracks(tracks)
                     .setMetadata(metaData)
                     .build();
         }

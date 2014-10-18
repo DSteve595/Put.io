@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
+        classpath 'com.android.tools.build:gradle:0.13.2'
     }
 }
 
@@ -50,7 +50,7 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:20.+'
     compile 'com.android.support:support-v13:20.+'
-    compile 'com.google.android.gms:play-services:5.2.+'
+    compile 'com.google.android.gms:play-services:6.1.+'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.httpcomponents:httpmime:4.3.+'
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
