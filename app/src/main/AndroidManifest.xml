@@ -46,10 +46,11 @@
                 android:name="android.app.default_searchable"
                 android:value=".activities.Putio" />
         </activity>
-        <activity android:name=".activities.Setup" />
+        <activity android:name=".activities.Login" />
         <activity
             android:name=".activities.FileDetailsActivity"
-            android:parentActivityName=".activities.Putio">
+            android:parentActivityName=".activities.Putio"
+            android:theme="@style/Theme.Putio.FileDetails">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.Putio" />

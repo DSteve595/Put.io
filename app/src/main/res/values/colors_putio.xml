@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="putio_accent">#FFF200</color>
-    <color name="putio_accent_dark">#E6E073</color>
-    <color name="putio_accent_threequarters">#C0FFF200</color>
-    <color name="putio_accent_half">#80FFF200</color>
-    <color name="putio_accent_quarter">#40FFF200</color>
-    <color name="putio_accent_eigth">#20FFF200</color>
-    <color name="putio_select">#40FFF200</color>
-    <color name="putio_dark">#D0D0D0</color>
+    <color name="putio_accent">#FDCE45</color>
+    <color name="putio_accent_light">#FFDE80</color>
+    <color name="putio_accent_dark">#DEB53D</color>
+    <color name="putio_accent_threequarters">#C0FDCE45</color>
+    <color name="putio_accent_half">#80FDCE45</color>
+    <color name="putio_accent_quarter">#40FDCE45</color>
+    <color name="putio_accent_eigth">#20FDCE45</color>
+    <color name="putio_select">#40FDCE45</color>
+    <color name="putio_dark">#0F1216</color>
     <color name="putio_green">#00A000</color>
     <color name="putio_lightgreen">#C8FFC8</color>
     <color name="putio_error">#F0BE76</color>

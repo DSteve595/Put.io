@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/loading_setup"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true" />
+
+    <WebView
+        android:id="@+id/webview_setup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/view_setup_noconnection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/image_setup_noconnection"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_above="@id/center"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="-40dp"
+            android:layout_marginTop="32dp"
+            android:alpha="0.4"
+            android:src="@drawable/x" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/image_setup_noconnection"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+            <TextView
+                android:id="@+id/text_setup_noconnection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="80dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_horizontal"
+                android:text="@string/couldntconnect"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="24sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

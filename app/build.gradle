@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
+        classpath 'com.android.tools.build:gradle:0.13.2'
     }
 }
 
@@ -17,11 +17,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '20.0.0'
+    compileSdkVersion 21
+    buildToolsVersion '21.0.2'
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 69
         versionName '2.1 beta 1'
     }
@@ -48,14 +48,14 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.+'
-    compile 'com.android.support:support-v13:20.+'
-    compile 'com.google.android.gms:play-services:5.0.+'
+    compile 'com.android.support:appcompat-v7:21.+'
+    compile 'com.android.support:support-v13:21.+'
+    compile 'com.android.support:palette-v7:21.+'
+    compile 'com.google.android.gms:play-services:6.1.+'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.httpcomponents:httpmime:4.3.+'
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
-    compile 'com.commonsware.cwac:mediarouter:0.1.+'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.+'
+    //    compile 'com.commonsware.cwac:mediarouter:0.1.+'
     compile 'com.squareup.retrofit:retrofit:1.7.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.squareup.okhttp:okhttp:2.0.+'

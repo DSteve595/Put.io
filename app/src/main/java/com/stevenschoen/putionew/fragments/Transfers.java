@@ -76,6 +76,8 @@ public final class Transfers extends Fragment {
 		setHasOptionsMenu(true);
 
 		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
+
+        utils.getEventBus().register(this);
 		
 		Intent transfersServiceIntent = new Intent(getActivity(), PutioTransfersService.class);
 		getActivity().startService(transfersServiceIntent);
@@ -234,9 +236,6 @@ public final class Transfers extends Fragment {
         } catch (ClassCastException e) {
         	mCallbacks = sDummyCallbacks;
         }
-    	
-    	getActivity().registerReceiver(
-				transfersAvailableReceiver, new IntentFilter(Putio.transfersAvailableIntent));
     }
     
     @Override
@@ -244,8 +243,6 @@ public final class Transfers extends Fragment {
         super.onDetach();
         
         mCallbacks = sDummyCallbacks;
-        
-        getActivity().unregisterReceiver(transfersAvailableReceiver);
     }
 	
 	public void updateTransfers(List<PutioTransferData> transfers) {
@@ -291,12 +288,8 @@ public final class Transfers extends Fragment {
 		@Override
 		public void onServiceDisconnected(ComponentName arg0) { }
 	};
-	
-	private BroadcastReceiver transfersAvailableReceiver = new BroadcastReceiver() {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			updateTransfers(transfersService.getTransfers());
-		}
-	};
+    public void onEventMainThread(PutioTransfersService.TransfersAvailable ta) {
+        updateTransfers(transfersService.getTransfers());
+    }
 }

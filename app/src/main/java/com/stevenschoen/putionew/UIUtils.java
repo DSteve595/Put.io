@@ -11,11 +11,6 @@ public class UIUtils {
 				"android.hardware.type.television");
 	}
 
-    public static boolean isFireTv() {
-        return (android.os.Build.MANUFACTURER.equalsIgnoreCase("Amazon")
-                && android.os.Build.MODEL.equalsIgnoreCase("AFTB"));
-    }
-
 	public static boolean hasGingerbread() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
 	}
@@ -44,8 +39,8 @@ public class UIUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
-    public static boolean hasL() {
-        return Build.VERSION.SDK_INT >= 20;
+    public static boolean hasLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
 	public static boolean isTablet(Context context) {

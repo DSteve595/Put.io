@@ -1,13 +1,14 @@
 package com.stevenschoen.putionew.activities;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.MediaRouteActionProvider;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.commonsware.cwac.mediarouter.MediaRouteActionProvider;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.common.images.WebImage;
@@ -22,20 +23,22 @@ import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import org.apache.commons.io.FilenameUtils;
 
-public abstract class BaseCastActivity extends Activity implements PutioApplication.CastCallbacks {
+public abstract class BaseCastActivity extends ActionBarActivity implements PutioApplication.CastCallbacks {
 
     private VideoCastManager videoCastManager;
 	private MiniController castBar;
+
+    private boolean initCast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PutioApplication application = (PutioApplication) getApplication();
-        videoCastManager = application.getVideoCastManager();
+        initCast = false;
 
-        if (shouldUpdateCastContext()) {
-            videoCastManager.setContext(this);
+        PutioApplication application = (PutioApplication) getApplication();
+        if (application.isLoggedIn()) {
+            initCast();
         }
     }
 
@@ -44,6 +47,21 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
     }
 
     public abstract boolean shouldUpdateCastContext();
+
+    protected void initCast() {
+        if (!initCast) {
+            PutioApplication application = (PutioApplication) getApplication();
+            videoCastManager = application.getVideoCastManager();
+
+            if (shouldUpdateCastContext()) {
+                videoCastManager.setContext(this);
+            }
+
+            supportInvalidateOptionsMenu();
+
+            initCast = true;
+        }
+    }
 
     protected void initCastBar() {
         castBar = (MiniController) findViewById(R.id.castbar_holder);
@@ -54,78 +72,93 @@ public abstract class BaseCastActivity extends Activity implements PutioApplicat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.cast, menu);
+        if (initCast) {
+            getMenuInflater().inflate(R.menu.cast, menu);
 
-        MenuItem buttonMediaRoute = menu.findItem(R.id.menu_cast);
-		MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider)
-                buttonMediaRoute.getActionProvider();
-        PutioApplication application = (PutioApplication) getApplication();
-        mediaRouteActionProvider.setRouteSelector(application.getMediaRouteSelector());
+            MenuItem buttonMediaRoute = menu.findItem(R.id.menu_cast);
+            MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider)
+                    MenuItemCompat.getActionProvider(buttonMediaRoute);
+            PutioApplication application = (PutioApplication) getApplication();
+//            mediaRouteActionProvider.setRouteSelector(application.getMediaRouteSelector()); TODO
+        }
 
         return true;
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-                try {
-                    if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
-                        videoCastManager.updateVolume(1);
-                        return true;
+        if (initCast) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_VOLUME_UP:
+                    try {
+                        if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
+                            videoCastManager.updateVolume(1);
+                            return true;
+                        }
+                    } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
+                        return super.onKeyDown(keyCode, event);
                     }
-                } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
                     return super.onKeyDown(keyCode, event);
-                }
-                return super.onKeyDown(keyCode, event);
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                try {
-                    if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
-                        videoCastManager.updateVolume(1);
-                        return true;
+                case KeyEvent.KEYCODE_VOLUME_DOWN:
+                    try {
+                        if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
+                            videoCastManager.updateVolume(1);
+                            return true;
+                        }
+                    } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
+                        return super.onKeyDown(keyCode, event);
                     }
-                } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
                     return super.onKeyDown(keyCode, event);
-                }
-                return super.onKeyDown(keyCode, event);
-            default:
-                return super.onKeyDown(keyCode, event);
+                default:
+                    return super.onKeyDown(keyCode, event);
+            }
         }
+
+        return false;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                try {
-                    return videoCastManager != null && videoCastManager.isRemoteMoviePlaying();
-                } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
+        if (initCast) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_VOLUME_UP:
+                case KeyEvent.KEYCODE_VOLUME_DOWN:
+                    try {
+                        return videoCastManager != null && videoCastManager.isRemoteMoviePlaying();
+                    } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
+                        return super.onKeyUp(keyCode, event);
+                    }
+                default:
                     return super.onKeyUp(keyCode, event);
-                }
-            default:
-                return super.onKeyUp(keyCode, event);
+            }
         }
+
+        return false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (shouldUpdateCastContext()) {
-            videoCastManager.setContext(this);
-        }
+        if (initCast) {
+            if (shouldUpdateCastContext()) {
+                videoCastManager.setContext(this);
+            }
 
-        if (videoCastManager != null) {
-            videoCastManager.incrementUiCounter();
+            if (videoCastManager != null) {
+                videoCastManager.incrementUiCounter();
+            }
         }
     }
 
     @Override
     protected void onPause() {
-        if (videoCastManager != null) {
-            videoCastManager.decrementUiCounter();
+        if (initCast) {
+            if (videoCastManager != null) {
+                videoCastManager.decrementUiCounter();
+            }
         }
+
         super.onPause();
     }
 

@@ -4,7 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -18,27 +18,28 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.graphics.Outline;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.astuetz.PagerSlidingTabStrip;
-import com.google.sample.castcompanionlibrary.widgets.MiniController;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioNotification;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
+import com.stevenschoen.putionew.SlidingTabLayout;
 import com.stevenschoen.putionew.SwipeDismissTouchListener;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.fragments.Account;
@@ -57,7 +58,7 @@ import java.io.File;
 import java.io.InputStream;
 
 public class Putio extends BaseCastActivity implements
-        ActionBar.TabListener, Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks, DestinationFilesDialog.Callbacks {
+        Files.Callbacks, FileDetails.Callbacks, Transfers.Callbacks, DestinationFilesDialog.Callbacks {
 
     public static final int TAB_ACCOUNT = 0;
     public static final int TAB_FILES = 1;
@@ -65,66 +66,49 @@ public class Putio extends BaseCastActivity implements
 
     private boolean init = false;
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
+    private SlidingTabLayout tabs;
+    private ViewPager pager;
 
     int requestCode;
 
-    SharedPreferences sharedPrefs;
+    private SharedPreferences sharedPrefs;
 
-    Bundle savedInstanceState;
+    private Bundle savedInstanceState;
 
     public static final String checkCacheSizeIntent = "com.stevenschoen.putionew.checkcachesize";
     public static final String fileDownloadUpdateIntent = "com.stevenschoen.putionew.filedownloadupdate";
-    public static final String transfersAvailableIntent = "com.stevenschoen.putionew.transfersavailable";
     public static final String noNetworkIntent = "com.stevenschoen.putionew.nonetwork";
 
-    Account accountFragment;
-    Files filesFragment;
-    FileDetails fileDetailsFragment;
-    Transfers transfersFragment;
+    private Account accountFragment;
+    private Files filesFragment;
+    private FileDetails fileDetailsFragment;
+    private Transfers transfersFragment;
 
-    private String titleAccount;
-    private String titleFiles;
-    private String titleTransfers;
-    private String[] titles;
-
-    private View tabletAccountView;
-    private View tabletFilesView;
-    private View tabletTransfersView;
-    private int accountId;
-    private int filesId;
-    private int fileDetailsId;
-    private int transfersId;
+    private ImageButton buttonAddTransfer;
 
     private PutioNotification[] notifs;
 
-    PutioUtils utils;
+    private PutioUtils utils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+
+        PutioApplication application = (PutioApplication) getApplication();
+        if (application.isLoggedIn()) {
+            init();
+        } else {
+            Intent setupIntent = new Intent(this, Login.class);
+            startActivityForResult(setupIntent, requestCode);
+        }
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         this.savedInstanceState = savedInstanceState;
 
-        if (UIUtils.isTablet(this)) {
-            getActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        titleAccount = getString(R.string.account);
-        titleFiles = getString(R.string.files);
-        titleTransfers = getString(R.string.transfers);
-        titles = new String[]{titleAccount, titleFiles, titleTransfers};
-
-        if (!sharedPrefs.getBoolean("loggedIn", false)) {
-            Intent setupIntent = new Intent(this, Setup.class);
-            startActivityForResult(setupIntent, requestCode);
-        } else {
-            init();
-        }
+//        if (UIUtils.isTablet(this)) {
+//            getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        }
 
         if (getIntent() != null) {
             handleIntent(getIntent());
@@ -157,8 +141,7 @@ public class Putio extends BaseCastActivity implements
             }
 
             if (intent.getAction() != null) {
-                if (intent.getAction().equals(Intent.ACTION_SEARCH) &&
-                        filesFragment != null) {
+                if (intent.getAction().equals(Intent.ACTION_SEARCH) && filesFragment != null) {
                     String query = intent.getStringExtra(SearchManager.QUERY);
                     filesFragment.initSearch(query);
                 }
@@ -167,47 +150,11 @@ public class Putio extends BaseCastActivity implements
     }
 
     @Override
-	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        switch (tab.getPosition()) {
-            case TAB_ACCOUNT:
-                accountFragment.setMenuVisibility(false);
-                break;
-            case TAB_FILES:
-                filesFragment.setMenuVisibility(false);
-                break;
-            case TAB_TRANSFERS:
-                transfersFragment.setMenuVisibility(false);
-                break;
-        }
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        switch (tab.getPosition()) {
-            case TAB_ACCOUNT:
-                setContentView(tabletAccountView);
-                accountFragment.setMenuVisibility(true);
-                break;
-            case TAB_FILES:
-                setContentView(tabletFilesView);
-                filesFragment.setMenuVisibility(true);
-                break;
-            case TAB_TRANSFERS:
-                setContentView(tabletTransfersView);
-                transfersFragment.setMenuVisibility(true);
-                break;
-        }
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) { }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         try {
-            outState.putInt("currentTab", getActionBar().getSelectedTab().getPosition());
+            outState.putInt("currentTab", pager.getCurrentItem());
 		} catch (NullPointerException e) { }
     }
 
@@ -216,21 +163,6 @@ public class Putio extends BaseCastActivity implements
         super.onCreateOptionsMenu(menu);
 
         getMenuInflater().inflate(R.menu.putio, menu);
-
-        MenuItem buttonAdd = menu.findItem(R.id.menu_addtransfers);
-        if (UIUtils.isFireTv()) {
-            buttonAdd.setVisible(false);
-            buttonAdd.setEnabled(false);
-        } else {
-            buttonAdd.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-
-                public boolean onMenuItemClick(MenuItem item) {
-                    Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class);
-                    startActivity(addTransferActivityIntent);
-                    return false;
-                }
-            });
-        }
 
         MenuItem buttonSettings = menu.findItem(R.id.menu_settings);
         buttonSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -269,32 +201,130 @@ public class Putio extends BaseCastActivity implements
         filesFragment.onDestinationFolderSelected(folder);
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends PagerAdapter {
         FragmentManager fm;
 
+        int currentPosition;
+
         public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super();
             this.fm = fm;
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = null;
+            boolean newFragment = true;
             switch (position) {
                 case TAB_ACCOUNT:
-                    accountFragment = (Account) Account.instantiate(Putio.this, Account.class.getName());
-                    return accountFragment;
+                    fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), position));
+                    if (fragment == null) {
+                        fragment = Account.instantiate(Putio.this, Account.class.getName());
+                    } else {
+                        newFragment = false;
+                    }
+                    accountFragment = (Account) fragment;
+                    break;
                 case TAB_FILES:
-                    filesFragment = (Files) Files.instantiate(Putio.this, Files.class.getName());
-                    return filesFragment;
+                    fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), position));
+                    if (fragment == null) {
+                        fragment = Files.instantiate(Putio.this, Files.class.getName());
+                    } else {
+                        newFragment = false;
+                    }
+                    filesFragment = (Files) fragment;
+
+                    if (UIUtils.isTablet(Putio.this)) {
+                        View filesView = getLayoutInflater().inflate(R.layout.tablet_files, container);
+                        FragmentTransaction ft = fm.beginTransaction();
+                        if (newFragment) {
+                            ft.add(R.id.fragment_files, fragment, makeFragmentTag(container.getId(), position));
+                        } else {
+                            ft.attach(fragment);
+                        }
+                        ft.commit();
+                        return filesView;
+                    }
+                    break;
                 case TAB_TRANSFERS:
-                    transfersFragment = (Transfers) Transfers.instantiate(Putio.this, Transfers.class.getName());
-                    return transfersFragment;
+                    fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), position));
+                    if (fragment == null) {
+                        fragment = Transfers.instantiate(Putio.this, Transfers.class.getName());
+                    } else {
+                        newFragment = false;
+                    }
+                    transfersFragment = (Transfers) fragment;
+                    break;
             }
+
+            if (isFragment(position)) {
+                FragmentTransaction ft = fm.beginTransaction();
+                if (newFragment) {
+                    ft.add(container.getId(), fragment, makeFragmentTag(container.getId(), position));
+                } else {
+                    ft.attach(fragment);
+                }
+                ft.commit();
+
+                if (position != currentPosition) {
+                    fragment.setMenuVisibility(false);
+                    fragment.setUserVisibleHint(false);
+                }
+                return fragment;
+            }
+
             return null;
         }
 
-        private String makeFragmentName(int viewId, int index) {
-            return "android:switcher:" + viewId + ":" + index;
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            if (isFragment(position)) {
+                Fragment fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), position));
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.detach(fragment);
+                ft.commit();
+            }
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            currentPosition = position;
+
+            if (isFragment(position)) {
+                Fragment fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), position));
+                if (fragment != null) {
+                    fragment.setMenuVisibility(false);
+                    fragment.setUserVisibleHint(false);
+                }
+            }
+        }
+
+        private boolean isFragment(int position) {
+            switch (position) {
+                case TAB_ACCOUNT:
+                    return true;
+                case TAB_FILES:
+                    return !UIUtils.isTablet(Putio.this);
+                case TAB_TRANSFERS:
+                    return true;
+            }
+
+            return false;
+        }
+
+        private String makeFragmentTag(int viewId, int position) {
+            return "putio_fragment_" + viewId + "_" + position;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object o) {
+            if (o instanceof Fragment) {
+                return (view == ((Fragment) o).getView());
+            } else if (o instanceof View) {
+                return (view.getId() == R.id.layout_main_root);
+            }
+
+            return false;
         }
 
         @Override
@@ -306,11 +336,11 @@ public class Putio extends BaseCastActivity implements
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_ACCOUNT:
-                    return titleAccount;
+                    return getString(R.string.account);
                 case TAB_FILES:
-                    return titleFiles;
+                    return getString(R.string.files);
                 case TAB_TRANSFERS:
-                    return titleTransfers;
+                    return getString(R.string.transfers);
             }
             return null;
         }
@@ -319,20 +349,51 @@ public class Putio extends BaseCastActivity implements
     private void init() {
         init = true;
 
-		((PutioApplication) getApplication()).buildUtils();
-		this.utils = ((PutioApplication) getApplication()).getPutioUtils();
+        initCast();
 
-        if (UIUtils.isTablet(this)) {
-            setupTabletLayout();
-        } else {
-            setupPhoneLayout();
+        setContentView(R.layout.main);
+
+        try {
+            ((PutioApplication) getApplication()).buildUtils();
+        } catch (PutioUtils.NoTokenException e) {
+            e.printStackTrace();
         }
+        this.utils = ((PutioApplication) getApplication()).getPutioUtils();
 
-        int navItem = 1;
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs.setSelectedIndicatorColors(getResources().getColor(R.color.putio_dark));
+        tabs.setDistributeEvenly(true);
+
+        setupLayout();
+
+        int navItem = TAB_FILES;
         if (savedInstanceState != null) {
-            navItem = savedInstanceState.getInt("currentTab");
+            navItem = savedInstanceState.getInt("currentTab", -1);
         }
         selectTab(navItem);
+
+        buttonAddTransfer = (ImageButton) findViewById(R.id.button_addtransfer);
+        buttonAddTransfer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class);
+                Bundle options = ActivityOptions.makeScaleUpAnimation(buttonAddTransfer,
+                        0, 0,
+                        buttonAddTransfer.getWidth(), buttonAddTransfer.getHeight()).toBundle();
+                startActivity(addTransferActivityIntent, options);
+            }
+        });
+
+        if (UIUtils.hasLollipop()) {
+            ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setOval(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+                }
+            };
+            buttonAddTransfer.setClipToOutline(true);
+            buttonAddTransfer.setOutlineProvider(viewOutlineProvider);
+        }
 
         class NotificationTask extends AsyncTask<Void, Void, PutioNotification[]> {
 
@@ -432,93 +493,42 @@ public class Putio extends BaseCastActivity implements
     }
 
     public void logOut() {
-        sharedPrefs.edit().remove("token").remove("loggedIn").commit();
+        sharedPrefs.edit().remove("token").commit();
         finish();
         startActivity(getIntent());
     }
 
-    private void setupPhoneLayout() {
+    private void setupLayout() {
         initCastBar();
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setAlpha(0);
-        tabs.setShouldExpand(true);
-        tabs.setTabBackground(R.drawable.putio_tab_indicator);
-        tabs.setTextColor(Color.BLACK);
-        tabs.setIndicatorColorResource(R.color.putio_accent);
-
-        String accountFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 0);
-        accountFragment = (Account) getFragmentManager().findFragmentByTag(accountFragmentName);
-        String filesFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 1);
-        filesFragment = (Files) getFragmentManager().findFragmentByTag(filesFragmentName);
-        String transfersFragmentName = mSectionsPagerAdapter.makeFragmentName(R.id.pager, 2);
-        transfersFragment = (Transfers) getFragmentManager().findFragmentByTag(transfersFragmentName);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(3);
+        pager.setAdapter(mSectionsPagerAdapter);
 
-        tabs.setViewPager(mViewPager);
-        tabs.animate().alpha(1).setDuration(200);
-        selectTab(1);
-    }
-
-    private void setupTabletLayout() {
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Account
-        tabletAccountView = getLayoutInflater().inflate(R.layout.tablet_account, null);
-        accountId = R.id.fragment_account;
-
-        accountFragment = (Account) getFragmentManager().findFragmentById(R.id.fragment_account);
-
-        // Files
-        tabletFilesView = getLayoutInflater().inflate(R.layout.tablet_files, null);
-        filesId = R.id.fragment_files;
-        fileDetailsId = tabletFilesView.findViewById(R.id.fragment_details).getId();
-
-        filesFragment = (Files) getFragmentManager().findFragmentById(R.id.fragment_files);
-
-        if (getFragmentManager().findFragmentById(R.id.fragment_details) != null) {
-            fileDetailsFragment = (FileDetails) getFragmentManager()
-                    .findFragmentById(R.id.fragment_details);
-        }
-
-        // Transfers
-        tabletTransfersView = getLayoutInflater().inflate(R.layout.tablet_transfers, null);
-        transfersId = R.id.fragment_transfers;
-
-        transfersFragment = (Transfers) getFragmentManager().findFragmentById(R.id.fragment_transfers);
-
-        // Cast bars
-        MiniController accountCastBar = (MiniController)
-                getLayoutInflater().inflate(R.layout.castbar, (ViewGroup) tabletAccountView, false);
-        ((ViewGroup) tabletAccountView).addView(accountCastBar);
-        getCastManager().addMiniController(accountCastBar);
-
-        MiniController filesCastBar = (MiniController)
-                getLayoutInflater().inflate(R.layout.castbar, (ViewGroup) tabletFilesView, false);
-        ((ViewGroup) tabletFilesView).addView(filesCastBar);
-        getCastManager().addMiniController(filesCastBar);
-
-        MiniController transfersCastBar = (MiniController)
-                getLayoutInflater().inflate(R.layout.castbar, (ViewGroup) tabletTransfersView, false);
-        ((ViewGroup) tabletTransfersView).addView(transfersCastBar);
-        getCastManager().addMiniController(transfersCastBar);
-
-        // Other
-        accountFragment.setMenuVisibility(false);
-        filesFragment.setMenuVisibility(false);
-        transfersFragment.setMenuVisibility(false);
-
-        for (int i = 0; i < 3; i++) {
-            getActionBar().addTab(getActionBar().newTab()
-                    .setText(titles[i])
-                    .setTabListener(this));
-        }
+        tabs.setViewPager(pager);
+        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == TAB_ACCOUNT) {
+                    float factorMoved = 1f - positionOffset;
+                    int width = pager.getChildAt(TAB_ACCOUNT).getWidth();
+                    float move = width * factorMoved;
+                    buttonAddTransfer.setTranslationX(move);
+                } else {
+                    buttonAddTransfer.setTranslationX(0);
+                }
+            }
+            @Override
+            public void onPageSelected(int i) { }
+            @Override
+            public void onPageScrollStateChanged(int i) { }
+        });
     }
 
     public void showFilesAndHighlightFile(int parentId, int id) {
@@ -536,9 +546,10 @@ public class Putio extends BaseCastActivity implements
 
             getFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(R.animator.slide_in_left,
+                    .setCustomAnimations(R.animator.slide_in_from_bottom,
                             R.animator.slide_out_right)
-                    .replace(fileDetailsId, fileDetailsFragment).commit();
+                    .replace(R.id.fragment_details, fileDetailsFragment).commit();
+            buttonAddTransfer.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -574,7 +585,7 @@ public class Putio extends BaseCastActivity implements
         if (isFDShown()) {
             filesFragment.setFileChecked(fileDetailsFragment.getFileId(), false);
             getFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.animator.slide_in_left, exitAnim)
+                    .setCustomAnimations(R.animator.slide_in_from_bottom, exitAnim)
                     .remove(fileDetailsFragment)
                     .commit();
         }
@@ -659,27 +670,27 @@ public class Putio extends BaseCastActivity implements
 	@Override
     public void onBackPressed() {
         if (UIUtils.isTablet(this)) {
-            if (getActionBar().getSelectedNavigationIndex() == TAB_FILES) {
+            if (getSupportActionBar().getSelectedNavigationIndex() == TAB_FILES) {
                 if (filesFragment.goBack()) {
-                    super.onBackPressed();
+                    if (isFDShown()) {
+                        removeFD(true);
+                    }
                 } else {
-                    removeFD(true);
+                    super.onBackPressed();
                 }
             } else {
                 super.onBackPressed();
             }
         } else {
-            if (mViewPager.getCurrentItem() == TAB_FILES && !filesFragment.goBack()) {
+            if (pager.getCurrentItem() == TAB_FILES && !filesFragment.goBack()) {
                 super.onBackPressed();
             }
         }
     }
 
     private void selectTab(int position) {
-        if (UIUtils.isTablet(this)) {
-            getActionBar().setSelectedNavigationItem(position);
-        } else {
-            if (mViewPager.getCurrentItem() != position) mViewPager.setCurrentItem(position, false);
+        if (position != -1 && pager.getCurrentItem() != position) {
+            pager.setCurrentItem(position, false);
         }
     }
 

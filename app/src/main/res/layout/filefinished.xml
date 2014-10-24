@@ -29,7 +29,7 @@
 
         <LinearLayout
             android:id="@+id/buttonbar"
-            style="@style/Putio.ButtonBar"
+            style="@style/ButtonBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -38,7 +38,7 @@
 
             <Button
                 android:id="@+id/button_filefinished_ok"
-                style="@style/Putio.ButtonBar.Button"
+                style="@style/ButtonBar.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -47,7 +47,7 @@
 
             <Button
                 android:id="@+id/button_filefinished_action"
-                style="@style/Putio.ButtonBar.Button"
+                style="@style/ButtonBar.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />

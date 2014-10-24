@@ -1,13 +1,17 @@
 package com.stevenschoen.putionew.fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SearchView;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -28,7 +32,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.stevenschoen.putionew.FilesAdapter;
@@ -144,10 +147,10 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
             swipeRefreshLayout.setOnRefreshListener(this);
 			swipeRefreshLayout.setColorSchemeResources(
-					R.color.putio_accent,
-					R.color.putio_accent_dark,
-					R.color.putio_accent,
-					R.color.putio_accent_dark);
+                    R.color.putio_accent,
+                    R.color.putio_accent,
+                    R.color.putio_accent,
+                    R.color.putio_accent);
 		}
 
 		adapter = new FilesAdapter(getActivity(), fileLayouts);
@@ -268,6 +271,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         buttonUpFolderShown = false;
 
         buttonUpFolder.post(new Runnable() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void run() {
                 if (isInSubfolderOrSearch()) {
@@ -446,21 +450,12 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.search, menu);
+        inflater.inflate(R.menu.files, menu);
         MenuItem buttonSearch = menu.findItem(R.id.menu_search);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) buttonSearch.getActionView();
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(buttonSearch);
         searchView.setIconifiedByDefault(true);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-        try {
-            int searchPlateId = searchView.getContext().getResources().getIdentifier(
-                    "android:id/search_plate", null, null);
-            View searchPlate = searchView.findViewById(searchPlateId);
-            searchPlate.setBackgroundResource(R.drawable.edit_text_search_putio);
-        } catch (Exception e) {
-//            SearchView couldn't be styled
-        }
 	}
 
     public void initSearch(String query) {

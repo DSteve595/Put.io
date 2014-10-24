@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.ipaulpro.afilechooser.FileChooserActivity"/>
+      <point      
+        x = "480"      
+        y = "4160"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.TransfersActivity"/>
+      <point      
+        x = "600"      
+        y = "4240"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.AddTransfers"/>
+      <point      
+        x = "550"      
+        y = "4190"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.Preferences"/>
+      <point      
+        x = "650"      
+        y = "4290"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.google.sample.castcompanionlibrary.cast.player.VideoCastControllerActivity"/>
+      <point      
+        x = "480"      
+        y = "160"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "cast_player_menu"/>
+      <point      
+        x = "2060"      
+        y = "220"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.Login"/>
+      <point      
+        x = "700"      
+        y = "4340"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "putio"/>
+      <point      
+        x = "2080"      
+        y = "2120"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.AboutActivity"/>
+      <point      
+        x = "800"      
+        y = "4440"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.FileFinished"/>
+      <point      
+        x = "750"      
+        y = "4390"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.FileDetailsActivity"/>
+      <point      
+        x = "850"      
+        y = "4490"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.stevenschoen.putionew.activities.Putio"/>
+      <point      
+        x = "500"      
+        y = "2120"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

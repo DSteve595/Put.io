@@ -20,10 +20,8 @@
             android:layout_marginLeft="16dip"
             android:layout_marginRight="16dip"
             android:layout_marginTop="8dp"
-            android:background="@null"
             android:gravity="center_vertical|start|left"
-            android:text="@string/destination"
-            android:textAppearance="@style/TextAppearance.Putio.DialogWindowTitle" />
+            android:text="@string/destination" />
 
         <View
             android:id="@+id/titleDivider"
@@ -46,14 +44,14 @@
 
     <LinearLayout
         android:id="@+id/buttonbar"
-        style="@style/Putio.ButtonBar.Dialog"
+        style="@style/ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_destination_cancel"
-            style="@style/Putio.ButtonBar.Button"
+            style="@style/ButtonBar.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -61,7 +59,7 @@
 
         <Button
             android:id="@+id/button_destination_choose"
-            style="@style/Putio.ButtonBar.Button"
+            style="@style/ButtonBar.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

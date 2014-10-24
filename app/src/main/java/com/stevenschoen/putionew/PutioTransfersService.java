@@ -71,9 +71,10 @@ public class PutioTransfersService extends Service {
 		transfers = result.getTransfers();
 		Collections.reverse(transfers);
 
-		Intent transfersAvailableIntent = new Intent(Putio.transfersAvailableIntent);
-		sendBroadcast(transfersAvailableIntent);
+        utils.getEventBus().post(new TransfersAvailable());
 	}
+
+    public static class TransfersAvailable { }
 
 	public List<PutioTransferData> getTransfers() {
 		return transfers;

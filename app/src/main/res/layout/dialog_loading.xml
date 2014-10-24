@@ -1,15 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <include layout="@layout/dialog_title_putio" >
-    </include>
+    <include layout="@layout/dialog_title_putio" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/padding_medium" >
+        android:padding="@dimen/padding_medium">
 
         <ProgressBar
             android:id="@+id/gettingstream_loading"
@@ -27,7 +26,7 @@
             android:paddingBottom="@dimen/padding_medium"
             android:paddingLeft="@dimen/padding_medium"
             android:paddingRight="@dimen/padding_large"
-            android:paddingTop="@dimen/padding_medium" >
+            android:paddingTop="@dimen/padding_medium">
 
             <TextView
                 android:layout_width="wrap_content"

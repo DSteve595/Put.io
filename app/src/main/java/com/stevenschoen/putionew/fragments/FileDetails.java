@@ -1,21 +1,30 @@
 package com.stevenschoen.putionew.fragments;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
+import android.util.Property;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewAnimator;
 
 import com.stevenschoen.putionew.FlushedInputStream;
 import com.stevenschoen.putionew.PutioApplication;
@@ -54,6 +64,9 @@ public class FileDetails extends Fragment {
     private static final String MP4_IN_QUEUE = "IN_QUEUE";
     private static final String MP4_CONVERTING = "CONVERTING";
     private PutioMp4Status mp4Status;
+
+    private Toolbar toolbar;
+    private TextView textTitle;
 
 	private TextView mp4Convert;
 	private View mp4Available;
@@ -123,11 +136,67 @@ public class FileDetails extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View view = inflater.inflate(R.layout.filedetails, container, false);
 
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_filedetails);
+        toolbar.inflateMenu(R.menu.filedetails);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_share:
+                        initShareFile();
+                        return true;
+                    case R.id.menu_delete:
+                        initDeleteFile();
+                        return true;
+                }
+                return false;
+            }
+        });
+        if (!UIUtils.isTablet(getActivity())) {
+            if (isAdded()) {
+                ActionBarActivity activity = (ActionBarActivity) getActivity();
+                activity.setSupportActionBar(toolbar);
+                activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+        }
+
+        if (UIUtils.hasLollipop()) {
+            toolbar.setElevation(getResources().getDimension(R.dimen.actionBarElevation));
+            view.setElevation(PutioUtils.pxFromDp(getActivity(), 8));
+        }
+
+        textTitle = (TextView) toolbar.findViewById(R.id.text_filedetails_title);
+        textTitle.setText(getOldFilename());
+
         if (UIUtils.isTablet(getActivity())) {
-            view.setBackgroundResource(R.drawable.card_bg_r8);
+            if (UIUtils.hasLollipop()) {
+                view.setBackgroundColor(Color.WHITE);
+            } else {
+                view.setBackgroundResource(R.drawable.card_bg_r8);
+            }
+
+//            view.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (PutioUtils.dpFromPx(getActivity(), view.getHeight()) > 560) {
+//                        view.getLayoutParams().height =
+//                                (int) PutioUtils.pxFromDp(getActivity(), 560);
+//                    }
+//
+//                    if (PutioUtils.dpFromPx(getActivity(), view.getWidth()) > 400) {
+//                        view.getLayoutParams().width =
+//                                (int) PutioUtils.pxFromDp(getActivity(), 400);
+//                    }
+//
+//                    View parent = (View) view.getParent();
+//                    ViewGroup.LayoutParams params = parent.getLayoutParams();
+//                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//                    parent.setLayoutParams(params);
+//                }
+//            });
         }
 
         textFileName = (EditText) view.findViewById(R.id.editText_fileName);
@@ -158,9 +227,8 @@ public class FileDetails extends Fragment {
 
         Button btnApply = (Button) view.findViewById(R.id.button_filedetails_apply);
         btnApply.setOnClickListener(new OnClickListener() {
-
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 newFileData.name = textFileName.getText().toString();
                 renameAndFinish();
             }
@@ -168,11 +236,10 @@ public class FileDetails extends Fragment {
 
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
 
-        Button btnCancel = (Button) view.findViewById(R.id.button_filedetails_cancel);
-        btnCancel.setOnClickListener(new OnClickListener() {
-
+        ImageButton buttonClose = (ImageButton) view.findViewById(R.id.button_filedetails_close);
+        buttonClose.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 if (!UIUtils.isTablet(getActivity())) {
                     getActivity().finish();
                 } else {
@@ -224,23 +291,6 @@ public class FileDetails extends Fragment {
             }
         };
 
-        final View filePreviewBox = view.findViewById(R.id.filedetailspreview);
-        filePreviewBox.post(new Runnable() {
-
-            @Override
-            public void run() {
-                if (isAdded()) {
-                    if (PutioUtils.dpFromPx(getActivity(), filePreviewBox.getWidth()) > 460) {
-                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                (int) PutioUtils.pxFromDp(getActivity(), 460),
-                                filePreviewBox.getHeight());
-                        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                        filePreviewBox.setLayoutParams(params);
-                    }
-                }
-            }
-        });
-
         imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
 
         class getPreviewTask extends AsyncTask<Void, Void, Bitmap> {
@@ -289,7 +339,7 @@ public class FileDetails extends Fragment {
             @Override
             public void onPostExecute(final Bitmap bitmap) {
                 if (bitmap != null) {
-                    changeImagePreview(bitmap, true);
+                    setImagePreview(bitmap, true);
                 }
                 imagePreviewBitmap = bitmap;
             }
@@ -297,7 +347,7 @@ public class FileDetails extends Fragment {
         if (newFileData.screenshot != null && !newFileData.screenshot.equals("null")) {
             if (savedInstanceState != null && savedInstanceState.containsKey("imagePreviewBitmap")) {
                 imagePreviewBitmap = savedInstanceState.getParcelable("imagePreviewBitmap");
-                changeImagePreview(imagePreviewBitmap, false);
+                setImagePreview(imagePreviewBitmap, false);
             } else {
                 new getPreviewTask().execute();
             }
@@ -408,25 +458,6 @@ public class FileDetails extends Fragment {
         utils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), newFileData);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.filedetails, menu);
-    }
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_share:
-				initShareFile();
-				return true;
-			case R.id.menu_delete:
-				initDeleteFile();
-				return true;
-		}
-
-		return false;
-	}
-
 	private void updateMp4Bar() {
         if (isAdded()) {
             switch (mp4Status.getStatus()) {
@@ -454,23 +485,52 @@ public class FileDetails extends Fragment {
         }
     }
 
-    private void changeImagePreview(final Bitmap bitmap, boolean animate) {
-        if (animate) {
-            imagePreview.animate()
-                    .setDuration(250)
-                    .rotationX(90f)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            changeImagePreview(bitmap, false);
-                            imagePreview.setRotationX(270f);
-                            imagePreview.animate().setDuration(250).rotationXBy(90f).setListener(null);
-                            imagePreviewBitmap = bitmap;
-                        }
-                    });
-        } else {
-            imagePreview.setScaleType(ScaleType.CENTER);
-            imagePreview.setImageBitmap(bitmap);
+    private void setImagePreview(final Bitmap bitmap, boolean animate) {
+        if (isAdded()) {
+            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch lightMuted = palette.getLightMutedSwatch();
+                    if (lightMuted != null) {
+                        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(),
+                                Color.WHITE, lightMuted.getRgb());
+                        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                getView().setBackgroundColor((Integer) animation.getAnimatedValue());
+                            }
+                        });
+                        anim.start();
+                    }
+                    Palette.Swatch lightVibrant = palette.getDarkMutedSwatch();
+                    if (lightVibrant != null) {
+                        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(),
+                                Color.parseColor("#9E9E9E"), lightVibrant.getRgb());
+                        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                toolbar.setBackgroundColor((Integer) animation.getAnimatedValue());
+                            }
+                        });
+                        anim.start();
+                        textTitle.setTextColor(lightVibrant.getBodyTextColor());
+                    }
+                }
+            });
+            if (animate) {
+                setImagePreview(bitmap, false);
+                if (UIUtils.hasLollipop()) {
+                    Animator anim = ViewAnimationUtils.createCircularReveal(imagePreview,
+                            imagePreview.getWidth() / 2, imagePreview.getHeight() / 2,
+                            0, Math.max(imagePreview.getWidth(), imagePreview.getHeight()));
+                    anim.start();
+                } else {
+                    imagePreview.setAlpha(0f);
+                    imagePreview.animate().alpha(1);
+                }
+            } else {
+                imagePreview.setImageBitmap(bitmap);
+            }
         }
     }
 

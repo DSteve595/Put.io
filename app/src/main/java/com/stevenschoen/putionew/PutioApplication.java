@@ -1,6 +1,8 @@
 package com.stevenschoen.putionew;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.media.MediaRouteSelector;
 
 import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
@@ -14,17 +16,34 @@ public class PutioApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 
-		buildUtils();
+        try {
+            buildUtils();
+        } catch (PutioUtils.NoTokenException e) {
+            // User is not logged in
+        }
         buildVideoCastManager();
 	}
 
-	public void buildUtils() {
-		try {
-			this.utils = new PutioUtils(this);
-		} catch (PutioUtils.NoTokenException e) {
-//			User not logged in yet
-		}
-	}
+    public boolean isLoggedIn() {
+        if (utils != null) {
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String token = sharedPrefs.getString("token", null);
+            if (token != null && !token.isEmpty()) {
+                return true;
+            }
+        } else {
+            try {
+                buildUtils();
+                return isLoggedIn();
+            } catch (PutioUtils.NoTokenException e) { }
+        }
+
+        return false;
+    }
+
+	public void buildUtils() throws PutioUtils.NoTokenException {
+        this.utils = new PutioUtils(this);
+    }
 
 	public PutioUtils getPutioUtils() {
 		return utils;

@@ -34,7 +34,7 @@
 
         <LinearLayout
             android:id="@+id/buttonbar"
-            style="@style/Putio.ButtonBar.Dialog"
+            style="@style/ButtonBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttonbarSeparator"
@@ -42,7 +42,7 @@
 
             <Button
                 android:id="@+id/button_delete_cancel"
-                style="@style/Putio.ButtonBar.Button"
+                style="@style/ButtonBar.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -50,7 +50,7 @@
 
             <Button
                 android:id="@+id/button_delete_delete"
-                style="@style/Putio.ButtonBar.Button"
+                style="@style/ButtonBar.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

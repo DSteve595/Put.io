@@ -17,9 +17,7 @@ public class FileDetailsActivity extends BaseCastActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        PutioFileData fileData = (PutioFileData) getIntent().getExtras().getParcelable("fileData");
+        PutioFileData fileData = getIntent().getExtras().getParcelable("fileData");
 
         setContentView(R.layout.filedetailsphone);
 

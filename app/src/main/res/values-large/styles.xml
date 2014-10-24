@@ -1,5 +1,0 @@
-<resources>
-
-    <style name="Putio.DialogOrActivity" parent="@style/Putio.Dialog" />
-
-</resources>

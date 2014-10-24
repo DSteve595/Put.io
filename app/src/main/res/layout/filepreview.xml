@@ -1,63 +1,60 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="160dp"
-    android:layout_height="140dp"
-    android:paddingBottom="16dp"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:paddingTop="16dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".activities.FileDetailsActivity">
 
-    <ImageView
-        android:id="@+id/image_filepreview_image"
-        android:layout_width="wrap_content"
-        android:layout_height="120dp"
+    <FrameLayout
+        android:id="@+id/holder_filepreview_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/border"
-        android:scaleType="fitCenter"
-        android:src="@drawable/filepreview"/>
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/image_filepreview_stock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/filepreview" />
+
+        <ImageView
+            android:id="@+id/image_filepreview_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxHeight="200dp"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/buttonbar_filepreview_actions"
-        style="@style/Putio.ButtonBar"
+        style="@style/ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_filepreview_image"
+        android:layout_alignBottom="@id/holder_filepreview_image"
         android:layout_centerHorizontal="true"
-        android:background="@color/putio_dark"
-        android:weightSum="2">
+        android:alpha="0.5">
 
         <Button
             android:id="@+id/button_filepreview_download"
-            style="@style/Putio.ButtonBar.Button"
-            android:layout_width="match_parent"
+            style="@style/ButtonBar.Button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/putio_clickable_button_dark"
-            android:text="@string/download"/>
+            android:text="@string/download" />
 
         <Button
             android:id="@+id/button_filepreview_open"
-            style="@style/Putio.ButtonBar.Button"
-            android:layout_width="match_parent"
+            style="@style/ButtonBar.Button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/putio_clickable_button_dark"
-            android:text="@string/open"/>
+            android:text="@string/open" />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/filepreview_convert"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:layout_below="@id/buttonbar_filepreview_actions">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentTop="true"
-            android:background="@color/putio_dark"
-            android:foreground="?android:attr/dividerHorizontal"/>
+        android:layout_below="@id/holder_filepreview_image">
 
         <TextView
             android:id="@+id/button_filepreview_convert"
@@ -67,7 +64,7 @@
             android:gravity="center"
             android:text="@string/convert_mp4"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/holder_filepreview_available"
@@ -85,14 +82,14 @@
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/putio_checkbox"/>
+                android:src="@drawable/putio_checkbox" />
 
             <TextView
                 android:id="@+id/text_filepreview_mp4ready"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mp4_available"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
         <LinearLayout
@@ -108,7 +105,7 @@
                 android:id="@+id/item_filepreview_converting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="2dp"/>
+                android:padding="2dp" />
 
             <TextView
                 android:id="@+id/text_filepreview_converting"
@@ -116,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:text="@string/converting_mp4"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </RelativeLayout>
 

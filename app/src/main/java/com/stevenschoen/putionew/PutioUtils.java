@@ -105,12 +105,7 @@ public class PutioUtils {
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.create();
 
-        Client client;
-        if (UIUtils.hasL()) {
-            client = new AndroidApacheClient();
-        } else {
-            client = new OkClient(new OkHttpClient());
-        }
+        Client client = new OkClient(new OkHttpClient());
 
 		RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder()
 				.setEndpoint(baseUrl)

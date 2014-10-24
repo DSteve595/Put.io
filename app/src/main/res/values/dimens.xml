@@ -1,5 +1,9 @@
 <resources>
 
+    <dimen name="actionBarElevation">2dp</dimen>
+    <dimen name="fabElevation">12dp</dimen>
+    <dimen name="fileDetailsElevation">2dp</dimen>
+
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>

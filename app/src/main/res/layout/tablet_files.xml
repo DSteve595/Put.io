@@ -2,35 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_main_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:baselineAligned="false"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:baselineAligned="false"
-        android:clipChildren="false"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/padding_large"
-        android:paddingRight="16dp">
+    <FrameLayout
+        android:id="@+id/fragment_files"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="@integer/weight_files"
+        tools:layout="@layout/files" />
 
-        <fragment
-            android:id="@+id/fragment_files"
-            class="com.stevenschoen.putionew.fragments.Files"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="@integer/weight_files"
-            tools:layout="@layout/files" />
-
-        <FrameLayout
-            android:id="@+id/fragment_details"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="@integer/weight_filedetails" />
-    </LinearLayout>
-
+    <FrameLayout
+        android:id="@+id/fragment_details"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
+        android:layout_marginTop="8dp"
+        android:layout_weight="@integer/weight_filedetails" />
 </LinearLayout>
