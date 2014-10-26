@@ -13,19 +13,31 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Outline;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +46,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.path.android.jobqueue.JobManager;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 
@@ -48,6 +61,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +70,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -63,7 +78,6 @@ import javax.net.ssl.HttpsURLConnection;
 import de.greenrobot.event.EventBus;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.android.AndroidApacheClient;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
@@ -154,6 +168,41 @@ public class PutioUtils {
         text.setText(String.format(context.getString(R.string.applychanges), filename));
 
         return dialog;
+    }
+
+    public Dialog renameFileDialog(Context context, final PutioFileData file) {
+        final Dialog renameDialog = PutioUtils.PutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
+
+        final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
+        textFileName.setText(file.name);
+
+        ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
+        btnUndoName.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textFileName.setText(file.name);
+            }
+        });
+
+        Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
+        saveRename.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
+                        PutioUtils.this, file.id, textFileName.getText().toString()));
+                renameDialog.dismiss();
+            }
+        });
+
+        Button cancelRename = (Button) renameDialog.findViewById(R.id.button_rename_cancel);
+        cancelRename.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                renameDialog.cancel();
+            }
+        });
+
+        return renameDialog;
     }
 
     public static Dialog PutioDialog(Context context, String title, int contentViewId) {
@@ -735,8 +784,14 @@ public class PutioUtils {
 		return string.toString();
 	}
 
-    public static String[] separateIsoTime(String isoTime) {
-        return isoTime.split("T");
+    public static String[] parseIsoTime(Context context, String isoTime) {
+        String[] result = new String[2];
+
+        DateTime created = new DateTime(isoTime);
+        result[0] = DateFormat.getDateFormat(context).format(created.toDate());
+        result[1] = DateFormat.getTimeFormat(context).format(created.toDate());
+
+        return result;
     }
 
     public static float dpFromPx(Context context, float px) {
@@ -745,5 +800,49 @@ public class PutioUtils {
 
     public static float pxFromDp(Context context, float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
+    }
+
+    public static void setupFab(View floatingActionButton) {
+        if (UIUtils.hasLollipop()) {
+            floatingActionButton.setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setOval(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+                }
+            });
+            floatingActionButton.setClipToOutline(true);
+        }
+    }
+
+    public static class BlurTransformation implements Transformation {
+        private Context context;
+        private float radius;
+
+        public BlurTransformation(Context context, float radius) {
+            this.context = context;
+            this.radius = radius;
+        }
+
+        @Override
+        public Bitmap transform(Bitmap source) {
+            if (Build.VERSION.SDK_INT < 17) {
+                return source;
+            }
+
+            RenderScript rs = RenderScript.create(context);
+            Allocation input = Allocation.createFromBitmap(rs, source, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+            Allocation output = Allocation.createTyped(rs, input.getType());
+            ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+            script.setRadius(radius);
+            script.setInput(input);
+            script.forEach(output);
+            output.copyTo(source);
+            return source;
+        }
+
+        @Override
+        public String key() {
+            return BlurTransformation.class.getCanonicalName() + "-" + radius;
+        }
     }
 }

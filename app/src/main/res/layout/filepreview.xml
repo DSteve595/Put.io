@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".activities.FileDetailsActivity">
 
     <FrameLayout
         android:id="@+id/holder_filepreview_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
@@ -15,40 +16,52 @@
             android:id="@+id/image_filepreview_stock"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/filepreview" />
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/image_filepreview_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxHeight="200dp"
+            android:adjustViewBounds="false"
             android:scaleType="centerCrop" />
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/buttonbar_filepreview_actions"
-        style="@style/ButtonBar"
+    <View
+        android:id="@+id/gradient_filepreview_toolbar"
         android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:alpha="0.25"
+        android:background="@drawable/black_gradient" />
+
+    <View
+        android:id="@+id/gradient_filepreview_title"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.2"
+        android:background="@drawable/black_gradient"
+        android:rotation="180" />
+
+    <de.ankri.views.AutoScaleTextView
+        android:id="@+id/text_filepreview_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/holder_filepreview_image"
-        android:layout_centerHorizontal="true"
-        android:alpha="0.5">
-
-        <Button
-            android:id="@+id/button_filepreview_download"
-            style="@style/ButtonBar.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download" />
-
-        <Button
-            android:id="@+id/button_filepreview_open"
-            style="@style/ButtonBar.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/open" />
-    </LinearLayout>
+        android:layout_alignLeft="@id/holder_filepreview_image"
+        android:layout_alignStart="@id/holder_filepreview_image"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="16dp"
+        android:background="?selectableItemBackground"
+        android:ellipsize="end"
+        android:gravity="bottom"
+        android:maxLines="2"
+        android:textColor="@android:color/white"
+        android:textSize="34sp"
+        app:minTextSize="28sp"
+        tools:text="File name" />
 
     <RelativeLayout
         android:id="@+id/filepreview_convert"

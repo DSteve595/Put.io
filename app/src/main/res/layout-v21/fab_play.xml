@@ -3,5 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fab_bg"
-    android:src="@drawable/ic_add"
+    android:elevation="@dimen/fabElevation"
+    android:src="@drawable/ic_play"
+    android:stateListAnimator="@animator/fab_state_list_anim"
     android:tint="@android:color/black" />

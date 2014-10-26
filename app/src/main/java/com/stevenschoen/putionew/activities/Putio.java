@@ -84,7 +84,7 @@ public class Putio extends BaseCastActivity implements
     private FileDetails fileDetailsFragment;
     private Transfers transfersFragment;
 
-    private ImageButton buttonAddTransfer;
+    private View buttonAddTransfer;
 
     private PutioNotification[] notifs;
 
@@ -372,7 +372,7 @@ public class Putio extends BaseCastActivity implements
         }
         selectTab(navItem);
 
-        buttonAddTransfer = (ImageButton) findViewById(R.id.button_addtransfer);
+        buttonAddTransfer = findViewById(R.id.button_addtransfer);
         buttonAddTransfer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -385,14 +385,7 @@ public class Putio extends BaseCastActivity implements
         });
 
         if (UIUtils.hasLollipop()) {
-            ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-                }
-            };
-            buttonAddTransfer.setClipToOutline(true);
-            buttonAddTransfer.setOutlineProvider(viewOutlineProvider);
+            PutioUtils.setupFab(buttonAddTransfer);
         }
 
         class NotificationTask extends AsyncTask<Void, Void, PutioNotification[]> {

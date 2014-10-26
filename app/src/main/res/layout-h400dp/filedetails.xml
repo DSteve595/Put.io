@@ -4,45 +4,37 @@
     android:layout_gravity="center">
 
     <include
-        android:id="@+id/toolbar_filedetails"
-        layout="@layout/filedetails_toolbar" />
-
-    <include
         android:id="@+id/filedetailspreview"
         layout="@layout/filepreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_filedetails" />
+        android:layout_above="@+id/filedetails_info" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/filedetailspreview"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+    <include
+        android:id="@+id/toolbar_filedetails"
+        layout="@layout/filedetails_toolbar" />
 
-        <include layout="@layout/filename" />
-
-        <include layout="@layout/created_at" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/buttonbar"
-        style="@style/ButtonBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+    <ImageButton
+        android:id="@+id/button_filedetails_play"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignBottom="@id/filedetailspreview"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:theme="@style/Theme.Putio">
+        android:layout_marginBottom="-28dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/fab_bg"
+        android:elevation="2dp"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_play"
+        android:tint="@android:color/black" />
 
-        <Button
-            android:id="@+id/button_filedetails_apply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/apply" />
-    </LinearLayout>
+    <include
+        android:id="@id/filedetails_info"
+        layout="@layout/filedetails_info"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

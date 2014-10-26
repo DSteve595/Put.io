@@ -82,8 +82,8 @@
     <string name="total_is">Total: %s</string>
     <string name="size_is">%s</string>
     <string name="loading">Loading…</string>
-    <string name="created">Created:</string>
-    <string name="at">at</string>
+    <string name="created_on_x_at_x">Created on %1$s at %2$s</string>
+    <string name="accessed_on_x_at_x">Accessed on %1$s at %2$s</string>
     <string name="welcome">Welcome!</string>
     <string name="gotosite">Go to site</string>
     <string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>

@@ -4,9 +4,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.stevenschoen.putionew.R;
+import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 
@@ -38,6 +41,13 @@ public class FileDetailsActivity extends BaseCastActivity {
         }
 
         setTitle(fileData.name);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        return true;
     }
 
     @Override

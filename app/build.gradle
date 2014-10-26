@@ -55,6 +55,7 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.httpcomponents:httpmime:4.3.+'
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
+    compile 'joda-time:joda-time:2.5'
     //    compile 'com.commonsware.cwac:mediarouter:0.1.+'
     compile 'com.squareup.retrofit:retrofit:1.7.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'

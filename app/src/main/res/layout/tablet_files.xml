@@ -20,8 +20,11 @@
         android:id="@+id/fragment_details"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
         android:layout_marginEnd="@dimen/padding_large"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="@dimen/padding_large"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="@integer/weight_filedetails" />
 </LinearLayout>

@@ -14,15 +14,14 @@ public class PutioFileData implements Parcelable {
 	public String icon;
 	public String screenshot;
 	public String createdAt;
+    public String firstAccessedAt;
 	public int parentId;
 	public boolean isMp4Available;
 	public String contentType;
 	public int id;
 	public long size;
 
-    public PutioFileData() {
-
-    }
+    public PutioFileData() { }
 
 	public boolean isFolder() {
 		return contentType.equals("application/x-directory");
@@ -55,6 +54,7 @@ public class PutioFileData implements Parcelable {
 		this.icon = in.readString();
 		this.screenshot = in.readString();
 		this.createdAt = in.readString();
+        this.firstAccessedAt = in.readString();
 		this.parentId = in.readInt();
 		this.isMp4Available = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
 		this.contentType = in.readString();
@@ -69,6 +69,7 @@ public class PutioFileData implements Parcelable {
 		out.writeString(this.icon);
 		out.writeString(this.screenshot);
 		out.writeString(this.createdAt);
+        out.writeString(this.firstAccessedAt);
 		out.writeInt(this.parentId);
 		out.writeValue(this.isMp4Available);
 		out.writeString(this.contentType);

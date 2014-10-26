@@ -386,39 +386,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
 	private void initRenameFile(final int index) {
-		final Dialog renameDialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.renametitle), R.layout.dialog_rename);
-		renameDialog.show();
-
-		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
-		textFileName.setText(fileData.get(index).name);
-
-		ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
-		btnUndoName.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				textFileName.setText(fileData.get(index).name);
-			}
-		});
-
-		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
-		saveRename.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				PutioFileData file = fileData.get(index);
-				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
-						utils, file.id, textFileName.getText().toString()));
-				renameDialog.dismiss();
-			}
-		});
-
-		Button cancelRename = (Button) renameDialog.findViewById(R.id.button_rename_cancel);
-		cancelRename.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				renameDialog.cancel();
-			}
-		});
+        utils.renameFileDialog(getActivity(), fileData.get(index)).show();
 	}
 
 	private void initDeleteFile(int... indeces) {

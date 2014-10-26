@@ -2,39 +2,33 @@ package com.stevenschoen.putionew.fragments;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Property;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ViewAnimator;
 
+import com.squareup.picasso.Picasso;
 import com.stevenschoen.putionew.FlushedInputStream;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioApplication.CastCallbacks;
@@ -65,10 +59,12 @@ public class FileDetails extends Fragment {
     private static final String MP4_CONVERTING = "CONVERTING";
     private PutioMp4Status mp4Status;
 
+    private boolean isMedia = false;
+
     private Toolbar toolbar;
     private TextView textTitle;
 
-	private TextView mp4Convert;
+    private TextView mp4Convert;
 	private View mp4Available;
 	private View mp4Converting;
     private TextView textPercent;
@@ -107,10 +103,6 @@ public class FileDetails extends Fragment {
 	};
 	private boolean startedMp4StatusCheck = false;
 
-    private TextView textFileCreatedDate;
-    private TextView textFileCreatedTime;
-
-    private EditText textFileName;
     private ImageView imagePreview;
 
     @Override
@@ -127,6 +119,12 @@ public class FileDetails extends Fragment {
             newFileData = origFileData;
         }
 
+        for (int i = 0; i < PutioUtils.streamingMediaTypes.length; i++) {
+            if (newFileData.contentType.contains(PutioUtils.streamingMediaTypes[i])) {
+                isMedia = true;
+            }
+        }
+
 		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
 
 		utils.getEventBus().register(this);
@@ -139,23 +137,16 @@ public class FileDetails extends Fragment {
         final View view = inflater.inflate(R.layout.filedetails, container, false);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_filedetails);
-        toolbar.inflateMenu(R.menu.filedetails);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_share:
-                        initShareFile();
-                        return true;
-                    case R.id.menu_delete:
-                        initDeleteFile();
-                        return true;
-                }
-                return false;
-            }
-        });
-        if (!UIUtils.isTablet(getActivity())) {
-            if (isAdded()) {
+        if (isAdded()) {
+            if (UIUtils.isTablet(getActivity())) {
+                toolbar.inflateMenu(R.menu.filedetails);
+                toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        return onOptionsItemSelected(item);
+                    }
+                });
+            } else {
                 ActionBarActivity activity = (ActionBarActivity) getActivity();
                 activity.setSupportActionBar(toolbar);
                 activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -163,12 +154,23 @@ public class FileDetails extends Fragment {
         }
 
         if (UIUtils.hasLollipop()) {
+            View preview = view.findViewById(R.id.filedetailspreview);
+            preview.setElevation(PutioUtils.pxFromDp(getActivity(), 2));
             toolbar.setElevation(getResources().getDimension(R.dimen.actionBarElevation));
-            view.setElevation(PutioUtils.pxFromDp(getActivity(), 8));
+
+            if (UIUtils.isTablet(getActivity())) {
+                view.setElevation(getResources().getDimension(R.dimen.fileDetailsElevation));
+            }
         }
 
-        textTitle = (TextView) toolbar.findViewById(R.id.text_filedetails_title);
+        textTitle = (TextView) view.findViewById(R.id.text_filepreview_title);
         textTitle.setText(getOldFilename());
+        textTitle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                utils.renameFileDialog(getActivity(), newFileData).show();
+            }
+        });
 
         if (UIUtils.isTablet(getActivity())) {
             if (UIUtils.hasLollipop()) {
@@ -199,40 +201,26 @@ public class FileDetails extends Fragment {
 //            });
         }
 
-        textFileName = (EditText) view.findViewById(R.id.editText_fileName);
-        textFileName.setText(origFileData.name);
+        View infoMp4Available = view.findViewById(R.id.holder_fileinfo_mp4);
+        if (!isMedia) {
+            infoMp4Available.setVisibility(View.GONE);
+        }
+        TextView textMp4Available = (TextView) infoMp4Available.findViewById(R.id.text_fileinfo_mp4);
+//        TODO mp4 status
 
-        ImageButton btnUndoName = (ImageButton) view.findViewById(R.id.button_undoName);
-        btnUndoName.setOnClickListener(new OnClickListener() {
+        View infoAccessed = view.findViewById(R.id.holder_fileinfo_accessedat);
+        TextView textAccessed = (TextView) infoAccessed.findViewById(R.id.text_fileinfo_accessedat);
+        String[] accessed = PutioUtils.parseIsoTime(getActivity(), newFileData.firstAccessedAt);
+        textAccessed.setText(getString(R.string.accessed_on_x_at_x, accessed[0], accessed[1]));
 
-            @Override
-            public void onClick(View v) {
-                textFileName.setText(origFileData.name);
-            }
+        View infoCreated = view.findViewById(R.id.holder_fileinfo_createdat);
+        TextView textCreated = (TextView) infoCreated.findViewById(R.id.text_fileinfo_createdat);
+        String[] created = PutioUtils.parseIsoTime(getActivity(), newFileData.createdAt);
+        textCreated.setText(getString(R.string.created_on_x_at_x, created[0], created[1]));
 
-        });
-
-        String[] created = PutioUtils.separateIsoTime(origFileData.createdAt);
-        TextView textFileCreatedCreated = (TextView) view.findViewById(R.id.text_fileDetailsCreatedStatic);
-        textFileCreatedCreated.setText(getString(R.string.created) + " ");
-
-        textFileCreatedDate = (TextView) view.findViewById(R.id.text_fileDetailsCreatedDate);
-        textFileCreatedDate.setText(created[0]);
-
-        TextView textFileCreatedAt = (TextView) view.findViewById(R.id.text_fileDetailsCreatedStaticAt);
-        textFileCreatedAt.setText(" " + getString(R.string.at) + " ");
-
-        textFileCreatedTime = (TextView) view.findViewById(R.id.text_fileDetailsCreatedTime);
-        textFileCreatedTime.setText(created[1]);
-
-        Button btnApply = (Button) view.findViewById(R.id.button_filedetails_apply);
-        btnApply.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newFileData.name = textFileName.getText().toString();
-                renameAndFinish();
-            }
-        });
+        View infoSize = view.findViewById(R.id.holder_fileinfo_size);
+        TextView textSize = (TextView) infoSize.findViewById(R.id.text_fileinfo_size);
+        textSize.setText(PutioUtils.humanReadableByteCount(newFileData.size, false));
 
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
 
@@ -240,56 +228,46 @@ public class FileDetails extends Fragment {
         buttonClose.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!UIUtils.isTablet(getActivity())) {
-                    getActivity().finish();
-                } else {
+                if (UIUtils.isTablet(getActivity())) {
                     mCallbacks.onFDCancelled();
+                } else {
+                    getActivity().finish();
                 }
             }
 
         });
 
-        Button btnDownload = (Button) view.findViewById(R.id.button_filepreview_download);
-        btnDownload.setOnClickListener(new OnClickListener() {
-
+        View buttonPlay = view.findViewById(R.id.button_filedetails_play);
+        PutioUtils.setupFab(buttonPlay);
+        buttonPlay.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                initActionFile(PutioUtils.ACTION_NOTHING);
-            }
-        });
-
-        Button btnOpen = (Button) view.findViewById(R.id.button_filepreview_open);
-        OnClickListener playMediaListener = new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 String streamOrStreamMp4;
-				if (mp4Status == null) {
-					if (origFileData.isMp4Available) {
-						streamOrStreamMp4 = "/mp4/stream";
-					} else {
-						streamOrStreamMp4 = "/stream";
-					}
-				} else {
-					if (mp4Status.getStatus().equals(MP4_AVAILABLE)) {
-						streamOrStreamMp4 = "/mp4/stream";
-					} else {
-						streamOrStreamMp4 = "/stream";
-					}
-				}
+                if (mp4Status == null) {
+                    if (origFileData.isMp4Available) {
+                        streamOrStreamMp4 = "/mp4/stream";
+                    } else {
+                        streamOrStreamMp4 = "/stream";
+                    }
+                } else {
+                    if (mp4Status.getStatus().equals(MP4_AVAILABLE)) {
+                        streamOrStreamMp4 = "/mp4/stream";
+                    } else {
+                        streamOrStreamMp4 = "/stream";
+                    }
+                }
 
                 String url = PutioUtils.baseUrl + "/files/"
                         + getFileId() + streamOrStreamMp4 + utils.tokenWithStuff;
                 mCastCallbacks.load(newFileData, url, utils);
             }
-        };
+        });
 
-        OnClickListener openFileListener = new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                initActionFile(PutioUtils.ACTION_OPEN);
-            }
-        };
+        ImageView imagePreviewStock = (ImageView) view.findViewById(R.id.image_filepreview_stock);
+        Picasso.with(getActivity())
+                .load(origFileData.icon)
+                .transform(new PutioUtils.BlurTransformation(getActivity(), 4))
+                .into(imagePreviewStock);
 
         imagePreview = (ImageView) view.findViewById(R.id.image_filepreview_image);
 
@@ -353,19 +331,6 @@ public class FileDetails extends Fragment {
             }
         }
 
-        boolean isMedia = false;
-        for (int i = 0; i < PutioUtils.streamingMediaTypes.length; i++) {
-            if (newFileData.contentType.contains(PutioUtils.streamingMediaTypes[i])) {
-                isMedia = true;
-
-                btnOpen.setOnClickListener(playMediaListener);
-                btnOpen.setText(getString(R.string.play));
-            }
-        }
-        if (!isMedia) {
-            btnOpen.setOnClickListener(openFileListener);
-        }
-
 		mp4Convert = (TextView) view.findViewById(R.id.button_filepreview_convert);
 		mp4Convert.setOnClickListener(new OnClickListener() {
 			@Override
@@ -388,6 +353,31 @@ public class FileDetails extends Fragment {
 				utils, getFileId()));
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        if (!UIUtils.isTablet(getActivity())) {
+            inflater.inflate(R.menu.filedetails, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_download:
+                initActionFile(PutioUtils.ACTION_NOTHING);
+                return true;
+            case R.id.menu_share:
+                initShareFile();
+                return true;
+            case R.id.menu_delete:
+                initDeleteFile();
+                return true;
+        }
+        return false;
     }
 
     private void initActionFile(final int mode) {
@@ -490,30 +480,19 @@ public class FileDetails extends Fragment {
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
-                    Palette.Swatch lightMuted = palette.getLightMutedSwatch();
-                    if (lightMuted != null) {
-                        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(),
-                                Color.WHITE, lightMuted.getRgb());
-                        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                getView().setBackgroundColor((Integer) animation.getAnimatedValue());
-                            }
-                        });
-                        anim.start();
-                    }
-                    Palette.Swatch lightVibrant = palette.getDarkMutedSwatch();
-                    if (lightVibrant != null) {
-                        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(),
-                                Color.parseColor("#9E9E9E"), lightVibrant.getRgb());
-                        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                toolbar.setBackgroundColor((Integer) animation.getAnimatedValue());
-                            }
-                        });
-                        anim.start();
-                        textTitle.setTextColor(lightVibrant.getBodyTextColor());
+                    Palette.Swatch vibrant = palette.getVibrantSwatch();
+                    if (vibrant != null) {
+                        if (UIUtils.hasLollipop() && !UIUtils.isTablet(getActivity())) {
+                            ValueAnimator statusBarAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
+                                    getActivity().getWindow().getStatusBarColor(), vibrant.getRgb());
+                            statusBarAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    getActivity().getWindow().setStatusBarColor((Integer) animation.getAnimatedValue());
+                                }
+                            });
+                            statusBarAnim.start();
+                        }
                     }
                 }
             });
@@ -534,6 +513,14 @@ public class FileDetails extends Fragment {
         }
     }
 
+    private int adjustAlpha(int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(alpha, red, green, blue);
+    }
+
     public void updatePercent(int percent) {
         textPercent.setText(Integer.toString(percent));
     }
@@ -549,14 +536,8 @@ public class FileDetails extends Fragment {
 	}
 
 	public void onEventMainThread(FileResponse result) {
-		if (result != null) {
+		if (result != null && result.getFile().id == origFileData.id) {
 			newFileData = result.getFile();
-
-			String[] created = PutioUtils.separateIsoTime(newFileData.createdAt);
-			if (!created[0].equals(textFileCreatedDate.getText().toString()) || !created[1].equals(textFileCreatedTime.getText().toString())) {
-				textFileCreatedDate.setText(created[0]);
-				textFileCreatedTime.setText(created[1]);
-			}
 		}
 	}
 
@@ -574,7 +555,7 @@ public class FileDetails extends Fragment {
     }
 
     public String getNewFilename() {
-        return textFileName.getText().toString();
+        return newFileData.name;
     }
 
 	public void renameAndFinish() {

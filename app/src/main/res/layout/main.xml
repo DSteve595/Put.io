@@ -7,6 +7,8 @@
 
     <include layout="@layout/toolbar_with_tabs" />
 
+    <include layout="@layout/actionbar_shadow" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,9 +21,9 @@
 
         <include
             android:id="@+id/button_addtransfer"
-            layout="@layout/fab"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            layout="@layout/fab_addtransfer"
+            android:layout_width="@dimen/fabSize"
+            android:layout_height="@dimen/fabSize"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
