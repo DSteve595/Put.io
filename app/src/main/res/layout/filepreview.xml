@@ -30,15 +30,15 @@
         android:id="@+id/gradient_filepreview_toolbar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:alpha="0.25"
+        android:alpha="0.5"
         android:background="@drawable/black_gradient" />
 
     <View
         android:id="@+id/gradient_filepreview_title"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
-        android:alpha="0.2"
+        android:alpha="0.5"
         android:background="@drawable/black_gradient"
         android:rotation="180" />
 
@@ -129,5 +129,4 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </RelativeLayout>
-
 </RelativeLayout>

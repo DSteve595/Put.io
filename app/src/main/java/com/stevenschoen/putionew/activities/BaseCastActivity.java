@@ -166,7 +166,7 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
         if (videoCastManager == null || !videoCastManager.isConnected()) {
             utils.getStreamUrlAndPlay(this, file, url);
         } else {
-            MediaMetadata metaData = new MediaMetadata(file.contentType.contains("video") ?
+            MediaMetadata metaData = new MediaMetadata(file.isVideo() ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
             metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(file.name));
             if (file.icon != null) metaData.addImage(new WebImage(Uri.parse(file.icon)));

@@ -1,40 +1,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:clipChildren="false">
 
     <include
         android:id="@+id/filedetailspreview"
         layout="@layout/filepreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/filedetails_info" />
+        android:layout_above="@+id/holder_fileinfo"
+        android:layout_marginBottom="@dimen/fabSizeHalfNegative" />
 
     <include
         android:id="@+id/toolbar_filedetails"
         layout="@layout/filedetails_toolbar" />
 
-    <ImageButton
-        android:id="@+id/button_filedetails_play"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_alignBottom="@id/filedetailspreview"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="-28dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:background="@drawable/fab_bg"
-        android:elevation="2dp"
-        android:padding="12dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play"
-        android:tint="@android:color/black" />
-
-    <include
-        android:id="@id/filedetails_info"
-        layout="@layout/filedetails_info"
+    <RelativeLayout
+        android:id="@id/holder_fileinfo"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clipChildren="false">
+
+        <include
+            layout="@layout/fileinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fabSizeHalf" />
+
+        <include
+            android:id="@+id/button_filedetails_play"
+            layout="@layout/fab_play"
+            android:layout_width="@dimen/fabSize"
+            android:layout_height="@dimen/fabSize"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp" />
+    </RelativeLayout>
 </RelativeLayout>

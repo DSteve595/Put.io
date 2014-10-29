@@ -1,6 +1,8 @@
 <resources>
 
     <dimen name="fabSize">64dp</dimen>
+    <dimen name="fabSizeHalf">32dp</dimen>
+    <dimen name="fabSizeHalfNegative">-32dp</dimen>
 
     <dimen name="actionBarElevation">2dp</dimen>
     <dimen name="fabElevation">4dp</dimen>

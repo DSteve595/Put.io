@@ -1,5 +1,6 @@
 package com.stevenschoen.putionew.activities;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewAnimationUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -33,17 +35,18 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
     public static final int TYPE_URL = 1;
     public static final int TYPE_FILE = 2;
 
-    int selectedType = TYPE_SELECTING;
+    private int selectedType = TYPE_SELECTING;
 
     private Uri selectedFileUri;
     private String selectedUrl;
 
 	private SharedPreferences sharedPrefs;
 
-    Button addButton;
+    private Button addButton;
 
-    View holderSelectType, holderUrl, holderFile;
-    ImageButton cancelUrl, cancelFile;
+    private View buttonChooseUrl, buttonChooseFile;
+    private View holderSelectType, holderUrl, holderFile;
+    private ImageButton cancelUrl, cancelFile;
 
     private EditText textUrl;
     private CheckBox checkBoxExtract;
@@ -101,7 +104,7 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
             buttonDestination.setText("Your Files");
         }
 
-        View buttonChooseUrl = findViewById(R.id.button_addtransfer_chooseurl);
+        buttonChooseUrl = findViewById(R.id.button_addtransfer_chooseurl);
         buttonChooseUrl.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +112,8 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
                 updateView();
             }
         });
-        View buttonChooseFile = findViewById(R.id.button_addtransfer_choosefile);
+
+        buttonChooseFile = findViewById(R.id.button_addtransfer_choosefile);
         buttonChooseFile.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

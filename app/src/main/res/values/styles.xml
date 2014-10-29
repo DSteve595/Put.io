@@ -42,12 +42,14 @@
     </style>
 
     <style name="ButtonBar.Button">
-        <item name="android:background">?selectableItemBackground</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/putio_clickable_button_dark</item>
+        <item name="android:gravity">center</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
     </style>
 
     <declare-styleable name="com.stevenschoen.putio.SizePreference">

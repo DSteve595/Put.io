@@ -21,25 +21,34 @@
             layout="@layout/filedetails_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.45">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/holder_fileinfo"
+                layout="@layout/fileinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
 
         <include
             android:id="@+id/button_filedetails_play"
             layout="@layout/fab_play"
             android:layout_width="@dimen/fabSize"
             android:layout_height="@dimen/fabSize"
-            android:layout_alignEnd="@id/filedetailspreview"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignRight="@id/filedetailspreview"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginBottom="32dp"
-            android:layout_marginEnd="-28dp"
-            android:layout_marginRight="-28dp" />
+            android:layout_marginLeft="@dimen/fabSizeHalfNegative"
+            android:layout_marginStart="@dimen/fabSizeHalfNegative" />
     </RelativeLayout>
-
-    <include
-        layout="@layout/filedetails_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.45" />
 </LinearLayout>

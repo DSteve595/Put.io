@@ -13,6 +13,6 @@
         android:clickable="false"
         android:duplicateParentState="true"
         android:focusable="false"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_fab_add"
         android:tint="@android:color/black" />
 </FrameLayout>

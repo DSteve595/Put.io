@@ -27,6 +27,10 @@ public class PutioFileData implements Parcelable {
 		return contentType.equals("application/x-directory");
 	}
 
+    public boolean isVideo() {
+        return contentType.startsWith("video");
+    }
+
 	public static Map<String, Integer> contentTypes = new HashMap<>();
 	static {
 		contentTypes.put("file", R.drawable.ic_putio_file);

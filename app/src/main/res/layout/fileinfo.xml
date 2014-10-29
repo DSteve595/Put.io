@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/holder_fileinfo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="8dp">
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_mp4"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:id="@+id/icon_fileinfo_mp4"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/ic_fileinfo_mp4"
+            android:tint="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/text_fileinfo_mp4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:text="MP4 available"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="@string/mp4_available" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_accessedat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:id="@+id/icon_fileinfo_accessedat"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/ic_fileinfo_accessed"
+            android:tint="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/text_fileinfo_accessedat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="@string/accessed_on_x_at_x" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_more"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="8dp"
+            android:padding="2dp"
+            android:src="@drawable/ic_more"
+            android:tint="#808080" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:text="More"
+            android:textColor="#808080" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_createdat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:id="@+id/icon_fileinfo_createdat"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/ic_fileinfo_created"
+            android:tint="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/text_fileinfo_createdat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="@string/created_on_x_at_x" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_size"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:id="@+id/icon_fileinfo_size"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/ic_fileinfo_size"
+            android:tint="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/text_fileinfo_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="100 MB" />
+    </LinearLayout>
+</LinearLayout>

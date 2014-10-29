@@ -2,6 +2,7 @@ package com.stevenschoen.putionew.fragments;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
+import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -201,26 +203,49 @@ public class FileDetails extends Fragment {
 //            });
         }
 
-        View infoMp4Available = view.findViewById(R.id.holder_fileinfo_mp4);
-        if (!isMedia) {
+        ViewGroup holderInfo = (ViewGroup) view.findViewById(R.id.holder_fileinfo);
+
+        View infoMp4Available = holderInfo.findViewById(R.id.holder_fileinfo_mp4);
+        if (newFileData.isVideo()) {
+            TextView textMp4Available = (TextView) infoMp4Available.findViewById(R.id.text_fileinfo_mp4);
+//            TODO mp4 status
+        } else {
             infoMp4Available.setVisibility(View.GONE);
         }
-        TextView textMp4Available = (TextView) infoMp4Available.findViewById(R.id.text_fileinfo_mp4);
-//        TODO mp4 status
 
-        View infoAccessed = view.findViewById(R.id.holder_fileinfo_accessedat);
+        View infoAccessed = holderInfo.findViewById(R.id.holder_fileinfo_accessedat);
         TextView textAccessed = (TextView) infoAccessed.findViewById(R.id.text_fileinfo_accessedat);
         String[] accessed = PutioUtils.parseIsoTime(getActivity(), newFileData.firstAccessedAt);
         textAccessed.setText(getString(R.string.accessed_on_x_at_x, accessed[0], accessed[1]));
 
-        View infoCreated = view.findViewById(R.id.holder_fileinfo_createdat);
+        final View infoCreated = holderInfo.findViewById(R.id.holder_fileinfo_createdat);
         TextView textCreated = (TextView) infoCreated.findViewById(R.id.text_fileinfo_createdat);
         String[] created = PutioUtils.parseIsoTime(getActivity(), newFileData.createdAt);
         textCreated.setText(getString(R.string.created_on_x_at_x, created[0], created[1]));
 
-        View infoSize = view.findViewById(R.id.holder_fileinfo_size);
+        final View infoSize = holderInfo.findViewById(R.id.holder_fileinfo_size);
         TextView textSize = (TextView) infoSize.findViewById(R.id.text_fileinfo_size);
         textSize.setText(PutioUtils.humanReadableByteCount(newFileData.size, false));
+
+        final View infoMore = holderInfo.findViewById(R.id.holder_fileinfo_more);
+        if (isMedia) {
+            infoMore.setVisibility(View.VISIBLE);
+
+            infoCreated.setVisibility(View.GONE);
+            infoSize.setVisibility(View.GONE);
+
+            infoMore.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    infoMore.setVisibility(View.GONE);
+
+                    infoCreated.setVisibility(View.VISIBLE);
+                    infoSize.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            infoMore.setVisibility(View.GONE);
+        }
 
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
 

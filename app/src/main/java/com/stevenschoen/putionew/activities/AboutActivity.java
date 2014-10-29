@@ -18,7 +18,7 @@ public class AboutActivity extends BaseCastActivity {
 		if (UIUtils.isTablet(this)) {
 			getWindow().setLayout((int) PutioUtils.pxFromDp(this, 380), (int) PutioUtils.pxFromDp(this, 500));
 		} else {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             initCastBar();
 		}

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fabSize">56dp</dimen>
+    <dimen name="fabSizeHalf">28dp</dimen>
+    <dimen name="fabSizeHalfNegative">-28dp</dimen>
 </resources>
