@@ -29,7 +29,7 @@
         android:layout_below="@id/text_filesempty_addstuff"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:background="@drawable/putio_clickable_button_round"
+        android:background="@drawable/putio_clickable_round"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_refresh"
         android:text="@string/refresh" />

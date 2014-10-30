@@ -59,7 +59,6 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Putio_Dialog);
 		setContentView(R.layout.dialog_addtransfer);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -74,16 +73,15 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
         addButton = (Button) findViewById(R.id.button_addtransfer_add);
         addButton.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
                 add();
 			}
 		});
 
 		Button cancelButton = (Button) findViewById(R.id.button_addtransfer_cancel);
 		cancelButton.setOnClickListener(new OnClickListener() {
-
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
 				finish();
 			}
 		});

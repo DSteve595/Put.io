@@ -11,7 +11,7 @@
     android:paddingTop="8dp">
 
     <LinearLayout
-        android:id="@+id/holder_fileinfo_mp4"
+        android:id="@+id/holder_fileinfo_mp4_converting"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"
@@ -19,24 +19,102 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
 
-        <ImageView
-            android:id="@+id/icon_fileinfo_mp4"
+        <ProgressBar
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginLeft="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/converting_mp4"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_mp4_already"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="?attr/listChoiceBackgroundIndicator"
+            android:src="@drawable/ic_fileinfo_mp4"
+            android:tint="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/mp4_available"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/holder_fileinfo_mp4_notavailable"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_fileinfo_mp4"
             android:tint="?android:attr/textColorPrimary" />
 
         <TextView
-            android:id="@+id/text_fileinfo_mp4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
+            android:text="@string/convert_mp4"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/holder_fileinfo_mp4_available"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:addStatesFromChildren="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <CheckBox
+            android:id="@+id/checkbox_fileinfo_mp4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:checked="true" />
+
+        <TextView
+            android:id="@+id/text_fileinfo_mp4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="48dp"
+            android:gravity="center_vertical"
             android:text="MP4 available"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="@string/mp4_available" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/holder_fileinfo_accessedat"

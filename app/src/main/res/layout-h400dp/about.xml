@@ -10,6 +10,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:adjustViewBounds="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Put.io logo"
         android:maxHeight="160dp"
         android:maxWidth="160dp"

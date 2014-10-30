@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/context_download"
         android:icon="@android:drawable/ic_menu_save"
-        android:showAsAction="ifRoom"
-        android:title="@string/download" />
+        android:title="@string/download"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/context_delete"
         android:icon="@android:drawable/ic_menu_delete"

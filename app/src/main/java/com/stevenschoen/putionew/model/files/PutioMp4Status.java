@@ -4,12 +4,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PutioMp4Status implements Parcelable {
-	private String status;
+    private String status;
 	private long size;
+
+    public PutioMp4Status(String status) {
+        this.status = status;
+    }
 
 	public String getStatus() {
 		return status;
 	}
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 	public long getSize() {
 		return size;

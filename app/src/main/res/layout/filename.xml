@@ -1,32 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_nameHolder"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <EditText
         android:id="@+id/editText_fileName"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="top|start"
+        android:layout_toLeftOf="@+id/button_undoName"
+        android:layout_toStartOf="@+id/button_undoName"
         android:hint="File name"
         android:inputType="textMultiLine|textNoSuggestions"
         android:maxLines="3" />
 
     <ImageButton
-        android:id="@+id/button_undoName"
+        android:id="@id/button_undoName"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/undo"
-        android:padding="8dp"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_undo"
         android:tint="@color/putio_dark" />
-
-</LinearLayout>
+</RelativeLayout>

@@ -4,4 +4,10 @@
     <style name="ButtonBar.Button" parent="android:Widget.Material.Light.Button">
         <item name="android:theme">@style/Theme.Putio</item>
     </style>
+
+    <style name="ButtonBar.Button.Transparent" parent="android:Widget.Material.Light.Button.Borderless" />
+
+    <style name="ListView" parent="android:Widget.Material.Light.ListView">
+        <item name="android:listSelector">@drawable/item_background_accent</item>
+    </style>
 </resources>

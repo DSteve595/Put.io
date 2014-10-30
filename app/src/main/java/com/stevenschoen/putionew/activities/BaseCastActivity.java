@@ -79,7 +79,7 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
             MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider)
                     MenuItemCompat.getActionProvider(buttonMediaRoute);
             PutioApplication application = (PutioApplication) getApplication();
-//            mediaRouteActionProvider.setRouteSelector(application.getMediaRouteSelector()); TODO
+            mediaRouteActionProvider.setRouteSelector(application.getMediaRouteSelector());
         }
 
         return true;

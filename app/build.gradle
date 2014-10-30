@@ -11,9 +11,6 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://repo.commonsware.com.s3.amazonaws.com"
-    }
 }
 
 android {
@@ -22,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 69
-        versionName '2.1 beta 1'
+        versionCode 70
+        versionName 'L preview 2'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -56,7 +53,6 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.3.+'
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
     compile 'joda-time:joda-time:2.5'
-    //    compile 'com.commonsware.cwac:mediarouter:0.1.+'
     compile 'com.squareup.retrofit:retrofit:1.7.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.squareup.okhttp:okhttp:2.0.+'

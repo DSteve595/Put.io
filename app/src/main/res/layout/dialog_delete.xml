@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -22,40 +23,30 @@
             <TextView
                 android:id="@+id/text_delete_body"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:text="@string/delete" />
         </FrameLayout>
-
-        <View
-            android:id="@+id/buttonbarSeparator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/nameHolder"
-            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:id="@+id/buttonbar"
             style="@style/ButtonBar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buttonbarSeparator"
-            android:orientation="horizontal">
+            android:layout_below="@id/nameHolder">
 
             <Button
                 android:id="@+id/button_delete_cancel"
-                style="@style/ButtonBar.Button"
-                android:layout_width="0dp"
+                style="@style/ButtonBar.Button.Transparent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/button_delete_delete"
                 style="@style/ButtonBar.Button"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/delete" />
         </LinearLayout>
     </RelativeLayout>
-
 </LinearLayout>

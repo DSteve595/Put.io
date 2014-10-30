@@ -5,7 +5,9 @@
         <item name="colorPrimaryDark">@color/putio_accent_dark</item>
         <item name="colorAccent">@color/putio_accent</item>
         <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
+        <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:textColorPrimary">#DE000000</item>
         <item name="android:textColorSecondary">#8A000000</item>
     </style>
@@ -36,21 +38,31 @@
 
     <style name="ButtonBar">
         <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_gravity">end</item>
         <item name="android:gravity">end</item>
     </style>
 
-    <style name="ButtonBar.Button">
-        <item name="android:background">@drawable/putio_clickable_button_dark</item>
+    <style name="ButtonBar.Button" parent="android:Widget.Holo.Light.Button.Small">
+        <item name="android:background">@drawable/putio_clickable_rounded_dark</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:minWidth">36dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
     </style>
+
+    <style name="ButtonBar.Button.Transparent" parent="ButtonBar.Button">
+        <item name="android:background">@drawable/putio_clickable_rounded</item>
+    </style>
+
+    <style name="ListView" parent="android:Widget.Holo.Light.ListView" />
 
     <declare-styleable name="com.stevenschoen.putio.SizePreference">
         <attr name="minValue" format="integer" />
@@ -63,6 +75,7 @@
 
     <style name="Putio.DialogOrActivity" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="android:theme">@style/Theme.Putio</item>
+        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
     </style>
 
 </resources>

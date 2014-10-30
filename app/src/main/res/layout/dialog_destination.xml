@@ -5,30 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/putio_accent_eigth"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/dialog_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dip"
-            android:layout_marginRight="16dip"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical|start|left"
-            android:text="@string/destination" />
-
-        <View
-            android:id="@+id/titleDivider"
-            android:layout_width="match_parent"
-            android:layout_height="2dip"
-            android:background="@color/putio_accent" />
-    </LinearLayout>
+    <include layout="@layout/dialog_title_putio" />
 
     <include
         layout="@layout/files"
@@ -36,33 +13,24 @@
         android:layout_height="0px"
         android:layout_weight="1" />
 
-    <View
-        android:id="@+id/buttonbarSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/dividerHorizontal" />
-
     <LinearLayout
         android:id="@+id/buttonbar"
         style="@style/ButtonBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/button_destination_cancel"
-            style="@style/ButtonBar.Button"
-            android:layout_width="0dp"
+            style="@style/ButtonBar.Button.Transparent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/cancel" />
 
         <Button
             android:id="@+id/button_destination_choose"
             style="@style/ButtonBar.Button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/choose_destination" />
     </LinearLayout>
 

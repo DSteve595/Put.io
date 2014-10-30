@@ -106,25 +106,16 @@ public class Putio extends BaseCastActivity implements
 
         this.savedInstanceState = savedInstanceState;
 
-//        if (UIUtils.isTablet(this)) {
-//            getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        }
-
         if (getIntent() != null) {
             handleIntent(getIntent());
         }
 
         IntentFilter checkCacheSizeIntentFilter = new IntentFilter(
                 Putio.checkCacheSizeIntent);
-        IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(
-                Putio.fileDownloadUpdateIntent);
         IntentFilter noNetworkIntentFilter = new IntentFilter(
                 Putio.noNetworkIntent);
 
         registerReceiver(checkCacheSizeReceiver, checkCacheSizeIntentFilter);
-        if (UIUtils.isTablet(this)) {
-            registerReceiver(fileDownloadUpdateReceiver, fileDownloadUpdateIntentFilter);
-        }
         registerReceiver(noNetworkReceiver, noNetworkIntentFilter);
     }
 
@@ -642,16 +633,6 @@ public class Putio extends BaseCastActivity implements
         }
     };
 
-    private BroadcastReceiver fileDownloadUpdateReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (fileDetailsFragment.getFileId() == intent.getExtras().getInt("id")) {
-                fileDetailsFragment.updatePercent(intent.getExtras().getInt("percent"));
-            }
-        }
-    };
-
     private BroadcastReceiver noNetworkReceiver = new BroadcastReceiver() {
 
         @Override
@@ -690,9 +671,6 @@ public class Putio extends BaseCastActivity implements
     @Override
     protected void onDestroy() {
         unregisterReceiver(checkCacheSizeReceiver);
-        if (UIUtils.isTablet(this)) {
-            unregisterReceiver(fileDownloadUpdateReceiver);
-        }
         unregisterReceiver(noNetworkReceiver);
 
         super.onDestroy();

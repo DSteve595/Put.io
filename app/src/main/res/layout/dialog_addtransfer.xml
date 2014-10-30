@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/putio_accent_eigth"
-        android:fitsSystemWindows="true"
         android:orientation="vertical">
 
         <TextView
@@ -78,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_button"
+            android:background="@drawable/putio_clickable"
             android:paddingBottom="8dp">
 
             <ImageView
@@ -108,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/putio_clickable_button"
+            android:background="@drawable/putio_clickable"
             android:paddingBottom="8dp">
 
             <ImageView
@@ -148,12 +147,12 @@
     <LinearLayout
         android:id="@+id/buttonbar"
         style="@style/ButtonBar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/button_addtransfer_cancel"
-            style="@style/ButtonBar.Button"
+            style="@style/ButtonBar.Button.Transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel" />
@@ -165,5 +164,4 @@
             android:layout_height="wrap_content"
             android:text="@string/add" />
     </LinearLayout>
-
 </LinearLayout>

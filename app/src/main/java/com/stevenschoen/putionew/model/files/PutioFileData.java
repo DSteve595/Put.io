@@ -3,6 +3,7 @@ package com.stevenschoen.putionew.model.files;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 
 import java.util.HashMap;
@@ -27,8 +28,28 @@ public class PutioFileData implements Parcelable {
 		return contentType.equals("application/x-directory");
 	}
 
+    public boolean isMedia() {
+        for (int i = 0; i < PutioUtils.streamingMediaTypes.length; i++) {
+            if (contentType.startsWith(PutioUtils.streamingMediaTypes[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isVideo() {
         return contentType.startsWith("video");
+    }
+
+    public boolean isMp4() {
+        return contentType.equals("video/mp4");
+    }
+
+    public String getStreamUrl(PutioUtils utils, boolean mp4) {
+        String base = PutioUtils.baseUrl + "/files/" + id + "/";
+        String streamOrStreamMp4 = "";
+
+        return base + streamOrStreamMp4 + utils.tokenWithStuff;
     }
 
 	public static Map<String, Integer> contentTypes = new HashMap<>();

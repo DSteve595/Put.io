@@ -2,7 +2,6 @@ package com.stevenschoen.putionew.fragments;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
-import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,7 +12,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +24,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,17 +59,18 @@ public class FileDetails extends Fragment {
     private static final String MP4_AVAILABLE = "COMPLETED";
     private static final String MP4_IN_QUEUE = "IN_QUEUE";
     private static final String MP4_CONVERTING = "CONVERTING";
+    private static final String MP4_ALREADY = "internal_ALREADY";
     private PutioMp4Status mp4Status;
-
-    private boolean isMedia = false;
 
     private Toolbar toolbar;
     private TextView textTitle;
 
-    private TextView mp4Convert;
-	private View mp4Available;
-	private View mp4Converting;
-    private TextView textPercent;
+    private View infoMp4Already;
+    private View infoMp4Available;
+    private TextView textMp4Available;
+    private CheckBox checkBoxMp4Available;
+    private View infoMp4NotAvailable;
+	private View infoMp4Converting;
 
     private Bitmap imagePreviewBitmap;
 
@@ -121,12 +122,6 @@ public class FileDetails extends Fragment {
             newFileData = origFileData;
         }
 
-        for (int i = 0; i < PutioUtils.streamingMediaTypes.length; i++) {
-            if (newFileData.contentType.contains(PutioUtils.streamingMediaTypes[i])) {
-                isMedia = true;
-            }
-        }
-
 		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
 
 		utils.getEventBus().register(this);
@@ -142,6 +137,11 @@ public class FileDetails extends Fragment {
         if (isAdded()) {
             if (UIUtils.isTablet(getActivity())) {
                 toolbar.inflateMenu(R.menu.filedetails);
+                if (newFileData.isMedia()) {
+                    MenuItem itemOpen = toolbar.getMenu().findItem(R.id.menu_open);
+                    itemOpen.setVisible(false);
+                    itemOpen.setEnabled(false);
+                }
                 toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -205,12 +205,38 @@ public class FileDetails extends Fragment {
 
         ViewGroup holderInfo = (ViewGroup) view.findViewById(R.id.holder_fileinfo);
 
-        View infoMp4Available = holderInfo.findViewById(R.id.holder_fileinfo_mp4);
+        infoMp4Already = holderInfo.findViewById(R.id.holder_fileinfo_mp4_already);
+        infoMp4Available = holderInfo.findViewById(R.id.holder_fileinfo_mp4_available);
+        infoMp4NotAvailable = holderInfo.findViewById(R.id.holder_fileinfo_mp4_notavailable);
+        infoMp4Converting = holderInfo.findViewById(R.id.holder_fileinfo_mp4_converting);
         if (newFileData.isVideo()) {
-            TextView textMp4Available = (TextView) infoMp4Available.findViewById(R.id.text_fileinfo_mp4);
-//            TODO mp4 status
+            checkBoxMp4Available = (CheckBox) infoMp4Available.findViewById(R.id.checkbox_fileinfo_mp4);
+            checkBoxMp4Available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    refreshMp4View();
+                }
+            });
+            textMp4Available = (TextView) infoMp4Available.findViewById(R.id.text_fileinfo_mp4);
+            infoMp4NotAvailable.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    utils.getJobManager().addJobInBackground(new PutioRestInterface.PostConvertToMp4Job(
+                            utils, getFileId()));
+                    v.setEnabled(false);
+
+                    if (!startedMp4StatusCheck) {
+                        handler.post(updateMp4StatusRunnable);
+                        startedMp4StatusCheck = true;
+                    }
+                }
+            });
+            refreshMp4View();
         } else {
+            infoMp4Already.setVisibility(View.GONE);
             infoMp4Available.setVisibility(View.GONE);
+            infoMp4NotAvailable.setVisibility(View.GONE);
+            infoMp4Converting.setVisibility(View.GONE);
         }
 
         View infoAccessed = holderInfo.findViewById(R.id.holder_fileinfo_accessedat);
@@ -228,9 +254,8 @@ public class FileDetails extends Fragment {
         textSize.setText(PutioUtils.humanReadableByteCount(newFileData.size, false));
 
         final View infoMore = holderInfo.findViewById(R.id.holder_fileinfo_more);
-        if (isMedia) {
+        if (newFileData.isMedia()) {
             infoMore.setVisibility(View.VISIBLE);
-
             infoCreated.setVisibility(View.GONE);
             infoSize.setVisibility(View.GONE);
 
@@ -263,30 +288,28 @@ public class FileDetails extends Fragment {
         });
 
         View buttonPlay = view.findViewById(R.id.button_filedetails_play);
-        PutioUtils.setupFab(buttonPlay);
-        buttonPlay.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String streamOrStreamMp4;
-                if (mp4Status == null) {
-                    if (origFileData.isMp4Available) {
-                        streamOrStreamMp4 = "/mp4/stream";
-                    } else {
-                        streamOrStreamMp4 = "/stream";
+        if (newFileData.isMedia()) {
+            PutioUtils.setupFab(buttonPlay);
+            buttonPlay.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean mp4 = false;
+                    if (mp4Status != null) {
+                        if (mp4Status.getStatus().equals(MP4_AVAILABLE)) {
+                            mp4 = checkBoxMp4Available.isChecked();
+                        }
+                    } else if (newFileData.isMp4Available) {
+                        mp4 = checkBoxMp4Available.isChecked();
                     }
-                } else {
-                    if (mp4Status.getStatus().equals(MP4_AVAILABLE)) {
-                        streamOrStreamMp4 = "/mp4/stream";
-                    } else {
-                        streamOrStreamMp4 = "/stream";
-                    }
-                }
 
-                String url = PutioUtils.baseUrl + "/files/"
-                        + getFileId() + streamOrStreamMp4 + utils.tokenWithStuff;
-                mCastCallbacks.load(newFileData, url, utils);
-            }
-        });
+                    String url = newFileData.getStreamUrl(utils, mp4);
+                    mCastCallbacks.load(newFileData, url, utils);
+                }
+            });
+        } else {
+            buttonPlay.setEnabled(false);
+            buttonPlay.setVisibility(View.GONE);
+        }
 
         ImageView imagePreviewStock = (ImageView) view.findViewById(R.id.image_filepreview_stock);
         Picasso.with(getActivity())
@@ -311,7 +334,7 @@ public class FileDetails extends Fragment {
                     URLConnection connection = url.openConnection();
                     FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
                     baf = new ByteArrayBuffer(100);
-                    int current = 0;
+                    int current;
                     while ((current = fis.read()) != -1) {
                         baf.append((byte) current);
                     }
@@ -322,7 +345,7 @@ public class FileDetails extends Fragment {
                         URLConnection connection = url.openConnection();
                         FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
                         baf = new ByteArrayBuffer(100);
-                        int current = 0;
+                        int current;
                         while ((current = fis.read()) != -1) {
                             baf.append((byte) current);
                         }
@@ -356,24 +379,6 @@ public class FileDetails extends Fragment {
             }
         }
 
-		mp4Convert = (TextView) view.findViewById(R.id.button_filepreview_convert);
-		mp4Convert.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostConvertToMp4Job(
-						utils, getFileId()));
-				v.setEnabled(false);
-
-				if (!startedMp4StatusCheck) {
-					handler.post(updateMp4StatusRunnable);
-					startedMp4StatusCheck = true;
-				}
-			}
-		});
-
-		mp4Available = view.findViewById(R.id.holder_filepreview_available);
-		mp4Converting = view.findViewById(R.id.holder_filepreview_converting);
-
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetMp4StatusJob(
 				utils, getFileId()));
 
@@ -392,11 +397,14 @@ public class FileDetails extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_open:
+                initActionFile(PutioUtils.ACTION_OPEN);
+                return true;
             case R.id.menu_download:
                 initActionFile(PutioUtils.ACTION_NOTHING);
                 return true;
             case R.id.menu_share:
-                initShareFile();
+                initActionFile(PutioUtils.ACTION_SHARE);
                 return true;
             case R.id.menu_delete:
                 initDeleteFile();
@@ -461,42 +469,60 @@ public class FileDetails extends Fragment {
         }
     }
 
-    private void initShareFile() {
-        if (PutioUtils.idIsDownloaded(getFileId())) {
-            PutioUtils.shareDownloadedId(getFileId(), getActivity());
-        } else {
-            utils.downloadFile(getActivity(), PutioUtils.ACTION_SHARE, newFileData);
-        }
-    }
-
     private void initDeleteFile() {
         utils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), newFileData);
     }
 
-	private void updateMp4Bar() {
-        if (isAdded()) {
+    private void refreshMp4View() {
+        if (mp4Status != null) {
             switch (mp4Status.getStatus()) {
-                case MP4_AVAILABLE:
-                    mp4Convert.setVisibility(View.INVISIBLE);
-                    mp4Available.setVisibility(View.VISIBLE);
-                    mp4Converting.setVisibility(View.INVISIBLE);
+                case MP4_ALREADY: {
+                    infoMp4Already.setVisibility(View.VISIBLE);
+                    infoMp4Available.setVisibility(View.GONE);
+                    infoMp4Converting.setVisibility(View.GONE);
+                    infoMp4NotAvailable.setVisibility(View.GONE);
                     break;
+                }
+                case MP4_AVAILABLE: {
+                    infoMp4Already.setVisibility(View.GONE);
+                    infoMp4Available.setVisibility(View.VISIBLE);
+                    infoMp4Converting.setVisibility(View.GONE);
+                    infoMp4NotAvailable.setVisibility(View.GONE);
+
+                    if (checkBoxMp4Available.isChecked()) {
+                        textMp4Available.setText(getString(R.string.use_mp4));
+                    } else {
+                        textMp4Available.setText(getString(R.string.dont_use_mp4));
+                    }
+                    break;
+                }
                 case MP4_CONVERTING:
-					mp4Convert.setVisibility(View.INVISIBLE);
-					mp4Available.setVisibility(View.INVISIBLE);
-					mp4Converting.setVisibility(View.VISIBLE);
+                case MP4_IN_QUEUE: {
+                    infoMp4Already.setVisibility(View.GONE);
+                    infoMp4Available.setVisibility(View.GONE);
+                    infoMp4Converting.setVisibility(View.VISIBLE);
+                    infoMp4NotAvailable.setVisibility(View.GONE);
                     break;
-                case MP4_IN_QUEUE:
-					mp4Convert.setVisibility(View.INVISIBLE);
-					mp4Available.setVisibility(View.INVISIBLE);
-					mp4Converting.setVisibility(View.VISIBLE);
+                }
+                case MP4_NOT_AVAILABLE: {
+                    infoMp4Already.setVisibility(View.GONE);
+                    infoMp4Available.setVisibility(View.GONE);
+                    infoMp4Converting.setVisibility(View.GONE);
+                    infoMp4NotAvailable.setVisibility(View.VISIBLE);
                     break;
-                case MP4_NOT_AVAILABLE:
-					mp4Convert.setVisibility(View.VISIBLE);
-					mp4Available.setVisibility(View.INVISIBLE);
-					mp4Converting.setVisibility(View.INVISIBLE);
-                    break;
+                }
             }
+        } else {
+            String status;
+            if (newFileData.isMp4()) {
+                status = MP4_ALREADY;
+            } else if (newFileData.isMp4Available) {
+                status = MP4_AVAILABLE;
+            } else {
+                status = MP4_NOT_AVAILABLE;
+            }
+            mp4Status = new PutioMp4Status(status);
+            refreshMp4View();
         }
     }
 
@@ -505,11 +531,11 @@ public class FileDetails extends Fragment {
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
-                    Palette.Swatch vibrant = palette.getVibrantSwatch();
-                    if (vibrant != null) {
+                    Palette.Swatch darkMuted = palette.getDarkMutedSwatch();
+                    if (darkMuted != null) {
                         if (UIUtils.hasLollipop() && !UIUtils.isTablet(getActivity())) {
                             ValueAnimator statusBarAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
-                                    getActivity().getWindow().getStatusBarColor(), vibrant.getRgb());
+                                    getActivity().getWindow().getStatusBarColor(), darkMuted.getRgb());
                             statusBarAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -546,13 +572,16 @@ public class FileDetails extends Fragment {
         return Color.argb(alpha, red, green, blue);
     }
 
-    public void updatePercent(int percent) {
-        textPercent.setText(Integer.toString(percent));
-    }
+//    public void updatePercent(int percent) {
+//        textPercent.setText(Integer.toString(percent));
+//    }
 
 	public void onEventMainThread(Mp4StatusResponse result) {
 		mp4Status = result.getMp4Status();
-		updateMp4Bar();
+        if (newFileData.isMp4()) {
+            mp4Status.setStatus(MP4_ALREADY);
+        }
+		refreshMp4View();
 
 		if (!startedMp4StatusCheck && shouldCheckForMp4Updates()) {
 			handler.postDelayed(updateMp4StatusRunnable, 5000);
