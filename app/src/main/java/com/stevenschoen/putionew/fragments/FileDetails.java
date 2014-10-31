@@ -403,9 +403,6 @@ public class FileDetails extends Fragment {
             case R.id.menu_download:
                 initActionFile(PutioUtils.ACTION_NOTHING);
                 return true;
-            case R.id.menu_share:
-                initActionFile(PutioUtils.ACTION_SHARE);
-                return true;
             case R.id.menu_delete:
                 initDeleteFile();
                 return true;
@@ -426,9 +423,6 @@ public class FileDetails extends Fragment {
                 case PutioUtils.ACTION_OPEN:
                     textBody.setText(getString(R.string.redownloadforopenbody));
                     break;
-				case PutioUtils.ACTION_SHARE:
-					textBody.setText(getString(R.string.redownloadforsharebody));
-					break;
             }
 
             Button buttonOpen = (Button) dialog.findViewById(R.id.button_redownload_open);
@@ -447,7 +441,6 @@ public class FileDetails extends Fragment {
 
             Button buttonRedownload = (Button) dialog.findViewById(R.id.button_redownload_download);
             buttonRedownload.setOnClickListener(new OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     PutioUtils.deleteId(getFileId());
@@ -458,7 +451,6 @@ public class FileDetails extends Fragment {
 
             Button buttonCancel = (Button) dialog.findViewById(R.id.button_redownload_cancel);
             buttonCancel.setOnClickListener(new OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     dialog.cancel();

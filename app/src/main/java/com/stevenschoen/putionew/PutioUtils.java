@@ -87,9 +87,8 @@ public class PutioUtils {
     public static final int TYPE_VIDEO = 2;
     public static final String[] streamingMediaTypes = new String[]{"audio", "video"};
 
-    public static final int ACTION_NOTHING = -1;
-    public static final int ACTION_OPEN = 1;
-    public static final int ACTION_SHARE = 2;
+    public static final int ACTION_NOTHING = 1;
+    public static final int ACTION_OPEN = 2;
 
     public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
 //    public static final String CAST_APPLICATION_ID = "C18ACC9E";
@@ -326,15 +325,6 @@ public class PutioUtils {
                         context.startService(serviceOpenIntent);
                         Toast.makeText(context, context.getString(R.string.downloadwillopen),
                                 Toast.LENGTH_LONG).show();
-                        break;
-                    case ACTION_SHARE:
-                        Intent serviceShareIntent = new Intent(context, PutioOpenFileService.class);
-                        serviceShareIntent.putExtra("downloadId", (long) dlId);
-                        serviceShareIntent.putExtra("id", files[0].id);
-                        serviceShareIntent.putExtra("filename", files[0].name);
-                        serviceShareIntent.putExtra("mode", actionWhenDone);
-                        context.startService(serviceShareIntent);
-                        Toast.makeText(context, context.getString(R.string.downloadwillshare), Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_NOTHING:
                         Toast.makeText(context, context.getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();

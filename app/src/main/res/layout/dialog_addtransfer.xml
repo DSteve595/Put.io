@@ -20,7 +20,7 @@
             android:paddingLeft="16dip"
             android:paddingRight="16dip"
             android:paddingTop="12dp"
-            android:text="@string/addtransferstitle"
+            android:text="@string/add_transfers"
             android:textAppearance="@style/Putio.TextAppearance.DialogTitle" />
 
         <View

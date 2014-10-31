@@ -12,22 +12,18 @@
     <string name="rename">Rename</string>
     <string name="add">Add</string>
     <string name="play">Play</string>
-    <string name="menu_addtransfers">Add transfers</string>
-    <string name="menu_settings">Settings</string>
-    <string name="menu_logout">Log out</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_about">About</string>
+    <string name="add_transfers">Add transfers</string>
+    <string name="settings">Settings</string>
     <string name="log_in">Log in</string>
+    <string name="log_out">Log out</string>
+    <string name="about">About</string>
     <string name="apply">Apply</string>
     <string name="download">Download</string>
     <string name="redownload">Re-download</string>
     <string name="open">Open</string>
-    <string name="share">Share</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="search">Search</string>
-    <string name="browse">Browse</string>
     <string name="retry">Retry</string>
     <string name="remove">Remove</string>
     <string name="undo">Undo</string>
@@ -49,26 +45,19 @@
     <string name="removetransfertitle">Remove this transfer?</string>
     <string name="removetransferbody">The download will be cancelled.</string>
     <string name="downloadwillopen">Your file will open as soon as it is finished downloading.</string>
-    <string name="downloadwillshare">Your file will be shared as soon as it is finished downloading.</string>
     <string name="downloadfinishedopentitle">Open file?</string>
-    <string name="downloadfinishedsharetitle">Share file?</string>
     <string name="downloadfinishedbody">%1$s is done downloading.</string>
     <string name="downloadpreparing">Preparing to download</string>
     <string name="downloadstarted">Download started.</string>
     <string name="redownloadtitle">Re-download file?</string>
     <string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
     <string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
-    <string name="redownloadforsharebody">It looks like this has already been downloaded. Do you want to share this copy or download it again?</string>
-    <string name="addtransferstitle">Add transfers</string>
-    <string name="applychangestitle">Apply changes?</string>
 
     <!-- Errors (for users) -->
-    <string name="cantopenbecausefuckyou">There was an error opening the file.</string>
     <string name="cantopenbecausetype">None of your apps can open this type of file.</string>
     <string name="transferfailed">This transfer failed to download.</string>
     <string name="nothingenteredtofetch">Enter something to fetch first!</string>
     <string name="filetoobig">This file is too big! Are you sure it\'s a torrent?</string>
-    <string name="nofilechosen">Browse for a file first!</string>
     <string name="streamerror">Sorry, there was an error streaming your video.</string>
     <string name="couldntconnect">Couldn\'t connect to Put.io. Are you online?</string>
     <string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
@@ -85,13 +74,8 @@
     <string name="loading">Loading…</string>
     <string name="created_on_x_at_x">Created on %1$s at %2$s</string>
     <string name="accessed_on_x_at_x">Accessed on %1$s at %2$s</string>
-    <string name="welcome">Welcome!</string>
-    <string name="gotosite">Go to site</string>
     <string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
-    <string name="tokenlogin">If, for whatever reason, you\'d like to provide your login token manually, you can do so here.</string>
-    <string name="entertoken">Enter token</string>
     <string name="pasteurls">Paste URLs here</string>
-    <string name="torrentadded">Torrent added to transfers!</string>
     <string name="extractwhenfinished">Extract when finished</string>
     <string name="searchyourfiles">Search your files</string>
     <string name="nofilesfound">No files were found.</string>
@@ -101,7 +85,6 @@
     <string name="ratio_is">Ratio: %s</string>
     <string name="hey">Hey!</string>
     <string name="readytopaste">The download link is ready to be pasted.</string>
-    <string name="choosefile">Choose a file</string>
     <string name="cachesize">Cache size</string>
     <string name="cacheexplanation">How much space should be used for the cache?\nThis won\'t affect your downloaded files.</string>
     <string name="addtransfer_type_url">URL</string>
@@ -116,9 +99,8 @@
     <string name="mp4_available">MP4 available</string>
     <string name="use_mp4">Use MP4</string>
     <string name="dont_use_mp4">Don\'t use MP4</string>
-    <string name="destination">Destination</string>
     <string name="destination_is">Destination:</string>
-    <string name="choose_destination">Choose folder</string>
+    <string name="choose_folder">Choose folder</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Uploading torrent</string>

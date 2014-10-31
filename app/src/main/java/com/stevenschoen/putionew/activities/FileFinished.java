@@ -32,10 +32,6 @@ public class FileFinished extends Activity {
 			textTitle.setText(getString(R.string.downloadfinishedopentitle));
 			buttonAction.setText(getString(R.string.open));
 			break;
-		case PutioUtils.ACTION_SHARE:
-			textTitle.setText(getString(R.string.downloadfinishedsharetitle));
-			buttonAction.setText(getString(R.string.share));
-			break;
 		}
 		buttonAction.setOnClickListener(new OnClickListener() {
 			
@@ -45,9 +41,6 @@ public class FileFinished extends Activity {
 				switch (mode) {
 				case PutioUtils.ACTION_OPEN:
 					PutioUtils.openDownloadedId(id, FileFinished.this);
-					break;
-				case PutioUtils.ACTION_SHARE:
-					PutioUtils.shareDownloadedId(id, FileFinished.this);
 					break;
 				}
 	
