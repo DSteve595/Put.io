@@ -18,7 +18,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Outline;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,7 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -192,12 +190,12 @@ public class Putio extends BaseCastActivity implements
         filesFragment.onDestinationFolderSelected(folder);
     }
 
-    public class SectionsPagerAdapter extends PagerAdapter {
-        FragmentManager fm;
+    public class PutioPagerAdapter extends PagerAdapter {
+        private FragmentManager fm;
 
-        int currentPosition;
+        private int currentPosition;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public PutioPagerAdapter(FragmentManager fm) {
             super();
             this.fm = fm;
         }
@@ -281,11 +279,16 @@ public class Putio extends BaseCastActivity implements
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             currentPosition = position;
 
-            if (isFragment(position)) {
-                Fragment fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), position));
+            for (int i = 0; i < getCount(); i++) {
+                Fragment fragment = fm.findFragmentByTag(makeFragmentTag(container.getId(), i));
                 if (fragment != null) {
-                    fragment.setMenuVisibility(false);
-                    fragment.setUserVisibleHint(false);
+                    if (i == position) {
+                        fragment.setMenuVisibility(true);
+                        fragment.setUserVisibleHint(true);
+                    } else {
+                        fragment.setMenuVisibility(false);
+                        fragment.setUserVisibleHint(false);
+                    }
                 }
             }
         }
@@ -488,12 +491,12 @@ public class Putio extends BaseCastActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        PutioPagerAdapter adapter = new PutioPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setOffscreenPageLimit(3);
-        pager.setAdapter(mSectionsPagerAdapter);
+        pager.setAdapter(adapter);
 
         tabs.setViewPager(pager);
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -644,7 +647,7 @@ public class Putio extends BaseCastActivity implements
 	@Override
     public void onBackPressed() {
         if (UIUtils.isTablet(this)) {
-            if (getSupportActionBar().getSelectedNavigationIndex() == TAB_FILES) {
+            if (pager.getCurrentItem() == TAB_FILES) {
                 if (filesFragment.goBack()) {
                     if (isFDShown()) {
                         removeFD(true);
@@ -656,7 +659,11 @@ public class Putio extends BaseCastActivity implements
                 super.onBackPressed();
             }
         } else {
-            if (pager.getCurrentItem() == TAB_FILES && !filesFragment.goBack()) {
+            if (pager.getCurrentItem() == TAB_FILES) {
+                if (!filesFragment.goBack()) {
+                    super.onBackPressed();
+                }
+            } else {
                 super.onBackPressed();
             }
         }

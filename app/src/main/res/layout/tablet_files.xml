@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_main_root"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
+    android:layout_height="match_parent"
     android:layout_weight="1"
     android:baselineAligned="false"
     android:clipChildren="false"
@@ -17,7 +17,6 @@
         tools:layout="@layout/files" />
 
     <FrameLayout
-        android:id="@+id/fragment_details"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginBottom="12dp"
@@ -26,5 +25,19 @@
         android:layout_marginRight="@dimen/padding_large"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:layout_weight="@integer/weight_filedetails" />
+        android:layout_weight="@integer/weight_filedetails">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:tint="#D0D0D0"
+            android:scaleType="fitCenter"
+            android:src="@drawable/biglogo_transparentletters" />
+
+        <FrameLayout
+            android:id="@+id/fragment_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </LinearLayout>
