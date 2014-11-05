@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="64dp">
 
@@ -38,8 +39,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="2dp"
         android:paddingRight="12dp"
-        android:text="0"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="0%" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,18 +58,18 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="Transfer name"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="Transfer name" />
 
         <TextView
             android:id="@+id/text_transfer_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="Other message"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="Other message" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -91,7 +92,7 @@
                     android:alpha="0.9"
                     android:padding="1dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_putio_download" />
+                    android:src="@drawable/ic_transfer_download" />
 
                 <TextView
                     android:id="@+id/text_transfer_downValue"
@@ -99,16 +100,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2sp"
                     android:layout_marginStart="2sp"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    tools:text="0" />
 
                 <TextView
                     android:id="@+id/text_transfer_downUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2sp"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    tools:text="0" />
             </LinearLayout>
 
             <LinearLayout
@@ -126,7 +127,7 @@
                     android:alpha="0.9"
                     android:padding="1dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_upload" />
+                    android:src="@drawable/ic_transfer_upload" />
 
                 <TextView
                     android:id="@+id/text_transfer_upValue"
@@ -134,16 +135,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2sp"
                     android:layout_marginStart="2sp"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    tools:text="0" />
 
                 <TextView
                     android:id="@+id/text_transfer_upUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2sp"
-                    android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    tools:text="0" />
             </LinearLayout>
 
             <LinearLayout

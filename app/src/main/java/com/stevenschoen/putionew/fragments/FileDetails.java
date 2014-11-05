@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -31,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.stevenschoen.putionew.FlushedInputStream;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioApplication.CastCallbacks;
 import com.stevenschoen.putionew.PutioUtils;
@@ -40,16 +39,11 @@ import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 import com.stevenschoen.putionew.model.files.PutioMp4Status;
+import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.FileResponse;
 import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 
-import org.apache.http.util.ByteArrayBuffer;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class FileDetails extends Fragment {
     private PutioFileData origFileData;
@@ -133,6 +127,23 @@ public class FileDetails extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.filedetails, container, false);
 
+        if (UIUtils.isTablet(getActivity())) {
+            ViewTreeObserver vto = view.getViewTreeObserver();
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (isAdded()) {
+                        int maxHeight = (int) getResources().getDimension(R.dimen.fileDetailsMaxHeight);
+                        if (view.getHeight() > maxHeight) {
+                            ViewGroup.LayoutParams params = view.getLayoutParams();
+                            params.height = maxHeight;
+                            view.setLayoutParams(params);
+                        }
+                    }
+                }
+            });
+        }
+
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_filedetails);
         if (isAdded()) {
             if (UIUtils.isTablet(getActivity())) {
@@ -170,7 +181,13 @@ public class FileDetails extends Fragment {
         textTitle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                utils.renameFileDialog(getActivity(), newFileData).show();
+                utils.renameFileDialog(getActivity(), newFileData, new PutioUtils.RenameCallback() {
+                    @Override
+                    public void onRename(PutioFileData file, String newName) {
+                        newFileData.name = newName;
+                        textTitle.setText(newName);
+                    }
+                }).show();
             }
         });
 
@@ -241,8 +258,12 @@ public class FileDetails extends Fragment {
 
         View infoAccessed = holderInfo.findViewById(R.id.holder_fileinfo_accessedat);
         TextView textAccessed = (TextView) infoAccessed.findViewById(R.id.text_fileinfo_accessedat);
-        String[] accessed = PutioUtils.parseIsoTime(getActivity(), newFileData.firstAccessedAt);
-        textAccessed.setText(getString(R.string.accessed_on_x_at_x, accessed[0], accessed[1]));
+        if (newFileData.isAccessed()) {
+            String[] accessed = PutioUtils.parseIsoTime(getActivity(), newFileData.firstAccessedAt);
+            textAccessed.setText(getString(R.string.accessed_on_x_at_x, accessed[0], accessed[1]));
+        } else {
+            textAccessed.setText(getString(R.string.never_accessed));
+        }
 
         final View infoCreated = holderInfo.findViewById(R.id.holder_fileinfo_createdat);
         TextView textCreated = (TextView) infoCreated.findViewById(R.id.text_fileinfo_createdat);
@@ -322,58 +343,27 @@ public class FileDetails extends Fragment {
         class getPreviewTask extends AsyncTask<Void, Void, Bitmap> {
             @Override
             protected Bitmap doInBackground(Void... nothing) {
-                URL url = null;
                 try {
-                    url = new URL(newFileData.screenshot);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-
-                ByteArrayBuffer baf = null;
-                try {
-                    URLConnection connection = url.openConnection();
-                    FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
-                    baf = new ByteArrayBuffer(100);
-                    int current;
-                    while ((current = fis.read()) != -1) {
-                        baf.append((byte) current);
-                    }
-                    fis.close();
-                } catch (FileNotFoundException e) {
-                    try {
-                        url = new URL(origFileData.screenshot.replace(".jpg", "%3D%3D.jpg"));
-                        URLConnection connection = url.openConnection();
-                        FlushedInputStream fis = new FlushedInputStream(connection.getInputStream());
-                        baf = new ByteArrayBuffer(100);
-                        int current;
-                        while ((current = fis.read()) != -1) {
-                            baf.append((byte) current);
-                        }
-                        fis.close();
-                    } catch (FileNotFoundException ee) {
-                        return null;
-                    } catch (IOException ee) {
-                        e.printStackTrace();
-                    }
+                    return Picasso.with(getActivity()).load(newFileData.screenshot).get();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                return BitmapFactory.decodeByteArray(baf.toByteArray(), 0, baf.length());
+                return null;
             }
 
             @Override
-            public void onPostExecute(final Bitmap bitmap) {
+            public void onPostExecute(Bitmap bitmap) {
                 if (bitmap != null) {
-                    setImagePreview(bitmap, true);
+                    imagePreviewBitmap = bitmap;
+                    refreshImagePreview(true);
                 }
-                imagePreviewBitmap = bitmap;
             }
         }
         if (newFileData.screenshot != null && !newFileData.screenshot.equals("null")) {
             if (savedInstanceState != null && savedInstanceState.containsKey("imagePreviewBitmap")) {
                 imagePreviewBitmap = savedInstanceState.getParcelable("imagePreviewBitmap");
-                setImagePreview(imagePreviewBitmap, false);
+                refreshImagePreview(false);
             } else {
                 new getPreviewTask().execute();
             }
@@ -518,9 +508,9 @@ public class FileDetails extends Fragment {
         }
     }
 
-    private void setImagePreview(final Bitmap bitmap, boolean animate) {
+    private void refreshImagePreview(boolean animate) {
         if (isAdded()) {
-            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+            Palette.generateAsync(imagePreviewBitmap, new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
                     Palette.Swatch darkMuted = palette.getDarkMutedSwatch();
@@ -540,7 +530,7 @@ public class FileDetails extends Fragment {
                 }
             });
             if (animate) {
-                setImagePreview(bitmap, false);
+                refreshImagePreview(false);
                 if (UIUtils.hasLollipop()) {
                     Animator anim = ViewAnimationUtils.createCircularReveal(imagePreview,
                             imagePreview.getWidth() / 2, imagePreview.getHeight() / 2,
@@ -551,22 +541,10 @@ public class FileDetails extends Fragment {
                     imagePreview.animate().alpha(1);
                 }
             } else {
-                imagePreview.setImageBitmap(bitmap);
+                imagePreview.setImageBitmap(imagePreviewBitmap);
             }
         }
     }
-
-    private int adjustAlpha(int color, float factor) {
-        int alpha = Math.round(Color.alpha(color) * factor);
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-        return Color.argb(alpha, red, green, blue);
-    }
-
-//    public void updatePercent(int percent) {
-//        textPercent.setText(Integer.toString(percent));
-//    }
 
 	public void onEventMainThread(Mp4StatusResponse result) {
 		mp4Status = result.getMp4Status();
@@ -582,10 +560,15 @@ public class FileDetails extends Fragment {
 	}
 
 	public void onEventMainThread(FileResponse result) {
-		if (result != null && result.getFile().id == origFileData.id) {
+		if (result != null && result.getFile().id == newFileData.id) {
 			newFileData = result.getFile();
+            textTitle.setText(newFileData.name);
 		}
 	}
+
+    public void onEventMainThread(BasePutioResponse.FileChangingResponse result) {
+        utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
+    }
 
 	private boolean shouldCheckForMp4Updates() {
 		return (mp4Status.getStatus().equals(MP4_IN_QUEUE) ||
@@ -603,16 +586,6 @@ public class FileDetails extends Fragment {
     public String getNewFilename() {
         return newFileData.name;
     }
-
-	public void renameAndFinish() {
-		utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
-				utils, getFileId(), getNewFilename()));
-		if (!UIUtils.isTablet(getActivity())) {
-			getActivity().finish();
-		} else {
-			mCallbacks.onFDFinished();
-		}
-	}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

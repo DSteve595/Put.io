@@ -31,7 +31,6 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
@@ -70,7 +69,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -169,7 +167,7 @@ public class PutioUtils {
         return dialog;
     }
 
-    public Dialog renameFileDialog(Context context, final PutioFileData file) {
+    public Dialog renameFileDialog(Context context, final PutioFileData file, final RenameCallback callback) {
         final Dialog renameDialog = PutioUtils.PutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
 
         final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
@@ -187,8 +185,10 @@ public class PutioUtils {
         saveRename.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                String newName = textFileName.getText().toString();
+                callback.onRename(file, newName);
                 getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
-                        PutioUtils.this, file.id, textFileName.getText().toString()));
+                        PutioUtils.this, file.id, newName));
                 renameDialog.dismiss();
             }
         });
@@ -202,6 +202,10 @@ public class PutioUtils {
         });
 
         return renameDialog;
+    }
+
+    public static interface RenameCallback {
+        public void onRename(PutioFileData file, String newName);
     }
 
     public static Dialog PutioDialog(Context context, String title, int contentViewId) {

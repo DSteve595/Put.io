@@ -29,6 +29,7 @@
     <string name="undo">Undo</string>
     <string name="storage">Storage</string>
     <string name="move">Move</string>
+    <string name="more">More</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Preparing to stream</string>
@@ -74,6 +75,7 @@
     <string name="loading">Loading…</string>
     <string name="created_on_x_at_x">Created on %1$s at %2$s</string>
     <string name="accessed_on_x_at_x">Accessed on %1$s at %2$s</string>
+    <string name="never_accessed">Never accessed</string>
     <string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
     <string name="pasteurls">Paste URLs here</string>
     <string name="extractwhenfinished">Extract when finished</string>

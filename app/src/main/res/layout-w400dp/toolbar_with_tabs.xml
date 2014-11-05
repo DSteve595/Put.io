@@ -6,13 +6,13 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     android:elevation="@dimen/actionBarElevation"
-    app:contentInsetLeft="32dp"
-    app:contentInsetStart="32dp"
     app:popupTheme="@style/ThemeOverlay.AppCompat"
     app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
     <com.stevenschoen.putionew.SlidingTabLayout
         android:id="@+id/tabs"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary" />

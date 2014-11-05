@@ -111,7 +111,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="48dp"
             android:gravity="center_vertical"
-            android:text="MP4 available"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="@string/mp4_available" />
     </RelativeLayout>
@@ -166,7 +165,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
-            android:text="More"
+            android:text="@string/more"
             android:textColor="#808080" />
     </LinearLayout>
 

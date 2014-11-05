@@ -78,6 +78,7 @@ public class Putio extends BaseCastActivity implements
     public static final String noNetworkIntent = "com.stevenschoen.putionew.nonetwork";
 
     private Account accountFragment;
+    private View filesView;
     private Files filesFragment;
     private FileDetails fileDetailsFragment;
     private Transfers transfersFragment;

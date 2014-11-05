@@ -4,8 +4,10 @@
     <dimen name="fabSizeHalf">32dp</dimen>
     <dimen name="fabSizeHalfNegative">-32dp</dimen>
 
+    <dimen name="fileDetailsMaxHeight">600dp</dimen>
+
     <dimen name="actionBarElevation">2dp</dimen>
-    <dimen name="fabElevation">4dp</dimen>
+    <dimen name="fabElevation">2dp</dimen>
     <dimen name="fileDetailsElevation">2dp</dimen>
 
     <dimen name="padding_small">8dp</dimen>

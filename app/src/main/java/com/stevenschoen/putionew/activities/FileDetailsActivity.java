@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.fragments.FileDetails;
 import com.stevenschoen.putionew.model.files.PutioFileData;
 

@@ -25,15 +25,16 @@
         android:layout_marginRight="@dimen/padding_large"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:layout_weight="@integer/weight_filedetails">
+        android:layout_weight="@integer/weight_filedetails"
+        android:clipChildren="false">
 
         <ImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            android:tint="#D0D0D0"
             android:scaleType="fitCenter"
-            android:src="@drawable/biglogo_transparentletters" />
+            android:src="@drawable/biglogo_transparentletters"
+            android:tint="#D0D0D0" />
 
         <FrameLayout
             android:id="@+id/fragment_details"

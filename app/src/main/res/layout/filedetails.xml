@@ -10,8 +10,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginEnd="@dimen/fabSizeHalfNegative"
         android:layout_marginRight="@dimen/fabSizeHalfNegative"
-        android:layout_toLeftOf="@+id/holder_container_fileinfo"
-        android:layout_toStartOf="@id/holder_container_fileinfo">
+        android:layout_toLeftOf="@+id/holder_fileinfo"
+        android:layout_toStartOf="@id/holder_fileinfo">
 
         <include
             android:id="@+id/filedetailspreview"
@@ -27,11 +27,12 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@id/holder_container_fileinfo"
+        android:id="@id/holder_fileinfo"
         android:layout_width="340dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentRight="true"
+        android:clipChildren="false">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -40,10 +41,10 @@
             android:layout_marginStart="@dimen/fabSizeHalf">
 
             <include
-                android:id="@+id/holder_fileinfo"
                 layout="@layout/fileinfo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:elevation="2dp" />
         </ScrollView>
 
         <include

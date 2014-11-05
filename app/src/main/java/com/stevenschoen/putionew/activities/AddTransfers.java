@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewAnimationUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -70,6 +68,9 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
 			finish();
 		}
 
+        TextView textTitle = (TextView) findViewById(R.id.dialog_title);
+        textTitle.setText(getString(R.string.add_transfers));
+
         addButton = (Button) findViewById(R.id.button_addtransfer_add);
         addButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -90,7 +91,8 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
         buttonDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DestinationFilesDialog destinationDialog = (DestinationFilesDialog) DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
+                DestinationFilesDialog destinationDialog = (DestinationFilesDialog)
+                        DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
                 destinationDialog.show(getFragmentManager(), "dialog");
             }
         });

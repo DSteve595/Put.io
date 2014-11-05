@@ -7,21 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import java.util.List;
 
-public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
+public class FilesAdapter extends ArrayAdapter<PutioFileData> {
 
 	Context context;
-	List<PutioFileLayout> data = null;
 
-	public FilesAdapter(Context context, List<PutioFileLayout> data) {
+	public FilesAdapter(Context context, List<PutioFileData> data) {
 		super(context, R.layout.file_putio, data);
 		this.context = context;
-		this.data = data;
 	}
 
 	@Override
@@ -40,29 +40,46 @@ public class FilesAdapter extends ArrayAdapter<PutioFileLayout> {
 			holder.textName = (TextView) row.findViewById(R.id.text_fileListName);
 			holder.textDescription = (TextView) row.findViewById(R.id.text_fileListDesc);
 			holder.imgIcon = (ImageView) row.findViewById(R.id.img_fileIcon);
+            holder.iconAccessed = (ImageView) row.findViewById(R.id.icon_file_accessed);
 
 			row.setTag(holder);
 		} else {
 			holder = (FileHolder) row.getTag();
 		}
 
-		PutioFileLayout file = data.get(position);
+		PutioFileData file = getItem(position);
 		holder.textName.setText(file.name);
-		holder.textDescription.setText(file.description);
-		if (file.iconUrl == null) {
-            Picasso.with(context).cancelRequest(holder.imgIcon);
-			holder.imgIcon.setImageResource(file.iconRes);
-		} else {
-			holder.imgIcon.setImageResource(0);
-            Picasso.with(context).load(file.iconUrl).into(holder.imgIcon);
-		}
+		holder.textDescription.setText(PutioUtils.humanReadableByteCount(file.size, false));
+        if (file.icon != null && !file.icon.isEmpty()) {
+            Picasso.with(context).load(file.icon).into(holder.imgIcon);
+        }
+        if (file.isAccessed()) {
+            holder.iconAccessed.setVisibility(View.VISIBLE);
+        } else {
+            holder.iconAccessed.setVisibility(View.GONE);
+        }
 
-		return row;
+        return row;
 	}
-	
-	static class FileHolder {
+
+    @Override
+    public long getItemId(int position) {
+        if (position != ListView.INVALID_POSITION) {
+            return getItem(position).id;
+        }
+
+        return 0;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    static class FileHolder {
 		TextView textName;
 		TextView textDescription;
 		ImageView imgIcon;
+        ImageView iconAccessed;
 	}
 }

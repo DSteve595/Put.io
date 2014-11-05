@@ -4,10 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.stevenschoen.putionew.PutioUtils;
-import com.stevenschoen.putionew.R;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PutioFileData implements Parcelable {
 	public boolean isShared;
@@ -45,24 +41,19 @@ public class PutioFileData implements Parcelable {
         return contentType.equals("video/mp4");
     }
 
+    public boolean isAccessed() {
+        return (firstAccessedAt != null && !firstAccessedAt.isEmpty());
+    }
+
     public String getStreamUrl(PutioUtils utils, boolean mp4) {
-        String base = PutioUtils.baseUrl + "/files/" + id + "/";
-        String streamOrStreamMp4 = "";
+        String base = PutioUtils.baseUrl + "/files/" + id;
+        String streamOrStreamMp4 = "/stream";
+        if (mp4) {
+            streamOrStreamMp4 += "/mp4";
+        }
 
         return base + streamOrStreamMp4 + utils.tokenWithStuff;
     }
-
-	public static Map<String, Integer> contentTypes = new HashMap<>();
-	static {
-		contentTypes.put("file", R.drawable.ic_putio_file);
-		contentTypes.put("application/x-directory", R.drawable.ic_putio_folder);
-		contentTypes.put("application/x-iso9660-image", R.drawable.ic_putio_image);
-		contentTypes.put("application/zip", R.drawable.ic_putio_compressed);
-		contentTypes.put("application/x-rar", R.drawable.ic_putio_compressed);
-		contentTypes.put("application/x-dosexec", R.drawable.ic_putio_file);
-		contentTypes.put("application/pdf", R.drawable.ic_putio_pdf);
-		contentTypes.put("text/plain", R.drawable.ic_putio_text);
-	}
 
 	@Override
 	public int describeContents() {
