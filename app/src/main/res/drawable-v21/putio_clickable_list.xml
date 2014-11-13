@@ -2,6 +2,6 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/putio_accent">
     <item android:id="@android:id/mask">
-        <color android:color="@color/white" />
+        <color android:color="@android:color/white" />
     </item>
 </ripple>

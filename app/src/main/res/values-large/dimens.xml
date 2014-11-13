@@ -4,6 +4,8 @@
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">16dp</dimen>
 
-    <dimen name="file_rowpadding">0dp</dimen>
+    <dimen name="accountMaxWidth">400dp</dimen>
+
+    <dimen name="files_row_padding">16dp</dimen>
 
 </resources>

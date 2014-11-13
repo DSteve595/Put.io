@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.14.0'
+        classpath 'com.android.tools.build:gradle:0.14.1'
     }
 }
 
@@ -15,7 +15,7 @@ repositories {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.1.0'
+    buildToolsVersion '21.1.1'
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
@@ -47,6 +47,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.android.support:support-v13:21.+'
+    compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.android.support:palette-v7:21.+'
     compile 'com.google.android.gms:play-services:6.1.+'
     compile 'commons-io:commons-io:2.4'
@@ -57,8 +58,8 @@ dependencies {
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.squareup.okhttp:okhttp:2.0.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.+'
-    compile 'de.greenrobot:eventbus:2.2.1'
-    compile 'com.squareup.picasso:picasso:2.3.+'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.squareup.picasso:picasso:2.4.+'
     compile project(':libraries:aFileChooser')
     compile project(':libraries:CastCompanionLibrary-android')
 }

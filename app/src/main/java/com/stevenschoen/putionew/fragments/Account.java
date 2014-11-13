@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.account.PutioAccountInfo;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
 
-public class Account extends Fragment {
+public class Account extends NoClipSupportFragment {
 
 	private PutioUtils utils;
 

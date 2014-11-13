@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_main_root"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
@@ -9,22 +9,24 @@
     android:gravity="center"
     android:orientation="horizontal">
 
+    <include layout="@layout/shadow_overleft" />
+
     <FrameLayout
         android:id="@+id/fragment_files"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/weight_files"
-        tools:layout="@layout/files" />
+        android:background="@android:color/white"
+        android:clipChildren="false"
+        android:elevation="@dimen/tabletFilesElevation" />
+
+    <include layout="@layout/shadow_overright" />
 
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="@dimen/padding_large"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="@dimen/padding_large"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:layout_weight="@integer/weight_filedetails"
         android:clipChildren="false">
 

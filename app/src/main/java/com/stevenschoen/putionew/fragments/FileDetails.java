@@ -1,16 +1,16 @@
 package com.stevenschoen.putionew.fragments;
 
-import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -46,8 +45,8 @@ import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 import java.io.IOException;
 
 public class FileDetails extends Fragment {
-    private PutioFileData origFileData;
-    private PutioFileData newFileData;
+
+    private State state;
 
     private static final String MP4_NOT_AVAILABLE = "NOT_AVAILABLE";
     private static final String MP4_AVAILABLE = "COMPLETED";
@@ -66,27 +65,17 @@ public class FileDetails extends Fragment {
     private View infoMp4NotAvailable;
 	private View infoMp4Converting;
 
-    private Bitmap imagePreviewBitmap;
-
     public interface Callbacks {
-        public void onFDCancelled();
-        public void onFDFinished();
+        public void onFileDetailsClosed();
     }
-
-    private static Callbacks sDummyCallbacks = new Callbacks() {
-        @Override
-        public void onFDCancelled() { }
-        @Override
-        public void onFDFinished() { }
-    };
 
     private static CastCallbacks sDummyCastCallbacks = new CastCallbacks() {
         @Override
 		public void load(PutioFileData file, String url, PutioUtils utils) { }
     };
 
-    private Callbacks mCallbacks = sDummyCallbacks;
-    private CastCallbacks mCastCallbacks = sDummyCastCallbacks;
+    private Callbacks callbacks;
+    private CastCallbacks castCallbacks = sDummyCastCallbacks;
 
 	private PutioUtils utils;
 
@@ -100,7 +89,7 @@ public class FileDetails extends Fragment {
 	};
 	private boolean startedMp4StatusCheck = false;
 
-    private ImageView imagePreview;
+    private ImageView imagePreview, imagePreviewStock;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,12 +97,19 @@ public class FileDetails extends Fragment {
 
         setHasOptionsMenu(true);
 
-        if (savedInstanceState != null) {
-            origFileData = savedInstanceState.getParcelable("origFileData");
-            newFileData = savedInstanceState.getParcelable("newFileData");
-        } else {
-            origFileData = getArguments().getParcelable("fileData");
-            newFileData = origFileData;
+        if (savedInstanceState != null && savedInstanceState.containsKey("state")) {
+            state = savedInstanceState.getParcelable("state");
+        }
+        if (state == null) {
+            if (getArguments() != null) {
+                if (getArguments().containsKey("state")) {
+                    state = getArguments().getParcelable("state");
+                } else if (getArguments().containsKey("fileData")) {
+                    state = new State();
+                    state.origFileData = getArguments().getParcelable("fileData");
+                    state.newFileData = state.origFileData;
+                }
+            }
         }
 
 		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
@@ -128,8 +124,7 @@ public class FileDetails extends Fragment {
         final View view = inflater.inflate(R.layout.filedetails, container, false);
 
         if (UIUtils.isTablet(getActivity())) {
-            ViewTreeObserver vto = view.getViewTreeObserver();
-            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     if (isAdded()) {
@@ -148,7 +143,7 @@ public class FileDetails extends Fragment {
         if (isAdded()) {
             if (UIUtils.isTablet(getActivity())) {
                 toolbar.inflateMenu(R.menu.filedetails);
-                if (newFileData.isMedia()) {
+                if (getCurrentFile().isMedia()) {
                     MenuItem itemOpen = toolbar.getMenu().findItem(R.id.menu_open);
                     itemOpen.setVisible(false);
                     itemOpen.setEnabled(false);
@@ -167,12 +162,12 @@ public class FileDetails extends Fragment {
         }
 
         if (UIUtils.hasLollipop()) {
-            View preview = view.findViewById(R.id.filedetailspreview);
+            View preview = view.findViewById(R.id.filepreview);
             preview.setElevation(PutioUtils.pxFromDp(getActivity(), 2));
             toolbar.setElevation(getResources().getDimension(R.dimen.actionBarElevation));
 
             if (UIUtils.isTablet(getActivity())) {
-                view.setElevation(getResources().getDimension(R.dimen.fileDetailsElevation));
+                view.setElevation(getResources().getDimension(R.dimen.tabletFileDetailsElevation));
             }
         }
 
@@ -181,10 +176,10 @@ public class FileDetails extends Fragment {
         textTitle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                utils.renameFileDialog(getActivity(), newFileData, new PutioUtils.RenameCallback() {
+                utils.renameFileDialog(getActivity(), getCurrentFile(), new PutioUtils.RenameCallback() {
                     @Override
                     public void onRename(PutioFileData file, String newName) {
-                        newFileData.name = newName;
+                        getCurrentFile().name = newName;
                         textTitle.setText(newName);
                     }
                 }).show();
@@ -192,12 +187,6 @@ public class FileDetails extends Fragment {
         });
 
         if (UIUtils.isTablet(getActivity())) {
-            if (UIUtils.hasLollipop()) {
-                view.setBackgroundColor(Color.WHITE);
-            } else {
-                view.setBackgroundResource(R.drawable.card_bg_r8);
-            }
-
 //            view.post(new Runnable() {
 //                @Override
 //                public void run() {
@@ -226,7 +215,7 @@ public class FileDetails extends Fragment {
         infoMp4Available = holderInfo.findViewById(R.id.holder_fileinfo_mp4_available);
         infoMp4NotAvailable = holderInfo.findViewById(R.id.holder_fileinfo_mp4_notavailable);
         infoMp4Converting = holderInfo.findViewById(R.id.holder_fileinfo_mp4_converting);
-        if (newFileData.isVideo()) {
+        if (getCurrentFile().isVideo()) {
             checkBoxMp4Available = (CheckBox) infoMp4Available.findViewById(R.id.checkbox_fileinfo_mp4);
             checkBoxMp4Available.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -258,8 +247,8 @@ public class FileDetails extends Fragment {
 
         View infoAccessed = holderInfo.findViewById(R.id.holder_fileinfo_accessedat);
         TextView textAccessed = (TextView) infoAccessed.findViewById(R.id.text_fileinfo_accessedat);
-        if (newFileData.isAccessed()) {
-            String[] accessed = PutioUtils.parseIsoTime(getActivity(), newFileData.firstAccessedAt);
+        if (getCurrentFile().isAccessed()) {
+            String[] accessed = PutioUtils.parseIsoTime(getActivity(), getCurrentFile().firstAccessedAt);
             textAccessed.setText(getString(R.string.accessed_on_x_at_x, accessed[0], accessed[1]));
         } else {
             textAccessed.setText(getString(R.string.never_accessed));
@@ -267,15 +256,15 @@ public class FileDetails extends Fragment {
 
         final View infoCreated = holderInfo.findViewById(R.id.holder_fileinfo_createdat);
         TextView textCreated = (TextView) infoCreated.findViewById(R.id.text_fileinfo_createdat);
-        String[] created = PutioUtils.parseIsoTime(getActivity(), newFileData.createdAt);
+        String[] created = PutioUtils.parseIsoTime(getActivity(), getCurrentFile().createdAt);
         textCreated.setText(getString(R.string.created_on_x_at_x, created[0], created[1]));
 
         final View infoSize = holderInfo.findViewById(R.id.holder_fileinfo_size);
         TextView textSize = (TextView) infoSize.findViewById(R.id.text_fileinfo_size);
-        textSize.setText(PutioUtils.humanReadableByteCount(newFileData.size, false));
+        textSize.setText(PutioUtils.humanReadableByteCount(getCurrentFile().size, false));
 
         final View infoMore = holderInfo.findViewById(R.id.holder_fileinfo_more);
-        if (newFileData.isMedia()) {
+        if (getCurrentFile().isMedia()) {
             infoMore.setVisibility(View.VISIBLE);
             infoCreated.setVisibility(View.GONE);
             infoSize.setVisibility(View.GONE);
@@ -293,14 +282,14 @@ public class FileDetails extends Fragment {
             infoMore.setVisibility(View.GONE);
         }
 
-		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
+        utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
 
         ImageButton buttonClose = (ImageButton) view.findViewById(R.id.button_filedetails_close);
         buttonClose.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (UIUtils.isTablet(getActivity())) {
-                    mCallbacks.onFDCancelled();
+                if (hasCallbacks()) {
+                    callbacks.onFileDetailsClosed();
                 } else {
                     getActivity().finish();
                 }
@@ -309,7 +298,7 @@ public class FileDetails extends Fragment {
         });
 
         View buttonPlay = view.findViewById(R.id.button_filedetails_play);
-        if (newFileData.isMedia()) {
+        if (getCurrentFile().isMedia()) {
             PutioUtils.setupFab(buttonPlay);
             buttonPlay.setOnClickListener(new OnClickListener() {
                 @Override
@@ -319,12 +308,12 @@ public class FileDetails extends Fragment {
                         if (mp4Status.getStatus().equals(MP4_AVAILABLE)) {
                             mp4 = checkBoxMp4Available.isChecked();
                         }
-                    } else if (newFileData.isMp4Available) {
+                    } else if (getCurrentFile().isMp4Available) {
                         mp4 = checkBoxMp4Available.isChecked();
                     }
 
-                    String url = newFileData.getStreamUrl(utils, mp4);
-                    mCastCallbacks.load(newFileData, url, utils);
+                    String url = getCurrentFile().getStreamUrl(utils, mp4);
+                    castCallbacks.load(getCurrentFile(), url, utils);
                 }
             });
         } else {
@@ -332,9 +321,9 @@ public class FileDetails extends Fragment {
             buttonPlay.setVisibility(View.GONE);
         }
 
-        ImageView imagePreviewStock = (ImageView) view.findViewById(R.id.image_filepreview_stock);
+        imagePreviewStock = (ImageView) view.findViewById(R.id.image_filepreview_stock);
         Picasso.with(getActivity())
-                .load(origFileData.icon)
+                .load(getCurrentFile().icon)
                 .transform(new PutioUtils.BlurTransformation(getActivity(), 4))
                 .into(imagePreviewStock);
 
@@ -344,7 +333,7 @@ public class FileDetails extends Fragment {
             @Override
             protected Bitmap doInBackground(Void... nothing) {
                 try {
-                    return Picasso.with(getActivity()).load(newFileData.screenshot).get();
+                    return Picasso.with(getActivity()).load(getCurrentFile().screenshot).get();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -354,23 +343,22 @@ public class FileDetails extends Fragment {
 
             @Override
             public void onPostExecute(Bitmap bitmap) {
-                if (bitmap != null) {
-                    imagePreviewBitmap = bitmap;
+                if (bitmap != null && isAdded()) {
+                    state.imagePreviewBitmap = bitmap;
                     refreshImagePreview(true);
                 }
             }
         }
-        if (newFileData.screenshot != null && !newFileData.screenshot.equals("null")) {
-            if (savedInstanceState != null && savedInstanceState.containsKey("imagePreviewBitmap")) {
-                imagePreviewBitmap = savedInstanceState.getParcelable("imagePreviewBitmap");
+        if (getCurrentFile().screenshot != null && !getCurrentFile().screenshot.equals("null")) {
+            if (state.imagePreviewBitmap != null) {
                 refreshImagePreview(false);
             } else {
                 new getPreviewTask().execute();
             }
         }
 
-		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetMp4StatusJob(
-				utils, getFileId()));
+        utils.getJobManager().addJobInBackground(new PutioRestInterface.GetMp4StatusJob(
+                utils, getFileId()));
 
         return view;
     }
@@ -434,7 +422,7 @@ public class FileDetails extends Fragment {
                 @Override
                 public void onClick(View v) {
                     PutioUtils.deleteId(getFileId());
-					utils.downloadFile(getActivity(), mode, newFileData);
+					utils.downloadFile(getActivity(), mode, getCurrentFile());
                     dialog.dismiss();
                 }
             });
@@ -447,12 +435,12 @@ public class FileDetails extends Fragment {
                 }
             });
         } else {
-			utils.downloadFile(getActivity(), mode, newFileData);
+			utils.downloadFile(getActivity(), mode, getCurrentFile());
         }
     }
 
     private void initDeleteFile() {
-        utils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), newFileData);
+        utils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), getCurrentFile());
     }
 
     private void refreshMp4View() {
@@ -496,9 +484,9 @@ public class FileDetails extends Fragment {
             }
         } else {
             String status;
-            if (newFileData.isMp4()) {
+            if (getCurrentFile().isMp4()) {
                 status = MP4_ALREADY;
-            } else if (newFileData.isMp4Available) {
+            } else if (getCurrentFile().isMp4Available) {
                 status = MP4_AVAILABLE;
             } else {
                 status = MP4_NOT_AVAILABLE;
@@ -509,49 +497,49 @@ public class FileDetails extends Fragment {
     }
 
     private void refreshImagePreview(boolean animate) {
-        if (isAdded()) {
-            Palette.generateAsync(imagePreviewBitmap, new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch darkMuted = palette.getDarkMutedSwatch();
-                    if (darkMuted != null) {
-                        if (UIUtils.hasLollipop() && !UIUtils.isTablet(getActivity())) {
-                            ValueAnimator statusBarAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
-                                    getActivity().getWindow().getStatusBarColor(), darkMuted.getRgb());
-                            statusBarAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator animation) {
-                                    getActivity().getWindow().setStatusBarColor((Integer) animation.getAnimatedValue());
-                                }
-                            });
-                            statusBarAnim.start();
-                        }
-                    }
-                }
-            });
+        if (getPreviewBitmap() != null) {
             if (animate) {
                 refreshImagePreview(false);
-                if (UIUtils.hasLollipop()) {
-                    Animator anim = ViewAnimationUtils.createCircularReveal(imagePreview,
-                            imagePreview.getWidth() / 2, imagePreview.getHeight() / 2,
-                            0, Math.max(imagePreview.getWidth(), imagePreview.getHeight()));
-                    anim.start();
-                } else {
-                    imagePreview.setAlpha(0f);
-                    imagePreview.animate().alpha(1);
-                }
+                imagePreview.setAlpha(0f);
+                imagePreview.animate().alpha(1);
             } else {
-                imagePreview.setImageBitmap(imagePreviewBitmap);
+                imagePreview.setImageBitmap(getPreviewBitmap());
+                imagePreview.postInvalidate();
+                Palette.generateAsync(getPreviewBitmap(), new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        if (isAdded()) {
+                            Palette.Swatch darkMuted = palette.getDarkMutedSwatch();
+                            if (darkMuted != null) {
+                                if (UIUtils.hasLollipop() && !UIUtils.isTablet(getActivity())) {
+                                    ValueAnimator statusBarAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
+                                            getActivity().getWindow().getStatusBarColor(), darkMuted.getRgb());
+                                    statusBarAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                        @Override
+                                        public void onAnimationUpdate(ValueAnimator animation) {
+                                            if (isAdded() && getActivity().getWindow() != null) {
+                                                getActivity().getWindow().setStatusBarColor((Integer) animation.getAnimatedValue());
+                                            } else {
+                                                animation.cancel();
+                                            }
+                                        }
+                                    });
+                                    statusBarAnim.start();
+                                }
+                            }
+                        }
+                    }
+                });
             }
         }
     }
 
 	public void onEventMainThread(Mp4StatusResponse result) {
 		mp4Status = result.getMp4Status();
-        if (newFileData.isMp4()) {
+        if (getCurrentFile().isMp4()) {
             mp4Status.setStatus(MP4_ALREADY);
         }
-		refreshMp4View();
+		if (isAdded()) refreshMp4View();
 
 		if (!startedMp4StatusCheck && shouldCheckForMp4Updates()) {
 			handler.postDelayed(updateMp4StatusRunnable, 5000);
@@ -560,9 +548,9 @@ public class FileDetails extends Fragment {
 	}
 
 	public void onEventMainThread(FileResponse result) {
-		if (result != null && result.getFile().id == newFileData.id) {
-			newFileData = result.getFile();
-            textTitle.setText(newFileData.name);
+		if (result != null && result.getFile().id == getCurrentFile().id) {
+			state.newFileData = result.getFile();
+            textTitle.setText(getCurrentFilename());
 		}
 	}
 
@@ -575,45 +563,61 @@ public class FileDetails extends Fragment {
 						mp4Status.getStatus().equals(MP4_CONVERTING));
 	}
 
+    public PutioFileData getOriginalFile() {
+        return state.origFileData;
+    }
+
+    public PutioFileData getCurrentFile() {
+        return state.newFileData;
+    }
+
     public int getFileId() {
-        return origFileData.id;
+        return getCurrentFile().id;
     }
 
     public String getOldFilename() {
-        return origFileData.name;
+        return getOriginalFile().name;
     }
 
-    public String getNewFilename() {
-        return newFileData.name;
+    public String getCurrentFilename() {
+        return getCurrentFile().name;
+    }
+
+    public Bitmap getPreviewBitmap() {
+        return state.imagePreviewBitmap;
+    }
+
+    public State getState() {
+        return state;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable("origFileData", origFileData);
-        outState.putParcelable("newFileData", newFileData);
-        if (imagePreviewBitmap != null) {
-            outState.putParcelable("imagePreviewBitmap", imagePreviewBitmap);
-        }
-
         super.onSaveInstanceState(outState);
+
+        outState.putParcelable("state", state);
+    }
+
+    public void setCallbacks(Callbacks callbacks) {
+        this.callbacks = callbacks;
+    }
+
+    private boolean hasCallbacks() {
+        return (callbacks != null);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (UIUtils.isTablet(getActivity())) {
-            mCallbacks = (Callbacks) activity;
-        }
-        mCastCallbacks = (CastCallbacks) activity;
+        castCallbacks = (CastCallbacks) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
 
-        mCallbacks = sDummyCallbacks;
-        mCastCallbacks = sDummyCastCallbacks;
+        castCallbacks = sDummyCastCallbacks;
     }
 
 	@Override
@@ -623,4 +627,40 @@ public class FileDetails extends Fragment {
 
 		super.onDestroy();
 	}
+
+    public static class State implements Parcelable {
+        public Bitmap imagePreviewBitmap;
+        public PutioFileData origFileData;
+        public PutioFileData newFileData;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.imagePreviewBitmap, 0);
+            dest.writeParcelable(this.origFileData, 0);
+            dest.writeParcelable(this.newFileData, 0);
+        }
+
+        public State() { }
+
+        private State(Parcel in) {
+            this.imagePreviewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+            this.origFileData = in.readParcelable(PutioFileData.class.getClassLoader());
+            this.newFileData = in.readParcelable(PutioFileData.class.getClassLoader());
+        }
+
+        public static final Creator<State> CREATOR = new Creator<State>() {
+            public State createFromParcel(Parcel source) {
+                return new State(source);
+            }
+
+            public State[] newArray(int size) {
+                return new State[size];
+            }
+        };
+    }
 }

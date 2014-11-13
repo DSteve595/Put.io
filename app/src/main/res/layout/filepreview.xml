@@ -16,6 +16,7 @@
             android:id="@+id/image_filepreview_stock"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adjustViewBounds="false"
             android:scaleType="centerCrop" />
 
         <ImageView
@@ -32,6 +33,10 @@
         android:layout_height="80dp"
         android:alpha="0.5"
         android:background="@drawable/black_gradient" />
+
+    <include
+        android:id="@+id/toolbar_filedetails"
+        layout="@layout/filedetails_toolbar" />
 
     <View
         android:id="@+id/gradient_filepreview_title"

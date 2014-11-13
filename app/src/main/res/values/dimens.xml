@@ -8,11 +8,13 @@
 
     <dimen name="actionBarElevation">2dp</dimen>
     <dimen name="fabElevation">2dp</dimen>
-    <dimen name="fileDetailsElevation">2dp</dimen>
+    <dimen name="tabletFilesElevation">4dp</dimen>
+    <dimen name="tabletFileDetailsElevation">2dp</dimen>
 
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>
 
-    <dimen name="file_rowpadding">@dimen/padding_small</dimen>
+    <dimen name="files_row_padding">8dp</dimen>
+    <dimen name="files_divider_inset">56dp</dimen>
 </resources>

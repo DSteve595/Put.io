@@ -2,14 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:background="@drawable/putio_clickable_list"
+    android:background="?attr/listChoiceBackgroundIndicator"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/file_rowpadding"
-    android:paddingRight="@dimen/file_rowpadding">
+    android:paddingEnd="8dp"
+    android:paddingLeft="@dimen/files_row_padding"
+    android:paddingRight="8dp"
+    android:paddingStart="@dimen/files_row_padding">
 
     <ImageView
-        android:id="@+id/img_fileIcon"
+        android:id="@+id/icon_file_img"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:scaleType="fitCenter"
@@ -23,8 +25,8 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <CheckedTextView
-            android:id="@+id/text_fileListName"
+        <TextView
+            android:id="@+id/text_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -38,7 +40,7 @@
             tools:text="File name" />
 
         <TextView
-            android:id="@+id/text_fileListDesc"
+            android:id="@+id/text_file_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"

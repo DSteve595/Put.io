@@ -1,38 +1,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/filesSwipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/holder_files_currentfolder">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/fileslist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:clipToPadding="false"
-            android:divider="@drawable/divider_files"
-            android:fastScrollEnabled="true"
-            android:nextFocusDown="@+id/files_up"
-            android:scrollbarStyle="insideOverlay" />
+            android:clipToPadding="false" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include
-        android:id="@id/files_up"
-        layout="@layout/fab_upfolder"
-        android:layout_width="@dimen/fabSize"
-        android:layout_height="@dimen/fabSize"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="16dp"
-        android:nextFocusUp="@id/fileslist"
-        android:paddingBottom="8dp"
-        android:visibility="invisible"
-        tools:visibility="visible" />
+    <RelativeLayout
+        android:id="@id/holder_files_currentfolder"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="8dp"
+            android:paddingLeft="@dimen/files_row_padding"
+            android:paddingRight="8dp"
+            android:paddingStart="@dimen/files_row_padding">
+
+            <ImageView
+                android:id="@+id/icon_files_currentfolder"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:scaleType="fitCenter"
+                tools:icon="@drawable/ic_launcher" />
+
+            <com.stevenschoen.putionew.AutoResizeTextView
+                android:id="@+id/text_files_currentfolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Folder name" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/shadow_actionbar"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-4dp" />
+    </RelativeLayout>
 
     <include
         android:id="@+id/files_empty_subfolder"

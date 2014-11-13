@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +29,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.FileNotFoundException;
 
-public class AddTransfers extends Activity implements DestinationFilesDialog.Callbacks {
+public class AddTransfers extends FragmentActivity implements DestinationFilesDialog.Callbacks {
     public static final int TYPE_SELECTING = -1;
     public static final int TYPE_URL = 1;
     public static final int TYPE_FILE = 2;
@@ -93,7 +94,7 @@ public class AddTransfers extends Activity implements DestinationFilesDialog.Cal
             public void onClick(View v) {
                 DestinationFilesDialog destinationDialog = (DestinationFilesDialog)
                         DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
-                destinationDialog.show(getFragmentManager(), "dialog");
+                destinationDialog.show(getSupportFragmentManager(), "dialog");
             }
         });
         destinationFolderId = sharedPrefs.getInt("destinationFolderId", 0);

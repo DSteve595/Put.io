@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -35,15 +34,15 @@ import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Transfers extends Fragment {
+public final class Transfers extends NoClipSupportFragment {
 	
 	private TransfersAdapter adapter;
 	private ArrayList<PutioTransferLayout> transferLayouts = new ArrayList<>();
 	private List<PutioTransferData> transfersData;
 	private ListView listview;
 
-	PutioUtils utils;
-	PutioTransfersService transfersService;
+	private PutioUtils utils;
+	private PutioTransfersService transfersService;
 	
 	private int viewMode = 1;
 	public static final int VIEWMODE_LIST = 1;
@@ -66,14 +65,13 @@ public final class Transfers extends Fragment {
     };
 	
     private Callbacks mCallbacks = sDummyCallbacks;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
-
+		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
         utils.getEventBus().register(this);
 		
 		Intent transfersServiceIntent = new Intent(getActivity(), PutioTransfersService.class);
@@ -87,7 +85,7 @@ public final class Transfers extends Fragment {
 		View view = inflater.inflate(R.layout.transfers, container, false);
 		
 		listview = (ListView) view.findViewById(R.id.transferslist);
-		
+
 		adapter = new TransfersAdapter(getActivity(), transferLayouts);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -98,7 +96,8 @@ public final class Transfers extends Fragment {
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> a, View view, int position, long id) {
-				if (transfersData.get(position).status.equals("COMPLETED") || transfersData.get(position).status.equals("SEEDING")) {
+				if (transfersData.get(position).status.equals("COMPLETED")
+                        || transfersData.get(position).status.equals("SEEDING")) {
 					mCallbacks.onTransferSelected(transfersData.get(position));
 				}
 			}

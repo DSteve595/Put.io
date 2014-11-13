@@ -101,6 +101,10 @@ public interface PutioRestInterface {
 
 	public static abstract class PutioJob extends Job {
 		private PutioUtils utils;
+        
+        protected PutioJob(PutioUtils utils) {
+            this(new Params(0).requireNetwork(), utils);
+        }
 
 		protected PutioJob(Params params, PutioUtils utils) {
 			super(params);
@@ -131,8 +135,8 @@ public interface PutioRestInterface {
 		private NotificationManager notifManager;
 		private Intent retryIntent;
 
-		protected PutioUploadJob(Params params, PutioUtils utils, Context context, Intent retryIntent) {
-			super(params, utils);
+		protected PutioUploadJob(PutioUtils utils, Context context, Intent retryIntent) {
+			super(utils);
 
 			this.context = context;
 			this.retryIntent = retryIntent;
@@ -216,7 +220,7 @@ public interface PutioRestInterface {
 		private boolean alsoUseCache;
 
 		public GetFilesListJob(PutioUtils utils, int parentId, boolean alsoUseCache) {
-			super(new Params(0), utils);
+			super(utils);
 			this.parentId = parentId;
 			this.alsoUseCache = alsoUseCache;
 		}
@@ -240,7 +244,7 @@ public interface PutioRestInterface {
 		private String query;
 
 		public GetFilesSearchJob(PutioUtils utils, String query) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 			this.query = query;
 		}
 
@@ -256,7 +260,7 @@ public interface PutioRestInterface {
 		private int id;
 
 		public GetFileJob(PutioUtils utils, int id) {
-			super(new Params(0), utils);
+			super(utils);
 			this.id = id;
 		}
 
@@ -271,7 +275,7 @@ public interface PutioRestInterface {
 		private int[] ids;
 
 		public GetZipAndDownloadJob(PutioUtils utils, Context context, int... ids) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 			this.ids = ids;
 		}
 
@@ -285,7 +289,7 @@ public interface PutioRestInterface {
 		private int id;
 
 		public GetMp4StatusJob(PutioUtils utils, int id) {
-			super(new Params(0), utils);
+			super(utils);
 			this.id = id;
 		}
 
@@ -300,7 +304,7 @@ public interface PutioRestInterface {
 		private int id;
 
 		public PostConvertToMp4Job(PutioUtils utils, int id) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 			this.id = id;
 		}
 
@@ -315,7 +319,7 @@ public interface PutioRestInterface {
         private int parentId;
 
 		public PostUploadFileJob(PutioUtils utils, Context context, Intent retryIntent, Uri fileUri, int parentId) {
-			super(new Params(0).requireNetwork(), utils, context, retryIntent);
+			super(utils, context, retryIntent);
 			this.fileUri = fileUri;
             this.parentId = parentId;
 		}
@@ -347,7 +351,7 @@ public interface PutioRestInterface {
 		private String name;
 
 		public PostRenameFileJob(PutioUtils utils, int id, String name) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 			this.id = id;
 			this.name = name;
 		}
@@ -362,7 +366,7 @@ public interface PutioRestInterface {
 		private int[] ids;
 
 		public PostDeleteFilesJob(PutioUtils utils, int... ids) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 			this.ids = ids;
 		}
 
@@ -377,7 +381,7 @@ public interface PutioRestInterface {
         private int[] ids;
 
         public PostMoveFilesJob(PutioUtils utils, int newParentId, int... ids) {
-            super(new Params(0).requireNetwork(), utils);
+            super(utils);
             this.newParentId = newParentId;
             this.ids = ids;
         }
@@ -405,7 +409,7 @@ public interface PutioRestInterface {
         private int saveParentId;
 
 		public PostAddTransferJob(PutioUtils utils, String url, boolean extract, int saveParentId, Context context, Intent retryIntent) {
-			super(new Params(0).requireNetwork(), utils, context, retryIntent);
+			super(utils, context, retryIntent);
 			this.url = url;
             this.extract = extract;
             this.saveParentId = saveParentId;
@@ -422,7 +426,7 @@ public interface PutioRestInterface {
         private int id;
 
         public PostRetryTransferJob(PutioUtils utils, int id) {
-            super(new Params(0).requireNetwork(), utils);
+            super(utils);
             this.id = id;
         }
 
@@ -436,7 +440,7 @@ public interface PutioRestInterface {
 		private int[] ids;
 
 		public PostCancelTransferJob(PutioUtils utils, int... ids) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 			this.ids = ids;
 		}
 
@@ -448,7 +452,7 @@ public interface PutioRestInterface {
 
 	public static class PostCleanTransfersJob extends PutioJob {
 		public PostCleanTransfersJob(PutioUtils utils) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 		}
 
 		@Override
@@ -459,7 +463,7 @@ public interface PutioRestInterface {
 
 	public static class GetAccountInfoJob extends PutioJob {
 		public GetAccountInfoJob(PutioUtils utils) {
-			super(new Params(0).requireNetwork(), utils);
+			super(utils);
 		}
 
 		@Override

@@ -7,9 +7,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
-        <item name="android:listViewStyle">@style/ListView</item>
-        <item name="android:textColorPrimary">#DE000000</item>
-        <item name="android:textColorSecondary">#8A000000</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
     </style>
 
     <style name="Theme.Putio.FileDetails" parent="Theme.Putio">
@@ -61,8 +59,6 @@
     <style name="ButtonBar.Button.Transparent" parent="ButtonBar.Button">
         <item name="android:background">@drawable/putio_clickable_rounded</item>
     </style>
-
-    <style name="ListView" parent="android:Widget.Holo.Light.ListView" />
 
     <declare-styleable name="com.stevenschoen.putio.SizePreference">
         <attr name="minValue" format="integer" />

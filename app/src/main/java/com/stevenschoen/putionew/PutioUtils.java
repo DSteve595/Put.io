@@ -14,7 +14,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Outline;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -28,7 +31,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewOutlineProvider;
@@ -274,33 +276,13 @@ public class PutioUtils {
             @Override
             protected Long doInBackground(Void... params) {
 				for (PutioFileData file : files) {
-					long dlId;
-					if (UIUtils.hasHoneycomb()) {
-						if (file.isFolder()) {
-							int[] folder = new int[]{file.id};
-							dlId = downloadZipWithoutUrl(context, folder, file.name);
-						} else {
-							dlId = downloadFileWithoutUrl(context, file.id, file.name);
-							return dlId;
-						}
-					} else {
-						publishProgress(0);
-						if (file.isFolder()) {
-							int[] folder = new int[]{file.id};
-							dlId = downloadZipWithUrl(context, folder, file.name,
-									getZipDownloadUrl(folder).replace("https://", "http://"));
-							return dlId;
-						} else {
-							try {
-								dlId = downloadFileWithUrl(context, file.id, file.name,
-										resolveRedirect(getFileDownloadUrl(file.id).replace("https://", "http://")));
-								return dlId;
-							} catch (IOException ee) {
-								ee.printStackTrace();
-							}
-						}
-					}
-				}
+                    if (file.isFolder()) {
+                        int[] folder = new int[]{file.id};
+                        downloadZipWithoutUrl(context, folder, file.name);
+                    } else {
+                        return downloadFileWithoutUrl(context, file.id, file.name);
+                    }
+                }
                 return null;
             }
 
@@ -378,10 +360,8 @@ public class PutioUtils {
         file.getParentFile().mkdirs();
 
         request.setDescription("put.io");
-        if (UIUtils.hasHoneycomb()) {
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        }
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(
                 Environment.DIRECTORY_DOWNLOADS,
                 path);
@@ -452,9 +432,7 @@ public class PutioUtils {
                     if (gettingStreamDialog.isShowing()) {
                         gettingStreamDialog.dismiss();
                     }
-                } catch (IllegalArgumentException e) {
-                    Log.d("asdf", "context null: " + (context == null), e);
-                }
+                } catch (IllegalArgumentException e) { }
                 int type;
                 if (file.contentType.contains("audio")) {
                     type = PutioUtils.TYPE_AUDIO;
@@ -521,17 +499,10 @@ public class PutioUtils {
             protected void onPostExecute(String result) {
                 dialog.dismiss();
                 if (result != null) {
-                    if (UIUtils.hasHoneycomb()) {
-                        android.content.ClipboardManager clip =
-                                (android.content.ClipboardManager) context.getSystemService(
-                                        Context.CLIPBOARD_SERVICE);
-                        clip.setPrimaryClip(ClipData.newPlainText("Download link", result));
-                    } else {
-                        android.text.ClipboardManager clip =
-                                (android.text.ClipboardManager) context.getSystemService(
-                                        Context.CLIPBOARD_SERVICE);
-                        clip.setText(result);
-                    }
+                    android.content.ClipboardManager clip =
+                            (android.content.ClipboardManager) context.getSystemService(
+                                    Context.CLIPBOARD_SERVICE);
+                    clip.setPrimaryClip(ClipData.newPlainText("Download link", result));
                     Toast.makeText(context, context.getString(R.string.readytopaste),
                             Toast.LENGTH_SHORT).show();
                 } else {
@@ -838,5 +809,18 @@ public class PutioUtils {
         public String key() {
             return BlurTransformation.class.getCanonicalName() + "-" + radius;
         }
+    }
+
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+
+        return returnedBitmap;
     }
 }

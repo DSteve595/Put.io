@@ -50,7 +50,7 @@
             android:layout_marginLeft="8dp"
             android:background="?attr/listChoiceBackgroundIndicator"
             android:src="@drawable/ic_fileinfo_mp4"
-            android:tint="?android:attr/textColorPrimary" />
+            android:tint="@color/primary_text_default_material_light" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,7 +77,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_fileinfo_mp4"
-            android:tint="?android:attr/textColorPrimary" />
+            android:tint="@color/primary_text_default_material_light" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,7 +130,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_fileinfo_accessed"
-            android:tint="?android:attr/textColorPrimary" />
+            android:tint="@color/primary_text_default_material_light" />
 
         <TextView
             android:id="@+id/text_fileinfo_accessedat"
@@ -184,7 +184,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_fileinfo_created"
-            android:tint="?android:attr/textColorPrimary" />
+            android:tint="@color/primary_text_default_material_light" />
 
         <TextView
             android:id="@+id/text_fileinfo_createdat"
@@ -211,7 +211,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_fileinfo_size"
-            android:tint="?android:attr/textColorPrimary" />
+            android:tint="@color/primary_text_default_material_light" />
 
         <TextView
             android:id="@+id/text_fileinfo_size"

@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:clipChildren="false">
 
     <RelativeLayout
@@ -14,16 +15,10 @@
         android:layout_toStartOf="@id/holder_fileinfo">
 
         <include
-            android:id="@+id/filedetailspreview"
+            android:id="@+id/filepreview"
             layout="@layout/filepreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-        <include
-            android:id="@+id/toolbar_filedetails"
-            layout="@layout/filedetails_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <RelativeLayout

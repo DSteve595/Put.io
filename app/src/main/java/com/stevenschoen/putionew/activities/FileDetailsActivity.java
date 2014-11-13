@@ -1,10 +1,10 @@
 package com.stevenschoen.putionew.activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.stevenschoen.putionew.R;
@@ -25,9 +25,7 @@ public class FileDetailsActivity extends BaseCastActivity {
         initCastBar();
 
         if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager
-                    .beginTransaction();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             Bundle fileDetailsBundle = new Bundle();
             fileDetailsBundle.putParcelable("fileData", fileData);
             fileDetailsFragment = (FileDetails) FileDetails.instantiate(
@@ -35,17 +33,10 @@ public class FileDetailsActivity extends BaseCastActivity {
             fragmentTransaction.add(R.id.DetailsHolder, fileDetailsFragment);
             fragmentTransaction.commit();
         } else {
-            fileDetailsFragment = (FileDetails) getFragmentManager().findFragmentById(R.id.DetailsHolder);
+            fileDetailsFragment = (FileDetails) getSupportFragmentManager().findFragmentById(R.id.DetailsHolder);
         }
 
         setTitle(fileData.name);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        return true;
     }
 
     @Override

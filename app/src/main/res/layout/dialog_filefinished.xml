@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <include layout="@layout/dialog_title_putio" >
-    </include>
+    <include layout="@layout/dialog_title_putio" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/text_downloadfinished_body"
@@ -20,38 +19,27 @@
             android:text="@string/downloadfinishedbody"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <View
-            android:id="@+id/buttonbarSeparator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/text_downloadfinished_body"
-            android:background="?android:attr/dividerHorizontal" />
-
         <LinearLayout
             android:id="@+id/buttonbar"
             style="@style/ButtonBar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/buttonbarSeparator"
-            android:orientation="horizontal" >
+            android:layout_below="@+id/text_downloadfinished_body">
 
             <Button
                 android:id="@+id/button_filefinished_ok"
-                style="@style/ButtonBar.Button"
-                android:layout_width="0dp"
+                style="@style/ButtonBar.Button.Transparent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/ok"
                 tools:ignore="ButtonOrder" />
 
             <Button
                 android:id="@+id/button_filefinished_action"
                 style="@style/ButtonBar.Button"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                tools:text="Open" />
         </LinearLayout>
     </RelativeLayout>
-
 </LinearLayout>

@@ -17,7 +17,7 @@ public class FileFinished extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setTheme(R.style.Putio_Dialog);
-		setContentView(R.layout.filefinished);
+		setContentView(R.layout.dialog_filefinished);
 		
 		TextView textTitle = (TextView) findViewById(R.id.dialog_title);
 		

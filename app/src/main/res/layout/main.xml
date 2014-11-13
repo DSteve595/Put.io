@@ -1,23 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_main_root"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipChildren="false"
-    android:orientation="vertical">
-
-    <include layout="@layout/toolbar_with_tabs" />
-
-    <include layout="@layout/actionbar_shadow" />
+    android:clipChildren="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/castbar_holder"
+        android:layout_below="@+id/holder_toolbar_main">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipChildren="false" />
 
         <include
             android:id="@+id/button_addtransfer"
@@ -30,6 +27,15 @@
             android:layout_margin="16dp" />
     </RelativeLayout>
 
-    <include layout="@layout/castbar" />
+    <include
+        android:id="@id/castbar_holder"
+        layout="@layout/castbar" />
 
-</LinearLayout>
+    <include
+        android:id="@id/holder_toolbar_main"
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+</RelativeLayout>

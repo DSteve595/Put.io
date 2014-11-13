@@ -1,11 +1,9 @@
 package com.stevenschoen.putionew;
 
-import android.app.Activity;
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,71 +13,98 @@ import com.stevenschoen.putionew.model.files.PutioFileData;
 
 import java.util.List;
 
-public class FilesAdapter extends ArrayAdapter<PutioFileData> {
+public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> {
 
-	Context context;
+    private List<PutioFileData> data;
 
-	public FilesAdapter(Context context, List<PutioFileData> data) {
-		super(context, R.layout.file_putio, data);
-		this.context = context;
+    private OnItemClickListener itemClickListener;
+
+	public FilesAdapter(List<PutioFileData> data) {
+        super();
+        this.data = data;
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = convertView;
-		FileHolder holder;
-		
-		if (row == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-			try {
-				row = inflater.inflate(R.layout.file_putio, parent, false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			holder = new FileHolder();
-			holder.textName = (TextView) row.findViewById(R.id.text_fileListName);
-			holder.textDescription = (TextView) row.findViewById(R.id.text_fileListDesc);
-			holder.imgIcon = (ImageView) row.findViewById(R.id.img_fileIcon);
-            holder.iconAccessed = (ImageView) row.findViewById(R.id.icon_file_accessed);
+    @Override
+    public FileHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.file_putio, viewGroup, false);
 
-			row.setTag(holder);
-		} else {
-			holder = (FileHolder) row.getTag();
-		}
+        FileHolder holder = new FileHolder(view);
+        holder.root = view;
+        holder.textName = (TextView) view.findViewById(R.id.text_file_name);
+        holder.textDescription = (TextView) view.findViewById(R.id.text_file_description);
+        holder.iconImg = (ImageView) view.findViewById(R.id.icon_file_img);
+        holder.iconAccessed = (ImageView) view.findViewById(R.id.icon_file_accessed);
 
-		PutioFileData file = getItem(position);
-		holder.textName.setText(file.name);
-		holder.textDescription.setText(PutioUtils.humanReadableByteCount(file.size, false));
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(final FileHolder holder, final int position) {
+        PutioFileData file = data.get(position);
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(holder.root, position);
+                }
+            }
+        });
+        holder.root.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemLongClick(holder.root, position);
+                    return true;
+                }
+                return false;
+            }
+        });
+        holder.textName.setText(file.name);
+        holder.textDescription.setText(PutioUtils.humanReadableByteCount(file.size, false));
         if (file.icon != null && !file.icon.isEmpty()) {
-            Picasso.with(context).load(file.icon).into(holder.imgIcon);
+            Picasso.with(holder.iconImg.getContext()).load(file.icon).into(holder.iconImg);
         }
         if (file.isAccessed()) {
             holder.iconAccessed.setVisibility(View.VISIBLE);
         } else {
             holder.iconAccessed.setVisibility(View.GONE);
         }
-
-        return row;
-	}
+    }
 
     @Override
     public long getItemId(int position) {
-        if (position != ListView.INVALID_POSITION) {
-            return getItem(position).id;
+        if (position != ListView.INVALID_POSITION && !data.isEmpty()) {
+            return data.get(position).id;
         }
 
         return 0;
     }
 
     @Override
-    public boolean hasStableIds() {
-        return true;
+    public int getItemCount() {
+        return data.size();
     }
 
-    static class FileHolder {
-		TextView textName;
-		TextView textDescription;
-		ImageView imgIcon;
-        ImageView iconAccessed;
-	}
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
+        public void onItemLongClick(View view, int position);
+    }
+
+    public static class FileHolder extends RecyclerView.ViewHolder {
+        public View root;
+		public TextView textName;
+		public TextView textDescription;
+		public ImageView iconImg;
+        public ImageView iconAccessed;
+
+        public FileHolder(View itemView) {
+            super(itemView);
+        }
+    }
 }
