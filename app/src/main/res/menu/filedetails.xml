@@ -10,13 +10,13 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_download"
-        android:icon="@drawable/ic_action_download"
+        android:icon="@drawable/ic_action_download_white"
         android:orderInCategory="2"
         android:title="@string/download"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/ic_action_delete"
+        android:icon="@drawable/ic_action_delete_white"
         android:orderInCategory="4"
         android:tint="@android:color/black"
         android:title="@string/delete"

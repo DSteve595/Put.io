@@ -7,7 +7,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
+
         <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
     </style>
 
     <style name="Theme.Putio.FileDetails" parent="Theme.Putio">

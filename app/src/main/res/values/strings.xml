@@ -70,6 +70,7 @@
     <string name="files">Files</string>
     <string name="transfers">Transfers</string>
     <string name="loginsuccess">Successfully logged in!</string>
+    <string name="x_selected">"%d selected"</string>
     <string name="total_is">Total: %s</string>
     <string name="size_is">%s</string>
     <string name="loading">Loading…</string>

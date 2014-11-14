@@ -4,26 +4,38 @@
 
     <item
         android:id="@+id/context_download"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_action_download_black"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom"
         android:title="@string/download"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/context_copydownloadlink"
-        android:icon="@drawable/ic_action_copy"
+        android:icon="@drawable/ic_action_copy_black"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
         android:title="@string/copy_dl_link"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/context_rename"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_action_edit_black"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
         android:title="@string/rename"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/context_delete"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/delete" />
-    <item
         android:id="@+id/context_move"
         android:icon="@android:drawable/ic_menu_set_as"
+        android:orderInCategory="4"
+        android:showAsAction="never"
         android:title="@string/move"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/context_delete"
+        android:icon="@drawable/ic_action_delete_black"
+        android:orderInCategory="5"
+        android:showAsAction="never"
+        android:title="@string/delete"
+        app:showAsAction="never" />
+
 </menu>

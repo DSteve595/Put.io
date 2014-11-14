@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,8 +70,9 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
 	private PutioUtils utils;
 
+    private ActionMode actionMode;
+
 	private RecyclerView filesList;
-    private LinearLayoutManager filesManager;
     private FilesAdapter filesAdapter;
 	private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -118,7 +120,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(getLayoutResId(), container, false);
 
 		filesList = (RecyclerView) view.findViewById(R.id.fileslist);
@@ -131,43 +133,123 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
                     R.color.putio_accent,
                     R.color.putio_accent);
 		}
-        filesManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager filesManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         filesList.setLayoutManager(filesManager);
 		filesAdapter = new FilesAdapter(state.fileData);
         filesAdapter.setOnItemClickListener(new FilesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (hasCallbacks()) {
-                    callbacks.onSomethingSelected();
-                }
+                if (filesAdapter.isInCheckMode()) {
+                    filesAdapter.toggleChecked(position);
+                } else {
+                    if (hasCallbacks()) {
+                        callbacks.onSomethingSelected();
+                    }
 
-                state.isSearch = false;
-
-                PutioFileData file = getFileAtPosition(position);
-                if (!file.isFolder()) {
-                    if (!UIUtils.isTablet(getActivity())) {
-                        Intent detailsIntent = new Intent(getActivity(),
-                                FileDetailsActivity.class);
-                        detailsIntent.putExtra("fileData", file);
-                        startActivity(detailsIntent);
+                    PutioFileData file = getFileAtPosition(position);
+                    if (file.isFolder()) {
+                        state.isSearch = false;
+                        state.requestedId = file.id;
+                        invalidateList(true);
                     } else {
-                        if (hasCallbacks()) {
-                            callbacks.onFileSelected(getFileAtPosition(position));
+                        if (!UIUtils.isTablet(getActivity())) {
+                            Intent detailsIntent = new Intent(getActivity(),
+                                    FileDetailsActivity.class);
+                            detailsIntent.putExtra("fileData", file);
+                            startActivity(detailsIntent);
+                        } else {
+                            if (hasCallbacks()) {
+                                callbacks.onFileSelected(getFileAtPosition(position));
+                            }
                         }
                     }
-                } else {
-                    state.requestedId = file.id;
-                    invalidateList(true);
                 }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
+                filesAdapter.toggleChecked(position);
+            }
+        });
+        filesAdapter.setItemsCheckedChangedListener(new FilesAdapter.OnItemsCheckedChangedListener() {
+            @Override
+            public void onItemsCheckedChanged() {
                 if (getActivity() instanceof ActionBarActivity) {
-                    view.setActivated(!view.isActivated());
+                    if (actionMode == null) {
+                        if (filesAdapter.isInCheckMode()) {
+                            ActionBarActivity activity = (ActionBarActivity) getActivity();
+                            actionMode = activity.startSupportActionMode(new ActionMode.Callback() {
+                                @Override
+                                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                                    if (filesAdapter.isInCheckMode()) {
+                                        inflate(mode, menu);
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                @Override
+                                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                                    inflate(mode, menu);
+                                    if (filesAdapter.isInCheckMode()) {
+                                        mode.setTitle(getString(R.string.x_selected, filesAdapter.getCheckedCount()));
+                                    } else {
+                                        mode.finish();
+                                    }
+                                    return true;
+                                }
+
+                                public void inflate(ActionMode mode, Menu menu) {
+                                    menu.clear();
+                                    if (filesAdapter.getCheckedCount() > 1) {
+                                        mode.getMenuInflater().inflate(R.menu.context_files_multiple, menu);
+                                    } else {
+                                        mode.getMenuInflater().inflate(R.menu.context_files, menu);
+                                    }
+                                }
+
+                                @Override
+                                public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                                    int[] checkedPositions = filesAdapter.getCheckedPositions();
+
+                                    switch (menuItem.getItemId()) {
+                                        case R.id.context_download:
+                                            initDownloadFiles(checkedPositions);
+                                            return true;
+                                        case R.id.context_copydownloadlink:
+                                            initCopyFileDownloadLink(checkedPositions[0]);
+                                            return true;
+                                        case R.id.context_rename:
+                                            initRenameFile(checkedPositions[0]);
+                                            return true;
+                                        case R.id.context_delete:
+                                            initDeleteFile(checkedPositions);
+                                            return true;
+                                        case R.id.context_move:
+                                            initMoveFile(checkedPositions);
+                                            return true;
+                                    }
+
+                                    return false;
+                                }
+
+                                @Override
+                                public void onDestroyActionMode(ActionMode actionMode) {
+                                    filesAdapter.clearChecked();
+                                    Files.this.actionMode = null;
+                                }
+                            });
+                        }
+                    } else {
+                        actionMode.invalidate();
+                    }
                 }
             }
         });
+        if (state.checkedIds != null) {
+            filesAdapter.addCheckedIds(state.checkedIds);
+        }
         filesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -180,77 +262,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
             }
         });
 		filesList.setAdapter(filesAdapter);
-//        filesList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-//        filesList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-//            @Override
-//            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-//                mode.setTitle(filesList.getCheckedItemCount() + " selected");
-//                mode.getMenu().clear();
-//                if (filesList.getCheckedItemCount() > 1) {
-//                    mode.getMenuInflater().inflate(R.menu.context_files_multiple, mode.getMenu());
-//                } else {
-//                    mode.getMenuInflater().inflate(R.menu.context_files, mode.getMenu());
-//                }
-//            }
-//
-//            @Override
-//            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//                if (filesList.getCheckedItemCount() > 1) {
-//                    mode.getMenuInflater().inflate(R.menu.context_files_multiple, mode.getMenu());
-//                } else {
-//                    mode.getMenuInflater().inflate(R.menu.context_files, mode.getMenu());
-//                }
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//                mode.setTitle(filesList.getCheckedItemCount() + " selected");
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//                SparseBooleanArray checkedPositionsBooleans = filesList.getCheckedItemPositions();
-//                ArrayList<Integer> checkedPositions = new ArrayList<>();
-//                for (int i = 0; i < checkedPositionsBooleans.size(); i++) {
-//                    if (checkedPositionsBooleans.valueAt(i)) {
-//                        checkedPositions.add(checkedPositionsBooleans.keyAt(i));
-//                    }
-//                }
-//                int[] checkedPositionsArray = new int[checkedPositions.size()];
-//                for (int i = 0; i < checkedPositions.size(); i++) {
-//                    checkedPositionsArray[i] = checkedPositions.get(i);
-//                }
-//
-//                filesList.clearChoices();
-//                mode.finish();
-//
-//                switch (item.getItemId()) {
-//                    case R.id.context_download:
-//                        initDownloadFiles(checkedPositionsArray);
-//                        return true;
-//                    case R.id.context_copydownloadlink:
-//                        initCopyFileDownloadLink(checkedPositionsArray[0]);
-//                        return true;
-//                    case R.id.context_rename:
-//                        initRenameFile(checkedPositionsArray[0]);
-//                        return true;
-//                    case R.id.context_delete:
-//                        initDeleteFile(checkedPositionsArray);
-//                        return true;
-//                    case R.id.context_move:
-//                        initMoveFile(checkedPositionsArray);
-//                        return true;
-//                }
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public void onDestroyActionMode(ActionMode mode) {
-//            }
-//        });
         filesList.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST,
                 (int) getResources().getDimension(R.dimen.files_divider_inset),
@@ -487,7 +498,10 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
     public boolean goBack() {
-		if (isInSubfolderOrSearch()) {
+        if (filesAdapter.isInCheckMode()) {
+            filesAdapter.clearChecked();
+            return true;
+        } else if (isInSubfolderOrSearch()) {
 			if (state.isSearch) {
 				state.isSearch = false;
 				state.requestedId = 0;
@@ -495,7 +509,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 				state.requestedId = state.currentFolder.parentId;
 			}
 			invalidateList(true);
-
 			return true;
 		} else {
 			return false;
@@ -510,10 +523,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		state.requestedId = parentId;
         highlightFileId = id;
 		invalidateList(true);
-	}
-
-	public void setFileChecked(int fileId, boolean checked) {
-//		filesList.setItemChecked(getIndexFromFileId(fileId), checked);
 	}
 
 	public void onEventMainThread(FilesListResponse result) {
@@ -549,6 +558,12 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
+        state.checkedIds = new long[filesAdapter.getCheckedIds().size()];
+        List<Long> checkedIds = filesAdapter.getCheckedIds();
+        for (int i = 0; i < checkedIds.size(); i++) {
+            state.checkedIds[i] = checkedIds.get(i);
+        }
+
         outState.putParcelable("state", state);
 	}
 
@@ -565,7 +580,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
     public void onDestinationFolderSelected(PutioFileData folder) {
-        // TODO confirmation popup?
         int selectedFolderId = folder.id;
         utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
         Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
@@ -575,10 +589,13 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         public boolean isSearch;
         public String searchQuery;
         public PutioFileData currentFolder;
+        public long[] checkedIds;
         public int origId;
         public int requestedId;
         public boolean hasUpdated;
         public List<PutioFileData> fileData;
+
+        public State() { }
 
         @Override
         public int describeContents() {
@@ -590,18 +607,18 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
             dest.writeByte(isSearch ? (byte) 1 : (byte) 0);
             dest.writeString(this.searchQuery);
             dest.writeParcelable(this.currentFolder, 0);
+            dest.writeLongArray(this.checkedIds);
             dest.writeInt(this.origId);
             dest.writeInt(this.requestedId);
             dest.writeByte(hasUpdated ? (byte) 1 : (byte) 0);
             dest.writeTypedList(fileData);
         }
 
-        public State() { }
-
         private State(Parcel in) {
             this.isSearch = in.readByte() != 0;
             this.searchQuery = in.readString();
             this.currentFolder = in.readParcelable(PutioFileData.class.getClassLoader());
+            this.checkedIds = in.createLongArray();
             this.origId = in.readInt();
             this.requestedId = in.readInt();
             this.hasUpdated = in.readByte() != 0;

@@ -1,61 +1,27 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/padding_large"
     android:paddingRight="@dimen/padding_large">
 
-    <RelativeLayout
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/roundedyellowbg">
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/text_storage_availablestorage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:text="@string/available_storage"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-        <TextView
-            android:id="@+id/text_storage_amountfree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="40sp"
-            android:textStyle="bold"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="12dp">
-
-            <TextView
-                android:id="@+id/text_storage_amounttotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
-        </LinearLayout>
-    </RelativeLayout>
+        <include layout="@layout/account_storage" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:gravity="right"
+        android:gravity="end"
         android:orientation="vertical">
 
         <TextView
@@ -63,20 +29,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/logged_in_as"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/text_behind_accountname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:text="Account Name" />
 
         <TextView
             android:id="@+id/text_behind_accountemail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="account_email.com" />
     </LinearLayout>
-
 </RelativeLayout>
