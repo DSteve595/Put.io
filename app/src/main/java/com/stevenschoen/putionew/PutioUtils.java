@@ -71,6 +71,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -269,21 +271,24 @@ public class PutioUtils {
     }
 
     public void downloadFile(final Context context, final int actionWhenDone, final PutioFileData... files) {
-        class downloadFileTaskCompat extends AsyncTask<Void, Integer, Long> {
+        class downloadFileTaskCompat extends AsyncTask<Void, Integer, long[]> {
             private boolean resolveRedirect = false;
             private Dialog dialog;
 
             @Override
-            protected Long doInBackground(Void... params) {
-				for (PutioFileData file : files) {
+            protected long[] doInBackground(Void... params) {
+                long[] downloadIds = new long[files.length];
+                for (int i = 0; i < files.length; i++) {
+                    PutioFileData file = files[i];
                     if (file.isFolder()) {
                         int[] folder = new int[]{file.id};
-                        downloadZipWithoutUrl(context, folder, file.name);
+                        downloadIds[i] = downloadZipWithoutUrl(context, folder, file.name);
                     } else {
-                        return downloadFileWithoutUrl(context, file.id, file.name);
+                        downloadIds[i] = downloadFileWithoutUrl(context, file.id, file.name);
                     }
                 }
-                return null;
+
+                return downloadIds;
             }
 
             @Override
@@ -296,7 +301,7 @@ public class PutioUtils {
             }
 
             @Override
-            protected void onPostExecute(Long dlId) {
+            protected void onPostExecute(long[] downloadIds) {
                 if (resolveRedirect) {
                     dialog.dismiss();
                 }
@@ -304,7 +309,7 @@ public class PutioUtils {
                 switch (actionWhenDone) {
                     case ACTION_OPEN:
                         Intent serviceOpenIntent = new Intent(context, PutioOpenFileService.class);
-                        serviceOpenIntent.putExtra("downloadId", (long) dlId);
+                        serviceOpenIntent.putExtra("downloadIds", downloadIds);
                         serviceOpenIntent.putExtra("id", files[0].id);
                         serviceOpenIntent.putExtra("filename", files[0].name);
                         serviceOpenIntent.putExtra("mode", actionWhenDone);
