@@ -440,7 +440,14 @@ public class FileDetails extends Fragment {
     }
 
     private void initDeleteFile() {
-        utils.showDeleteFilesDialog(getActivity(), !UIUtils.isTablet(getActivity()), getCurrentFile());
+        utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
+            @Override
+            public void onDelete() {
+                if (callbacks != null) {
+                    callbacks.onFileDetailsClosed();
+                }
+            }
+        }, getCurrentFile()).show();
     }
 
     private void refreshMp4View() {

@@ -630,7 +630,8 @@ public class PutioUtils {
         share(uri, context);
     }
 
-    public void showDeleteFilesDialog(final Context context, final boolean finish, final PutioFileData... filesToDelete) {
+    public Dialog deleteFilesDialog(final Context context, final DeleteCallback callback,
+                                    final PutioFileData... filesToDelete) {
         final Dialog deleteDialog = PutioDialog(context,
 				context.getResources().getQuantityString(
 						R.plurals.deletetitle, filesToDelete.length),
@@ -638,9 +639,7 @@ public class PutioUtils {
 
 		TextView textDeleteBody = (TextView) deleteDialog.findViewById(R.id.text_delete_body);
 		textDeleteBody.setText(context.getResources()
-				.getQuantityString(R.plurals.deletebody, filesToDelete.length));
-
-        deleteDialog.show();
+                .getQuantityString(R.plurals.deletebody, filesToDelete.length));
 
         Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
         deleteDelete.setOnClickListener(new OnClickListener() {
@@ -655,8 +654,8 @@ public class PutioUtils {
                 Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
                 deleteDialog.dismiss();
 
-                if (finish) {
-                    ((Activity) context).finish();
+                if (callback != null) {
+                    callback.onDelete();
                 }
             }
         });
@@ -669,11 +668,16 @@ public class PutioUtils {
                 deleteDialog.cancel();
             }
         });
+
+        return deleteDialog;
     }
 
-    public void showRemoveTransferDialog(final Context context, final int... idsToDelete) {
+    public static interface DeleteCallback {
+        public void onDelete();
+    }
+
+    public Dialog removeTransferDialog(final Context context, final int... idsToDelete) {
         final Dialog removeDialog = PutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
-        removeDialog.show();
 
         Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
         removeRemove.setOnClickListener(new OnClickListener() {
@@ -695,6 +699,8 @@ public class PutioUtils {
                 removeDialog.cancel();
             }
         });
+
+        return removeDialog;
     }
 
     public boolean isConnected(Context context) {

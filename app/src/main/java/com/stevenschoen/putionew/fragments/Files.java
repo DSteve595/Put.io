@@ -64,6 +64,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     public interface Callbacks {
         public void onFileSelected(PutioFileData file);
         public void onSomethingSelected();
+        public void currentFolderRefreshed();
     }
 
     private Callbacks callbacks;
@@ -87,8 +88,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	private boolean hasUpdated = false;
 
 	protected State state;
-
-	private int origId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -253,10 +252,10 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         filesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                if (state.currentFolder.id != origId) {
+                if (state.currentFolder.id != state.origId) {
                     filesList.scrollToPosition(0);
                 }
-                origId = state.currentFolder.id;
+                state.origId = state.currentFolder.id;
 
                 super.onChanged();
             }
@@ -402,7 +401,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = getFileAtPosition(indeces[i]);
 		}
-		utils.showDeleteFilesDialog(getActivity(), false, files);
+		utils.deleteFilesDialog(getActivity(), null, files).show();
 	}
 
     private void initMoveFile(int... indeces) {
@@ -444,7 +443,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 				utils, query));
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
-	}
+    }
 
 	private void populateList(final List<PutioFileData> files, final PutioFileData folder) {
         if (folder != null) {
@@ -454,7 +453,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
         refreshCurrentFolderView();
 
-		if (files == null) {
+		if (files == null || files.isEmpty()) {
 			setViewMode(VIEWMODE_EMPTY);
 			return;
 		}
@@ -478,13 +477,19 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
                 }
             });
 		}
+
+        if (folder != null) {
+            if (state.origId == folder.id && callbacks != null) {
+                callbacks.currentFolderRefreshed();
+            }
+        }
 	}
 
     public State getState() {
         return state;
     }
 
-	public int getIndexFromFileId(int fileId) {
+	public int getIndexFromFileId(long fileId) {
 		for (int i = 0; i < state.fileData.size(); i++) {
 			if (getFileAtPosition(i).id == fileId) {
 				return i;
@@ -492,6 +497,10 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		}
 		return -1;
 	}
+
+    public boolean isShowingFileId(long fileId) {
+        return getIndexFromFileId(fileId) != -1;
+    }
 
 	public PutioFileData getFileAtPosition(int position) {
 		return state.fileData.get(position);

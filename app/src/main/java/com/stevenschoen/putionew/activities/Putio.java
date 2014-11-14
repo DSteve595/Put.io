@@ -466,7 +466,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
         if (pager.getCurrentItem() == TAB_FILES) {
             if (getFilesFragment().goBack()) {
                 if (UIUtils.isTablet(Putio.this)) {
-                    getFilesAndFileDetailsFragment().removeDetails();
+                    getFilesAndFileDetailsFragment().closeDetails();
                 }
             } else {
                 super.onBackPressed();

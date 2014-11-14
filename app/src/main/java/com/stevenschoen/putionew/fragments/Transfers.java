@@ -211,7 +211,7 @@ public final class Transfers extends NoClipSupportFragment {
 			utils.getJobManager().addJobInBackground(new PutioRestInterface.PostCancelTransferJob(
 					utils, transfersData.get(idInList).id));
 		} else {
-			utils.showRemoveTransferDialog(getActivity(), transfersData.get(idInList).id);
+			utils.removeTransferDialog(getActivity(), transfersData.get(idInList).id).show();
 		}
 	}
 	

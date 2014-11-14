@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,15 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
 
             @Override
             public void onSomethingSelected() {
-                removeDetails();
+                closeDetails();
+            }
+
+            @Override
+            public void currentFolderRefreshed() {
+                if (isDetailsOpen() && !getFilesFragment()
+                        .isShowingFileId(getFileDetailsFragment().getCurrentFile().id)) {
+                    closeDetails();
+                }
             }
         });
     }
@@ -64,9 +71,7 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
         ft.add(R.id.fragment_files, files, TAG_FILES);
         Bundle detailsArgs = new Bundle();
         if (savedInstanceState != null) {
-            Log.d("asdf", "not null");
             if (savedInstanceState.containsKey("details_state")) {
-                Log.d("asdf", "has state");
                 detailsArgs.putParcelable("state", savedInstanceState.getParcelable("details_state"));
                 FileDetails details = (FileDetails) Fragment.instantiate(getActivity(), FileDetails.class.getName(), detailsArgs);
                 ft.add(R.id.fragment_details, details, TAG_FILEDETAILS);
@@ -99,9 +104,9 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
                 .commit();
     }
 
-    public void removeDetails() {
+    public void closeDetails() {
         FileDetails details = getFileDetailsFragment();
-        if (isDetailsShown()) {
+        if (isDetailsOpen()) {
             getChildFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_fromleft,
                             R.anim.slide_out_toright)
@@ -110,17 +115,17 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
         }
     }
 
-    public boolean isDetailsShown() {
-        return isDetailsShown(getFileDetailsFragment());
+    public boolean isDetailsOpen() {
+        return isDetailsOpen(getFileDetailsFragment());
     }
 
-    private boolean isDetailsShown(FileDetails details) {
+    private boolean isDetailsOpen(FileDetails details) {
         return (details != null && details.isAdded());
     }
 
     @Override
     public void onFileDetailsClosed() {
-        removeDetails();
+        closeDetails();
     }
 
     @Override
@@ -130,7 +135,7 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
         outState.putParcelable("files_state", getFilesFragment().getState());
 
         FileDetails details = getFileDetailsFragment();
-        if (isDetailsShown(details)) {
+        if (isDetailsOpen(details)) {
             outState.putParcelable("details_state", details.getState());
         }
     }
