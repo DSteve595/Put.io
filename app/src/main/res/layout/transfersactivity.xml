@@ -1,39 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="320dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:minHeight="120dp"
+    android:orientation="vertical"
+    tools:context=".activities.TransfersActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/putio_dark">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/transfersactivity_text_title"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_transfersdialog"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/transfers"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:background="@color/putio_accent"
+            android:elevation="@dimen/actionBarElevation"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationContentDescription="@string/maximize"
+            app:navigationIcon="@drawable/ic_action_maximize_black"
+            app:popupTheme="@style/ThemeOverlay.AppCompat"
+            app:theme="@style/Putio.Toolbar"
+            app:title="@string/transfers" />
 
-        <ImageButton
-            android:id="@+id/transfersactivity_button_maximize"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/putio_clickable"
-            android:src="@drawable/ic_maximize" />
-
-        <ImageButton
-            android:id="@+id/transfersactivity_button_close"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/putio_clickable"
-            android:src="@drawable/ic_close" />
-    </RelativeLayout>
+        <include layout="@layout/shadow_actionbar" />
+    </LinearLayout>
 
     <fragment
         android:id="@+id/transfersactivity_transfersfragment"

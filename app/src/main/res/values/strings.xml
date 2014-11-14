@@ -30,6 +30,7 @@
     <string name="storage">Storage</string>
     <string name="move">Move</string>
     <string name="more">More</string>
+    <string name="maximize">Maximize</string>
 
     <!-- Dialog text -->
     <string name="gettingstreamurltitle">Preparing to stream</string>

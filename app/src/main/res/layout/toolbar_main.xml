@@ -9,12 +9,12 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="@dimen/actionBarElevation"
         android:minHeight="?attr/actionBarSize"
         app:popupTheme="@style/ThemeOverlay.AppCompat"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+        app:theme="@style/Putio.Toolbar" />
 
     <com.stevenschoen.putionew.SlidingTabLayout
         android:id="@+id/tabs"

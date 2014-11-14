@@ -38,10 +38,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			}
 			holder = new TransferHolder();
 			holder.textName = (TextView) row.findViewById(R.id.text_transfer_name);
-			holder.textDownValue = (TextView) row.findViewById(R.id.text_transfer_downValue);
-			holder.textDownUnit = (TextView) row.findViewById(R.id.text_transfer_downUnit);
-			holder.textUpValue = (TextView) row.findViewById(R.id.text_transfer_upValue);
-			holder.textUpUnit = (TextView) row.findViewById(R.id.text_transfer_upUnit);
+			holder.textDown = (TextView) row.findViewById(R.id.text_transfer_down);
+			holder.textUp = (TextView) row.findViewById(R.id.text_transfer_up);
             holder.textRatio = (TextView) row.findViewById(R.id.text_transfer_ratio);
 			holder.textPercent = (TextView) row.findViewById(R.id.text_transfer_percent);
 			holder.imgStatusIcon = (ImageView) row.findViewById(R.id.img_transfer_icon);
@@ -62,12 +60,10 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 		
 		holder.textName.setText(transfer.name);
 		
-		String[] downStrings = PutioUtils.humanReadableByteCountArray(transfer.downSpeed, false);
-		holder.textDownValue.setText(downStrings[0]);
-		holder.textDownUnit.setText(downStrings[1] + "/sec");
-		String[] upStrings = PutioUtils.humanReadableByteCountArray(transfer.upSpeed, false);
-		holder.textUpValue.setText(upStrings[0]);
-		holder.textUpUnit.setText(upStrings[1] + "/sec");
+		String downString = PutioUtils.humanReadableByteCount(transfer.downSpeed, false);
+		holder.textDown.setText(downString + "/sec");
+		String upString = PutioUtils.humanReadableByteCount(transfer.upSpeed, false);
+		holder.textUp.setText(upString + "/sec");
 		
 		int percentInt = transfer.percentDone;
 		String percentString = Integer.toString(percentInt);
@@ -127,10 +123,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 	
 	static class TransferHolder {
 		TextView textName;
-		TextView textDownValue;
-		TextView textDownUnit;
-		TextView textUpValue;
-		TextView textUpUnit;
+		TextView textDown;
+		TextView textUp;
         TextView textRatio;
 		TextView textPercent;
 		ImageView imgStatusIcon;

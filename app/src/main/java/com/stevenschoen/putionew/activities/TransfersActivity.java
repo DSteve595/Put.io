@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -8,9 +7,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
@@ -29,7 +29,7 @@ public class TransfersActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		this.utils = ((PutioApplication) getApplication()).getPutioUtils();
+		utils = ((PutioApplication) getApplication()).getPutioUtils();
 		
 		if (getIntent().getExtras() != null && getIntent().getIntExtra("mode", 0) != 0) {
 			int mode = getIntent().getIntExtra("mode", 0);
@@ -54,37 +54,40 @@ public class TransfersActivity extends FragmentActivity {
 		} else {
 			setContentView(R.layout.transfersactivity);
 
-            ImageButton buttonMaximize = (ImageButton) findViewById(R.id.transfersactivity_button_maximize);
-			buttonMaximize.setOnClickListener(new OnClickListener() {
-				@SuppressLint("NewApi")
-				@Override
-				public void onClick(View v) {
-					Intent putioIntent = new Intent(TransfersActivity.this, Putio.class);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_transfersdialog);
+            toolbar.inflateMenu(R.menu.transfersdialog);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.menu_close:
+                            finish();
+                            return true;
+                    }
+                    return false;
+                }
+            });
+            toolbar.setNavigationOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent putioIntent = new Intent(TransfersActivity.this, Putio.class);
                     putioIntent.putExtra("goToTab", Putio.TAB_TRANSFERS);
-					if (UIUtils.hasJellyBean()) {
+                    if (UIUtils.hasJellyBean()) {
                         View content = findViewById(android.R.id.content);
-						Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
+                        Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
                                 content,
                                 0,
                                 0,
                                 content.getWidth(),
                                 content.getHeight())
                                 .toBundle();
-						startActivity(putioIntent, options);
-					} else {
-						startActivity(putioIntent);
-					}
-					finish();
-				}
-			});
-			
-			ImageButton buttonClose = (ImageButton) findViewById(R.id.transfersactivity_button_close);
-			buttonClose.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					finish();
-				}
-			});
+                        startActivity(putioIntent, options);
+                    } else {
+                        startActivity(putioIntent);
+                    }
+                    finish();
+                }
+            });
 		}
 	}
 }

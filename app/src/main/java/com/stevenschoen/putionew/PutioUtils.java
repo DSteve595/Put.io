@@ -2,7 +2,6 @@ package com.stevenschoen.putionew;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -71,8 +70,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -720,24 +717,9 @@ public class PutioUtils {
         if (bytes < unit)
             return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-//		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
         String pre = ("KMGTPE").charAt(exp - 1)
-//				+ (si ? "" : "i");
                 + "";
         return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
-    }
-
-    public static String[] humanReadableByteCountArray(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
-        if (bytes < unit)
-            return new String[]{Long.toString(bytes), "B"};
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-//		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
-        String pre = ("KMGTPE").charAt(exp - 1)
-//				+ (si ? "" : "i");
-                + "";
-        String one = String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
-        return one.split(" ");
     }
 
     public static Boolean stringToBooleanHack(String value) {

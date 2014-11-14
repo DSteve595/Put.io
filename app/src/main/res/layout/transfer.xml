@@ -95,21 +95,13 @@
                     android:src="@drawable/ic_transfer_download" />
 
                 <TextView
-                    android:id="@+id/text_transfer_downValue"
+                    android:id="@+id/text_transfer_down"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2sp"
                     android:layout_marginStart="2sp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    tools:text="0" />
-
-                <TextView
-                    android:id="@+id/text_transfer_downUnit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2sp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    tools:text="0" />
+                    tools:text="100 KB/sec" />
             </LinearLayout>
 
             <LinearLayout
@@ -130,21 +122,13 @@
                     android:src="@drawable/ic_transfer_upload" />
 
                 <TextView
-                    android:id="@+id/text_transfer_upValue"
+                    android:id="@+id/text_transfer_up"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2sp"
                     android:layout_marginStart="2sp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    tools:text="0" />
-
-                <TextView
-                    android:id="@+id/text_transfer_upUnit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2sp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    tools:text="0" />
+                    tools:text="100 KB/sec" />
             </LinearLayout>
 
             <LinearLayout

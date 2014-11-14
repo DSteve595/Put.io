@@ -27,7 +27,6 @@ import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
-import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.transfers.PutioTransferData;
 
@@ -90,9 +89,6 @@ public final class Transfers extends NoClipSupportFragment {
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
-		if (UIUtils.isTablet(getActivity())) {
-			listview.setVerticalFadingEdgeEnabled(true);
-		}
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> a, View view, int position, long id) {

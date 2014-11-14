@@ -26,6 +26,11 @@
         <item name="android:actionBarStyle">@style/Putio.ActionBar.Transparent</item>
     </style>
 
+    <style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:theme">@style/Theme.Putio</item>
+        <item name="theme">@style/Theme.Putio</item>
+    </style>
+
     <style name="Putio.CastMiniController" parent="Theme.Putio">
         <item name="android:background">@android:color/white</item>
     </style>
@@ -69,10 +74,12 @@
 
     <style name="Putio.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:theme">@style/Theme.Putio</item>
+        <item name="theme">@style/Theme.Putio</item>
     </style>
 
     <style name="Putio.DialogOrActivity" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="android:theme">@style/Theme.Putio</item>
+        <item name="theme">@style/Theme.Putio</item>
         <item name="colorPrimaryDark">@color/putio_accent_dark</item>
     </style>
 </resources>
