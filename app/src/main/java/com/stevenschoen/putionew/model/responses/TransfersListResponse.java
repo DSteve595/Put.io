@@ -1,13 +1,13 @@
 package com.stevenschoen.putionew.model.responses;
 
-import com.stevenschoen.putionew.model.transfers.PutioTransferData;
+import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
 import java.util.List;
 
 public class TransfersListResponse extends BasePutioResponse {
-	private List<PutioTransferData> transfers;
+	private List<PutioTransfer> transfers;
 
-	public List<PutioTransferData> getTransfers() {
+	public List<PutioTransfer> getTransfers() {
 		return transfers;
 	}
 }

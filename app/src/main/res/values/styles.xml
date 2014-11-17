@@ -21,9 +21,7 @@
     </style>
 
     <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat">
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:actionBarStyle">@style/Putio.ActionBar.Transparent</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
@@ -42,6 +40,7 @@
     <style name="Putio.TextAppearance.DialogTitle" parent="TextAppearance.AppCompat.Title" />
 
     <style name="ButtonBar">
+        <item name="android:theme">@style/Theme.Putio</item>
         <item name="android:layout_margin">16dp</item>
         <item name="android:layout_gravity">bottom|end</item>
         <item name="android:layout_alignParentRight">true</item>

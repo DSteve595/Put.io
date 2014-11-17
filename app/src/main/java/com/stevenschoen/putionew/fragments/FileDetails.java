@@ -36,7 +36,7 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.files.PutioMp4Status;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.FileResponse;
@@ -71,7 +71,7 @@ public class FileDetails extends Fragment {
 
     private static CastCallbacks sDummyCastCallbacks = new CastCallbacks() {
         @Override
-		public void load(PutioFileData file, String url, PutioUtils utils) { }
+		public void load(PutioFile file, String url, PutioUtils utils) { }
     };
 
     private Callbacks callbacks;
@@ -178,7 +178,7 @@ public class FileDetails extends Fragment {
             public void onClick(View v) {
                 utils.renameFileDialog(getActivity(), getCurrentFile(), new PutioUtils.RenameCallback() {
                     @Override
-                    public void onRename(PutioFileData file, String newName) {
+                    public void onRename(PutioFile file, String newName) {
                         getCurrentFile().name = newName;
                         textTitle.setText(newName);
                     }
@@ -570,11 +570,11 @@ public class FileDetails extends Fragment {
 						mp4Status.getStatus().equals(MP4_CONVERTING));
 	}
 
-    public PutioFileData getOriginalFile() {
+    public PutioFile getOriginalFile() {
         return state.origFileData;
     }
 
-    public PutioFileData getCurrentFile() {
+    public PutioFile getCurrentFile() {
         return state.newFileData;
     }
 
@@ -637,8 +637,8 @@ public class FileDetails extends Fragment {
 
     public static class State implements Parcelable {
         public Bitmap imagePreviewBitmap;
-        public PutioFileData origFileData;
-        public PutioFileData newFileData;
+        public PutioFile origFileData;
+        public PutioFile newFileData;
 
         @Override
         public int describeContents() {
@@ -656,8 +656,8 @@ public class FileDetails extends Fragment {
 
         private State(Parcel in) {
             this.imagePreviewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
-            this.origFileData = in.readParcelable(PutioFileData.class.getClassLoader());
-            this.newFileData = in.readParcelable(PutioFileData.class.getClassLoader());
+            this.origFileData = in.readParcelable(PutioFile.class.getClassLoader());
+            this.newFileData = in.readParcelable(PutioFile.class.getClassLoader());
         }
 
         public static final Creator<State> CREATOR = new Creator<State>() {

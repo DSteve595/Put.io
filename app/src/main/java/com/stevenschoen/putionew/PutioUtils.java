@@ -29,6 +29,8 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,7 +50,7 @@ import com.path.android.jobqueue.JobManager;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
@@ -168,18 +170,32 @@ public class PutioUtils {
         return dialog;
     }
 
-    public Dialog renameFileDialog(Context context, final PutioFileData file, final RenameCallback callback) {
+    public Dialog renameFileDialog(Context context, final PutioFile file, final RenameCallback callback) {
         final Dialog renameDialog = PutioUtils.PutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
 
         final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
         textFileName.setText(file.name);
 
-        ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
+        final ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
+        btnUndoName.setEnabled(false);
         btnUndoName.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 textFileName.setText(file.name);
             }
+        });
+
+        textFileName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                btnUndoName.setEnabled(!file.name.contentEquals(s));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
         });
 
         Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
@@ -206,7 +222,7 @@ public class PutioUtils {
     }
 
     public static interface RenameCallback {
-        public void onRename(PutioFileData file, String newName);
+        public void onRename(PutioFile file, String newName);
     }
 
     public static Dialog PutioDialog(Context context, String title, int contentViewId) {
@@ -267,7 +283,7 @@ public class PutioUtils {
         return null;
     }
 
-    public void downloadFile(final Context context, final int actionWhenDone, final PutioFileData... files) {
+    public void downloadFile(final Context context, final int actionWhenDone, final PutioFile... files) {
         class downloadFileTaskCompat extends AsyncTask<Void, Integer, long[]> {
             private boolean resolveRedirect = false;
             private Dialog dialog;
@@ -276,7 +292,7 @@ public class PutioUtils {
             protected long[] doInBackground(Void... params) {
                 long[] downloadIds = new long[files.length];
                 for (int i = 0; i < files.length; i++) {
-                    PutioFileData file = files[i];
+                    PutioFile file = files[i];
                     if (file.isFolder()) {
                         int[] folder = new int[]{file.id};
                         downloadIds[i] = downloadZipWithoutUrl(context, folder, file.name);
@@ -399,7 +415,7 @@ public class PutioUtils {
         }
     }
 
-    public void getStreamUrlAndPlay(final Context context, final PutioFileData file, String url) {
+    public void getStreamUrlAndPlay(final Context context, final PutioFile file, String url) {
         class GetStreamUrlAndPlay extends AsyncTask<String, Void, String> {
             Dialog gettingStreamDialog;
 
@@ -633,7 +649,7 @@ public class PutioUtils {
     }
 
     public Dialog deleteFilesDialog(final Context context, final DeleteCallback callback,
-                                    final PutioFileData... filesToDelete) {
+                                    final PutioFile... filesToDelete) {
         final Dialog deleteDialog = PutioDialog(context,
 				context.getResources().getQuantityString(
 						R.plurals.deletetitle, filesToDelete.length),

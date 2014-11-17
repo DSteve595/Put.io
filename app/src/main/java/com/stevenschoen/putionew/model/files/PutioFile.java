@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.stevenschoen.putionew.PutioUtils;
 
-public class PutioFileData implements Parcelable {
+public class PutioFile implements Parcelable {
 	public boolean isShared;
 	public String name;
 	public String icon;
@@ -18,7 +18,7 @@ public class PutioFileData implements Parcelable {
 	public int id;
 	public long size;
 
-    public PutioFileData() { }
+    public PutioFile() { }
 
 	public boolean isFolder() {
 		return contentType.equals("application/x-directory");
@@ -60,7 +60,7 @@ public class PutioFileData implements Parcelable {
 		return 0;
 	}
 	
-	public PutioFileData(Parcel in) {
+	public PutioFile(Parcel in) {
 		readFromParcel(in);
 	}
 	
@@ -94,12 +94,12 @@ public class PutioFileData implements Parcelable {
 	}
 	
 	public static final Creator CREATOR = new Creator() {
-		public PutioFileData createFromParcel(Parcel in) {
-			return new PutioFileData(in);
+		public PutioFile createFromParcel(Parcel in) {
+			return new PutioFile(in);
 		}
 
-		public PutioFileData[] newArray(int size) {
-			return new PutioFileData[size];
+		public PutioFile[] newArray(int size) {
+			return new PutioFile[size];
 		}
 	};
 }

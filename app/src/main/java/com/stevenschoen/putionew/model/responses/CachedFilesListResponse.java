@@ -1,16 +1,16 @@
 package com.stevenschoen.putionew.model.responses;
 
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import java.util.List;
 
 public class CachedFilesListResponse {
-	private List<PutioFileData> files;
-	private PutioFileData parent;
+	private List<PutioFile> files;
+	private PutioFile parent;
 
-	public List<PutioFileData> getFiles() {
+	public List<PutioFile> getFiles() {
 		return files;
 	}
 
-	public PutioFileData getParent() { return parent; }
+	public PutioFile getParent() { return parent; }
 }

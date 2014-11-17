@@ -23,7 +23,7 @@ import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import org.apache.commons.io.FileUtils;
 
@@ -249,7 +249,7 @@ public class AddTransfers extends FragmentActivity implements DestinationFilesDi
 	}
 
     @Override
-    public void onDestinationFolderSelected(PutioFileData folder) {
+    public void onDestinationFolderSelected(PutioFile folder) {
         destinationFolderId = folder.id;
         buttonDestination.setText(folder.name);
 

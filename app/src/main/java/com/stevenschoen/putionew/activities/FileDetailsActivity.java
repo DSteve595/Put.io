@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.FileDetails;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class FileDetailsActivity extends BaseCastActivity {
 
@@ -16,7 +16,7 @@ public class FileDetailsActivity extends BaseCastActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PutioFileData fileData = getIntent().getExtras().getParcelable("fileData");
+        PutioFile fileData = getIntent().getExtras().getParcelable("fileData");
 
         setContentView(R.layout.filedetailsphone);
 

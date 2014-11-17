@@ -1,11 +1,11 @@
 package com.stevenschoen.putionew.model.responses;
 
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class FileResponse extends BasePutioResponse {
-	private PutioFileData file;
+	private PutioFile file;
 
-	public PutioFileData getFile() {
+	public PutioFile getFile() {
 		return file;
 	}
 }

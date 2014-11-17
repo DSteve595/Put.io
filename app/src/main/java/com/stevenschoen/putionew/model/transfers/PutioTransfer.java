@@ -3,7 +3,7 @@ package com.stevenschoen.putionew.model.transfers;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PutioTransferData implements Parcelable {
+public class PutioTransfer implements Parcelable {
 	public int id;
 	public int fileId;
 	public long size;
@@ -24,7 +24,7 @@ public class PutioTransferData implements Parcelable {
 		return 0;
 	}
 	
-	public PutioTransferData(Parcel in) {
+	public PutioTransfer(Parcel in) {
 		readFromParcel(in);
 	}
 	
@@ -64,12 +64,12 @@ public class PutioTransferData implements Parcelable {
 	}
 	
 	public static final Creator CREATOR = new Creator() {
-		public PutioTransferData createFromParcel(Parcel in) {
-			return new PutioTransferData(in);
+		public PutioTransfer createFromParcel(Parcel in) {
+			return new PutioTransfer(in);
 		}
 
-		public PutioTransferData[] newArray(int size) {
-			return new PutioTransferData[size];
+		public PutioTransfer[] newArray(int size) {
+			return new PutioTransfer[size];
 		}
 	};
 }

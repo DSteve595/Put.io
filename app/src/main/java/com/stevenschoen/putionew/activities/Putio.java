@@ -38,8 +38,8 @@ import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.FilesAndFileDetails;
 import com.stevenschoen.putionew.fragments.Transfers;
-import com.stevenschoen.putionew.model.files.PutioFileData;
-import com.stevenschoen.putionew.model.transfers.PutioTransferData;
+import com.stevenschoen.putionew.model.files.PutioFile;
+import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -163,7 +163,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
     }
 
     @Override
-    public void onDestinationFolderSelected(PutioFileData folder) {
+    public void onDestinationFolderSelected(PutioFile folder) {
         getFilesFragment().onDestinationFolderSelected(folder);
     }
 
@@ -436,7 +436,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
     }
 
     @Override
-    public void onTransferSelected(PutioTransferData transfer) {
+    public void onTransferSelected(PutioTransfer transfer) {
         showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId);
     }
 

@@ -21,14 +21,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.stevenschoen.putionew.PutioApplication;
-import com.stevenschoen.putionew.PutioTransferLayout;
 import com.stevenschoen.putionew.PutioTransfersService;
 import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
 import com.stevenschoen.putionew.model.PutioRestInterface;
-import com.stevenschoen.putionew.model.transfers.PutioTransferData;
+import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,7 @@ import java.util.List;
 public final class Transfers extends NoClipSupportFragment {
 	
 	private TransfersAdapter adapter;
-	private ArrayList<PutioTransferLayout> transferLayouts = new ArrayList<>();
-	private List<PutioTransferData> transfersData;
+	private List<PutioTransfer> transfers = new ArrayList<>();
 	private ListView listview;
 
 	private PutioUtils utils;
@@ -55,12 +53,12 @@ public final class Transfers extends NoClipSupportFragment {
 	private View noNetworkView;
 
 	public interface Callbacks {
-        public void onTransferSelected(PutioTransferData transfer);
+        public void onTransferSelected(PutioTransfer transfer);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onTransferSelected(PutioTransferData transfer) { }
+        public void onTransferSelected(PutioTransfer transfer) { }
     };
 	
     private Callbacks mCallbacks = sDummyCallbacks;
@@ -85,16 +83,16 @@ public final class Transfers extends NoClipSupportFragment {
 		
 		listview = (ListView) view.findViewById(R.id.transferslist);
 
-		adapter = new TransfersAdapter(getActivity(), transferLayouts);
+		adapter = new TransfersAdapter(getActivity(), transfers);
 		listview.setAdapter(adapter);
 		listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		registerForContextMenu(listview);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> a, View view, int position, long id) {
-				if (transfersData.get(position).status.equals("COMPLETED")
-                        || transfersData.get(position).status.equals("SEEDING")) {
-					mCallbacks.onTransferSelected(transfersData.get(position));
+				if (transfers.get(position).status.equals("COMPLETED")
+                        || transfers.get(position).status.equals("SEEDING")) {
+					mCallbacks.onTransferSelected(transfers.get(position));
 				}
 			}
 		});
@@ -135,7 +133,7 @@ public final class Transfers extends NoClipSupportFragment {
 				noNetworkView.setVisibility(View.VISIBLE);
 				break;
 			case VIEWMODE_LISTOREMPTY:
-				if (transfersData == null || transfersData.isEmpty()) {
+				if (transfers == null || transfers.isEmpty()) {
 					setViewMode(VIEWMODE_EMPTY);
 				} else {
 					setViewMode(VIEWMODE_LIST);
@@ -150,13 +148,13 @@ public final class Transfers extends NoClipSupportFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		
-		menu.setHeaderTitle(transfersData.get(info.position).name);
+		menu.setHeaderTitle(transfers.get(info.position).name);
 	    MenuInflater inflater = getActivity().getMenuInflater();
 	    inflater.inflate(R.menu.context_transfers, menu);
 
         MenuItem itemRetry = menu.findItem(R.id.context_retry);
-        PutioTransferData transfer = transfersData.get(info.position);
-        if (transfer.status.equals("FAILED")) { // Need to find the actual status string
+        PutioTransfer transfer = transfers.get(info.position);
+        if (transfer.status.equals("ERROR")) {
             itemRetry.setVisible(true);
             itemRetry.setEnabled(true);
         } else {
@@ -170,10 +168,10 @@ public final class Transfers extends NoClipSupportFragment {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 			case R.id.context_remove:
-				initRemoveTransfer(info.position);
+				initRemoveTransfer(transfers.get(info.position));
 				return true;
             case R.id.context_retry:
-                initRetryTransfer(info.position);
+                initRetryTransfer(transfers.get(info.position));
 			default:
 				return super.onContextItemSelected(item);
 		}
@@ -197,17 +195,17 @@ public final class Transfers extends NoClipSupportFragment {
 		return false;
 	}
 
-    private void initRetryTransfer(int idInList) {
+    private void initRetryTransfer(PutioTransfer transfer) {
         utils.getJobManager().addJobInBackground(new PutioRestInterface.PostRetryTransferJob(
-                utils, transfersData.get(idInList).id));
+                utils, transfer.id));
     }
 
-	private void initRemoveTransfer(int idInList) {
-		if (transfersData.get(idInList).status.equals("COMPLETED")) {
+	private void initRemoveTransfer(PutioTransfer transfer) {
+		if (transfer.status.equals("COMPLETED")) {
 			utils.getJobManager().addJobInBackground(new PutioRestInterface.PostCancelTransferJob(
-					utils, transfersData.get(idInList).id));
+					utils, transfer.id));
 		} else {
-			utils.removeTransferDialog(getActivity(), transfersData.get(idInList).id).show();
+			utils.removeTransferDialog(getActivity(), transfer.id).show();
 		}
 	}
 	
@@ -237,23 +235,17 @@ public final class Transfers extends NoClipSupportFragment {
         mCallbacks = sDummyCallbacks;
     }
 	
-	public void updateTransfers(List<PutioTransferData> transfers) {
+	public void updateTransfers(List<PutioTransfer> transfers) {
+        if (isAdded()) {
+            this.transfers.clear();
+            this.transfers.addAll(transfers);
+            adapter.notifyDataSetChanged();
+        }
+
 		if (transfers == null || transfers.isEmpty()) {
 			setViewMode(VIEWMODE_EMPTY);
-			transfersData = null;
-			return;
 		} else {
 			setViewMode(VIEWMODE_LIST);
-		}
-		
-		transfersData = transfers;
-		
-		if (isAdded()) {
-			transferLayouts.clear();
-			for (PutioTransferData transfer : transfers) {
-				transferLayouts.add(new PutioTransferLayout(transfer));
-			}
-			adapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -267,7 +259,6 @@ public final class Transfers extends NoClipSupportFragment {
 	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
-
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			TransfersServiceBinder binder = (TransfersServiceBinder) service;

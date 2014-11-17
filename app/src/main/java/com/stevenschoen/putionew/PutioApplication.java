@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.media.MediaRouteSelector;
 
 import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class PutioApplication extends Application {
 	private PutioUtils utils;
@@ -68,6 +68,6 @@ public class PutioApplication extends Application {
     }
 
     public interface CastCallbacks {
-        public void load(PutioFileData file, String url, PutioUtils utils);
+        public void load(PutioFile file, String url, PutioUtils utils);
     }
 }

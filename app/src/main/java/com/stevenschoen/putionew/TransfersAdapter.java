@@ -11,14 +11,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.stevenschoen.putionew.model.transfers.PutioTransfer;
+
 import java.util.List;
 
-public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
+public class TransfersAdapter extends ArrayAdapter<PutioTransfer> {
 
 	Context context;
-	List<PutioTransferLayout> data = null;
+	List<PutioTransfer> data = null;
 
-	public TransfersAdapter(Context context, List<PutioTransferLayout> data) {
+	public TransfersAdapter(Context context, List<PutioTransfer> data) {
 		super(context, R.layout.transfer, data);
 		this.context = context;
 		this.data = data;
@@ -56,7 +58,7 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 			holder = (TransferHolder) row.getTag();
 		}
 
-		PutioTransferLayout transfer = data.get(position);
+        PutioTransfer transfer = data.get(position);
 		
 		holder.textName.setText(transfer.name);
 		
@@ -77,8 +79,8 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
                 holder.textMessage.setVisibility(View.GONE);
                 holder.downHolder.setVisibility(View.GONE);
                 holder.upHolder.setVisibility(View.VISIBLE);
-                if (transfer.ratio != 0) {
-                    holder.textRatio.setText(getContext().getString(R.string.ratio_is, transfer.ratio));
+                if (transfer.currentRatio != 0) {
+                    holder.textRatio.setText(getContext().getString(R.string.ratio_is, transfer.currentRatio));
                     holder.ratioHolder.setVisibility(View.VISIBLE);
                 } else {
                     holder.ratioHolder.setVisibility(View.GONE);
@@ -120,8 +122,22 @@ public class TransfersAdapter extends ArrayAdapter<PutioTransferLayout> {
 
 		return row;
 	}
-	
-	static class TransferHolder {
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (position != -1 && !data.isEmpty()) {
+            return data.get(position).id;
+        }
+
+        return 0;
+    }
+
+    static class TransferHolder {
 		TextView textName;
 		TextView textDown;
 		TextView textUp;

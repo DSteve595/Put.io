@@ -19,7 +19,7 @@ import com.google.sample.castcompanionlibrary.widgets.MiniController;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -162,7 +162,7 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
         super.onPause();
     }
 
-    public void load(PutioFileData file, String url, PutioUtils utils) {
+    public void load(PutioFile file, String url, PutioUtils utils) {
         if (videoCastManager == null || !videoCastManager.isConnected()) {
             utils.getStreamUrlAndPlay(this, file, url);
         } else {

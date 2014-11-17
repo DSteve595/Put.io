@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.Files;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class DestinationFilesDialog extends Files {
 
     private DestinationFilesDialog.Callbacks mCallbacks;
 
     public interface Callbacks {
-        public void onDestinationFolderSelected(PutioFileData folder);
+        public void onDestinationFolderSelected(PutioFile folder);
     }
 
     @Override

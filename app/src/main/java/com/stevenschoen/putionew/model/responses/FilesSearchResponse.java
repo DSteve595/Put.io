@@ -1,15 +1,15 @@
 package com.stevenschoen.putionew.model.responses;
 
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import java.util.List;
 
 public class FilesSearchResponse extends BasePutioResponse {
-	private List<PutioFileData> files;
+	private List<PutioFile> files;
 
     private String query;
 
-	public List<PutioFileData> getFiles() {
+	public List<PutioFile> getFiles() {
 		return files;
 	}
 

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import java.lang.reflect.Field;
 
@@ -32,7 +32,7 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
         files = (Files) Fragment.instantiate(getActivity(), Files.class.getName(), filesArgs);
         files.setCallbacks(new Files.Callbacks() {
             @Override
-            public void onFileSelected(PutioFileData file) {
+            public void onFileSelected(PutioFile file) {
                 if (hasCallbacks()) {
                     callbacks.filesRequestAttention();
                 }
@@ -90,7 +90,7 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
         return (FileDetails) getChildFragmentManager().findFragmentByTag(TAG_FILEDETAILS);
     }
 
-    private void showDetails(PutioFileData file) {
+    private void showDetails(PutioFile file) {
         Bundle fileDetailsBundle = new Bundle();
         fileDetailsBundle.putParcelable("fileData", file);
         FileDetails fileDetailsFragment = (FileDetails) FileDetails.instantiate(

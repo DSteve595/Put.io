@@ -13,12 +13,11 @@
         android:icon="@drawable/ic_action_download_white"
         android:orderInCategory="2"
         android:title="@string/download"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/ic_action_delete_white"
-        android:orderInCategory="4"
-        android:tint="@android:color/black"
+        android:orderInCategory="3"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
 

@@ -26,6 +26,5 @@
         android:contentDescription="@string/undo"
         android:padding="10dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_undo"
-        android:tint="@color/putio_dark" />
+        android:src="@drawable/ic_undo" />
 </RelativeLayout>

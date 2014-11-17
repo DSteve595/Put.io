@@ -6,25 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> {
 
-    private List<PutioFileData> data;
+    private List<PutioFile> data;
 
     private OnItemClickListener itemClickListener;
     private OnItemsCheckedChangedListener itemsCheckedChangedListener;
 
-    private List<Long> checkedIds;
+    private final List<Long> checkedIds;
 
-	public FilesAdapter(final List<PutioFileData> data) {
+	public FilesAdapter(final List<PutioFile> data) {
         super();
         this.data = data;
 
@@ -34,21 +33,28 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
             @Override
             public void onChanged() {
                 super.onChanged();
+                if (isInCheckMode()) {
+                    List<Long> idsToRemove = new ArrayList<>();
 
-                if (!checkedIds.isEmpty()) {
-                    List<Long> stillCheckedInDataIds = new ArrayList<>(checkedIds.size());
-                    for (Long checkedId : checkedIds) {
-                        for (PutioFileData file : data) {
+                    for (long checkedId : checkedIds) {
+                        boolean stillHas = false;
+                        for (PutioFile file : data) {
                             if (file.id == checkedId) {
-                                stillCheckedInDataIds.add(checkedId);
+                                stillHas = true;
                                 break;
                             }
                         }
+                        if (!stillHas) {
+                            idsToRemove.add(checkedId);
+                        }
                     }
 
-                    checkedIds.clear();
-                    for (Long checkedId : stillCheckedInDataIds) {
-                        checkedIds.add(checkedId);
+                    for (long id : idsToRemove) {
+                        checkedIds.remove(id);
+                        notifyItemChanged(getItemPosition(id));
+                    }
+                    if (!idsToRemove.isEmpty() && itemsCheckedChangedListener != null) {
+                        itemsCheckedChangedListener.onItemsCheckedChanged();
                     }
                 }
             }
@@ -73,10 +79,10 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
     @Override
     public void onBindViewHolder(final FileHolder holder, final int position) {
         if (holder.root instanceof Checkable) {
-            ((Checkable) holder.root).setChecked(isChecked(position));
+            ((Checkable) holder.root).setChecked(isPositionChecked(position));
         }
 
-        PutioFileData file = data.get(position);
+        PutioFile file = data.get(position);
 
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +116,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
 
     @Override
     public long getItemId(int position) {
-        if (position != ListView.INVALID_POSITION && !data.isEmpty()) {
+        if (position != -1 && !data.isEmpty()) {
             return data.get(position).id;
         }
 
@@ -119,7 +125,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
 
     public int getItemPosition(long fileId) {
         for (int i = 0; i < data.size(); i++) {
-            PutioFileData file = data.get(i);
+            PutioFile file = data.get(i);
             if (file.id == fileId) {
                 return i;
             }
@@ -140,7 +146,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
         return checkedIds.size();
     }
 
-    public boolean isChecked(int position) {
+    public boolean isPositionChecked(int position) {
         long itemId = getItemId(position);
         return (itemId != -1 && checkedIds.contains(itemId));
     }
@@ -159,7 +165,8 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
         return checkedIds;
     }
 
-    public void setChecked(int position, boolean checked) {
+    public void setPositionChecked(int position, boolean checked) {
+
         long itemId = getItemId(position);
         if (checked && !checkedIds.contains(itemId)) {
             checkedIds.add(itemId);
@@ -172,14 +179,16 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
         }
     }
 
-    public void toggleChecked(int position) {
-        setChecked(position, !isChecked(position));
+    public void togglePositionChecked(int position) {
+        setPositionChecked(position, !isPositionChecked(position));
     }
 
     public void addCheckedIds(long... ids) {
         for (long id : ids) {
-            checkedIds.add(id);
-            notifyItemChanged(getItemPosition(id));
+            if (!checkedIds.contains(id)) {
+                checkedIds.add(id);
+                notifyItemChanged(getItemPosition(id));
+            }
         }
         if (itemsCheckedChangedListener != null) {
             itemsCheckedChangedListener.onItemsCheckedChanged();

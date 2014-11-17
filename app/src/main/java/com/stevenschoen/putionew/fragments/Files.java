@@ -39,7 +39,7 @@ import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.DestinationFilesDialog;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.model.PutioRestInterface;
-import com.stevenschoen.putionew.model.files.PutioFileData;
+import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.CachedFilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesListResponse;
@@ -62,7 +62,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     private int[] mIdsToMove;
 
     public interface Callbacks {
-        public void onFileSelected(PutioFileData file);
+        public void onFileSelected(PutioFile file);
         public void onSomethingSelected();
         public void currentFolderRefreshed();
     }
@@ -104,7 +104,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
             if (state == null) {
                 state = new State();
                 state.requestedId = 0;
-                state.currentFolder = new PutioFileData();
+                state.currentFolder = new PutioFile();
                 state.currentFolder.id = 0;
                 state.isSearch = false;
                 state.origId = 0;
@@ -139,13 +139,13 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
             @Override
             public void onItemClick(View view, int position) {
                 if (filesAdapter.isInCheckMode()) {
-                    filesAdapter.toggleChecked(position);
+                    filesAdapter.togglePositionChecked(position);
                 } else {
                     if (hasCallbacks()) {
                         callbacks.onSomethingSelected();
                     }
 
-                    PutioFileData file = getFileAtPosition(position);
+                    PutioFile file = getFileAtPosition(position);
                     if (file.isFolder()) {
                         state.isSearch = false;
                         state.requestedId = file.id;
@@ -167,7 +167,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
             @Override
             public void onItemLongClick(View view, int position) {
-                filesAdapter.toggleChecked(position);
+                filesAdapter.togglePositionChecked(position);
             }
         });
         filesAdapter.setItemsCheckedChangedListener(new FilesAdapter.OnItemsCheckedChangedListener() {
@@ -374,7 +374,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     }
 
 	private void initDownloadFiles(final int... indeces) {
-		PutioFileData[] files = new PutioFileData[indeces.length];
+		PutioFile[] files = new PutioFile[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = getFileAtPosition(indeces[i]);
 		}
@@ -389,7 +389,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	private void initRenameFile(final int index) {
         utils.renameFileDialog(getActivity(), getFileAtPosition(index), new PutioUtils.RenameCallback() {
             @Override
-            public void onRename(PutioFileData file, String newName) {
+            public void onRename(PutioFile file, String newName) {
                 getFileAtPosition(getIndexFromFileId(file.id)).name = newName;
                 filesAdapter.notifyDataSetChanged();
             }
@@ -397,7 +397,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 	}
 
 	private void initDeleteFile(int... indeces) {
-		PutioFileData[] files = new PutioFileData[indeces.length];
+		PutioFile[] files = new PutioFile[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = getFileAtPosition(indeces[i]);
 		}
@@ -445,7 +445,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
     }
 
-	private void populateList(final List<PutioFileData> files, final PutioFileData folder) {
+	private void populateList(final List<PutioFile> files, final PutioFile folder) {
         if (folder != null) {
             state.currentFolder = folder;
         }
@@ -453,12 +453,14 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 
         refreshCurrentFolderView();
 
+        state.fileData.clear();
 		if (files == null || files.isEmpty()) {
 			setViewMode(VIEWMODE_EMPTY);
+            filesAdapter.notifyDataSetChanged();
 			return;
 		}
 
-		state.fileData.clear();
+        state.fileData.clear();
         state.fileData.addAll(files);
         filesAdapter.notifyDataSetChanged();
 
@@ -502,7 +504,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         return getIndexFromFileId(fileId) != -1;
     }
 
-	public PutioFileData getFileAtPosition(int position) {
+	public PutioFile getFileAtPosition(int position) {
 		return state.fileData.get(position);
 	}
 
@@ -588,7 +590,7 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		invalidateList(false);
 	}
 
-    public void onDestinationFolderSelected(PutioFileData folder) {
+    public void onDestinationFolderSelected(PutioFile folder) {
         int selectedFolderId = folder.id;
         utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
         Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
@@ -597,12 +599,12 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
     public static class State implements Parcelable {
         public boolean isSearch;
         public String searchQuery;
-        public PutioFileData currentFolder;
+        public PutioFile currentFolder;
         public long[] checkedIds;
         public int origId;
         public int requestedId;
         public boolean hasUpdated;
-        public List<PutioFileData> fileData;
+        public List<PutioFile> fileData;
 
         public State() { }
 
@@ -626,12 +628,12 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         private State(Parcel in) {
             this.isSearch = in.readByte() != 0;
             this.searchQuery = in.readString();
-            this.currentFolder = in.readParcelable(PutioFileData.class.getClassLoader());
+            this.currentFolder = in.readParcelable(PutioFile.class.getClassLoader());
             this.checkedIds = in.createLongArray();
             this.origId = in.readInt();
             this.requestedId = in.readInt();
             this.hasUpdated = in.readByte() != 0;
-            in.readTypedList(fileData, PutioFileData.CREATOR);
+            in.readTypedList(fileData, PutioFile.CREATOR);
         }
 
         public static final Creator<State> CREATOR = new Creator<State>() {

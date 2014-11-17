@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
-import com.stevenschoen.putionew.model.transfers.PutioTransferData;
+import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,7 @@ public class PutioTransfersService extends Service {
 
 	private Runnable updateTransfersRunnable;
 
-	private List<PutioTransferData> transfers;
+	private List<PutioTransfer> transfers;
 	
 	@Override
 	public void onCreate() {
@@ -76,7 +76,7 @@ public class PutioTransfersService extends Service {
 
     public static class TransfersAvailable { }
 
-	public List<PutioTransferData> getTransfers() {
+	public List<PutioTransfer> getTransfers() {
 		return transfers;
 	}
 	
