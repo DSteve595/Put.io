@@ -27,15 +27,15 @@
         android:id="@+id/context_move"
         android:icon="@android:drawable/ic_menu_set_as"
         android:orderInCategory="4"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/move"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/context_delete"
         android:icon="@drawable/ic_action_delete_black"
         android:orderInCategory="5"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/delete"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -13,8 +13,8 @@
         android:id="@+id/context_delete"
         android:icon="@drawable/ic_action_delete_black"
         android:orderInCategory="2"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/delete"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>
