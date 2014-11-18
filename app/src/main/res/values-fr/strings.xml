@@ -27,6 +27,8 @@
   <string name="undo">Annuler</string>
   <string name="storage">Stockage</string>
   <string name="move">Déplacer</string>
+  <string name="more">Plus</string>
+  <string name="maximize">Maximiser</string>
   <string name="gettingstreamurltitle">Streaming en préparation</string>
   <string name="gettingstreamurlbody">Juste une seconde&#8230;</string>
   <string name="renametitle">Renommer ce fichier ?</string>
@@ -61,8 +63,12 @@
   <string name="files">Fichiers</string>
   <string name="transfers">Transferts</string>
   <string name="loginsuccess">Vous vous êtes connecté avec succès !</string>
+  <string name="x_selected">%d sélectionné</string>
   <string name="total_is">Total : %s</string>
   <string name="loading">Chargement&#8230;</string>
+  <string name="created_on_x_at_x">Créé le %1$s à %2$s</string>
+  <string name="accessed_on_x_at_x">Consulté le %1$s à %2$s</string>
+  <string name="never_accessed">Jamais consulté</string>
   <string name="applychanges">Il y a eu des modifications sur %1$s.\nAppliquer les modifications ?</string>
   <string name="pasteurls">Coller les URLs ici</string>
   <string name="extractwhenfinished">Extraire à la fin</string>
@@ -86,6 +92,8 @@
   <string name="convert_mp4">Convertir en MP4</string>
   <string name="converting_mp4">Convertion en MP4&#8230;</string>
   <string name="mp4_available">MP4 disponible</string>
+  <string name="use_mp4">Utilise le MP4</string>
+  <string name="dont_use_mp4">N\'utilise pas le MP4</string>
   <string name="destination_is">Destination :</string>
   <string name="choose_folder">Choisir le dossier</string>
   <string name="notification_title_uploading_torrent">Envoi du torrent</string>
