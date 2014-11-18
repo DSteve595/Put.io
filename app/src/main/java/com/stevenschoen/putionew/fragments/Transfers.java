@@ -26,6 +26,7 @@ import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
+import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
@@ -82,6 +83,9 @@ public final class Transfers extends NoClipSupportFragment {
 		View view = inflater.inflate(R.layout.transfers, container, false);
 		
 		listview = (ListView) view.findViewById(R.id.transferslist);
+        if (!UIUtils.isTablet(getActivity())) {
+            PutioUtils.padForFab(listview);
+        }
 
 		adapter = new TransfersAdapter(getActivity(), transfers);
 		listview.setAdapter(adapter);

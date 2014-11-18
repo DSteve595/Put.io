@@ -259,9 +259,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
             }
         });
 
-        if (UIUtils.hasLollipop()) {
-            PutioUtils.setupFab(buttonAddTransfer);
-        }
+        PutioUtils.setupFab(buttonAddTransfer);
 
         class NotificationTask extends AsyncTask<Void, Void, PutioNotification[]> {
 

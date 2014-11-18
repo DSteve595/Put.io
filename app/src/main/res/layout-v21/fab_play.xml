@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fab_bg"
+    android:contentDescription="@string/play"
     android:elevation="@dimen/fabElevation"
     android:src="@drawable/ic_fab_play"
     android:stateListAnimator="@animator/fab_state_list_anim"

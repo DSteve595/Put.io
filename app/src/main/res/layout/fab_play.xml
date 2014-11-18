@@ -11,6 +11,7 @@
         android:layout_gravity="center"
         android:background="@drawable/fab_bg"
         android:clickable="false"
+        android:contentDescription="@string/play"
         android:duplicateParentState="true"
         android:focusable="false"
         android:src="@drawable/ic_fab_play"

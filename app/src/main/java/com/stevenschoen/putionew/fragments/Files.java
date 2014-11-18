@@ -123,6 +123,9 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
 		View view = inflater.inflate(getLayoutResId(), container, false);
 
 		filesList = (RecyclerView) view.findViewById(R.id.fileslist);
+        if (!UIUtils.isTablet(getActivity())) {
+            PutioUtils.padForFab(filesList);
+        }
         if (!UIUtils.isTV(getActivity())) {
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
             swipeRefreshLayout.setOnRefreshListener(this);

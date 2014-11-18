@@ -3,6 +3,7 @@
     <dimen name="fabSize">64dp</dimen>
     <dimen name="fabSizeHalf">32dp</dimen>
     <dimen name="fabSizeHalfNegative">-32dp</dimen>
+    <dimen name="fabMargin">16dp</dimen>
 
     <dimen name="fileDetailsMaxHeight">600dp</dimen>
 

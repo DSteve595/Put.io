@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -786,6 +787,15 @@ public class PutioUtils {
             });
             floatingActionButton.setClipToOutline(true);
         }
+    }
+
+    public static void padForFab(View viewToPad) {
+        Resources res = viewToPad.getResources();
+        viewToPad.setPadding(
+                viewToPad.getPaddingLeft(),
+                viewToPad.getPaddingTop(),
+                viewToPad.getPaddingRight(),
+                (int) (res.getDimension(R.dimen.fabSize) + (res.getDimension(R.dimen.fabMargin)) * 2));
     }
 
     public static class BlurTransformation implements Transformation {
