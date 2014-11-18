@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/castbar_holder"
+        android:layout_above="@+id/holder_castbar"
         android:layout_below="@+id/holder_toolbar_main">
 
         <android.support.v4.view.ViewPager
@@ -27,9 +27,15 @@
             android:layout_margin="16dp" />
     </RelativeLayout>
 
-    <include
-        android:id="@id/castbar_holder"
-        layout="@layout/castbar" />
+    <FrameLayout
+        android:id="@id/holder_castbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clipChildren="false">
+
+        <include layout="@layout/castbar" />
+    </FrameLayout>
 
     <include
         android:id="@id/holder_toolbar_main"
@@ -37,5 +43,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
-
 </RelativeLayout>
