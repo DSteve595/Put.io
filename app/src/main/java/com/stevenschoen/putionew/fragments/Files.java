@@ -103,13 +103,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
             }
             if (state == null) {
                 state = new State();
-                state.requestedId = 0;
-                state.currentFolder = new PutioFile();
-                state.currentFolder.id = 0;
-                state.isSearch = false;
-                state.origId = 0;
-                state.fileData = new ArrayList<>();
-                state.hasUpdated = false;
             }
         }
 
@@ -609,7 +602,15 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
         public boolean hasUpdated;
         public List<PutioFile> fileData;
 
-        public State() { }
+        public State() {
+            requestedId = 0;
+            currentFolder = new PutioFile();
+            currentFolder.id = 0;
+            isSearch = false;
+            origId = 0;
+            fileData = new ArrayList<>();
+            hasUpdated = false;
+        }
 
         @Override
         public int describeContents() {
