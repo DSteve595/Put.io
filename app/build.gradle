@@ -54,7 +54,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.3.+'
     compile 'org.apache.httpcomponents:httpcore:4.3.+'
     compile 'joda-time:joda-time:2.5'
-    compile 'com.squareup.retrofit:retrofit:1.7.+'
+    compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.squareup.okhttp:okhttp:2.0.+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.+'

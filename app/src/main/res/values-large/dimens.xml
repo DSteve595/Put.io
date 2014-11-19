@@ -6,6 +6,4 @@
 
     <dimen name="accountMaxWidth">400dp</dimen>
 
-    <dimen name="files_row_padding">16dp</dimen>
-
 </resources>

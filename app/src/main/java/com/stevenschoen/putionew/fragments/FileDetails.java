@@ -294,7 +294,6 @@ public class FileDetails extends Fragment {
                     getActivity().finish();
                 }
             }
-
         });
 
         View buttonPlay = view.findViewById(R.id.button_filedetails_play);

@@ -105,7 +105,11 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
         holder.textName.setText(file.name);
         holder.textDescription.setText(PutioUtils.humanReadableByteCount(file.size, false));
         if (file.icon != null && !file.icon.isEmpty()) {
-            Picasso.with(holder.iconImg.getContext()).load(file.icon).into(holder.iconImg);
+            if (file.icon.endsWith("folder.png")) {
+                Picasso.with(holder.iconImg.getContext()).load(R.drawable.ic_putio_folder).into(holder.iconImg);
+            } else {
+                Picasso.with(holder.iconImg.getContext()).load(file.icon).into(holder.iconImg);
+            }
         }
         if (file.isAccessed()) {
             holder.iconAccessed.setVisibility(View.VISIBLE);
