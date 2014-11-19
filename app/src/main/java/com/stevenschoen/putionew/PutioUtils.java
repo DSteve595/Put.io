@@ -795,7 +795,7 @@ public class PutioUtils {
                 viewToPad.getPaddingLeft(),
                 viewToPad.getPaddingTop(),
                 viewToPad.getPaddingRight(),
-                (int) (res.getDimension(R.dimen.fabSize) + (res.getDimension(R.dimen.fabMargin)) * 2));
+                (int) (res.getDimension(R.dimen.fabSize) + (res.getDimension(R.dimen.fabMargin)) * 1.5f));
     }
 
     public static class BlurTransformation implements Transformation {

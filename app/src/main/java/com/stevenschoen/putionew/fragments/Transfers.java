@@ -71,10 +71,6 @@ public final class Transfers extends NoClipSupportFragment {
 
 		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
         utils.getEventBus().register(this);
-		
-		Intent transfersServiceIntent = new Intent(getActivity(), PutioTransfersService.class);
-		getActivity().startService(transfersServiceIntent);
-		getActivity().bindService(transfersServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 	
 	@Override
@@ -83,9 +79,7 @@ public final class Transfers extends NoClipSupportFragment {
 		View view = inflater.inflate(R.layout.transfers, container, false);
 		
 		listview = (ListView) view.findViewById(R.id.transferslist);
-        if (!UIUtils.isTablet(getActivity())) {
-            PutioUtils.padForFab(listview);
-        }
+        PutioUtils.padForFab(listview);
 
 		adapter = new TransfersAdapter(getActivity(), transfers);
 		listview.setAdapter(adapter);
@@ -252,15 +246,24 @@ public final class Transfers extends NoClipSupportFragment {
 			setViewMode(VIEWMODE_LIST);
 		}
 	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		
-		if (transfersService != null) {
-			getActivity().unbindService(mConnection);
-		}
-	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Intent transfersServiceIntent = new Intent(getActivity(), PutioTransfersService.class);
+        getActivity().startService(transfersServiceIntent);
+        getActivity().bindService(transfersServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (transfersService != null) {
+            getActivity().unbindService(mConnection);
+        }
+    }
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
 		@Override
