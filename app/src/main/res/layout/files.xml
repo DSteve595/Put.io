@@ -17,17 +17,19 @@
             android:clipToPadding="false" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@id/holder_files_currentfolder"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:clipChildren="false"
+        android:elevation="2dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:elevation="2dp"
+            android:layout_height="64dp"
+            android:background="?attr/colorPrimary"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingEnd="8dp"
@@ -40,7 +42,8 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:scaleType="fitCenter"
-                tools:icon="@drawable/ic_launcher" />
+                android:src="@drawable/ic_putio_folder"
+                android:tint="?android:attr/textColorPrimary" />
 
             <com.stevenschoen.putionew.AutoResizeTextView
                 android:id="@+id/text_files_currentfolder"
@@ -49,20 +52,17 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif"
                 android:gravity="center_vertical"
                 android:maxLines="2"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 tools:text="Folder name" />
         </LinearLayout>
 
-        <include
-            layout="@layout/shadow_actionbar"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="-4dp" />
-    </RelativeLayout>
+            android:layout_height="1dp"
+            android:background="?attr/dividerVertical" />
+    </LinearLayout>
 
     <include
         android:id="@+id/files_empty_subfolder"

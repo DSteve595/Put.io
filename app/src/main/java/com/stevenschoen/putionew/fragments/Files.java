@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 import com.stevenschoen.putionew.AutoResizeTextView;
 import com.stevenschoen.putionew.DividerItemDecoration;
 import com.stevenschoen.putionew.FilesAdapter;
@@ -48,7 +47,7 @@ import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	private static final int VIEWMODE_LIST = 1;
 	private static final int VIEWMODE_LISTOREMPTY = 2;
@@ -306,7 +305,6 @@ public class Files extends DialogFragment implements SwipeRefreshLayout.OnRefres
                 textCurrentFolder.setText(state.searchQuery);
             } else {
                 iconCurrentFolder.setVisibility(View.VISIBLE);
-                Picasso.with(getActivity()).load(state.currentFolder.icon).into(iconCurrentFolder);
                 textCurrentFolder.setText(state.currentFolder.name);
             }
         } else {

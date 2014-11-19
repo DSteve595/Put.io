@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -44,7 +43,7 @@ import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 
 import java.io.IOException;
 
-public class FileDetails extends Fragment {
+public class FileDetails extends NoClipSupportFragment {
 
     private State state;
 
