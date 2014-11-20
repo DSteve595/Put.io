@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fab_shadow"
-    android:padding="4dp">
+    android:paddingBottom="6dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="2dp">
 
     <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
