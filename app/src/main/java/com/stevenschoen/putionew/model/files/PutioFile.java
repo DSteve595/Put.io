@@ -47,9 +47,11 @@ public class PutioFile implements Parcelable {
 
     public String getStreamUrl(PutioUtils utils, boolean mp4) {
         String base = PutioUtils.baseUrl + "/files/" + id;
-        String streamOrStreamMp4 = "/stream";
+        String streamOrStreamMp4;
         if (mp4) {
-            streamOrStreamMp4 += "/mp4";
+            streamOrStreamMp4 = "/mp4/stream";
+        } else {
+            streamOrStreamMp4 = "/stream";
         }
 
         return base + streamOrStreamMp4 + utils.tokenWithStuff;
