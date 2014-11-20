@@ -43,7 +43,7 @@
                 android:layout_height="36dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_putio_folder"
-                android:tint="?android:attr/textColorPrimary" />
+                android:tint="@color/abc_primary_text_material_light" />
 
             <com.stevenschoen.putionew.AutoResizeTextView
                 android:id="@+id/text_files_currentfolder"
