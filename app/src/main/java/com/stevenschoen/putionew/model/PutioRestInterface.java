@@ -161,6 +161,9 @@ public interface PutioRestInterface {
 		protected void notifStart() {
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
 			notifBuilder.setOngoing(true);
+            notifBuilder.setCategory(NotificationCompat.CATEGORY_PROGRESS);
+            notifBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
+            notifBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 			notifBuilder.setContentTitle(context.getString(R.string.notification_title_uploading_torrent));
 			notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
 			notifBuilder.setTicker(context.getString(R.string.notification_ticker_uploading_torrent));
@@ -182,6 +185,9 @@ public interface PutioRestInterface {
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
 			notifBuilder.setOngoing(false);
 			notifBuilder.setAutoCancel(true);
+            notifBuilder.setCategory(NotificationCompat.CATEGORY_PROGRESS);
+            notifBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
+            notifBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 			notifBuilder.setContentTitle(context.getString(R.string.notification_title_uploaded_torrent));
 			notifBuilder.setContentText(context.getString(R.string.notification_body_uploaded_torrent));
 			notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
@@ -200,6 +206,9 @@ public interface PutioRestInterface {
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
 			notifBuilder.setOngoing(false);
 			notifBuilder.setAutoCancel(true);
+            notifBuilder.setCategory(NotificationCompat.CATEGORY_ERROR);
+            notifBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            notifBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 			notifBuilder.setContentTitle(context.getString(R.string.notification_title_error));
 			notifBuilder.setContentText(context.getString(R.string.notification_body_error));
 			notifBuilder.setSmallIcon(R.drawable.ic_notificon_transfer);
