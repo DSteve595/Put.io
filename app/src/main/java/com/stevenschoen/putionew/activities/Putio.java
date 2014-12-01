@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +13,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -252,10 +253,10 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
             @Override
             public void onClick(View v) {
                 Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class);
-                Bundle options = ActivityOptions.makeScaleUpAnimation(buttonAddTransfer,
+                Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(buttonAddTransfer,
                         0, 0,
                         buttonAddTransfer.getWidth(), buttonAddTransfer.getHeight()).toBundle();
-                startActivity(addTransferActivityIntent, options);
+                ActivityCompat.startActivity(Putio.this, addTransferActivityIntent, options);
             }
         });
 
