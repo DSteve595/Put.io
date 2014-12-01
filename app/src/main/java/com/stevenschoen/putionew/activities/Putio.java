@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -288,7 +287,6 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
                 }
             }
 
-            @SuppressLint("NewApi")
             @Override
             protected void onPostExecute(final PutioNotification[] result) {
                 if (result != null) {
