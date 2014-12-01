@@ -52,7 +52,7 @@ public class AddTransfers extends FragmentActivity implements DestinationFilesDi
 
     private TextView textFilename, textNotATorrent;
 
-    private int destinationFolderId = 0;
+    private long destinationFolderId = 0;
     private TextView buttonDestination;
 
     @Override
@@ -254,7 +254,7 @@ public class AddTransfers extends FragmentActivity implements DestinationFilesDi
         buttonDestination.setText(folder.name);
 
         sharedPrefs.edit()
-                .putInt("destinationFolderId", folder.id)
+                .putLong("destinationFolderId", folder.id)
                 .putString("destinationFolderName", folder.name)
                 .apply();
     }

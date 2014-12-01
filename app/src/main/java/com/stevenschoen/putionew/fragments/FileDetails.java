@@ -185,29 +185,6 @@ public class FileDetails extends NoClipSupportFragment {
             }
         });
 
-        if (UIUtils.isTablet(getActivity())) {
-//            view.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (PutioUtils.dpFromPx(getActivity(), view.getHeight()) > 560) {
-//                        view.getLayoutParams().height =
-//                                (int) PutioUtils.pxFromDp(getActivity(), 560);
-//                    }
-//
-//                    if (PutioUtils.dpFromPx(getActivity(), view.getWidth()) > 400) {
-//                        view.getLayoutParams().width =
-//                                (int) PutioUtils.pxFromDp(getActivity(), 400);
-//                    }
-//
-//                    View parent = (View) view.getParent();
-//                    ViewGroup.LayoutParams params = parent.getLayoutParams();
-//                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                    params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                    parent.setLayoutParams(params);
-//                }
-//            });
-        }
-
         ViewGroup holderInfo = (ViewGroup) view.findViewById(R.id.holder_fileinfo);
 
         infoMp4Already = holderInfo.findViewById(R.id.holder_fileinfo_mp4_already);
@@ -576,7 +553,7 @@ public class FileDetails extends NoClipSupportFragment {
         return state.newFileData;
     }
 
-    public int getFileId() {
+    public long getFileId() {
         return getCurrentFile().id;
     }
 

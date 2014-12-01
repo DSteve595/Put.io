@@ -39,7 +39,7 @@ public class About extends Fragment {
         try {
             String version = getActivity().getPackageManager().getPackageInfo(
                     getActivity().getPackageName(), 0).versionName;
-            textVersion.setText("Version " + version);
+            textVersion.setText(getString(R.string.version_x, version));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

@@ -185,7 +185,9 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
                         filesAndFileDetailsFragment.setCallbacks(Putio.this);
                         return filesAndFileDetailsFragment;
                     } else {
-                        return Fragment.instantiate(Putio.this, Files.class.getName());
+                        Bundle args = new Bundle();
+                        args.putBoolean("padForFab", true);
+                        return Fragment.instantiate(Putio.this, Files.class.getName(), args);
                     }
                 case TAB_TRANSFERS:
                     return Fragment.instantiate(Putio.this, Transfers.class.getName());
@@ -398,7 +400,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
         });
     }
 
-    public void showFilesAndHighlightFile(int parentId, int id) {
+    public void showFilesAndHighlightFile(long parentId, long id) {
         selectTab(TAB_FILES, true);
         getFilesFragment().highlightFile(parentId, id);
     }

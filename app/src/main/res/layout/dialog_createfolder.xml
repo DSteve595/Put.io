@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/dialog_title_putio" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/text_createfolder_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_large"
+            android:hint="@string/folder_name" />
+
+        <LinearLayout
+            android:id="@+id/buttonbar"
+            style="@style/ButtonBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_createfolder_name">
+
+            <Button
+                android:id="@+id/button_createfolder_cancel"
+                style="@style/ButtonBar.Button.Transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/button_createfolder_create"
+                style="@style/ButtonBar.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

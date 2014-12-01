@@ -32,7 +32,7 @@ public class FilesCache {
 		filesCacheDir.mkdirs();
 	}
 
-	public void cache(FilesListResponse response, int parentId) {
+	public void cache(FilesListResponse response, long parentId) {
 		File file = getFile(parentId);
 		try {
 			FileUtils.writeStringToFile(file, gson.toJson(response));
@@ -41,7 +41,7 @@ public class FilesCache {
 		}
 	}
 
-	public CachedFilesListResponse getCached(int parentId) {
+	public CachedFilesListResponse getCached(long parentId) {
 		File file = getFile(parentId);
 		try {
 			return gson.fromJson(FileUtils.readFileToString(file), CachedFilesListResponse.class);
@@ -53,7 +53,7 @@ public class FilesCache {
 		return null;
 	}
 
-	private File getFile(int parentId) {
+	private File getFile(long parentId) {
 		return new File(filesCacheDir + File.separator + parentId + ".json");
 	}
 }

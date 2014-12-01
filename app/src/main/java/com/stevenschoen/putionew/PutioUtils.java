@@ -295,7 +295,7 @@ public class PutioUtils {
                 for (int i = 0; i < files.length; i++) {
                     PutioFile file = files[i];
                     if (file.isFolder()) {
-                        int[] folder = new int[]{file.id};
+                        long[] folder = new long[]{file.id};
                         downloadIds[i] = downloadZipWithoutUrl(context, folder, file.name);
                     } else {
                         downloadIds[i] = downloadFileWithoutUrl(context, file.id, file.name);
@@ -340,28 +340,28 @@ public class PutioUtils {
         new downloadFileTaskCompat().execute();
     }
 
-    private long downloadFileWithoutUrl(final Context context, final int id, String filename) {
+    private long downloadFileWithoutUrl(final Context context, final long id, String filename) {
         Uri uri = Uri.parse(getFileDownloadUrl(id));
         return download(context, id, false, filename, uri);
     }
 
-    private long downloadFileWithUrl(final Context context, final int id, String filename, String url) {
+    private long downloadFileWithUrl(final Context context, final long id, String filename, String url) {
         Uri uri = Uri.parse(url.replace("https://", "http://"));
         return download(context, id, false, filename, uri);
     }
 
-    private long downloadZipWithoutUrl(final Context context, final int[] id, String filename) {
+    private long downloadZipWithoutUrl(final Context context, final long[] id, String filename) {
         Uri uri = Uri.parse(getZipDownloadUrl(id));
         return download(context, 0, true, filename + ".zip", uri);
     }
 
-    private long downloadZipWithUrl(final Context context, final int[] id, String filename, String url) {
+    private long downloadZipWithUrl(final Context context, final long[] id, String filename, String url) {
         Uri uri = Uri.parse(url.replace("https://", "http://"));
         return download(context, 0, true, filename + ".zip", uri);
     }
 
     @TargetApi(11)
-    private long download(Context context, int id, boolean isZip, String filename, Uri uri) {
+    private long download(Context context, long id, boolean isZip, String filename, Uri uri) {
         if (idIsDownloaded(id) && !isZip) {
             deleteId(id);
         }
@@ -472,7 +472,7 @@ public class PutioUtils {
         new GetStreamUrlAndPlay().execute(url);
     }
 
-    public InputStream getDefaultSubtitleData(int id) throws SocketTimeoutException {
+    public InputStream getDefaultSubtitleData(long id) throws SocketTimeoutException {
         URL url = null;
         try {
             url = new URL(baseUrl + "/files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
@@ -492,8 +492,8 @@ public class PutioUtils {
         return null;
     }
 
-    public void copyDownloadLink(final Context context, int id) {
-        class GetDlLinkTask extends AsyncTask<Integer, Void, String> {
+    public void copyDownloadLink(final Context context, long id) {
+        class GetDlLinkTask extends AsyncTask<Long, Void, String> {
             Dialog dialog;
 
             @Override
@@ -503,7 +503,7 @@ public class PutioUtils {
             }
 
             @Override
-            protected String doInBackground(Integer... fileId) {
+            protected String doInBackground(Long... fileId) {
                 try {
                     return PutioUtils.resolveRedirect(baseUrl + "/files/" + fileId[0] + "/download"
                             + tokenWithStuff);
@@ -552,19 +552,16 @@ public class PutioUtils {
         return loc.length > 0 ? loc[0].getValue() : null;
     }
 
-    public String getFileDownloadUrl(int id) {
+    public String getFileDownloadUrl(long id) {
         return baseUrl + "/files/" + id + "/download" + tokenWithStuff;
     }
 
-    public String getZipDownloadUrl(int[] id) {
-        String ids = Integer.toString(id[0]);
-        for (int i = 1; i < id.length; i++) {
-            ids += "," + Integer.toString(id[i]);
-        }
-        return baseUrl + "/files/zip?file_ids=" + ids + tokenWithStuff.replace("?", "&"); // TODO hacky
+    public String getZipDownloadUrl(long... ids) {
+        String idsString = longsToString(ids);
+        return baseUrl + "/files/zip?file_ids=" + idsString + tokenWithStuff.replace("?", "&"); // TODO hacky
     }
 
-    public static boolean idIsDownloaded(int id) {
+    public static boolean idIsDownloaded(long id) {
         String path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
                 + File.separator + "put.io" + File.separator + id;
@@ -580,7 +577,7 @@ public class PutioUtils {
         }
     }
 
-    public static void deleteId(int id) {
+    public static void deleteId(long id) {
         String path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
                 + File.separator + "put.io" + File.separator + id;
@@ -604,7 +601,7 @@ public class PutioUtils {
         }
     }
 
-    public static void openDownloadedId(int id, Context context) {
+    public static void openDownloadedId(long id, Context context) {
         if (idIsDownloaded(id)) {
             String path = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
@@ -615,38 +612,6 @@ public class PutioUtils {
         } else {
             Toast.makeText(context, context.getString(R.string.filenotfound), Toast.LENGTH_LONG).show();
         }
-    }
-
-    private static void share(Uri uri, Context context) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        intent.setDataAndType(uri, "application/octet-stream");
-        try {
-            context.startActivity(Intent.createChooser(intent, uri.getLastPathSegment()));
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public static void shareDownloadedId(int id, Context context) {
-        if (idIsDownloaded(id)) {
-            String path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
-                    + File.separator + "put.io" + File.separator + id;
-            File file = new File(path).listFiles()[0];
-            Uri uri = Uri.fromFile(file);
-            share(uri, context);
-        } else {
-            Toast.makeText(context, context.getString(R.string.filenotfound), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public static void openDownloadedUri(Uri uri, Context context) {
-        open(uri, context);
-    }
-
-    public static void shareDownloadedUri(Uri uri, Context context) {
-        share(uri, context);
     }
 
     public Dialog deleteFilesDialog(final Context context, final DeleteCallback callback,
@@ -664,7 +629,7 @@ public class PutioUtils {
         deleteDelete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-				int[] idsToDelete = new int[filesToDelete.length];
+                long[] idsToDelete = new long[filesToDelete.length];
 				for (int i = 0; i < filesToDelete.length; i++) {
 					idsToDelete[i] = filesToDelete[i].id;
 				}
@@ -695,14 +660,39 @@ public class PutioUtils {
         public void onDelete();
     }
 
-    public Dialog removeTransferDialog(final Context context, final int... idsToDelete) {
+    public Dialog createFolderDialog(Context context, final long parentId) {
+        final Dialog createFolderDialog = PutioDialog(context, context.getString(R.string.create_folder), R.layout.dialog_createfolder);
+
+        final EditText textName = (EditText) createFolderDialog.findViewById(R.id.text_createfolder_name);
+
+        Button buttonCreate = (Button) createFolderDialog.findViewById(R.id.button_createfolder_create);
+        buttonCreate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getJobManager().addJobInBackground(new PutioRestInterface.PostCreateFolderJob(PutioUtils.this,
+                        textName.getText().toString(), parentId));
+                createFolderDialog.dismiss();
+            }
+        });
+
+        Button buttonCancel = (Button) createFolderDialog.findViewById(R.id.button_createfolder_cancel);
+        buttonCancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFolderDialog.cancel();
+            }
+        });
+
+        return createFolderDialog;
+    }
+
+    public Dialog removeTransferDialog(final Context context, final long... idsToDelete) {
         final Dialog removeDialog = PutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
         Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
         removeRemove.setOnClickListener(new OnClickListener() {
-
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 getJobManager().addJobInBackground(new PutioRestInterface.PostCancelTransferJob(
 						PutioUtils.this, idsToDelete));
                 Toast.makeText(context, context.getString(R.string.transferremoved), Toast.LENGTH_SHORT).show();
@@ -712,9 +702,8 @@ public class PutioUtils {
 
         Button cancelRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_cancel);
         cancelRemove.setOnClickListener(new OnClickListener() {
-
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 removeDialog.cancel();
             }
         });
@@ -748,16 +737,25 @@ public class PutioUtils {
         return false;
 	}
 
-	public static String intsToString(int... ints) {
+	public static String longsToString(long... longs) {
 		StringBuilder string = new StringBuilder();
-		for (int i = 0; i < ints.length; i++) {
-			int anInt = ints[i];
-			string.append(anInt);
-			if (i + 1 < ints.length) string.append(",");
+		for (int i = 0; i < longs.length; i++) {
+            long aLong = longs[i];
+			string.append(aLong);
+			if (i + 1 < longs.length) string.append(",");
 		}
 
 		return string.toString();
 	}
+
+    public static String intsToString(int... ints) {
+        long[] longs = new long[ints.length];
+        for (int i = 0; i < ints.length; i++) {
+            longs[i] = ints[i];
+        }
+
+        return longsToString(longs);
+    }
 
     public static String[] parseIsoTime(Context context, String isoTime) {
         String[] result = new String[2];

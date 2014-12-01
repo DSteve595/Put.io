@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PutioTransfer implements Parcelable {
-	public int id;
-	public int fileId;
+	public long id;
+	public long fileId;
 	public long size;
 	public String name;
 	public String estimatedTime;
@@ -17,7 +17,7 @@ public class PutioTransfer implements Parcelable {
 	public int percentDone;
 	public String status;
 	public String statusMessage;
-	public int saveParentId;
+	public long saveParentId;
 
     @Override
 	public int describeContents() {
@@ -29,8 +29,8 @@ public class PutioTransfer implements Parcelable {
 	}
 	
 	private void readFromParcel(Parcel in) {
-		this.id = in.readInt();
-		this.fileId = in.readInt();
+		this.id = in.readLong();
+		this.fileId = in.readLong();
 		this.size = in.readLong();
 		this.name = in.readString();
 		this.estimatedTime = in.readString();
@@ -42,13 +42,13 @@ public class PutioTransfer implements Parcelable {
 		this.percentDone = in.readInt();
 		this.status = in.readString();
 		this.statusMessage = in.readString();
-		this.saveParentId = in.readInt();
+		this.saveParentId = in.readLong();
 	}
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeInt(this.id);
-		out.writeInt(this.fileId);
+		out.writeLong(this.id);
+		out.writeLong(this.fileId);
 		out.writeLong(this.size);
 		out.writeString(this.name);
 		out.writeString(this.estimatedTime);
@@ -60,7 +60,7 @@ public class PutioTransfer implements Parcelable {
 		out.writeInt(this.percentDone);
 		out.writeString(this.status);
 		out.writeString(this.statusMessage);
-		out.writeInt(this.saveParentId);
+		out.writeLong(this.saveParentId);
 	}
 	
 	public static final Creator CREATOR = new Creator() {

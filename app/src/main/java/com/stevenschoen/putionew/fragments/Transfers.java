@@ -26,7 +26,6 @@ import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
-import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 

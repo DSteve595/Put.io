@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -56,9 +55,9 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	private static final int VIEWMODE_LISTORLOADING = 5;
 	private int viewMode = VIEWMODE_LIST;
 
-    private int highlightFileId = -1;
+    private long highlightFileId = -1;
 
-    private int[] mIdsToMove;
+    private long[] mIdsToMove;
 
     public interface Callbacks {
         public void onFileSelected(PutioFile file);
@@ -115,7 +114,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		View view = inflater.inflate(getLayoutResId(), container, false);
 
 		filesList = (RecyclerView) view.findViewById(R.id.fileslist);
-        if (!UIUtils.isTablet(getActivity())) {
+        if (getArguments() != null && getArguments().getBoolean("padForFab", false)) {
             PutioUtils.padForFab(filesList);
         }
         if (!UIUtils.isTV(getActivity())) {
@@ -249,6 +248,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
             public void onChanged() {
                 if (state.currentFolder.id != state.origId) {
                     filesList.scrollToPosition(0);
+                    getActivity().supportInvalidateOptionsMenu();
                 }
                 state.origId = state.currentFolder.id;
 
@@ -402,7 +402,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         DestinationFilesDialog destinationFilesDialog = (DestinationFilesDialog)
                 DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
         destinationFilesDialog.show(getFragmentManager(), "dialog");
-        mIdsToMove = new int[indeces.length];
+        mIdsToMove = new long[indeces.length];
         for (int i = 0; i < indeces.length; i++) {
             mIdsToMove[i] = getFileAtPosition(indeces[i]).id;
         }
@@ -423,12 +423,32 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.files, menu);
-        MenuItem buttonSearch = menu.findItem(R.id.menu_search);
+        MenuItem itemSearch = menu.findItem(R.id.menu_search);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(buttonSearch);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(itemSearch);
         searchView.setIconifiedByDefault(true);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 	}
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem itemCreateFolder = menu.findItem(R.id.menu_createfolder);
+        itemCreateFolder.setVisible(!state.isSearch);
+        itemCreateFolder.setEnabled(!state.isSearch);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_createfolder:
+                utils.createFolderDialog(getActivity(), state.currentFolder.id).show();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void initSearch(String query) {
         state.searchQuery = query;
@@ -524,7 +544,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		return (state.currentFolder.id != 0 || state.isSearch);
 	}
 
-	public void highlightFile(int parentId, int id) {
+	public void highlightFile(long parentId, long id) {
 		state.requestedId = parentId;
         highlightFileId = id;
 		invalidateList(true);
@@ -585,7 +605,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	}
 
     public void onDestinationFolderSelected(PutioFile folder) {
-        int selectedFolderId = folder.id;
+        long selectedFolderId = folder.id;
         utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
         Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
     }
@@ -595,8 +615,8 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         public String searchQuery;
         public PutioFile currentFolder;
         public long[] checkedIds;
-        public int origId;
-        public int requestedId;
+        public long origId;
+        public long requestedId;
         public boolean hasUpdated;
         public List<PutioFile> fileData;
 
@@ -621,8 +641,8 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
             dest.writeString(this.searchQuery);
             dest.writeParcelable(this.currentFolder, 0);
             dest.writeLongArray(this.checkedIds);
-            dest.writeInt(this.origId);
-            dest.writeInt(this.requestedId);
+            dest.writeLong(this.origId);
+            dest.writeLong(this.requestedId);
             dest.writeByte(hasUpdated ? (byte) 1 : (byte) 0);
             dest.writeTypedList(fileData);
         }
@@ -632,8 +652,8 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
             this.searchQuery = in.readString();
             this.currentFolder = in.readParcelable(PutioFile.class.getClassLoader());
             this.checkedIds = in.createLongArray();
-            this.origId = in.readInt();
-            this.requestedId = in.readInt();
+            this.origId = in.readLong();
+            this.requestedId = in.readLong();
             this.hasUpdated = in.readByte() != 0;
             in.readTypedList(fileData, PutioFile.CREATOR);
         }

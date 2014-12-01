@@ -12,10 +12,10 @@ public class PutioFile implements Parcelable {
 	public String screenshot;
 	public String createdAt;
     public String firstAccessedAt;
-	public int parentId;
+	public long parentId;
 	public boolean isMp4Available;
 	public String contentType;
-	public int id;
+	public long id;
 	public long size;
 
     public PutioFile() { }
@@ -73,10 +73,10 @@ public class PutioFile implements Parcelable {
 		this.screenshot = in.readString();
 		this.createdAt = in.readString();
         this.firstAccessedAt = in.readString();
-		this.parentId = in.readInt();
+		this.parentId = in.readLong();
 		this.isMp4Available = (Boolean) in.readValue(ClassLoader.getSystemClassLoader());
 		this.contentType = in.readString();
-		this.id = in.readInt();
+		this.id = in.readLong();
 		this.size = in.readLong();
 	}
 
@@ -88,10 +88,10 @@ public class PutioFile implements Parcelable {
 		out.writeString(this.screenshot);
 		out.writeString(this.createdAt);
         out.writeString(this.firstAccessedAt);
-		out.writeInt(this.parentId);
+		out.writeLong(this.parentId);
 		out.writeValue(this.isMp4Available);
 		out.writeString(this.contentType);
-		out.writeInt(this.id);
+		out.writeLong(this.id);
 		out.writeLong(this.size);
 	}
 	
