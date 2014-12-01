@@ -27,6 +27,8 @@
   <string name="undo">Desfazer</string>
   <string name="storage">Armazenamento</string>
   <string name="move">Mover</string>
+  <string name="more">Mais</string>
+  <string name="maximize">Maximizar</string>
   <string name="gettingstreamurltitle">Preparando para transmitir</string>
   <string name="gettingstreamurlbody">Só um segundo&#8230;</string>
   <string name="renametitle">Renomear esse arquivo?</string>
@@ -35,8 +37,8 @@
     <item quantity="other">Remover estes arquivos?</item>
   </plurals>
   <plurals name="deletebody">
-    <item quantity="one">Só poderá ter de volta se adicionar ele novamente.</item>
-    <item quantity="other">Só poderá recuperá-los adicionando-os novamente.</item>
+    <item quantity="one">Só poderá ter de volta se adicionar o arquivo novamente.</item>
+    <item quantity="other">Só poderá recuperá-los adicionando novamente os arquivos.</item>
   </plurals>
   <string name="removetransfertitle">Remover esta transferência?</string>
   <string name="removetransferbody">O download será cancelado.</string>
@@ -53,7 +55,7 @@
   <string name="nothingenteredtofetch">Digite algo para pesquisar primeiro!</string>
   <string name="filetoobig">Este arquivo é muito grande! Tem certeza que é um torrent?</string>
   <string name="streamerror">Desculpe, houve um erro na transmissão deste vídeo.</string>
-  <string name="couldntconnect">Não pude conectar ao Put.io. Está online?</string>
+  <string name="couldntconnect">Não pude conectar ao Put.io. Você está online?</string>
   <string name="notatorrent">Isto não parece ser um arquivo torrent!</string>
   <string name="couldntgetdownloadlink">Houve um problema em conseguir o link para download.</string>
   <string name="noactivityfound">Nenhum app instalado pode abrir este arquivo.</string>
@@ -61,10 +63,12 @@
   <string name="files">Arquivos</string>
   <string name="transfers">Transferências</string>
   <string name="loginsuccess">Conectado com sucesso!</string>
+  <string name="x_selected">%d selecionado/os</string>
   <string name="total_is">Total: %s</string>
   <string name="loading">Carregando&#8230;</string>
-  <string name="created_on_x_at_x">Criado em %1$s em %2$s</string>
-  <string name="accessed_on_x_at_x">Acessado em %1$s em %2$s</string>
+  <string name="created_on_x_at_x">Criado em %1$s as %2$s</string>
+  <string name="accessed_on_x_at_x">Acessado em %1$s as %2$s</string>
+  <string name="never_accessed">Nunca acessado</string>
   <string name="applychanges">Você tem %1$s mudanças não salvas.\nAplicá-las?</string>
   <string name="pasteurls">Colar URLs aqui</string>
   <string name="extractwhenfinished">Extrair ao terminar</string>
@@ -77,7 +81,7 @@
   <string name="hey">Ei!</string>
   <string name="readytopaste">O link para download está pronto para ser colado.</string>
   <string name="cachesize">Tamanho do cache</string>
-  <string name="cacheexplanation">O espaço deve ser usado para o cache? \nIsto não afetará seus arquivos baixados.</string>
+  <string name="cacheexplanation">Quanto espaço deve ser usado para o cache?\nIsto não afetará os seus arquivos baixados.</string>
   <string name="addtransfer_type_url">URL</string>
   <string name="addtransfer_type_file">Arquivo torrent</string>
   <string name="copy_dl_link">Copie o link para download</string>
@@ -102,7 +106,7 @@
   <string name="notification_ticker_error">Não consegui enviar o torrent</string>
   <string name="notification_button_retry">Tente novamente</string>
   <string name="logged_in_as">Logado como</string>
-  <string name="available_storage">Armazenamento disponível</string>
+  <string name="available_storage">Espaço Disponível</string>
   <string name="appbysteven">Android app por Steven Schoen.</string>
   <string name="codedwithlove">Codificado com amor, carinho e cafeína.</string>
   <string name="notaffiliated">Não é afiliado com o Put.io.</string>
