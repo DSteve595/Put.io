@@ -38,7 +38,6 @@ import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.FilesAndFileDetails;
 import com.stevenschoen.putionew.fragments.Transfers;
-import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
 import org.apache.commons.io.FileUtils;
@@ -48,8 +47,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.InputStream;
 
-public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callbacks,
-        Transfers.Callbacks, DestinationFilesDialog.Callbacks {
+public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callbacks, Transfers.Callbacks {
 
     public static final int TAB_ACCOUNT = 0;
     public static final int TAB_FILES = 1;
@@ -160,11 +158,6 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestinationFolderSelected(PutioFile folder) {
-        getFilesFragment().onDestinationFolderSelected(folder);
     }
 
     public class PutioMainPagerAdapter extends PublicFragmentPagerAdapter {

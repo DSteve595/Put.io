@@ -10,9 +10,16 @@
         android:title="@string/download"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/context_move"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:title="@string/move"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/context_delete"
         android:icon="@drawable/ic_action_delete_black"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:showAsAction="ifRoom"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />

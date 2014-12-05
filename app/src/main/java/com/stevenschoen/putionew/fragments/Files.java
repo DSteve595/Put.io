@@ -57,8 +57,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 
     private long highlightFileId = -1;
 
-    private long[] mIdsToMove;
-
     public interface Callbacks {
         public void onFileSelected(PutioFile file);
         public void onSomethingSelected();
@@ -398,14 +396,22 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		utils.deleteFilesDialog(getActivity(), null, files).show();
 	}
 
-    private void initMoveFile(int... indeces) {
+    private void initMoveFile(final int... indeces) {
         DestinationFilesDialog destinationFilesDialog = (DestinationFilesDialog)
                 DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
         destinationFilesDialog.show(getFragmentManager(), "dialog");
-        mIdsToMove = new long[indeces.length];
-        for (int i = 0; i < indeces.length; i++) {
-            mIdsToMove[i] = getFileAtPosition(indeces[i]).id;
-        }
+        destinationFilesDialog.setCallbacks(new DestinationFilesDialog.Callbacks() {
+            @Override
+            public void onDestinationFolderSelected(PutioFile folder) {
+                long[] idsToMove = new long[indeces.length];
+                for (int i = 0; i < indeces.length; i++) {
+                    idsToMove[i] = getFileAtPosition(indeces[i]).id;
+                }
+                long selectedFolderId = folder.id;
+                utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, idsToMove));
+                Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 	public void invalidateList(boolean useCache) {
@@ -603,12 +609,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	public void onRefresh() {
 		invalidateList(false);
 	}
-
-    public void onDestinationFolderSelected(PutioFile folder) {
-        long selectedFolderId = folder.id;
-        utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, mIdsToMove));
-        Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
-    }
 
     public static class State implements Parcelable {
         public boolean isSearch;

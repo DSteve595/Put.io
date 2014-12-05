@@ -1,6 +1,5 @@
 package com.stevenschoen.putionew.activities;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +13,10 @@ import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class DestinationFilesDialog extends Files {
 
-    private DestinationFilesDialog.Callbacks mCallbacks;
+    private DestinationFilesDialog.Callbacks callbacks;
 
     public interface Callbacks {
         public void onDestinationFolderSelected(PutioFile folder);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        mCallbacks = (Callbacks) activity;
     }
 
     @Override
@@ -55,11 +47,17 @@ public class DestinationFilesDialog extends Files {
         view.findViewById(R.id.button_destination_choose).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallbacks.onDestinationFolderSelected(getState().currentFolder);
+                if (callbacks != null) {
+                    callbacks.onDestinationFolderSelected(getState().currentFolder);
+                }
                 getDialog().dismiss();
             }
         });
 
         return view;
+    }
+
+    public void setCallbacks(Callbacks callbacks) {
+        this.callbacks = callbacks;
     }
 }
