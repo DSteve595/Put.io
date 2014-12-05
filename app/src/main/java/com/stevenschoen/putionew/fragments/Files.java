@@ -93,16 +93,21 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         if (savedInstanceState != null && savedInstanceState.containsKey("state")) {
             state = savedInstanceState.getParcelable("state");
         }
+        if (state == null && getArguments() != null && getArguments().containsKey("state")) {
+            state = getArguments().getParcelable("state");
+        }
         if (state == null) {
-            if (getArguments() != null && getArguments().containsKey("state")) {
-                state = getArguments().getParcelable("state");
-            }
-            if (state == null) {
-                state = new State();
-            }
+            state = new State();
+            state.requestedId = 0;
+            state.currentFolder = new PutioFile();
+            state.currentFolder.id = 0;
+            state.isSearch = false;
+            state.origId = 0;
+            state.fileData = new ArrayList<>();
+            hasUpdated = false;
         }
 
-		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
+		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
 
 		utils.getEventBus().register(this);
 	}
@@ -620,15 +625,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         public boolean hasUpdated;
         public List<PutioFile> fileData;
 
-        public State() {
-            requestedId = 0;
-            currentFolder = new PutioFile();
-            currentFolder.id = 0;
-            isSearch = false;
-            origId = 0;
-            fileData = new ArrayList<>();
-            hasUpdated = false;
-        }
+        public State() { }
 
         @Override
         public int describeContents() {
