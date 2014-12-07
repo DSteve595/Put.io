@@ -652,7 +652,11 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
             this.origId = in.readLong();
             this.requestedId = in.readLong();
             this.hasUpdated = in.readByte() != 0;
-            in.readTypedList(fileData, PutioFile.CREATOR);
+            try {
+                in.readTypedList(fileData, PutioFile.CREATOR);
+            } catch (NullPointerException e) {
+                this.fileData = new ArrayList<>();
+            }
         }
 
         public static final Creator<State> CREATOR = new Creator<State>() {
