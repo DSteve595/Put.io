@@ -42,7 +42,7 @@ public class PutioApplication extends Application {
     }
 
 	public void buildUtils() throws PutioUtils.NoTokenException {
-        this.utils = new PutioUtils(this);
+        utils = new PutioUtils(this);
     }
 
 	public PutioUtils getPutioUtils() {

@@ -10,9 +10,9 @@
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="4dp"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="-4dp"
         android:alpha="0.5"
-        android:layout_marginTop="-8dp"
         android:background="@drawable/shadow_horizontal" />
 </com.google.sample.castcompanionlibrary.widgets.MiniController>
