@@ -728,16 +728,7 @@ public class PutioUtils {
         return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static Boolean stringToBooleanHack(String value) {
-        if (value.equals("true")) {
-            return true;
-        } else if (value.equals("false")) {
-            return false;
-        }
-        return false;
-	}
-
-	public static String longsToString(long... longs) {
+    public static String longsToString(long... longs) {
 		StringBuilder string = new StringBuilder();
 		for (int i = 0; i < longs.length; i++) {
             long aLong = longs[i];

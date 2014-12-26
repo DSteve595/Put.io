@@ -45,8 +45,6 @@ dependencies {
     compile 'com.android.support:palette-v7:21.+'
     compile 'com.google.android.gms:play-services-cast:6.5.+'
     compile 'commons-io:commons-io:2.4'
-    compile 'org.apache.httpcomponents:httpmime:4.3.+'
-    compile 'org.apache.httpcomponents:httpcore:4.3.+'
     compile 'joda-time:joda-time:2.5'
     compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
