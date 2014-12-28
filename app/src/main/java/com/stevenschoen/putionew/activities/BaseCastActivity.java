@@ -102,7 +102,7 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
                 case KeyEvent.KEYCODE_VOLUME_DOWN:
                     try {
                         if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
-                            videoCastManager.updateVolume(1);
+                            videoCastManager.updateVolume(-1);
                             return true;
                         }
                     } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
