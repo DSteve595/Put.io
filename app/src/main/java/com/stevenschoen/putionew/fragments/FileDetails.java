@@ -344,6 +344,11 @@ public class FileDetails extends NoClipSupportFragment {
 
         if (!UIUtils.isTablet(getActivity())) {
             inflater.inflate(R.menu.filedetails, menu);
+            if (getCurrentFile().isMedia()) {
+                MenuItem itemOpen = menu.findItem(R.id.menu_open);
+                itemOpen.setVisible(false);
+                itemOpen.setEnabled(false);
+            }
         }
     }
 

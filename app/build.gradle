@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 78
-        versionName '3.0.3'
+        versionCode 79
+        versionName '3.0.4'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -48,8 +48,8 @@ dependencies {
     compile 'joda-time:joda-time:2.5'
     compile 'com.squareup.retrofit:retrofit:1.8.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
-    compile 'com.squareup.okhttp:okhttp:2.0.+'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.+'
+    compile 'com.squareup.okhttp:okhttp:2.1.+'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.picasso:picasso:2.4.+'
     compile project(':libraries:aFileChooser')
