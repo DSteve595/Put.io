@@ -141,7 +141,7 @@ public class FileDetails extends NoClipSupportFragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_filedetails);
         if (isAdded()) {
             if (UIUtils.isTablet(getActivity())) {
-                toolbar.inflateMenu(R.menu.filedetails);
+                toolbar.inflateMenu(R.menu.menu_filedetails);
                 if (getCurrentFile().isMedia()) {
                     MenuItem itemOpen = toolbar.getMenu().findItem(R.id.menu_open);
                     itemOpen.setVisible(false);
@@ -343,7 +343,7 @@ public class FileDetails extends NoClipSupportFragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         if (!UIUtils.isTablet(getActivity())) {
-            inflater.inflate(R.menu.filedetails, menu);
+            inflater.inflate(R.menu.menu_filedetails, menu);
             if (getCurrentFile().isMedia()) {
                 MenuItem itemOpen = menu.findItem(R.id.menu_open);
                 itemOpen.setVisible(false);

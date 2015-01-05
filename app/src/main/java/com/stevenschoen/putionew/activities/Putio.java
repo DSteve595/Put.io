@@ -136,7 +136,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.putio, menu);
+        getMenuInflater().inflate(R.menu.menu_putio, menu);
 
         return true;
     }

@@ -55,7 +55,7 @@ public class TransfersActivity extends FragmentActivity {
 			setContentView(R.layout.transfersactivity);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_transfersdialog);
-            toolbar.inflateMenu(R.menu.transfersdialog);
+            toolbar.inflateMenu(R.menu.menu_transfersdialog);
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {

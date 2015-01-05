@@ -201,7 +201,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                                     if (filesAdapter.getCheckedCount() > 1) {
                                         mode.getMenuInflater().inflate(R.menu.context_files_multiple, menu);
                                     } else {
-                                        mode.getMenuInflater().inflate(R.menu.context_files, menu);
+                                        mode.getMenuInflater().inflate(R.menu.context_files_single, menu);
                                     }
                                 }
 
@@ -433,7 +433,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.files, menu);
+        inflater.inflate(R.menu.menu_files, menu);
         MenuItem itemSearch = menu.findItem(R.id.menu_search);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(itemSearch);

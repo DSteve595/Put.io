@@ -73,7 +73,7 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (initCast) {
-            getMenuInflater().inflate(R.menu.cast, menu);
+            getMenuInflater().inflate(R.menu.menu_cast, menu);
 
             MenuItem buttonMediaRoute = menu.findItem(R.id.menu_cast);
             MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider)

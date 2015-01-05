@@ -25,7 +25,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/context_move"
-        android:icon="@android:drawable/ic_menu_set_as"
+        android:icon="@drawable/ic_action_move_black"
         android:orderInCategory="4"
         android:showAsAction="ifRoom"
         android:title="@string/move"
