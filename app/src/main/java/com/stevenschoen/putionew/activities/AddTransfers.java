@@ -29,7 +29,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.FileNotFoundException;
 
-public class AddTransfers extends FragmentActivity implements DestinationFilesDialog.Callbacks {
+public class AddTransfers extends FragmentActivity {
     public static final int TYPE_SELECTING = -1;
     public static final int TYPE_URL = 1;
     public static final int TYPE_FILE = 2;
@@ -94,6 +94,18 @@ public class AddTransfers extends FragmentActivity implements DestinationFilesDi
             public void onClick(View v) {
                 DestinationFilesDialog destinationDialog = (DestinationFilesDialog)
                         DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
+                destinationDialog.setCallbacks(new DestinationFilesDialog.Callbacks() {
+                    @Override
+                    public void onDestinationFolderSelected(PutioFile folder) {
+                        destinationFolderId = folder.id;
+                        buttonDestination.setText(folder.name);
+
+                        sharedPrefs.edit()
+                                .putLong("destinationFolderId", folder.id)
+                                .putString("destinationFolderName", folder.name)
+                                .apply();
+                    }
+                });
                 destinationDialog.show(getSupportFragmentManager(), "dialog");
             }
         });
@@ -247,17 +259,6 @@ public class AddTransfers extends FragmentActivity implements DestinationFilesDi
 			Toast.makeText(AddTransfers.this, getString(R.string.nothingenteredtofetch), Toast.LENGTH_LONG).show();
 		}
 	}
-
-    @Override
-    public void onDestinationFolderSelected(PutioFile folder) {
-        destinationFolderId = folder.id;
-        buttonDestination.setText(folder.name);
-
-        sharedPrefs.edit()
-                .putLong("destinationFolderId", folder.id)
-                .putString("destinationFolderName", folder.name)
-                .apply();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
