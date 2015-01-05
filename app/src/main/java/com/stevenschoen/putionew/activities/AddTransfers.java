@@ -109,7 +109,7 @@ public class AddTransfers extends FragmentActivity {
                 destinationDialog.show(getSupportFragmentManager(), "dialog");
             }
         });
-        destinationFolderId = sharedPrefs.getInt("destinationFolderId", 0);
+        destinationFolderId = sharedPrefs.getLong("destinationFolderId", 0);
         String destinationFolderName = sharedPrefs.getString("destinationFolderName", null);
         if (destinationFolderName != null && !destinationFolderName.isEmpty()) {
             buttonDestination.setText(destinationFolderName);
