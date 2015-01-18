@@ -1,8 +1,10 @@
 package com.stevenschoen.putionew.model.files;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 
 public class PutioFile implements Parcelable {
@@ -104,4 +106,44 @@ public class PutioFile implements Parcelable {
 			return new PutioFile[size];
 		}
 	};
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PutioFile putioFile = (PutioFile) o;
+
+        if (id != putioFile.id) return false;
+        if (isMp4Available != putioFile.isMp4Available) return false;
+        if (isShared != putioFile.isShared) return false;
+        if (parentId != putioFile.parentId) return false;
+        if (size != putioFile.size) return false;
+        if (contentType != null ? !contentType.equals(putioFile.contentType) : putioFile.contentType != null)
+            return false;
+        if (createdAt != null ? !createdAt.equals(putioFile.createdAt) : putioFile.createdAt != null) return false;
+        if (firstAccessedAt != null ? !firstAccessedAt.equals(putioFile.firstAccessedAt) : putioFile.firstAccessedAt != null)
+            return false;
+        if (icon != null ? !icon.equals(putioFile.icon) : putioFile.icon != null) return false;
+        if (name != null ? !name.equals(putioFile.name) : putioFile.name != null) return false;
+        if (screenshot != null ? !screenshot.equals(putioFile.screenshot) : putioFile.screenshot != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (isShared ? 1 : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (icon != null ? icon.hashCode() : 0);
+        result = 31 * result + (screenshot != null ? screenshot.hashCode() : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (firstAccessedAt != null ? firstAccessedAt.hashCode() : 0);
+        result = 31 * result + (int) (parentId ^ (parentId >>> 32));
+        result = 31 * result + (isMp4Available ? 1 : 0);
+        result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (size ^ (size >>> 32));
+        return result;
+    }
 }
