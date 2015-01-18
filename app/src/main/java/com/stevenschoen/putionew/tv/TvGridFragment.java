@@ -72,7 +72,6 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
             }
         });
 
-        // Start loading the files
         loadFiles();
     }
 

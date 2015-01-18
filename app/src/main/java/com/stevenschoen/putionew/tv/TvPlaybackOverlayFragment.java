@@ -119,7 +119,6 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
     }
 
     private void setupRows() {
-
         ClassPresenterSelector ps = new ClassPresenterSelector();
 
         PlaybackControlsRowPresenter playbackControlsRowPresenter;
@@ -213,7 +212,6 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
         adapter = mSecondaryActionsAdapter;
         if (adapter.indexOf(action) >= 0) {
             adapter.notifyArrayItemRangeChanged(adapter.indexOf(action), 1);
-            return;
         }
     }
 
@@ -292,7 +290,6 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
     }
 
     private class UpdateFfwRwdSpeedTask extends TimerTask {
-
         @Override
         public void run() {
             mClickTrackingHandler.post(new Runnable() {
@@ -362,5 +359,4 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
                 .load(uri.toString())
                 .into(mPlaybackControlsRowTarget);
     }
-
 }

@@ -14,9 +14,6 @@ import com.stevenschoen.putionew.activities.Login;
  */
 public class TvActivity extends FragmentActivity {
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +36,6 @@ public class TvActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // build Utils
             try {
                 ((PutioApplication) getApplication()).buildUtils();
             } catch (PutioUtils.NoTokenException e) {

@@ -49,9 +49,6 @@ public class TvPlaybackOverlayActivity extends Activity implements
         activity.startActivity(intent);
     }
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +153,7 @@ public class TvPlaybackOverlayActivity extends Activity implements
      * List of various states that we can be in
      */
     public static enum PlaybackState {
-        PLAYING, PAUSED, BUFFERING, IDLE;
+        PLAYING, PAUSED, BUFFERING, IDLE
     }
 
 }

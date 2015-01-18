@@ -41,18 +41,17 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.android.support:support-v13:21.+'
+    compile 'com.android.support:leanback-v17:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.android.support:palette-v7:21.+'
     compile 'com.google.android.gms:play-services-cast:6.5.+'
     compile 'commons-io:commons-io:2.4'
     compile 'joda-time:joda-time:2.5'
-    compile 'com.squareup.retrofit:retrofit:1.8.+'
+    compile 'com.squareup.retrofit:retrofit:1.9.+'
     compile 'com.path:android-priority-jobqueue:1.1.2'
-    compile 'com.squareup.okhttp:okhttp:2.1.+'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
+    compile 'com.squareup.okhttp:okhttp:2.2.+'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.picasso:picasso:2.4.+'
     compile project(':libraries:aFileChooser')
     compile project(':libraries:CastCompanionLibrary-android')
-    compile 'com.android.support:leanback-v17:21.0.3'
 }
