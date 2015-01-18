@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import com.stevenschoen.putionew.PutioApplication;
+import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.activities.Login;
 
@@ -38,6 +39,13 @@ public class TvActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            // build Utils
+            try {
+                ((PutioApplication) getApplication()).buildUtils();
+            } catch (PutioUtils.NoTokenException e) {
+                e.printStackTrace();
+            }
+
             init();
         } else {
             finish();
