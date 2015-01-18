@@ -3,11 +3,9 @@ package com.stevenschoen.putionew.model;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 import com.path.android.jobqueue.Job;
@@ -26,21 +24,14 @@ import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
-import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import retrofit.mime.TypedFile;
 
 public interface PutioRestInterface {
 	@GET("/files/list")
@@ -65,10 +56,6 @@ public interface PutioRestInterface {
     @FormUrlEncoded
     @POST("/files/create-folder")
     BasePutioResponse.FileChangingResponse createFolder(@Field("name") String name, @Field("parent_id") long parentId);
-
-	@Multipart
-	@POST("/files/upload")
-	void uploadFile(@Part("file") TypedFile file, @Part("parent_id") long parentId, Callback<Response> callback);
 
     @FormUrlEncoded
 	@POST("/files/rename")
@@ -342,38 +329,6 @@ public interface PutioRestInterface {
             getUtils().getEventBus().post(getUtils().getRestInterface().createFolder(name, parentId));
         }
     }
-
-	public static class PostUploadFileJob extends PutioUploadJob {
-		private Uri fileUri;
-        private long parentId;
-
-		public PostUploadFileJob(PutioUtils utils, Context context, Intent retryIntent, Uri fileUri, long parentId) {
-			super(utils, context, retryIntent);
-			this.fileUri = fileUri;
-            this.parentId = parentId;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			super.onRun();
-			File file;
-			if (fileUri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-				file = new File(context.getCacheDir(), "upload.torrent");
-				ContentResolver cr = context.getContentResolver();
-				FileUtils.copyInputStreamToFile(cr.openInputStream(fileUri), file);
-			} else {
-				file = new File(fileUri.getPath());
-			}
-
-			try {
-				getUtils().getRestInterface().uploadFile(
-						new TypedFile("application/x-bittorrent", file), parentId, this);
-			} catch (Exception e) {
-				file.delete();
-				throw e;
-			}
-		}
-	}
 
 	public static class PostRenameFileJob extends PutioJob {
 		private long id;

@@ -17,6 +17,9 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioRestInterface;
+import com.stevenschoen.putionew.model.PutioUploadInterface;
+
+import retrofit.RestAdapter;
 
 public class TransfersActivity extends FragmentActivity {
 
@@ -43,8 +46,10 @@ public class TransfersActivity extends FragmentActivity {
                         this, getIntent()));
                 break;
 			case AddTransfers.TYPE_FILE:
-				utils.getJobManager().addJobInBackground(new PutioRestInterface.PostUploadFileJob(
-						utils, this, getIntent(),
+                RestAdapter uploadAdapter = utils.makeRestAdapterBuilder(PutioUtils.uploadBaseUrl).build();
+                PutioUploadInterface uploadInterface = uploadAdapter.create(PutioUploadInterface.class);
+				utils.getJobManager().addJobInBackground(new PutioUploadInterface.PostUploadFileJob(
+						utils, uploadInterface, this, getIntent(),
                         (Uri) getIntent().getParcelableExtra("torrenturi"),
                         getIntent().getIntExtra("parentId", 0)));
                 break;

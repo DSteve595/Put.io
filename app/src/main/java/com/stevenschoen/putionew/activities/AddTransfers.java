@@ -269,14 +269,15 @@ public class AddTransfers extends FragmentActivity {
                         final Uri uri = data.getData();
                         try {
                             selectedFileUri = uri;
-                            textFilename.setText(PutioUtils.getNameFromUri(AddTransfers.this, uri));
+                            String filename = PutioUtils.getNameFromUri(AddTransfers.this, uri);
+                            textFilename.setText(filename);
                             ContentResolver cr = getContentResolver();
                             String mimetype = cr.getType(uri);
                             if (mimetype == null) {
                                 mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
                                         MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
                             }
-                            if (mimetype.equals("application/x-bittorrent")) {
+                            if ((mimetype != null && mimetype.equals("application/x-bittorrent")) || filename.endsWith("torrent")) {
                                 textNotATorrent.animate().alpha(0);
                             } else {
                                 textNotATorrent.animate().alpha(1);
