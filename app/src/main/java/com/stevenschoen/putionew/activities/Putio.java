@@ -39,6 +39,7 @@ import com.stevenschoen.putionew.fragments.Files;
 import com.stevenschoen.putionew.fragments.FilesAndFileDetails;
 import com.stevenschoen.putionew.fragments.Transfers;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
+import com.stevenschoen.putionew.tv.TvActivity;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -77,6 +78,12 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (UIUtils.isTV(this)) {
+            Intent tvIntent = new Intent(this, TvActivity.class);
+            startActivity(tvIntent);
+            finish();
+        }
 
         PutioApplication application = (PutioApplication) getApplication();
         if (application.isLoggedIn()) {
