@@ -54,4 +54,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.4.+'
     compile project(':libraries:aFileChooser')
     compile project(':libraries:CastCompanionLibrary-android')
+    compile 'com.android.support:leanback-v17:21.0.3'
 }
