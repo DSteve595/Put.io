@@ -105,6 +105,7 @@ public class PutioUtils {
     public String tokenWithStuff;
 
 	public static final String baseUrl = "https://api.put.io/v2";
+    public static final String uploadBaseUrl = "https://upload.put.io/v2";
 
     private SharedPreferences sharedPrefs;
 
@@ -116,23 +117,7 @@ public class PutioUtils {
 		}
         this.tokenWithStuff = "?oauth_token=" + token;
 
-		Gson gson = new GsonBuilder()
-				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.create();
-
-        Client client = new OkClient(new OkHttpClient());
-
-		RestAdapter.Builder restAdapterBuilder = new RestAdapter.Builder()
-				.setEndpoint(baseUrl)
-//				.setLogLevel(RestAdapter.LogLevel.FULL)
-				.setConverter(new GsonConverter(gson))
-				.setClient(client)
-				.setRequestInterceptor(new RequestInterceptor() {
-					@Override
-					public void intercept(RequestFacade request) {
-						request.addQueryParam("oauth_token", token);
-					}
-				});
+		RestAdapter.Builder restAdapterBuilder = makeRestAdapterBuilder(baseUrl);
 		RestAdapter restAdapter = restAdapterBuilder.build();
 		this.putioRestInterface = restAdapter.create(PutioRestInterface.class);
 
@@ -140,6 +125,26 @@ public class PutioUtils {
 		this.jobManager = new JobManager(context);
 		this.eventBus = new EventBus();
 	}
+
+    public RestAdapter.Builder makeRestAdapterBuilder(String baseUrl) {
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+
+        Client client = new OkClient(new OkHttpClient());
+
+        return new RestAdapter.Builder()
+                .setEndpoint(baseUrl)
+//				.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setConverter(new GsonConverter(gson))
+                .setClient(client)
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addQueryParam("oauth_token", token);
+                    }
+                });
+    }
 
 	public PutioRestInterface getRestInterface() {
 		return putioRestInterface;
