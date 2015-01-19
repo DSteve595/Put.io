@@ -79,7 +79,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (UIUtils.isTV(this)) {
+        if (UIUtils.hasJellyBeanMR1() && UIUtils.isTV(this)) {
             Intent tvIntent = new Intent(this, TvActivity.class);
             startActivity(tvIntent);
             finish();
