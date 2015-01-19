@@ -38,10 +38,6 @@ public class TvPlaybackOverlayActivity extends Activity implements
 
     private static final double MEDIA_HEIGHT = 0.95;
     private static final double MEDIA_WIDTH = 0.95;
-    private static final double MEDIA_TOP_MARGIN = 0.025;
-    private static final double MEDIA_RIGHT_MARGIN = 0.025;
-    private static final double MEDIA_BOTTOM_MARGIN = 0.025;
-    private static final double MEDIA_LEFT_MARGIN = 0.025;
 
     private VideoView mVideoView;
     private PlaybackState mPlaybackState = PlaybackState.IDLE;
@@ -65,7 +61,6 @@ public class TvPlaybackOverlayActivity extends Activity implements
         setContentView(R.layout.tv_playback_activity);
         loadViews();
         setupCallbacks();
-        overScan();
     }
 
     private void loadViews() {
@@ -115,20 +110,6 @@ public class TvPlaybackOverlayActivity extends Activity implements
                 mVideoView.start();
             }
         }
-    }
-
-    private void overScan() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int w = (int) (metrics.widthPixels * MEDIA_WIDTH);
-        int h = (int) (metrics.heightPixels * MEDIA_HEIGHT);
-        int marginLeft = (int) (metrics.widthPixels * MEDIA_LEFT_MARGIN);
-        int marginTop = (int) (metrics.heightPixels * MEDIA_TOP_MARGIN);
-        int marginRight = (int) (metrics.widthPixels * MEDIA_RIGHT_MARGIN);
-        int marginBottom = (int) (metrics.heightPixels * MEDIA_BOTTOM_MARGIN);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
-        lp.setMargins(marginLeft, marginTop, marginRight, marginBottom);
-        mVideoView.setLayoutParams(lp);
     }
 
     private void setupCallbacks() {
