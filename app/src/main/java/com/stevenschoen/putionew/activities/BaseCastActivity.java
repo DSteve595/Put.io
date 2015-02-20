@@ -46,16 +46,10 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
         return videoCastManager;
     }
 
-    public abstract boolean shouldUpdateCastContext();
-
     protected void initCast() {
         if (!initCast) {
             PutioApplication application = (PutioApplication) getApplication();
             videoCastManager = application.getVideoCastManager();
-
-            if (shouldUpdateCastContext()) {
-                videoCastManager.setContext(this);
-            }
 
             supportInvalidateOptionsMenu();
 
@@ -141,10 +135,6 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
         super.onResume();
 
         if (initCast) {
-            if (shouldUpdateCastContext()) {
-                videoCastManager.setContext(this);
-            }
-
             if (videoCastManager != null) {
                 videoCastManager.incrementUiCounter();
             }

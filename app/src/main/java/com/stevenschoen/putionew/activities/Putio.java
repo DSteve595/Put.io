@@ -439,11 +439,6 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
         showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId);
     }
 
-    @Override
-    public boolean shouldUpdateCastContext() {
-        return true;
-    }
-
     private BroadcastReceiver checkCacheSizeReceiver = new BroadcastReceiver() {
 
         @Override

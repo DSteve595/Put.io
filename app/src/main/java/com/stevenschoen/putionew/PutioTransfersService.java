@@ -28,8 +28,6 @@ public class PutioTransfersService extends Service {
 			return PutioTransfersService.this;
 		}
 	}
-	
-	private SharedPreferences sharedPrefs;
 
 	private PutioUtils utils;
 
@@ -42,8 +40,6 @@ public class PutioTransfersService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		utils = ((PutioApplication) getApplication()).getPutioUtils();
 		utils.getEventBus().register(this);

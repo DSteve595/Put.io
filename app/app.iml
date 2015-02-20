@@ -87,8 +87,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-6.5.87" level="project" />
-    <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
+    <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-6.5.87" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="palette-v7-21.0.3" level="project" />
@@ -98,8 +98,8 @@
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="leanback-v17-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="joda-time-2.5" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="joda-time-2.5" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="android-priority-jobqueue-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="okio-1.2.0" level="project" />
