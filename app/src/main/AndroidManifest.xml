@@ -2,8 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.stevenschoen.putionew">
 
+    <uses-sdk tools:overrideLibrary="android.support.v17.leanback" />
+
     <uses-feature
         android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <!-- TV -->
+    <uses-feature
+        android:name="android.software.leanback"
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,6 +19,7 @@
 
     <application
         android:name=".PutioApplication"
+        android:banner="@drawable/tv_banner"
         android:icon="@drawable/ic_launcher"
         android:label="@string/putio"
         android:theme="@style/Theme.Putio"
@@ -172,6 +180,22 @@
             android:excludeFromRecents="true"
             android:taskAffinity="com.stevenschoen.putio.transfersdialog"
             android:theme="@style/Putio.Dialog" />
+
+        <!-- TV -->
+        <activity
+            android:name=".tv.TvActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Leanback">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tv.TvPlaybackOverlayActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Leanback" />
     </application>
 
 </manifest>

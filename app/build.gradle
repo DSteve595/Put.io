@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 
@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 83
-        versionName '3.0.7'
+        versionCode 84
+        versionName '3.1 beta 2'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -41,17 +41,17 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.android.support:support-v13:21.+'
+    compile 'com.android.support:leanback-v17:21.+'
     compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.android.support:palette-v7:21.+'
     compile 'com.google.android.gms:play-services-cast:6.5.+'
     compile 'commons-io:commons-io:2.4'
     compile 'joda-time:joda-time:2.5'
-    compile 'com.squareup.retrofit:retrofit:1.8.+'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.path:android-priority-jobqueue:1.1.2'
-    compile 'com.squareup.okhttp:okhttp:2.1.+'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.squareup.picasso:picasso:2.4.+'
+    compile 'com.squareup.picasso:picasso:2.5.0'
     compile project(':libraries:aFileChooser')
     compile project(':libraries:CastCompanionLibrary-android')
 }

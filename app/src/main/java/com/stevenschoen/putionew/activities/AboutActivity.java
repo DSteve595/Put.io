@@ -34,9 +34,4 @@ public class AboutActivity extends BaseCastActivity {
 		}
 		return (super.onOptionsItemSelected(menuItem));
 	}
-
-    @Override
-    public boolean shouldUpdateCastContext() {
-        return (!getCastManager().hasContext());
-    }
 }
