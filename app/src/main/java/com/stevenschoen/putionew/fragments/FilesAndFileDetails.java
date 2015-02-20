@@ -111,7 +111,7 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
                     .setCustomAnimations(R.anim.slide_in_fromleft,
                             R.anim.slide_out_toright)
                     .remove(details)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
