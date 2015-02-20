@@ -1,8 +1,12 @@
 package com.stevenschoen.putionew.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -214,7 +219,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                                             initDownloadFiles(checkedPositions);
                                             return true;
                                         case R.id.context_copydownloadlink:
-                                            initCopyFileDownloadLink(checkedPositions[0]);
+                                            initCopyFileDownloadLink(checkedPositions);
                                             return true;
                                         case R.id.context_rename:
                                             initRenameFile(checkedPositions[0]);
@@ -371,16 +376,57 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     }
 
 	private void initDownloadFiles(final int... indeces) {
-		PutioFile[] files = new PutioFile[indeces.length];
-		for (int i = 0; i < indeces.length; i++) {
-			files[i] = getFileAtPosition(indeces[i]);
-		}
-
-		utils.downloadFile(getActivity(), PutioUtils.ACTION_NOTHING, files);
+        final PutioFile[] files = getFilesAtPositions(indeces);
+        if (indeces.length > 1) {
+            final Dialog dialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.download_files), R.layout.dialog_individualorzip);
+            Button buttonIndividual = (Button) dialog.findViewById(R.id.button_indidualorzip_individual);
+            buttonIndividual.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
+                    dialog.dismiss();
+                }
+            });
+            Button buttonZip = (Button) dialog.findViewById(R.id.button_indidualorzip_zip);
+            buttonZip.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    long fileIds[] = new long[files.length];
+                    String name = files[0].name;
+                    for (int i = 0; i < files.length; i++) {
+                        fileIds[i] = files[i].id;
+                        if (i > 0) {
+                            name += (", " + files[i].name);
+                        }
+                    }
+                    PutioUtils.download(getActivity(), Uri.parse(utils.getZipDownloadUrl(fileIds)), name);
+                    dialog.dismiss();
+                }
+            });
+            Button buttonCancel = (Button) dialog.findViewById(R.id.button_indidualorzip_cancel);
+            buttonCancel.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+        } else if (indeces.length > 0) {
+            utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
+        }
 	}
 
-	private void initCopyFileDownloadLink(int index) {
-		utils.copyDownloadLink(getActivity(), getFileAtPosition(index).id);
+	private void initCopyFileDownloadLink(int... indeces) {
+        if (indeces.length == 1) {
+            PutioFile file = getFileAtPosition(indeces[0]);
+            if (file.isFolder()) {
+                utils.copyZipDownloadLink(getActivity(), file);
+            } else {
+                utils.copyDownloadLink(getActivity(), getFileAtPosition(indeces[0]));
+            }
+        } else if (indeces.length > 0) {
+            utils.copyZipDownloadLink(getActivity(), getFilesAtPositions(indeces));
+        }
 	}
 
 	private void initRenameFile(final int index) {
@@ -465,7 +511,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         state.searchQuery = query;
 
 		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesSearchJob(
-				utils, query));
+                utils, query));
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
     }
@@ -532,6 +578,15 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	public PutioFile getFileAtPosition(int position) {
 		return state.fileData.get(position);
 	}
+
+    public PutioFile[] getFilesAtPositions(int[] positions) {
+        PutioFile[] files = new PutioFile[positions.length];
+        for (int i = 0; i < positions.length; i++) {
+            files[i] = getFileAtPosition(positions[i]);
+        }
+
+        return files;
+    }
 
     public boolean goBack() {
         if (filesAdapter.isInCheckMode()) {

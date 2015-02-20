@@ -402,7 +402,7 @@ public class FileDetails extends NoClipSupportFragment {
                 @Override
                 public void onClick(View v) {
                     PutioUtils.deleteId(getFileId());
-					utils.downloadFile(getActivity(), mode, getCurrentFile());
+					utils.downloadFiles(getActivity(), mode, getCurrentFile());
                     dialog.dismiss();
                 }
             });
@@ -415,7 +415,7 @@ public class FileDetails extends NoClipSupportFragment {
                 }
             });
         } else {
-			utils.downloadFile(getActivity(), mode, getCurrentFile());
+			utils.downloadFiles(getActivity(), mode, getCurrentFile());
         }
     }
 

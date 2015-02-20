@@ -96,6 +96,10 @@
     <string name="cacheexplanation">How much space should be used for the cache?\nThis won\'t affect your downloaded files.</string>
     <string name="addtransfer_type_url">URL</string>
     <string name="addtransfer_type_file">Torrent file</string>
+    <string name="download_files">Download files</string>
+    <string name="individual_or_zip">Do you want to download these files as individual downloads or as a ZIP archive?</string>
+    <string name="individually">Individually</string>
+    <string name="zip">ZIP</string>
     <string name="copy_dl_link">Copy download link</string>
     <string name="copyingdownloadlink">Copying download link</string>
     <string name="filenotfound">The file could not be found. Was it deleted?</string>

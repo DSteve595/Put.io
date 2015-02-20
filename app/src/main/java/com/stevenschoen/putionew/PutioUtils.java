@@ -289,8 +289,8 @@ public class PutioUtils {
         return null;
     }
 
-    public void downloadFile(final Context context, final int actionWhenDone, final PutioFile... files) {
-        class downloadFileTaskCompat extends AsyncTask<Void, Integer, long[]> {
+    public void downloadFiles(final Context context, final int actionWhenDone, final PutioFile... files) {
+        class DownloadFileTask extends AsyncTask<Void, Integer, long[]> {
             private boolean resolveRedirect = false;
             private Dialog dialog;
 
@@ -342,55 +342,48 @@ public class PutioUtils {
                 }
             }
         }
-        new downloadFileTaskCompat().execute();
+        new DownloadFileTask().execute();
     }
 
-    private long downloadFileWithoutUrl(final Context context, final long id, String filename) {
-        Uri uri = Uri.parse(getFileDownloadUrl(id));
-        return download(context, id, false, filename, uri);
+    private long downloadFileWithoutUrl(final Context context, final long fileId, String filename) {
+        Uri uri = Uri.parse(getFileDownloadUrl(fileId));
+        return download(context, fileId, false, filename, uri);
     }
 
-    private long downloadFileWithUrl(final Context context, final long id, String filename, String url) {
-        Uri uri = Uri.parse(url.replace("https://", "http://"));
-        return download(context, id, false, filename, uri);
-    }
-
-    private long downloadZipWithoutUrl(final Context context, final long[] id, String filename) {
-        Uri uri = Uri.parse(getZipDownloadUrl(id));
+    private long downloadZipWithoutUrl(final Context context, final long[] fileId, String filename) {
+        Uri uri = Uri.parse(getZipDownloadUrl(fileId));
         return download(context, 0, true, filename + ".zip", uri);
     }
 
-    private long downloadZipWithUrl(final Context context, final long[] id, String filename, String url) {
-        Uri uri = Uri.parse(url.replace("https://", "http://"));
-        return download(context, 0, true, filename + ".zip", uri);
-    }
-
-    @TargetApi(11)
-    private long download(Context context, long id, boolean isZip, String filename, Uri uri) {
-        if (idIsDownloaded(id) && !isZip) {
-            deleteId(id);
+    private long download(Context context, long fileId, boolean isZip, String filename, Uri uri) {
+        if (idIsDownloaded(fileId) && !isZip) {
+            deleteId(fileId);
         }
+
+        String name;
+        if (isZip) {
+            name = filename;
+        } else {
+            name = fileId + File.separator + filename;
+        }
+
+        return download(context, uri, name);
+    }
+
+    public static long download(Context context, Uri uri, String path) {
+        String subPath = "put.io" + File.separator + path;
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + subPath);
+        file.getParentFile().mkdirs();
 
         final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
-        String path = "put.io" + File.separator;
-        if (isZip) {
-            path += filename;
-        } else {
-            path += id + File.separator + filename;
-        }
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + path);
-        file.getParentFile().mkdirs();
-
         request.setDescription("put.io");
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                path);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
 
-		return manager.enqueue(request);
+        return manager.enqueue(request);
     }
 
     public static void stream(Context context, String url, Uri[] subtitles, int type) {
@@ -497,46 +490,29 @@ public class PutioUtils {
         return null;
     }
 
-    public void copyDownloadLink(final Context context, long id) {
-        class GetDlLinkTask extends AsyncTask<Long, Void, String> {
-            Dialog dialog;
+    public void copyDownloadLink(final Context context, PutioFile file) {
+        String url = baseUrl + "/files/" + file.id + "/download" + tokenWithStuff;
+        copy(context, "Download link", url);
+        Toast.makeText(context, context.getString(R.string.readytopaste),
+                Toast.LENGTH_SHORT).show();
+    }
 
-            @Override
-            protected void onPreExecute() {
-                dialog = PutioUtils.PutioDialog(context, context.getString(R.string.copyingdownloadlink), R.layout.dialog_loading);
-                dialog.show();
-            }
-
-            @Override
-            protected String doInBackground(Long... fileId) {
-                try {
-                    return PutioUtils.resolveRedirect(baseUrl + "/files/" + fileId[0] + "/download"
-                            + tokenWithStuff);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @SuppressLint({"NewApi", "ServiceCast"})
-            @Override
-            protected void onPostExecute(String result) {
-                dialog.dismiss();
-                if (result != null) {
-                    android.content.ClipboardManager clip =
-                            (android.content.ClipboardManager) context.getSystemService(
-                                    Context.CLIPBOARD_SERVICE);
-                    clip.setPrimaryClip(ClipData.newPlainText("Download link", result));
-                    Toast.makeText(context, context.getString(R.string.readytopaste),
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, context.getString(R.string.couldntgetdownloadlink),
-                            Toast.LENGTH_LONG).show();
-                }
-            }
+    public void copyZipDownloadLink(Context context, PutioFile... files) {
+        long[] fileIds = new long[files.length];
+        for (int i = 0; i < files.length; i++) {
+            fileIds[i] = files[i].id;
         }
+        String url = getZipDownloadUrl(fileIds);
+        copy(context, "Download link", url);
+        Toast.makeText(context, context.getString(R.string.readytopaste),
+                Toast.LENGTH_SHORT).show();
+    }
 
-        new GetDlLinkTask().execute(id);
+    public void copy(Context context, String label, String text) {
+        android.content.ClipboardManager clip =
+                (android.content.ClipboardManager) context.getSystemService(
+                        Context.CLIPBOARD_SERVICE);
+        clip.setPrimaryClip(ClipData.newPlainText(label, text));
     }
 
     public static String resolveRedirect(String url) throws IOException {
