@@ -11,6 +11,8 @@
   <string name="add">Ajouter</string>
   <string name="play">Lire</string>
   <string name="add_transfers">Ajouter des transfers</string>
+  <string name="create_folder">Créer un dossier</string>
+  <string name="create">Créer</string>
   <string name="settings">Paramètres</string>
   <string name="log_in">Se connecter</string>
   <string name="log_out">Se déconnecter</string>
@@ -63,6 +65,7 @@
   <string name="files">Fichiers</string>
   <string name="transfers">Transferts</string>
   <string name="loginsuccess">Vous vous êtes connecté avec succès !</string>
+  <string name="folder_name">Nom du dossier</string>
   <string name="x_selected">%d sélectionné</string>
   <string name="total_is">Total : %s</string>
   <string name="loading">Chargement&#8230;</string>
@@ -84,6 +87,10 @@
   <string name="cacheexplanation">Combien d\'espace devrait être utilisé pour le cache ? \nCela n\'affectera pas les fichiers téléchargés.</string>
   <string name="addtransfer_type_url">URL</string>
   <string name="addtransfer_type_file">Fichier torrent</string>
+  <string name="download_files">Télécharger les fichiers</string>
+  <string name="individual_or_zip">Voulez-vous télécharger ces fichiers individuellement ou sous forme d\'archive ZIP ?</string>
+  <string name="individually">Individuellement</string>
+  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Copier le lien de téléchargement</string>
   <string name="copyingdownloadlink">Lien de téléchagement en cours de copie</string>
   <string name="filenotfound">Le fichier n\'a pu être trouvé. A-t-il été supprimé ?</string>
@@ -107,6 +114,7 @@
   <string name="notification_button_retry">Réessayer</string>
   <string name="logged_in_as">Connecté comme</string>
   <string name="available_storage">Stockage disponible</string>
+  <string name="version_x">Version %s</string>
   <string name="appbysteven">Application Android par Steven Schoen.</string>
   <string name="codedwithlove">Développé avec amour, attention, et cafféine.</string>
   <string name="notaffiliated">Non affilié avec Put.io.</string>

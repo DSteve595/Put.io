@@ -87,6 +87,10 @@
   <string name="cacheexplanation">キャッシュにどのくらいの容量を使用する必要がありますか?\nこれはダウンロード済のファイルには影響しません。</string>
   <string name="addtransfer_type_url">URL</string>
   <string name="addtransfer_type_file">トレント ファイル</string>
+  <string name="download_files">ファイルをダウンロード</string>
+  <string name="individual_or_zip">これらのファイルを 個別にダウンロードしますか、それとも ZIP アーカイブとしてダウンロードしますか?</string>
+  <string name="individually">個別</string>
+  <string name="zip">ZIP</string>
   <string name="copy_dl_link">ダウンロード リンクをコピー</string>
   <string name="copyingdownloadlink">ダウンロード リンクのコピー中</string>
   <string name="filenotfound">ファイルが見つかりませんでした。削除されていますか?</string>

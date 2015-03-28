@@ -87,6 +87,10 @@
   <string name="cacheexplanation">Ne kadar alan önbellek için kullanılsın?\nBu indirilen dosyaları etkilemez.</string>
   <string name="addtransfer_type_url">URL</string>
   <string name="addtransfer_type_file">Torrent dosyası</string>
+  <string name="download_files">Dosyaları indir</string>
+  <string name="individual_or_zip">Tek tek dosyalar halinde mi indirmek istersiniz, yoksa bir ZIP arşivi halinde mi?</string>
+  <string name="individually">Tek tek</string>
+  <string name="zip">ZIP</string>
   <string name="copy_dl_link">İndirme bağlantısını kopyala</string>
   <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
   <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
