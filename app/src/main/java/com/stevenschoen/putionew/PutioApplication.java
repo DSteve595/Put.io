@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.media.MediaRouteSelector;
 
-import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.stevenschoen.putionew.activities.BaseCastActivity;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class PutioApplication extends Application {
@@ -56,6 +57,7 @@ public class PutioApplication extends Application {
                         VideoCastManager.FEATURE_LOCKSCREEN |
                         VideoCastManager.FEATURE_DEBUGGING
         );
+        videoCastManager.setVolumeStep(BaseCastActivity.VOLUME_INCREMENT);
         videoCastManager.setStopOnDisconnect(true);
     }
 

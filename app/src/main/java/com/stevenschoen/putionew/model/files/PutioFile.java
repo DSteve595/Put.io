@@ -1,10 +1,8 @@
 package com.stevenschoen.putionew.model.files;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 
 public class PutioFile implements Parcelable {

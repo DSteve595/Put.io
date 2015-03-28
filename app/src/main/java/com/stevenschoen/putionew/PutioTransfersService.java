@@ -2,11 +2,9 @@ package com.stevenschoen.putionew;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 
 import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.model.PutioRestInterface;

@@ -135,7 +135,7 @@
         </activity>
 
         <activity
-            android:name="com.google.sample.castcompanionlibrary.cast.player.VideoCastControllerActivity"
+            android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"
             android:label="@string/putio"
             android:launchMode="singleTask"
             android:parentActivityName=".activities.Putio"
@@ -146,13 +146,12 @@
                 android:value=".activities.Putio" />
         </activity>
 
-        <receiver android:name="com.google.sample.castcompanionlibrary.remotecontrol.VideoIntentReceiver">
+        <receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver">
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
-                <action android:name="com.google.sample.castcompanionlibrary.action.toggleplayback" />
-                <action android:name="com.google.sample.castcompanionlibrary.action.stop" />
+                <action android:name="com.google.android.libraries.cast.companionlibrary.action.toggleplayback" />
+                <action android:name="com.google.android.libraries.cast.companionlibrary.action.stop" />
             </intent-filter>
         </receiver>
 
@@ -165,12 +164,12 @@
         <service android:name=".PutioOpenFileService" />
         <service android:name=".PutioTransfersService" />
         <service
-            android:name="com.google.sample.castcompanionlibrary.notification.VideoCastNotificationService"
+            android:name="com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.sample.castcompanionlibrary.action.toggleplayback" />
-                <action android:name="com.google.sample.castcompanionlibrary.action.stop" />
-                <action android:name="com.google.sample.castcompanionlibrary.action.notificationvisibility" />
+                <action android:name="com.google.android.libraries.cast.companionlibrary.action.toggleplayback" />
+                <action android:name="com.google.android.libraries.cast.companionlibrary.action.stop" />
+                <action android:name="com.google.android.libraries.cast.companionlibrary.action.notificationvisibility" />
             </intent-filter>
         </service>
 
@@ -184,7 +183,7 @@
         <!-- TV -->
         <activity
             android:name=".tv.TvActivity"
-            android:label="@string/app_name"
+            android:label="@string/putio"
             android:theme="@style/Theme.Leanback">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -194,7 +193,7 @@
         </activity>
         <activity
             android:name=".tv.TvPlaybackOverlayActivity"
-            android:label="@string/app_name"
+            android:label="@string/putio"
             android:theme="@style/Theme.Leanback" />
     </application>
 

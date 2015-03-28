@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.google.sample.castcompanionlibrary.widgets.MiniController xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.libraries.cast.companionlibrary.widgets.MiniController xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/castbar_holder"
     style="@style/Putio.CastMiniController"
     android:layout_width="match_parent"
@@ -15,4 +15,4 @@
         android:layout_marginTop="-4dp"
         android:alpha="0.5"
         android:background="@drawable/shadow_horizontal" />
-</com.google.sample.castcompanionlibrary.widgets.MiniController>
+</com.google.android.libraries.cast.companionlibrary.widgets.MiniController>

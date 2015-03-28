@@ -12,10 +12,10 @@ import android.view.MenuItem;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.common.images.WebImage;
-import com.google.sample.castcompanionlibrary.cast.VideoCastManager;
-import com.google.sample.castcompanionlibrary.cast.exceptions.NoConnectionException;
-import com.google.sample.castcompanionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
-import com.google.sample.castcompanionlibrary.widgets.MiniController;
+import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.NoConnectionException;
+import com.google.android.libraries.cast.companionlibrary.cast.exceptions.TransientNetworkDisconnectionException;
+import com.google.android.libraries.cast.companionlibrary.widgets.MiniController;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
@@ -24,6 +24,8 @@ import com.stevenschoen.putionew.model.files.PutioFile;
 import org.apache.commons.io.FilenameUtils;
 
 public abstract class BaseCastActivity extends ActionBarActivity implements PutioApplication.CastCallbacks {
+
+    public static final double VOLUME_INCREMENT = 0.05;
 
     private VideoCastManager videoCastManager;
 	private MiniController castBar;
@@ -80,54 +82,12 @@ public abstract class BaseCastActivity extends ActionBarActivity implements Puti
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (initCast) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_VOLUME_UP:
-                    try {
-                        if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
-                            videoCastManager.updateVolume(1);
-                            return true;
-                        }
-                    } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
-                        return super.onKeyDown(keyCode, event);
-                    }
-                    return super.onKeyDown(keyCode, event);
-                case KeyEvent.KEYCODE_VOLUME_DOWN:
-                    try {
-                        if (videoCastManager != null && videoCastManager.isRemoteMoviePlaying()) {
-                            videoCastManager.updateVolume(-1);
-                            return true;
-                        }
-                    } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
-                        return super.onKeyDown(keyCode, event);
-                    }
-                    return super.onKeyDown(keyCode, event);
-                default:
-                    return super.onKeyDown(keyCode, event);
-            }
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (videoCastManager.onDispatchVolumeKeyEvent(event, VOLUME_INCREMENT)) {
+            return true;
         }
 
-        return false;
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (initCast) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_VOLUME_UP:
-                case KeyEvent.KEYCODE_VOLUME_DOWN:
-                    try {
-                        return videoCastManager != null && videoCastManager.isRemoteMoviePlaying();
-                    } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
-                        return super.onKeyUp(keyCode, event);
-                    }
-                default:
-                    return super.onKeyUp(keyCode, event);
-            }
-        }
-
-        return false;
+        return super.dispatchKeyEvent(event);
     }
 
     @Override
