@@ -376,7 +376,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	private void initDownloadFiles(final int... indeces) {
         final PutioFile[] files = getFilesAtPositions(indeces);
         if (indeces.length > 1) {
-            final Dialog dialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.download_files), R.layout.dialog_individualorzip);
+            final Dialog dialog = PutioUtils.showPutioDialog(getActivity(), getString(R.string.download_files), R.layout.dialog_individualorzip);
             Button buttonIndividual = (Button) dialog.findViewById(R.id.button_indidualorzip_individual);
             buttonIndividual.setOnClickListener(new OnClickListener() {
                 @Override
@@ -408,7 +408,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                     dialog.cancel();
                 }
             });
-            dialog.show();
         } else if (indeces.length > 0) {
             utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
         }

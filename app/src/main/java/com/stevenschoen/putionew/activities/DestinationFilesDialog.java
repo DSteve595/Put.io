@@ -1,11 +1,11 @@
 package com.stevenschoen.putionew.activities;
 
-import android.app.DialogFragment;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.fragments.Files;
@@ -16,7 +16,7 @@ public class DestinationFilesDialog extends Files {
     private DestinationFilesDialog.Callbacks callbacks;
 
     public interface Callbacks {
-        public void onDestinationFolderSelected(PutioFile folder);
+        void onDestinationFolderSelected(PutioFile folder);
     }
 
     @Override
@@ -27,15 +27,11 @@ public class DestinationFilesDialog extends Files {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Putio_Dialog);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        TextView textTitle = (TextView) view.findViewById(R.id.dialog_title);
-        textTitle.setText(getString(R.string.choose_folder));
 
         view.findViewById(R.id.button_destination_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +51,15 @@ public class DestinationFilesDialog extends Files {
         });
 
         return view;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setTitle(R.string.choose_folder);
+
+        return dialog;
     }
 
     public void setCallbacks(Callbacks callbacks) {

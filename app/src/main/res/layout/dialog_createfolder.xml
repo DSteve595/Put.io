@@ -1,9 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <include layout="@layout/dialog_title_putio" />
+    android:orientation="vertical"
+    android:paddingTop="12dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,7 +12,8 @@
             android:id="@+id/text_createfolder_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_large"
+            android:layout_marginLeft="?attr/dialogPreferredPadding"
+            android:layout_marginRight="?attr/dialogPreferredPadding"
             android:hint="@string/folder_name" />
 
         <LinearLayout

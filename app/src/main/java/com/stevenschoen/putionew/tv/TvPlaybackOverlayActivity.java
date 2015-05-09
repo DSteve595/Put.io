@@ -17,10 +17,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.FrameLayout;
 import android.widget.VideoView;
+
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;

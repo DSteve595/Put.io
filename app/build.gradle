@@ -1,17 +1,4 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
-    }
-}
-
 apply plugin: 'com.android.application'
-
-repositories {
-    mavenCentral()
-}
 
 android {
     compileSdkVersion 22
@@ -39,13 +26,13 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.+'
-    compile 'com.android.support:support-v13:22.+'
-    compile 'com.android.support:leanback-v17:22+'
-    compile 'com.android.support:recyclerview-v7:22.+'
-    compile 'com.android.support:palette-v7:22.+'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:support-v13:22.1.1'
+    compile 'com.android.support:leanback-v17:22.1.1'
+    compile 'com.android.support:recyclerview-v7:22.1.1'
+    compile 'com.android.support:palette-v7:22.1.1'
     compile 'commons-io:commons-io:2.4'
-    compile 'joda-time:joda-time:2.5'
+    compile 'joda-time:joda-time:2.7'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.path:android-priority-jobqueue:1.1.2'
     compile 'com.squareup.okhttp:okhttp:2.3.0'

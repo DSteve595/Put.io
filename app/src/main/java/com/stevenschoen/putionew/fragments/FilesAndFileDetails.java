@@ -194,6 +194,6 @@ public class FilesAndFileDetails extends NoClipSupportFragment implements FileDe
     }
 
     public interface Callbacks {
-        public void filesRequestAttention();
+        void filesRequestAttention();
     }
 }

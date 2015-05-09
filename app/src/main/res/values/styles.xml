@@ -1,12 +1,13 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Putio" parent="Theme.AppCompat.Light">
+    <style name="Theme.Putio" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/putio_accent</item>
         <item name="colorPrimaryDark">@color/putio_accent_dark</item>
         <item name="colorAccent">@color/putio_accent</item>
-        <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
+        <item name="dialogTheme">@style/Putio.Dialog</item>
+        <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
 
         <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
         <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
@@ -20,9 +21,7 @@
         <item name="colorButtonNormal">@color/putio_accent</item>
     </style>
 
-    <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat">
-        <item name="windowActionBar">false</item>
-    </style>
+    <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar" />
 
     <style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:theme">@style/Theme.Putio</item>
@@ -72,13 +71,20 @@
     </declare-styleable>
 
     <style name="Putio.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:theme">@style/Theme.Putio</item>
-        <item name="theme">@style/Theme.Putio</item>
+        <item name="colorPrimary">@color/putio_accent</item>
+        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
+        <item name="colorAccent">@color/putio_accent</item>
+    </style>
+
+    <style name="Putio.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/putio_accent</item>
+        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
+        <item name="colorAccent">@color/putio_accent</item>
     </style>
 
     <style name="Putio.DialogOrActivity" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="android:theme">@style/Theme.Putio</item>
-        <item name="theme">@style/Theme.Putio</item>
+        <item name="colorPrimary">@color/putio_accent</item>
         <item name="colorPrimaryDark">@color/putio_accent_dark</item>
+        <item name="colorAccent">@color/putio_accent</item>
     </style>
 </resources>

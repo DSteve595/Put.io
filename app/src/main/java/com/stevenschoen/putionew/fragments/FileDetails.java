@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -65,7 +65,7 @@ public class FileDetails extends NoClipSupportFragment {
 	private View infoMp4Converting;
 
     public interface Callbacks {
-        public void onFileDetailsClosed();
+        void onFileDetailsClosed();
     }
 
     private static CastCallbacks sDummyCastCallbacks = new CastCallbacks() {
@@ -154,7 +154,7 @@ public class FileDetails extends NoClipSupportFragment {
                     }
                 });
             } else {
-                ActionBarActivity activity = (ActionBarActivity) getActivity();
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
                 activity.setSupportActionBar(toolbar);
                 activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
@@ -370,8 +370,7 @@ public class FileDetails extends NoClipSupportFragment {
 
     private void initActionFile(final int mode) {
         if (PutioUtils.idIsDownloaded(getFileId())) {
-            final Dialog dialog = PutioUtils.PutioDialog(getActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownload);
-            dialog.show();
+            final Dialog dialog = PutioUtils.showPutioDialog(getActivity(), getString(R.string.redownloadtitle), R.layout.dialog_redownload);
 
             TextView textBody = (TextView) dialog.findViewById(R.id.text_redownloadbody);
             switch (mode) {
@@ -492,31 +491,32 @@ public class FileDetails extends NoClipSupportFragment {
             } else {
                 imagePreview.setImageBitmap(getPreviewBitmap());
                 imagePreview.postInvalidate();
-                Palette.generateAsync(getPreviewBitmap(), new Palette.PaletteAsyncListener() {
-                    @Override
-                    public void onGenerated(Palette palette) {
-                        if (isAdded()) {
-                            Palette.Swatch darkMuted = palette.getDarkMutedSwatch();
-                            if (darkMuted != null) {
-                                if (UIUtils.hasLollipop() && !UIUtils.isTablet(getActivity())) {
-                                    ValueAnimator statusBarAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
-                                            getActivity().getWindow().getStatusBarColor(), darkMuted.getRgb());
-                                    statusBarAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                        @Override
-                                        public void onAnimationUpdate(ValueAnimator animation) {
-                                            if (isAdded() && getActivity().getWindow() != null) {
-                                                getActivity().getWindow().setStatusBarColor((Integer) animation.getAnimatedValue());
-                                            } else {
-                                                animation.cancel();
-                                            }
+                if (UIUtils.hasLollipop() && !UIUtils.isTablet(getActivity())) {
+                    Palette.from(getPreviewBitmap())
+                            .generate(new Palette.PaletteAsyncListener() {
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    if (isAdded()) {
+                                        Palette.Swatch darkMuted = palette.getDarkMutedSwatch();
+                                        if (darkMuted != null) {
+                                            ValueAnimator statusBarAnim = ValueAnimator.ofObject(new ArgbEvaluator(),
+                                                    getActivity().getWindow().getStatusBarColor(), darkMuted.getRgb());
+                                            statusBarAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                                @Override
+                                                public void onAnimationUpdate(ValueAnimator animation) {
+                                                    if (isAdded() && getActivity().getWindow() != null) {
+                                                        getActivity().getWindow().setStatusBarColor((Integer) animation.getAnimatedValue());
+                                                    } else {
+                                                        animation.cancel();
+                                                    }
+                                                }
+                                            });
+                                            statusBarAnim.start();
                                         }
-                                    });
-                                    statusBarAnim.start();
+                                    }
                                 }
-                            }
-                        }
-                    }
-                });
+                            });
+                }
             }
         }
     }

@@ -16,10 +16,8 @@ public class FileFinished extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setTheme(R.style.Putio_Dialog);
+		setTheme(R.style.Putio_Dialog);
 		setContentView(R.layout.dialog_filefinished);
-		
-		TextView textTitle = (TextView) findViewById(R.id.dialog_title);
 		
 		TextView textBody = (TextView) findViewById(R.id.text_downloadfinished_body);
 		textBody.setText(String.format(getString(R.string.downloadfinishedbody), getIntent().getExtras().getString("filename")));
@@ -28,10 +26,9 @@ public class FileFinished extends Activity {
 		
 		Button buttonAction = (Button) findViewById(R.id.button_filefinished_action);
 		switch (mode) {
-		case PutioUtils.ACTION_OPEN:
-			textTitle.setText(getString(R.string.downloadfinishedopentitle));
-			buttonAction.setText(getString(R.string.open));
-			break;
+			case PutioUtils.ACTION_OPEN:
+				buttonAction.setText(getString(R.string.open));
+				break;
 		}
 		buttonAction.setOnClickListener(new OnClickListener() {
 			

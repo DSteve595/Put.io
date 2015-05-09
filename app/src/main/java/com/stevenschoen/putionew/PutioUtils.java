@@ -28,13 +28,13 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewOutlineProvider;
-import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
@@ -175,7 +175,7 @@ public class PutioUtils {
     }
 
     public Dialog renameFileDialog(Context context, final PutioFile file, final RenameCallback callback) {
-        final Dialog renameDialog = PutioUtils.PutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
+        final Dialog renameDialog = PutioUtils.showPutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
 
         final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
         textFileName.setText(file.name);
@@ -225,18 +225,15 @@ public class PutioUtils {
         return renameDialog;
     }
 
-    public static interface RenameCallback {
-        public void onRename(PutioFile file, String newName);
+    public interface RenameCallback {
+        void onRename(PutioFile file, String newName);
     }
 
-    public static Dialog PutioDialog(Context context, String title, int contentViewId) {
-        Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(contentViewId);
-        TextView textTitle = (TextView) dialog.findViewById(R.id.dialog_title);
-        textTitle.setText(title);
-
-        return dialog;
+    public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
+        return new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setView(contentViewId)
+                .show();
     }
 
     public static String convertStreamToString(InputStream is) {
@@ -251,16 +248,13 @@ public class PutioUtils {
         if (uri.getScheme().equals("file")) {
             return new File(uri.getPath()).getName();
         } else if (uri.getScheme().equals("content")) {
-            Cursor cursor = context.getContentResolver()
-                    .query(uri, null, null, null, null, null);
 
-            try {
+            try (Cursor cursor = context.getContentResolver()
+                    .query(uri, null, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     return cursor.getString(
                             cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
-            } finally {
-                cursor.close();
             }
         }
 
@@ -312,9 +306,8 @@ public class PutioUtils {
             protected void onProgressUpdate(Integer... nothing) {
                 resolveRedirect = true;
 
-                dialog = PutioDialog(context, context.getString(R.string.downloadpreparing), R.layout.dialog_loading);
+                dialog = showPutioDialog(context, context.getString(R.string.downloadpreparing), R.layout.dialog_loading);
                 dialog.setCanceledOnTouchOutside(false);
-                dialog.show();
             }
 
             @Override
@@ -418,7 +411,7 @@ public class PutioUtils {
 
             @Override
             public void onPreExecute() {
-                gettingStreamDialog = PutioUtils.PutioDialog(context,
+                gettingStreamDialog = PutioUtils.showPutioDialog(context,
                         context.getString(R.string.gettingstreamurltitle),
                         R.layout.dialog_loading);
                 gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
@@ -428,7 +421,6 @@ public class PutioUtils {
                         GetStreamUrlAndPlay.this.cancel(true);
                     }
                 });
-                gettingStreamDialog.show();
             }
 
             @Override
@@ -595,10 +587,10 @@ public class PutioUtils {
 
     public Dialog deleteFilesDialog(final Context context, final DeleteCallback callback,
                                     final PutioFile... filesToDelete) {
-        final Dialog deleteDialog = PutioDialog(context,
-				context.getResources().getQuantityString(
-						R.plurals.deletetitle, filesToDelete.length),
-				R.layout.dialog_delete);
+        final Dialog deleteDialog = showPutioDialog(context,
+                context.getResources().getQuantityString(
+                        R.plurals.deletetitle, filesToDelete.length),
+                R.layout.dialog_delete);
 
 		TextView textDeleteBody = (TextView) deleteDialog.findViewById(R.id.text_delete_body);
 		textDeleteBody.setText(context.getResources()
@@ -640,7 +632,7 @@ public class PutioUtils {
     }
 
     public Dialog createFolderDialog(Context context, final long parentId) {
-        final Dialog createFolderDialog = PutioDialog(context, context.getString(R.string.create_folder), R.layout.dialog_createfolder);
+        final Dialog createFolderDialog = showPutioDialog(context, context.getString(R.string.create_folder), R.layout.dialog_createfolder);
 
         final EditText textName = (EditText) createFolderDialog.findViewById(R.id.text_createfolder_name);
 
@@ -666,7 +658,7 @@ public class PutioUtils {
     }
 
     public Dialog removeTransferDialog(final Context context, final long... idsToDelete) {
-        final Dialog removeDialog = PutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
+        final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
         Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
         removeRemove.setOnClickListener(new OnClickListener() {

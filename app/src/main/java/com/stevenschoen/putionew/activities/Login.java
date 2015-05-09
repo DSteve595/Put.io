@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URI;
 
-public class Login extends ActionBarActivity {
+public class Login extends AppCompatActivity {
     public SharedPreferences sharedPrefs;
     private WebView loginWebView;
 

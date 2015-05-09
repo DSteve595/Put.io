@@ -58,7 +58,6 @@ public class AddTransfers extends FragmentActivity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dialog_addtransfer);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -67,10 +66,10 @@ public class AddTransfers extends FragmentActivity {
 			Intent putioActivity = new Intent(this, Putio.class);
 			startActivity(putioActivity);
 			finish();
+            return;
 		}
 
-        TextView textTitle = (TextView) findViewById(R.id.dialog_title);
-        textTitle.setText(getString(R.string.add_transfers));
+        setContentView(R.layout.dialog_addtransfer);
 
         addButton = (Button) findViewById(R.id.button_addtransfer_add);
         addButton.setOnClickListener(new OnClickListener() {

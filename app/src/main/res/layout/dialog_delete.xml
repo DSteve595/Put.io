@@ -4,8 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/dialog_title_putio" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,9 +13,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="?attr/dialogPreferredPadding"
+            android:layout_marginRight="?attr/dialogPreferredPadding"
             android:paddingBottom="@dimen/padding_large"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/padding_large"
             android:paddingTop="@dimen/padding_large">
 
             <TextView

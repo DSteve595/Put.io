@@ -23,8 +23,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/putio"
         android:theme="@style/Theme.Putio"
-        android:windowSoftInputMode="adjustPan"
-        tools:replace="theme,label">
+        android:windowSoftInputMode="adjustPan">
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"

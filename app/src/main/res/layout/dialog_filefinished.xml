@@ -1,21 +1,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/dialog_title_putio" />
-
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:paddingLeft="?attr/dialogPreferredPadding"
+        android:paddingRight="?attr/dialogPreferredPadding"
+        android:paddingTop="@dimen/abc_dialog_padding_top_material"
+        android:text="@string/downloadfinishedopentitle"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_downloadfinished_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/padding_large"
+            android:layout_marginLeft="?attr/dialogPreferredPadding"
+            android:layout_marginRight="?attr/dialogPreferredPadding"
             android:text="@string/downloadfinishedbody"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -23,8 +32,7 @@
             android:id="@+id/buttonbar"
             style="@style/ButtonBar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_downloadfinished_body">
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/button_filefinished_ok"
@@ -41,5 +49,5 @@
                 android:layout_height="wrap_content"
                 tools:text="Open" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
