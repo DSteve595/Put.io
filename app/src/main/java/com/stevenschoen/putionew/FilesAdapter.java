@@ -66,14 +66,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.file_putio, parent, false);
 
-        FileHolder holder = new FileHolder(view);
-        holder.root = view;
-        holder.textName = (TextView) view.findViewById(R.id.text_file_name);
-        holder.textDescription = (TextView) view.findViewById(R.id.text_file_description);
-        holder.iconImg = (ImageView) view.findViewById(R.id.icon_file_img);
-        holder.iconAccessed = (ImageView) view.findViewById(R.id.icon_file_accessed);
-
-        return holder;
+        return new FileHolder(view);
     }
 
     @Override
@@ -220,12 +213,12 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-        public void onItemLongClick(View view, int position);
+        void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 
     public interface OnItemsCheckedChangedListener {
-        public void onItemsCheckedChanged();
+        void onItemsCheckedChanged();
     }
 
     public static class FileHolder extends RecyclerView.ViewHolder {
@@ -237,6 +230,12 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
 
         public FileHolder(View itemView) {
             super(itemView);
+
+            root = itemView;
+            textName = (TextView) itemView.findViewById(R.id.text_file_name);
+            textDescription = (TextView) itemView.findViewById(R.id.text_file_description);
+            iconImg = (ImageView) itemView.findViewById(R.id.icon_file_img);
+            iconAccessed = (ImageView) itemView.findViewById(R.id.icon_file_accessed);
         }
     }
 }

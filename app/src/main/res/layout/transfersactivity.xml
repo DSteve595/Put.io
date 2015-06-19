@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/putio_accent"
-            android:elevation="@dimen/actionBarElevation"
+            android:elevation="@dimen/appBarElevation"
             android:minHeight="?attr/actionBarSize"
             app:navigationContentDescription="@string/maximize"
             app:navigationIcon="@drawable/ic_action_maximize_black"

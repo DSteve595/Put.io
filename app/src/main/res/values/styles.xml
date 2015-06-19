@@ -24,8 +24,9 @@
     <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar" />
 
     <style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:theme">@style/Theme.Putio</item>
-        <item name="theme">@style/Theme.Putio</item>
+        <item name="colorPrimary">@color/putio_accent</item>
+        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
+        <item name="colorAccent">@color/putio_accent</item>
     </style>
 
     <style name="Putio.CastMiniController" parent="Theme.Putio">

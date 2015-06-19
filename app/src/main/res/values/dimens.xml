@@ -7,8 +7,8 @@
 
     <dimen name="fileDetailsMaxHeight">600dp</dimen>
 
-    <dimen name="actionBarElevation">2dp</dimen>
     <dimen name="fabElevation">2dp</dimen>
+    <dimen name="appBarElevation">4dp</dimen>
     <dimen name="tabletFilesElevation">4dp</dimen>
     <dimen name="tabletFileDetailsElevation">2dp</dimen>
 

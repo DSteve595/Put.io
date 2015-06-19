@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:background="?attr/listChoiceBackgroundIndicator"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingEnd="8dp"

@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,6 @@ import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioNotification;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.SlidingTabLayout;
 import com.stevenschoen.putionew.SwipeDismissTouchListener;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.fragments.Account;
@@ -56,7 +56,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
 
     private boolean init = false;
 
-    private SlidingTabLayout tabs;
+    private TabLayout tabs;
     private ViewPager pager;
 
     int requestCode;
@@ -237,9 +237,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
         }
         this.utils = ((PutioApplication) getApplication()).getPutioUtils();
 
-        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        tabs.setSelectedIndicatorColors(getResources().getColor(R.color.putio_dark));
-        tabs.setDistributeEvenly(true);
+        tabs = (TabLayout) findViewById(R.id.tabs);
 
         setupLayout();
 
@@ -320,7 +318,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
                                                 @Override
                                                 public void onAnimationEnd(Animator animation) {
                                                     sharedPrefs.edit().putInt("readNotifs",
-                                                            sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
+                                                            sharedPrefs.getInt("readNotifs", 1) * result[ii].id).apply();
                                                     ll.removeView(notifView);
                                                     result[ii].show = false;
                                                     NotificationTask.this.onPostExecute(result);
@@ -337,7 +335,7 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
                                         @Override
                                         public void onDismiss(View view, Object token) {
                                             sharedPrefs.edit().putInt("readNotifs",
-                                                    sharedPrefs.getInt("readNotifs", 1) * result[ii].id).commit();
+                                                    sharedPrefs.getInt("readNotifs", 1) * result[ii].id).apply();
                                             ll.removeView(notifView);
                                             result[ii].show = false;
                                             NotificationTask.this.onPostExecute(result);
@@ -376,8 +374,8 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
 
-        tabs.setViewPager(pager);
-        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        tabs.setupWithViewPager(pager);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == TAB_ACCOUNT) {
@@ -391,12 +389,10 @@ public class Putio extends BaseCastActivity implements FilesAndFileDetails.Callb
             }
 
             @Override
-            public void onPageSelected(int i) {
-            }
+            public void onPageSelected(int i) { }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
-            }
+            public void onPageScrollStateChanged(int i) { }
         });
     }
 

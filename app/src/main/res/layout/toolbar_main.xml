@@ -11,17 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="@dimen/actionBarElevation"
+        android:elevation="@dimen/appBarElevation"
         android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat"
-        app:theme="@style/Putio.Toolbar" />
+        android:theme="@style/Putio.Toolbar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat" />
 
-    <com.stevenschoen.putionew.SlidingTabLayout
+    <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:elevation="@dimen/actionBarElevation" />
+        android:elevation="@dimen/appBarElevation"
+        app:tabIndicatorColor="@android:color/black"
+        app:tabMode="fixed" />
 
     <include layout="@layout/shadow_actionbar" />
 </LinearLayout>

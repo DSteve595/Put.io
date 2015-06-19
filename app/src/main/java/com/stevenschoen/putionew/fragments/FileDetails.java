@@ -163,7 +163,7 @@ public class FileDetails extends NoClipSupportFragment {
         if (UIUtils.hasLollipop()) {
             View preview = view.findViewById(R.id.filepreview);
             preview.setElevation(PutioUtils.pxFromDp(getActivity(), 2));
-            toolbar.setElevation(getResources().getDimension(R.dimen.actionBarElevation));
+            toolbar.setElevation(getResources().getDimension(R.dimen.appBarElevation));
 
             if (UIUtils.isTablet(getActivity())) {
                 view.setElevation(getResources().getDimension(R.dimen.tabletFileDetailsElevation));
