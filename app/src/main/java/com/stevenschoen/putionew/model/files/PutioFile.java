@@ -17,6 +17,7 @@ public class PutioFile implements Parcelable {
 	public String contentType;
 	public long id;
 	public long size;
+    public String crc32;
 
     public PutioFile() { }
 
@@ -78,6 +79,7 @@ public class PutioFile implements Parcelable {
 		this.contentType = in.readString();
 		this.id = in.readLong();
 		this.size = in.readLong();
+        this.crc32 = in.readString();
 	}
 
 	@Override
@@ -93,6 +95,7 @@ public class PutioFile implements Parcelable {
 		out.writeString(this.contentType);
 		out.writeLong(this.id);
 		out.writeLong(this.size);
+        out.writeString(this.crc32);
 	}
 	
 	public static final Creator CREATOR = new Creator() {
@@ -125,6 +128,7 @@ public class PutioFile implements Parcelable {
         if (icon != null ? !icon.equals(putioFile.icon) : putioFile.icon != null) return false;
         if (name != null ? !name.equals(putioFile.name) : putioFile.name != null) return false;
         if (screenshot != null ? !screenshot.equals(putioFile.screenshot) : putioFile.screenshot != null) return false;
+        if (crc32 != null ? !crc32.equals(putioFile.crc32) : putioFile.crc32 != null) return false;
 
         return true;
     }
@@ -142,6 +146,7 @@ public class PutioFile implements Parcelable {
         result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
         result = 31 * result + (int) (id ^ (id >>> 32));
         result = 31 * result + (int) (size ^ (size >>> 32));
+        result = 31 * result + (crc32 != null ? crc32.hashCode() : 0);
         return result;
     }
 }

@@ -239,11 +239,16 @@ public class FileDetails extends NoClipSupportFragment {
         TextView textSize = (TextView) infoSize.findViewById(R.id.text_fileinfo_size);
         textSize.setText(PutioUtils.humanReadableByteCount(getCurrentFile().size, false));
 
+        final View infoCrc32 = holderInfo.findViewById(R.id.holder_fileinfo_crc32);
+        TextView textCrc32 = (TextView) infoCrc32.findViewById(R.id.text_fileinfo_crc32);
+        textCrc32.setText(getCurrentFile().crc32);
+
         final View infoMore = holderInfo.findViewById(R.id.holder_fileinfo_more);
         if (getCurrentFile().isMedia()) {
             infoMore.setVisibility(View.VISIBLE);
             infoCreated.setVisibility(View.GONE);
             infoSize.setVisibility(View.GONE);
+            infoCrc32.setVisibility(View.GONE);
 
             infoMore.setOnClickListener(new OnClickListener() {
                 @Override
@@ -252,6 +257,7 @@ public class FileDetails extends NoClipSupportFragment {
 
                     infoCreated.setVisibility(View.VISIBLE);
                     infoSize.setVisibility(View.VISIBLE);
+                    infoCrc32.setVisibility(View.VISIBLE);
                 }
             });
         } else {
