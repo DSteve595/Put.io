@@ -8,6 +8,10 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+
     <!-- TV -->
     <uses-feature
         android:name="android.software.leanback"
