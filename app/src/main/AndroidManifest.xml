@@ -23,11 +23,11 @@
 
     <application
         android:name=".PutioApplication"
+        android:allowBackup="true"
         android:banner="@drawable/tv_banner"
         android:icon="@drawable/ic_launcher"
         android:label="@string/putio"
-        android:theme="@style/Theme.Putio"
-        android:windowSoftInputMode="adjustPan">
+        android:theme="@style/Theme.Putio">
 
         <meta-data
             android:name="com.sec.android.support.multiwindow"

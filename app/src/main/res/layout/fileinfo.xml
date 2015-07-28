@@ -46,7 +46,6 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:background="?attr/listChoiceBackgroundIndicator"
             android:src="@drawable/ic_fileinfo_mp4"
@@ -74,7 +73,6 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_fileinfo_mp4"
             android:tint="@color/primary_text_default_material_light" />

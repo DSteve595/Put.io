@@ -33,7 +33,7 @@ public class TvPlaybackOverlayActivity extends Activity implements
 
     public static final String ARG_FILE = "ARG_FILE";
 
-    private static final String TAG = "PlaybackOverlayActivity";
+    private static final String TAG = "OverlayActivity";
 
     private static final double MEDIA_HEIGHT = 0.95;
     private static final double MEDIA_WIDTH = 0.95;

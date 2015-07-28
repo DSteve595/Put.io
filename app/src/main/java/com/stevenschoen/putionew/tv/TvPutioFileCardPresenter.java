@@ -68,7 +68,7 @@ public class TvPutioFileCardPresenter extends Presenter {
         if (file.isAccessed()) {
             cardView.setBadgeImage(mContext.getResources().getDrawable(R.drawable.ic_fileinfo_accessed));
             // weird bug with fade mask, remove it for now
-            cardView.findViewById(android.support.v17.leanback.R.id.fade_mask).setVisibility(View.GONE);
+//            cardView.findViewById(android.support.v17.leanback.R.id.fade_mask).setVisibility(View.GONE);
         }
     }
 

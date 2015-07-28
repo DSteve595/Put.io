@@ -8,7 +8,7 @@
     android:paddingRight="4dp"
     android:paddingTop="2dp">
 
-    <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    <ImageButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

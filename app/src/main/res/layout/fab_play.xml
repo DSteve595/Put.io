@@ -5,7 +5,7 @@
     android:background="@drawable/fab_shadow"
     android:padding="4dp">
 
-    <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    <ImageButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

@@ -53,7 +53,7 @@ import java.util.TimerTask;
  * Class for video playback with media control
  */
 public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.PlaybackOverlayFragment {
-    private static final String TAG = "PlaybackControlsFragment";
+    private static final String TAG = "OverlayFragment";
 
     private static Context sContext;
 

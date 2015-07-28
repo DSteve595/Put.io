@@ -97,7 +97,7 @@
   <string name="go_to_previous_folder">Volte para a pasta anterior</string>
   <string name="clear_finished_transfers">Apagar transferências terminadas</string>
   <string name="convert_mp4">Converter para MP4</string>
-  <string name="converting_mp4">Convertendo para MP4...</string>
+  <string name="converting_mp4">Convertendo para MP4&#8230;</string>
   <string name="mp4_available">MP4 disponível</string>
   <string name="use_mp4">Usar MP4</string>
   <string name="dont_use_mp4">Não usar MP4</string>

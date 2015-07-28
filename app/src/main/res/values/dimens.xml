@@ -9,7 +9,6 @@
 
     <dimen name="fabElevation">2dp</dimen>
     <dimen name="appBarElevation">4dp</dimen>
-    <dimen name="tabletFilesElevation">4dp</dimen>
     <dimen name="tabletFileDetailsElevation">2dp</dimen>
 
     <dimen name="padding_small">8dp</dimen>
