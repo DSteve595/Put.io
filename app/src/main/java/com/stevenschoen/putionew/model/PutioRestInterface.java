@@ -17,7 +17,6 @@ import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.activities.TransfersActivity;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
-import com.stevenschoen.putionew.model.responses.CachedFilesListResponse;
 import com.stevenschoen.putionew.model.responses.FileResponse;
 import com.stevenschoen.putionew.model.responses.FilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
@@ -32,16 +31,17 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import rx.Observable;
 
 public interface PutioRestInterface {
 	@GET("/files/list")
-	FilesListResponse files(@Query("parent_id") long parentId);
+	Observable<FilesListResponse> files(@Query("parent_id") long parentId);
 
 	@GET("/files/search/{query}/page/-1")
-	FilesSearchResponse searchFiles(@Path("query") String query);
+	Observable<FilesSearchResponse> searchFiles(@Path("query") String query);
 
 	@GET("/files/{id}")
-	FileResponse file(@Path("id") long id);
+	Observable<FileResponse> file(@Path("id") long id);
 
 	@FormUrlEncoded
 	@GET("/files/zip")
@@ -55,19 +55,19 @@ public interface PutioRestInterface {
 
     @FormUrlEncoded
     @POST("/files/create-folder")
-    BasePutioResponse.FileChangingResponse createFolder(@Field("name") String name, @Field("parent_id") long parentId);
+    Observable<BasePutioResponse.FileChangingResponse> createFolder(@Field("name") String name, @Field("parent_id") long parentId);
 
     @FormUrlEncoded
 	@POST("/files/rename")
-	BasePutioResponse.FileChangingResponse renameFile(@Field("file_id") long id, @Field("name") String name);
+	Observable<BasePutioResponse.FileChangingResponse> renameFile(@Field("file_id") long id, @Field("name") String name);
 
 	@FormUrlEncoded
 	@POST("/files/delete")
-	BasePutioResponse.FileChangingResponse deleteFile(@Field("file_ids") String ids);
+	Observable<BasePutioResponse.FileChangingResponse> deleteFile(@Field("file_ids") String ids);
 
     @FormUrlEncoded
     @POST("/files/move")
-    BasePutioResponse.FileChangingResponse moveFile(@Field("file_ids") String ids, @Field("parent_id") long newParentId);
+    Observable<BasePutioResponse.FileChangingResponse> moveFile(@Field("file_ids") String ids, @Field("parent_id") long newParentId);
 
 	@GET("/transfers/list")
 	TransfersListResponse transfers();
@@ -214,77 +214,6 @@ public interface PutioRestInterface {
 		}
 	}
 
-	public static class GetFilesListJob extends PutioJob {
-		private long parentId;
-
-		private boolean alsoUseCache;
-
-		public GetFilesListJob(PutioUtils utils, long parentId, boolean alsoUseCache) {
-			super(utils);
-			this.parentId = parentId;
-			this.alsoUseCache = alsoUseCache;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			if (alsoUseCache) {
-				CachedFilesListResponse cachedResponse = getUtils().getFilesCache().getCached(parentId);
-				if (cachedResponse != null) {
-					getUtils().getEventBus().post(cachedResponse);
-				}
-			}
-
-			FilesListResponse networkResponse = getUtils().getRestInterface().files(parentId);
-			if (alsoUseCache) getUtils().getFilesCache().cache(networkResponse, parentId);
-			getUtils().getEventBus().post(networkResponse);
-		}
-	}
-
-	public static class GetFilesSearchJob extends PutioJob {
-		private String query;
-
-		public GetFilesSearchJob(PutioUtils utils, String query) {
-			super(utils);
-			this.query = query;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			FilesSearchResponse networkResponse = getUtils().getRestInterface().searchFiles(query);
-            networkResponse.setQuery(query);
-			getUtils().getEventBus().post(networkResponse);
-		}
-	}
-
-	public static class GetFileJob extends PutioJob {
-		private long id;
-
-		public GetFileJob(PutioUtils utils, long id) {
-			super(utils);
-			this.id = id;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			FileResponse networkResponse = getUtils().getRestInterface().file(id);
-			getUtils().getEventBus().post(networkResponse);
-		}
-	}
-
-	public static class GetZipAndDownloadJob extends PutioJob {
-		private long[] ids;
-
-		public GetZipAndDownloadJob(PutioUtils utils, Context context, long... ids) {
-			super(utils);
-			this.ids = ids;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-//			getUtils().getRestInterface().zip(PutioUtils.intsToString(ids)); TODO
-		}
-	}
-
 	public static class GetMp4StatusJob extends PutioJob {
 		private long id;
 
@@ -313,68 +242,6 @@ public interface PutioRestInterface {
 			getUtils().getRestInterface().convertToMp4(id);
 		}
 	}
-
-    public static class PostCreateFolderJob extends PutioJob {
-        private String name;
-        private long parentId;
-
-        public PostCreateFolderJob(PutioUtils utils, String name, long parentId) {
-            super(utils);
-            this.name = name;
-            this.parentId = parentId;
-        }
-
-        @Override
-        public void onRun() throws Throwable {
-            getUtils().getEventBus().post(getUtils().getRestInterface().createFolder(name, parentId));
-        }
-    }
-
-	public static class PostRenameFileJob extends PutioJob {
-		private long id;
-		private String name;
-
-		public PostRenameFileJob(PutioUtils utils, long id, String name) {
-			super(utils);
-			this.id = id;
-			this.name = name;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getEventBus().post(getUtils().getRestInterface().renameFile(id, name));
-		}
-	}
-
-	public static class PostDeleteFilesJob extends PutioJob {
-		private long[] ids;
-
-		public PostDeleteFilesJob(PutioUtils utils, long... ids) {
-			super(utils);
-			this.ids = ids;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getEventBus().post(getUtils().getRestInterface().deleteFile(PutioUtils.longsToString(ids)));
-		}
-	}
-
-    public static class PostMoveFilesJob extends PutioJob {
-        private long newParentId;
-        private long[] ids;
-
-        public PostMoveFilesJob(PutioUtils utils, long newParentId, long... ids) {
-            super(utils);
-            this.newParentId = newParentId;
-            this.ids = ids;
-        }
-
-        @Override
-        public void onRun() throws Throwable {
-            getUtils().getEventBus().post(getUtils().getRestInterface().moveFile(PutioUtils.longsToString(ids), newParentId));
-        }
-    }
 
 	public static class GetTransfersJob extends PutioJob {
 		public GetTransfersJob(PutioUtils utils) {

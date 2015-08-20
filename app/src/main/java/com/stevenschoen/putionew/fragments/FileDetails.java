@@ -43,6 +43,9 @@ import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 
 import java.io.IOException;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
 public class FileDetails extends NoClipSupportFragment {
 
     private State state;
@@ -175,13 +178,16 @@ public class FileDetails extends NoClipSupportFragment {
         textTitle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                utils.renameFileDialog(getActivity(), getCurrentFile(), new PutioUtils.RenameCallback() {
+                utils.renameFileDialog(getActivity(), new PutioUtils.RenameCallback() {
                     @Override
-                    public void onRename(PutioFile file, String newName) {
+                    public void onRenameClicked(PutioFile file, String newName) {
                         getCurrentFile().name = newName;
                         textTitle.setText(newName);
                     }
-                }).show();
+
+                    @Override
+                    public void onRenameFinished() { }
+                }, getCurrentFile()).show();
             }
         });
 
@@ -264,7 +270,7 @@ public class FileDetails extends NoClipSupportFragment {
             infoMore.setVisibility(View.GONE);
         }
 
-        utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
+        fetchFileData();
 
         ImageButton buttonClose = (ImageButton) view.findViewById(R.id.button_filedetails_close);
         buttonClose.setOnClickListener(new OnClickListener() {
@@ -427,7 +433,10 @@ public class FileDetails extends NoClipSupportFragment {
     private void initDeleteFile() {
         utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
             @Override
-            public void onDelete() {
+            public void onDeleteClicked() { }
+
+            @Override
+            public void onDeleteFinished() {
                 if (callbacks != null) {
                     callbacks.onFileDetailsClosed();
                 }
@@ -527,6 +536,26 @@ public class FileDetails extends NoClipSupportFragment {
         }
     }
 
+    private void fetchFileData() {
+        utils.getRestInterface().file(getFileId())
+                .compose(this.<FileResponse>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<FileResponse>() {
+                    @Override
+                    public void call(FileResponse fileResponse) {
+                        if (fileResponse != null) {
+                            state.newFileData = fileResponse.getFile();
+                            textTitle.setText(getCurrentFilename());
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
 	public void onEventMainThread(Mp4StatusResponse result) {
 		mp4Status = result.getMp4Status();
         if (getCurrentFile().isMp4()) {
@@ -540,15 +569,8 @@ public class FileDetails extends NoClipSupportFragment {
 		}
 	}
 
-	public void onEventMainThread(FileResponse result) {
-		if (result != null && result.getFile().id == getCurrentFile().id) {
-			state.newFileData = result.getFile();
-            textTitle.setText(getCurrentFilename());
-		}
-	}
-
     public void onEventMainThread(BasePutioResponse.FileChangingResponse result) {
-        utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFileJob(utils, getFileId()));
+        fetchFileData();
     }
 
 	private boolean shouldCheckForMp4Updates() {

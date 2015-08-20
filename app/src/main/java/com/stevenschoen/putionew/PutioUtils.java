@@ -47,6 +47,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
+import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
@@ -78,6 +79,8 @@ import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class PutioUtils {
     public static final int TYPE_AUDIO = 1;
@@ -171,7 +174,7 @@ public class PutioUtils {
         return dialog;
     }
 
-    public Dialog renameFileDialog(Context context, final PutioFile file, final RenameCallback callback) {
+    public Dialog renameFileDialog(Context context, final RenameCallback callback, final PutioFile file) {
         final Dialog renameDialog = PutioUtils.showPutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
 
         final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
@@ -188,15 +191,17 @@ public class PutioUtils {
 
         textFileName.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                btnUndoName.setEnabled(!file.name.contentEquals(s));
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                btnUndoName.setEnabled(!file.name.contentEquals(s) && !s.toString().isEmpty());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
@@ -204,9 +209,22 @@ public class PutioUtils {
             @Override
             public void onClick(View v) {
                 String newName = textFileName.getText().toString();
-                callback.onRename(file, newName);
-                getJobManager().addJobInBackground(new PutioRestInterface.PostRenameFileJob(
-                        PutioUtils.this, file.id, newName));
+                getRestInterface().renameFile(file.id, newName)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
+                            @Override
+                            public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
+                                if (callback != null) {
+                                    callback.onRenameFinished();
+                                }
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
+                callback.onRenameClicked(file, newName);
                 renameDialog.dismiss();
             }
         });
@@ -223,7 +241,8 @@ public class PutioUtils {
     }
 
     public interface RenameCallback {
-        void onRename(PutioFile file, String newName);
+        void onRenameClicked(PutioFile file, String newName);
+        void onRenameFinished();
     }
 
     public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
@@ -601,13 +620,26 @@ public class PutioUtils {
 				for (int i = 0; i < filesToDelete.length; i++) {
 					idsToDelete[i] = filesToDelete[i].id;
 				}
-				getJobManager().addJobInBackground(new PutioRestInterface.PostDeleteFilesJob(
-						PutioUtils.this, idsToDelete));
+                getRestInterface().deleteFile(longsToString(idsToDelete))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
+                            @Override
+                            public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
+                                if (callback != null) {
+                                    callback.onDeleteFinished();
+                                }
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
                 Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
                 deleteDialog.dismiss();
 
                 if (callback != null) {
-                    callback.onDelete();
+                    callback.onDeleteClicked();
                 }
             }
         });
@@ -624,11 +656,12 @@ public class PutioUtils {
         return deleteDialog;
     }
 
-    public static interface DeleteCallback {
-        public void onDelete();
+    public interface DeleteCallback {
+        void onDeleteClicked();
+        void onDeleteFinished();
     }
 
-    public Dialog createFolderDialog(Context context, final long parentId) {
+    public Dialog createFolderDialog(Context context, final CreateFolderCallback callback, final long parentId) {
         final Dialog createFolderDialog = showPutioDialog(context, context.getString(R.string.create_folder), R.layout.dialog_createfolder);
 
         final EditText textName = (EditText) createFolderDialog.findViewById(R.id.text_createfolder_name);
@@ -637,9 +670,26 @@ public class PutioUtils {
         buttonCreate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getJobManager().addJobInBackground(new PutioRestInterface.PostCreateFolderJob(PutioUtils.this,
-                        textName.getText().toString(), parentId));
+                getRestInterface().createFolder(textName.getText().toString(), parentId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
+                            @Override
+                            public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
+                                if (callback != null) {
+                                    callback.onCreateFolderFinished();
+                                }
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
                 createFolderDialog.dismiss();
+
+                if (callback != null) {
+                    callback.onCreateFolderClicked();
+                }
             }
         });
 
@@ -652,6 +702,11 @@ public class PutioUtils {
         });
 
         return createFolderDialog;
+    }
+
+    public interface CreateFolderCallback {
+        void onCreateFolderClicked();
+        void onCreateFolderFinished();
     }
 
     public Dialog removeTransferDialog(final Context context, final long... idsToDelete) {

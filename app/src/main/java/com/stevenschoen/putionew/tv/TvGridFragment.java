@@ -11,13 +11,13 @@ import android.support.v17.leanback.widget.VerticalGridPresenter;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
-import com.stevenschoen.putionew.model.responses.CachedFilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesListResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Created by simonreggiani on 15-01-11.
@@ -89,19 +89,18 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
     }
 
     private void loadFiles() {
-        mUtils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesListJob(mUtils, mCurrentFolderId, true));
-    }
-
-    public void onEventMainThread(FilesListResponse result) {
-        if (result != null && result.getParent().id == mCurrentFolderId) {
-            populateGrid(result.getFiles(), result.getParent());
-        }
-    }
-
-    public void onEventMainThread(CachedFilesListResponse result) {
-        if (result != null && result.getParent().id == mCurrentFolderId) {
-            populateGrid(result.getFiles(), result.getParent());
-        }
+        mUtils.getRestInterface().files(mCurrentFolderId)
+                .subscribe(new Action1<FilesListResponse>() {
+                    @Override
+                    public void call(FilesListResponse filesListResponse) {
+                        populateGrid(filesListResponse.getFiles(), filesListResponse.getParent());
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     private void populateGrid(List<PutioFile> files, PutioFile parent) {

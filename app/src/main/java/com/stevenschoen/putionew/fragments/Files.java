@@ -49,6 +49,11 @@ import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
 public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	private static final int VIEWMODE_LIST = 1;
@@ -111,8 +116,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         }
 
 		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
-
-		utils.getEventBus().register(this);
 	}
 
 	@Override
@@ -427,21 +430,44 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	}
 
 	private void initRenameFile(final int index) {
-        utils.renameFileDialog(getActivity(), getFileAtPosition(index), new PutioUtils.RenameCallback() {
+        utils.renameFileDialog(getActivity(), new PutioUtils.RenameCallback() {
             @Override
-            public void onRename(PutioFile file, String newName) {
+            public void onRenameClicked(PutioFile file, String newName) {
                 getFileAtPosition(getIndexFromFileId(file.id)).name = newName;
-                filesAdapter.notifyDataSetChanged();
+                filesAdapter.notifyItemChanged(index);
             }
-        }).show();
+
+            @Override
+            public void onRenameFinished() {
+                invalidateList(false);
+            }
+        }, getFileAtPosition(index)).show();
 	}
 
-	private void initDeleteFile(int... indeces) {
+	private void initDeleteFile(final int... indeces) {
 		PutioFile[] files = new PutioFile[indeces.length];
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = getFileAtPosition(indeces[i]);
 		}
-		utils.deleteFilesDialog(getActivity(), null, files).show();
+		utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
+            @Override
+            public void onDeleteClicked() {
+                long[] ids = new long[indeces.length];
+                for (int i = 0; i < indeces.length; i++) {
+                    ids[i] = getFileAtPosition(indeces[i]).id;
+                }
+                for (long id : ids) {
+                    int index = getIndexFromFileId(id);
+                    getState().fileData.remove(index);
+                    filesAdapter.notifyItemRemoved(index);
+                }
+            }
+
+            @Override
+            public void onDeleteFinished() {
+                invalidateList(false);
+            }
+        }, files).show();
 	}
 
     private void initMoveFile(final int... indeces) {
@@ -455,8 +481,26 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                 for (int i = 0; i < indeces.length; i++) {
                     idsToMove[i] = getFileAtPosition(indeces[i]).id;
                 }
+                for (long id : idsToMove) {
+                    int index = getIndexFromFileId(id);
+                    getState().fileData.remove(index);
+                    filesAdapter.notifyItemRemoved(index);
+                }
                 long selectedFolderId = folder.id;
-                utils.getJobManager().addJobInBackground(new PutioRestInterface.PostMoveFilesJob(utils, selectedFolderId, idsToMove));
+                utils.getRestInterface().moveFile(PutioUtils.longsToString(idsToMove), selectedFolderId)
+                        .compose(Files.this.<BasePutioResponse.FileChangingResponse>bindToLifecycle())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
+                            @Override
+                            public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
+                                invalidateList(false);
+                            }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
                 Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
             }
         });
@@ -466,11 +510,52 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         if (useCache && UIUtils.isTV(getActivity())) {
             useCache = false;
         }
-		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesListJob(
-				utils, state.requestedId, useCache));
+
+        filesListObservable(useCache, utils, state.requestedId)
+                .compose(this.<FilesListResponse>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<FilesListResponse>() {
+                    @Override
+                    public void call(FilesListResponse filesListResponse) {
+                        if (filesListResponse != null && filesListResponse.getParent().id == state.requestedId) {
+                            state.isSearch = false;
+                            populateList(filesListResponse.getFiles(), filesListResponse.getParent());
+                            if (!(filesListResponse instanceof CachedFilesListResponse)) {
+                                if (swipeRefreshLayout != null)
+                                    swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
+
+    private static Observable<FilesListResponse> filesListObservable(final boolean useCache, final PutioUtils utils, final long parentId) {
+        Observable<FilesListResponse> fetched = utils.getRestInterface().files(parentId);
+        fetched.subscribe(new Action1<FilesListResponse>() {
+            @Override
+            public void call(FilesListResponse filesListResponse) {
+                utils.getFilesCache().cache(filesListResponse, parentId);
+            }
+        });
+        return Observable.create(new Observable.OnSubscribe<FilesListResponse>() {
+            @Override
+            public void call(Subscriber<? super FilesListResponse> subscriber) {
+                if (useCache) {
+                    CachedFilesListResponse cached = utils.getFilesCache().getCached(parentId);
+                    if (cached != null) {
+                        subscriber.onNext(cached);
+                    }
+                }
+            }
+        }).mergeWith(fetched);
+    }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -497,7 +582,15 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_createfolder:
-                utils.createFolderDialog(getActivity(), state.currentFolder.id).show();
+                utils.createFolderDialog(getActivity(), new PutioUtils.CreateFolderCallback() {
+                    @Override
+                    public void onCreateFolderClicked() { }
+
+                    @Override
+                    public void onCreateFolderFinished() {
+                        invalidateList(false);
+                    }
+                }, state.currentFolder.id).show();
                 return true;
         }
 
@@ -507,8 +600,24 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     public void initSearch(String query) {
         state.searchQuery = query;
 
-		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetFilesSearchJob(
-                utils, query));
+        utils.getRestInterface().searchFiles(query)
+                .compose(this.<FilesSearchResponse>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<FilesSearchResponse>() {
+                    @Override
+                    public void call(FilesSearchResponse response) {
+                        if (response != null) {
+                            state.isSearch = true;
+                            populateList(response.getFiles(), null);
+                            if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
     }
@@ -613,35 +722,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		invalidateList(true);
 	}
 
-	public void onEventMainThread(FilesListResponse result) {
-        if (result != null && result.getParent().id == state.requestedId) {
-			state.isSearch = false;
-            populateList(result.getFiles(), result.getParent());
-			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
-		}
-	}
-
-	public void onEventMainThread(CachedFilesListResponse result) {
-		if (result != null && result.getParent().id == state.requestedId) {
-			state.isSearch = false;
-			populateList(result.getFiles(), result.getParent());
-		}
-	}
-
-	public void onEventMainThread(FilesSearchResponse result) {
-		if (result != null && state.searchQuery.equals(result.getQuery())) {
-			state.isSearch = true;
-			populateList(result.getFiles(), null);
-			if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
-		}
-	}
-
-	public void onEventMainThread(BasePutioResponse.FileChangingResponse result) {
-		if (result.getStatus().equals("OK")) {
-			invalidateList(false);
-		}
-	}
-
     @Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -653,13 +733,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         }
 
         outState.putParcelable("state", state);
-	}
-
-	@Override
-	public void onDestroy() {
-		utils.getEventBus().unregister(this);
-
-		super.onDestroy();
 	}
 
 	@Override
