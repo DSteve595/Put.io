@@ -75,6 +75,7 @@
         <item name="colorPrimary">@color/putio_accent</item>
         <item name="colorPrimaryDark">@color/putio_accent_dark</item>
         <item name="colorAccent">@color/putio_accent</item>
+        <item name="android:windowNoTitle">false</item>
     </style>
 
     <style name="Putio.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">

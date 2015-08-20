@@ -6,9 +6,9 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@android:color/transparent"
     android:minHeight="?attr/actionBarSize"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:contentInsetStart="0dp"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     <ImageButton
         android:id="@+id/button_filedetails_close"
@@ -19,7 +19,7 @@
         android:adjustViewBounds="true"
         android:background="?attr/actionBarItemBackground"
         android:contentDescription="@string/close"
-        android:padding="18dp"
+        android:padding="20dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_filedetails_close"
         android:tint="@android:color/white" />

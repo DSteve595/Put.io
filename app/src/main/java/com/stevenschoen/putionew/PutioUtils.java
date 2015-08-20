@@ -1,5 +1,6 @@
 package com.stevenschoen.putionew;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -44,22 +45,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.path.android.jobqueue.JobManager;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.joda.time.DateTime;
 
 import java.io.File;
@@ -260,11 +253,12 @@ public class PutioUtils {
         }
     }
 
+    // Content URIs are only returned on KitKat and higher
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getNameFromUri(Context context, Uri uri) {
         if (uri.getScheme().equals("file")) {
             return new File(uri.getPath()).getName();
         } else if (uri.getScheme().equals("content")) {
-
             try (Cursor cursor = context.getContentResolver()
                     .query(uri, null, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
@@ -522,21 +516,16 @@ public class PutioUtils {
     }
 
     public static String resolveRedirect(String url) throws IOException {
-        HttpParams httpParameters = new BasicHttpParams();
-        HttpClientParams.setRedirecting(httpParameters, false);
+        OkHttpClient client = new OkHttpClient();
+        client.setFollowRedirects(true);
+        client.setFollowSslRedirects(true);
+        Response response = client.newCall(new Request.Builder()
+                .url(url).build()).execute();
+        if (response.code() == 302) {
+            return response.header("Location");
+        }
 
-        HttpClient httpClient = new DefaultHttpClient(httpParameters);
-        HttpGet httpget = new HttpGet(url);
-        HttpContext context = new BasicHttpContext();
-
-        HttpResponse response = httpClient.execute(httpget, context);
-
-        // If we didn't get a '302 Found' we aren't being redirected.
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_MOVED_TEMPORARILY)
-            throw new IOException(response.getStatusLine().toString());
-
-        org.apache.http.Header[] loc = response.getHeaders("Location");
-        return loc.length > 0 ? loc[0].getValue() : null;
+        return url;
     }
 
     public String getFileDownloadUrl(long id) {
@@ -554,11 +543,7 @@ public class PutioUtils {
                 + File.separator + "put.io" + File.separator + id;
         File file = new File(path);
         if (file.exists()) {
-            if (file.list().length > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return file.list().length > 0;
         } else {
             return false;
         }

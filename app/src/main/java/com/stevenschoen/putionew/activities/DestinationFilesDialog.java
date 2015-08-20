@@ -1,8 +1,10 @@
 package com.stevenschoen.putionew.activities;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +24,6 @@ public class DestinationFilesDialog extends Files {
     @Override
     protected int getLayoutResId() {
         return R.layout.dialog_destination;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -58,6 +55,16 @@ public class DestinationFilesDialog extends Files {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setTitle(R.string.choose_folder);
+
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    return goBack();
+                }
+                return false;
+            }
+        });
 
         return dialog;
     }

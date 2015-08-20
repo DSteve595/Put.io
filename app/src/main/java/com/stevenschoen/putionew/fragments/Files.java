@@ -10,7 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,7 +39,6 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.activities.DestinationFilesDialog;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
-import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.CachedFilesListResponse;
@@ -66,9 +65,9 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     private long highlightFileId = -1;
 
     public interface Callbacks {
-        public void onFileSelected(PutioFile file);
-        public void onSomethingSelected();
-        public void currentFolderRefreshed();
+        void onFileSelected(PutioFile file);
+        void onSomethingSelected();
+        void currentFolderRefreshed();
     }
 
     private Callbacks callbacks;
@@ -176,10 +175,10 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         filesAdapter.setItemsCheckedChangedListener(new FilesAdapter.OnItemsCheckedChangedListener() {
             @Override
             public void onItemsCheckedChanged() {
-                if (getActivity() instanceof ActionBarActivity) {
+                if (getActivity() instanceof AppCompatActivity) {
                     if (actionMode == null) {
                         if (filesAdapter.isInCheckMode()) {
-                            ActionBarActivity activity = (ActionBarActivity) getActivity();
+                            AppCompatActivity activity = (AppCompatActivity) getActivity();
                             actionMode = activity.startSupportActionMode(new ActionMode.Callback() {
                                 @Override
                                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {

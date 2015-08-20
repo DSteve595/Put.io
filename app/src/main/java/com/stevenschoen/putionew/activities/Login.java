@@ -15,17 +15,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.stevenschoen.putionew.PutioUtils;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.stevenschoen.putionew.R;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.URI;
+import java.io.IOException;
 
 public class Login extends AppCompatActivity {
     public SharedPreferences sharedPrefs;
@@ -178,19 +176,17 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public InputStream getJsonData(String url) {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        URI uri;
-        InputStream data = null;
+    public String getJsonData(String url) {
         try {
-            uri = new URI(url);
-            HttpGet method = new HttpGet(uri);
-            HttpResponse response = httpClient.execute(method);
-            data = response.getEntity().getContent();
-        } catch (Exception e) {
+            OkHttpClient client = new OkHttpClient();
+            Response response = client.newCall(new Request.Builder()
+                    .url(url).build()).execute();
+            return response.body().string();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return data;
+
+        return null;
     }
 
     void saveTokenFromWeb(final String url) {
@@ -198,7 +194,7 @@ public class Login extends AppCompatActivity {
 
         JSONObject json;
         try {
-            json = new JSONObject(PutioUtils.convertStreamToString(getJsonData(url)));
+            json = new JSONObject(getJsonData(url));
             token = json.getString("access_token");
         } catch (JSONException e) {
             e.printStackTrace();

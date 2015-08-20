@@ -3,7 +3,7 @@ package com.stevenschoen.putionew.activities;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.MediaRouteActionProvider;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -23,7 +23,7 @@ import com.stevenschoen.putionew.model.files.PutioFile;
 
 import org.apache.commons.io.FilenameUtils;
 
-public abstract class BaseCastActivity extends ActionBarActivity implements PutioApplication.CastCallbacks {
+public abstract class BaseCastActivity extends AppCompatActivity implements PutioApplication.CastCallbacks {
 
     public static final double VOLUME_INCREMENT = 0.05;
 

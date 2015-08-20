@@ -163,7 +163,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FileHolder> 
     }
 
     public void setPositionChecked(int position, boolean checked) {
-
         long itemId = getItemId(position);
         if (checked && !checkedIds.contains(itemId)) {
             checkedIds.add(itemId);
