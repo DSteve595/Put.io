@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.VideoView;
 
 import com.stevenschoen.putionew.PutioApplication;
@@ -155,4 +156,29 @@ public class TvPlaybackOverlayActivity extends Activity implements
         PLAYING, PAUSED, BUFFERING, IDLE
     }
 
+    /*
+     * Handle key presses
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        TvPlaybackOverlayFragment playbackOverlayFragment = (TvPlaybackOverlayFragment) getFragmentManager().findFragmentById(R.id.playback_controls_fragment);
+
+        switch (keyCode) {
+        case KeyEvent.KEYCODE_MEDIA_PLAY:
+            playbackOverlayFragment.togglePlayback(false);
+            return true;
+        case KeyEvent.KEYCODE_MEDIA_PAUSE:
+            playbackOverlayFragment.togglePlayback(false);
+            return true;
+        case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            if (mPlaybackState == PlaybackState.PLAYING) {
+                playbackOverlayFragment.togglePlayback(false);
+            } else {
+                playbackOverlayFragment.togglePlayback(true);
+            }
+            return true;
+        default:
+            return super.onKeyUp(keyCode, event);
+        }
+    }
 }

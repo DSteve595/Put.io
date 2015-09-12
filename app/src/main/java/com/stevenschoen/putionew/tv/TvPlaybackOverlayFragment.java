@@ -141,15 +141,7 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
         playbackControlsRowPresenter.setOnActionClickedListener(new OnActionClickedListener() {
             public void onActionClicked(Action action) {
                 if (action.getId() == mPlayPauseAction.getId()) {
-                    if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
-                        startProgressAutomation();
-                        setFadingEnabled(true);
-                        mCallback.onFragmentPlayPause(mPlaybackControlsRow.getCurrentTime(), true);
-                    } else {
-                        stopProgressAutomation();
-                        setFadingEnabled(false);
-                        mCallback.onFragmentPlayPause(mPlaybackControlsRow.getCurrentTime(), false);
-                    }
+                    togglePlayback(mPlayPauseAction.getIndex() == PlayPauseAction.PLAY);
                 } else if (action.getId() == mFastForwardAction.getId()) {
                     fastForward();
                 } else if (action.getId() == mRewindAction.getId()) {
@@ -170,6 +162,25 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
         addPlaybackControlsRow();
 
         setAdapter(mRowsAdapter);
+    }
+
+    /**
+     * Toggle beween play and pause state
+     * @param playPause true = play, false = pause
+     */
+    public void togglePlayback(boolean playPause) {
+        if (playPause) {
+            startProgressAutomation();
+            setFadingEnabled(true);
+            mCallback.onFragmentPlayPause(mPlaybackControlsRow.getCurrentTime(), true);
+            mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlayPauseAction.PAUSE));
+        } else {
+            stopProgressAutomation();
+            setFadingEnabled(false);
+            mCallback.onFragmentPlayPause(mPlaybackControlsRow.getCurrentTime(), false);
+            mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlayPauseAction.PLAY));
+        }
+        notifyChanged(mPlayPauseAction);
     }
 
     private int getDuration() {
