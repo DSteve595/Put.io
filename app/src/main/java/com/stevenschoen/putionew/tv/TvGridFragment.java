@@ -129,4 +129,7 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
         mCurrentFolderId = mCurrentFolder.parentId;
         loadFiles();
     }
+
+    public void onEvent(Object event) {
+    }
 }
