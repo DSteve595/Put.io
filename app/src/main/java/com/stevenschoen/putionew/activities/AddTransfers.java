@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +29,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.FileNotFoundException;
 
-public class AddTransfers extends FragmentActivity {
+public class AddTransfers extends AppCompatActivity {
     public static final int TYPE_SELECTING = -1;
     public static final int TYPE_URL = 1;
     public static final int TYPE_FILE = 2;

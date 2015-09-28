@@ -309,10 +309,10 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 
             textCurrentFolder.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             if (state.isSearch) {
-                iconCurrentFolder.setVisibility(View.GONE);
+                iconCurrentFolder.setImageResource(R.drawable.ic_currentfolder_search);
                 textCurrentFolder.setText(state.searchQuery);
             } else {
-                iconCurrentFolder.setVisibility(View.VISIBLE);
+                iconCurrentFolder.setImageResource(R.drawable.ic_putio_folder);
                 textCurrentFolder.setText(state.currentFolder.name);
             }
         } else {

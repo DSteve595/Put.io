@@ -78,7 +78,8 @@
             android:theme="@style/Putio.Dialog" />
         <activity
             android:name=".activities.AddTransfers"
-            android:theme="@style/Putio.Dialog">
+            android:label="@string/add_transfers"
+            android:theme="@style/Putio.Dialog.NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
