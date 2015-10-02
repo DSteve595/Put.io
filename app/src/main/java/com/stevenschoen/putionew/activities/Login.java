@@ -19,6 +19,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.stevenschoen.putionew.R;
+import com.stevenschoen.putionew.ApiKey;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +46,7 @@ public class Login extends AppCompatActivity {
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        final String loginUrl = "https://api.put.io/v2/oauth2/authenticate?client_id=83&response_type=token&redirect_uri=http://stevenschoen.com/callback.php";
+        final String loginUrl = "https://api.put.io/v2/oauth2/authenticate?client_id=" + ApiKey.getClientId() + "&response_type=token&redirect_uri=http://stevenschoen.com/callback.php";
 
         StrictMode.setThreadPolicy(new ThreadPolicy.Builder().permitNetwork().build());
 
@@ -106,7 +107,9 @@ public class Login extends AppCompatActivity {
                 String[] strings = url.split("code=");
                 String code = strings[1];
 
-                final String finalUrl = "https://api.put.io/v2/oauth2/access_token?client_id=83&client_secret=6xf3yaxu62uj1cjbzfvz&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
+                final String finalUrl = "https://api.put.io/v2/oauth2/access_token?client_id=" +
+                        ApiKey.getClientId() + "&client_secret=" +
+                        ApiKey.getApiKey() + "&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
 						+ code;
                 saveTokenFromWeb(finalUrl);
             } else if (url.contains("token=")) {

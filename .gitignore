@@ -41,3 +41,6 @@
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+# File containing API keys
+ApiKey.java
