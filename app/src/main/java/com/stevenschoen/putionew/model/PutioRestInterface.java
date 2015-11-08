@@ -70,7 +70,7 @@ public interface PutioRestInterface {
     Observable<BasePutioResponse.FileChangingResponse> moveFile(@Field("file_ids") String ids, @Field("parent_id") long newParentId);
 
 	@GET("/transfers/list")
-	TransfersListResponse transfers();
+	Observable<TransfersListResponse> transfers();
 
 	@FormUrlEncoded
 	@POST("/transfers/add")
@@ -240,17 +240,6 @@ public interface PutioRestInterface {
 		@Override
 		public void onRun() throws Throwable {
 			getUtils().getRestInterface().convertToMp4(id);
-		}
-	}
-
-	public static class GetTransfersJob extends PutioJob {
-		public GetTransfersJob(PutioUtils utils) {
-			super(new Params(0).requireNetwork().groupBy("gettransfers"), utils);
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getEventBus().post(getUtils().getRestInterface().transfers());
 		}
 	}
 

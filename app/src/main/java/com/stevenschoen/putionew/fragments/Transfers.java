@@ -32,6 +32,9 @@ import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
 public final class Transfers extends NoClipSupportFragment {
 	
 	private TransfersAdapter adapter;
@@ -53,7 +56,7 @@ public final class Transfers extends NoClipSupportFragment {
 	private View noNetworkView;
 
 	public interface Callbacks {
-        public void onTransferSelected(PutioTransfer transfer);
+        void onTransferSelected(PutioTransfer transfer);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
@@ -69,7 +72,6 @@ public final class Transfers extends NoClipSupportFragment {
 		setHasOptionsMenu(true);
 
 		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
-        utils.getEventBus().register(this);
 	}
 	
 	@Override
@@ -269,16 +271,26 @@ public final class Transfers extends NoClipSupportFragment {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			TransfersServiceBinder binder = (TransfersServiceBinder) service;
 			transfersService = binder.getService();
-			if (transfersService.getTransfers() != null) {
-				updateTransfers(transfersService.getTransfers());
-			}
+			transfersService.getTransfersObservable()
+					.compose(Transfers.this.<List<PutioTransfer>>bindToLifecycle())
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(
+							new Action1<List<PutioTransfer>>() {
+								@Override
+								public void call(List<PutioTransfer> result) {
+									updateTransfers(result);
+								}
+							}, new Action1<Throwable>() {
+								@Override
+								public void call(Throwable throwable) {
+									throwable.printStackTrace();
+								}
+							});
 		}
 
 		@Override
-		public void onServiceDisconnected(ComponentName arg0) { }
-	};
+		public void onServiceDisconnected(ComponentName name) {
 
-    public void onEventMainThread(PutioTransfersService.TransfersAvailable ta) {
-        updateTransfers(transfersService.getTransfers());
-    }
+		}
+	};
 }

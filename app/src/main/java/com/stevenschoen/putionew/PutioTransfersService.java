@@ -3,11 +3,9 @@ package com.stevenschoen.putionew;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 
 import com.stevenschoen.putionew.activities.Putio;
-import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
@@ -15,6 +13,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.subjects.BehaviorSubject;
 
 public class PutioTransfersService extends Service {
 	
@@ -29,60 +34,67 @@ public class PutioTransfersService extends Service {
 
 	private PutioUtils utils;
 
-	private Handler handler;
+	private BehaviorSubject<List<PutioTransfer>> transfers;
 
-	private Runnable updateTransfersRunnable;
-
-	private List<PutioTransfer> transfers;
+	private Subscription fetchSubscription;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		utils = ((PutioApplication) getApplication()).getPutioUtils();
-		utils.getEventBus().register(this);
-		
-		handler = new Handler();
-		updateTransfersRunnable = new Runnable() {
-			@Override
-			public void run() {
-				utils.getJobManager().addJobInBackground(new PutioRestInterface.GetTransfersJob(utils));
 
+		transfers = BehaviorSubject.create();
+
+		final Observable<List<PutioTransfer>> transfersFetchObservable = Observable.create(new Observable.OnSubscribe<List<PutioTransfer>>() {
+			@Override
+			public void call(final Subscriber<? super List<PutioTransfer>> subscriber) {
+				utils.getRestInterface().transfers()
+						.subscribe(new Action1<TransfersListResponse>() {
+							@Override
+							public void call(TransfersListResponse transfersListResponse) {
+								subscriber.onNext(transfersListResponse.getTransfers());
+							}
+						}, new Action1<Throwable>() {
+							@Override
+							public void call(Throwable throwable) {
+								subscriber.onError(throwable);
+							}
+						});
+			}
+		});
+		fetchSubscription = transfersFetchObservable.subscribe(new Subscriber<List<PutioTransfer>>() {
+			@Override
+			public void onCompleted() { }
+			@Override
+			public void onError(Throwable e) {
+				transfers.onError(e);
 				if (!utils.isConnected(PutioTransfersService.this)) {
 					Intent noNetworkIntent = new Intent(Putio.noNetworkIntent);
 					noNetworkIntent.putExtra("from", "transfers");
 					sendBroadcast(noNetworkIntent);
 				}
-				
-				handler.postDelayed(this, 8000);
+				transfersFetchObservable.delaySubscription(8, TimeUnit.SECONDS).subscribe(this);
 			}
-		};
-		handler.post(updateTransfersRunnable);
+			@Override
+			public void onNext(List<PutioTransfer> transfersList) {
+				Collections.reverse(transfersList);
+				List<PutioTransfer> oldTransfers = transfers.getValue();
+				if (oldTransfers == null || !oldTransfers.equals(transfersList)) {
+					transfers.onNext(transfersList);
+				}
+				transfersFetchObservable.delaySubscription(8, TimeUnit.SECONDS).subscribe(this);
+			}
+		});
 	}
 
-	public void onEvent(TransfersListResponse result) {
-		transfers = result.getTransfers();
-		Collections.reverse(transfers);
-
-        utils.getEventBus().post(new TransfersAvailable());
-	}
-
-    public static class TransfersAvailable { }
-
-	public List<PutioTransfer> getTransfers() {
+	public BehaviorSubject<List<PutioTransfer>> getTransfersObservable() {
 		return transfers;
 	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		return Service.START_STICKY;
-	}
-	
-	@Override
-	public void onDestroy() {
-		handler.removeCallbacks(updateTransfersRunnable);
-		utils.getEventBus().unregister(this);
-		super.onDestroy();
+		return Service.START_NOT_STICKY;
 	}
 
 	@Override
@@ -93,8 +105,8 @@ public class PutioTransfersService extends Service {
 	
 	@Override
 	public void onRebind(Intent intent) {
-		if (stopTask != null) stopTask.cancel();
 		super.onRebind(intent);
+		if (stopTask != null) stopTask.cancel();
 	}
 	
 	@Override
@@ -108,5 +120,11 @@ public class PutioTransfersService extends Service {
 		new Timer().schedule(stopTask, 5000);
 		
 		return true;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (fetchSubscription != null) fetchSubscription.unsubscribe();
+		super.onDestroy();
 	}
 }
