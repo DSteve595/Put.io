@@ -4,13 +4,14 @@
 
     <item
         android:id="@+id/context_retry"
+        android:icon="@drawable/ic_menu_transfers_retry"
         android:title="@string/retry"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/context_remove"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/ic_menu_transfers_cancel"
         android:title="@string/remove"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 
 </menu>

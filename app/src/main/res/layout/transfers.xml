@@ -2,23 +2,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/transferslist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingTop="8dp" />
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="8dp"
+        android:scrollbars="vertical"/>
 
     <include
         android:id="@+id/transfers_loading"
-        layout="@layout/transfersloading" />
+        layout="@layout/transfersloading"/>
 
     <include
         android:id="@+id/transfers_empty"
-        layout="@layout/transfersempty" />
+        layout="@layout/transfersempty"/>
 
     <include
         android:id="@+id/transfers_nonetwork"
-        layout="@layout/transfersnonetwork" />
+        layout="@layout/transfersnonetwork"/>
 
 </RelativeLayout>

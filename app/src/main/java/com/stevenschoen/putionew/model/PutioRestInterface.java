@@ -25,6 +25,7 @@ import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -78,17 +79,17 @@ public interface PutioRestInterface {
 
     @FormUrlEncoded
     @POST("/transfers/retry")
-    BasePutioResponse retryTransfer(@Field("id") long id);
+    Observable<BasePutioResponse> retryTransfer(@Field("id") long id);
 
 	@FormUrlEncoded
 	@POST("/transfers/cancel")
-	BasePutioResponse cancelTransfer(@Field("transfer_ids") String ids);
+	Observable<BasePutioResponse> cancelTransfer(@Field("transfer_ids") String ids);
 
 	@POST("/transfers/clean")
-	BasePutioResponse cleanTransfers();
+	Observable<BasePutioResponse> cleanTransfers(@Body String nothing);
 
 	@GET("/account/info")
-	AccountInfoResponse account();
+	Observable<AccountInfoResponse> account();
 
 	public static abstract class PutioJob extends Job {
 		private PutioUtils utils;
@@ -260,56 +261,5 @@ public interface PutioRestInterface {
 			super.onRun();
 			getUtils().getRestInterface().addTransferUrl(url, extract, saveParentId, this);
 		}
-	}
-
-    public static class PostRetryTransferJob extends PutioJob {
-        private long id;
-
-        public PostRetryTransferJob(PutioUtils utils, long id) {
-            super(utils);
-            this.id = id;
-        }
-
-        @Override
-        public void onRun() throws Throwable {
-            getUtils().getRestInterface().retryTransfer(id);
-        }
-    }
-
-	public static class PostCancelTransferJob extends PutioJob {
-		private long[] ids;
-
-		public PostCancelTransferJob(PutioUtils utils, long... ids) {
-			super(utils);
-			this.ids = ids;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getRestInterface().cancelTransfer(PutioUtils.longsToString(ids));
-		}
-	}
-
-	public static class PostCleanTransfersJob extends PutioJob {
-		public PostCleanTransfersJob(PutioUtils utils) {
-			super(utils);
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getRestInterface().cleanTransfers();
-		}
-	}
-
-	public static class GetAccountInfoJob extends PutioJob {
-		public GetAccountInfoJob(PutioUtils utils) {
-			super(utils);
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getEventBus().post(getUtils().getRestInterface().account());
-		}
-
 	}
 }

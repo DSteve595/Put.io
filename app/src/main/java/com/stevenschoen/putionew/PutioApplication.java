@@ -70,6 +70,6 @@ public class PutioApplication extends Application {
     }
 
     public interface CastCallbacks {
-        public void load(PutioFile file, String url, PutioUtils utils);
+        void load(PutioFile file, String url, PutioUtils utils);
     }
 }

@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.ApiKey;
+import com.stevenschoen.putionew.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

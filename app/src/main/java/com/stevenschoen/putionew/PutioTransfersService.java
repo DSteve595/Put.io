@@ -36,7 +36,9 @@ public class PutioTransfersService extends Service {
 
 	private BehaviorSubject<List<PutioTransfer>> transfers;
 
+	private Observable<List<PutioTransfer>> transfersFetchObservable;
 	private Subscription fetchSubscription;
+	Subscriber<List<PutioTransfer>> subscriber;
 	
 	@Override
 	public void onCreate() {
@@ -46,7 +48,7 @@ public class PutioTransfersService extends Service {
 
 		transfers = BehaviorSubject.create();
 
-		final Observable<List<PutioTransfer>> transfersFetchObservable = Observable.create(new Observable.OnSubscribe<List<PutioTransfer>>() {
+		transfersFetchObservable = Observable.create(new Observable.OnSubscribe<List<PutioTransfer>>() {
 			@Override
 			public void call(final Subscriber<? super List<PutioTransfer>> subscriber) {
 				utils.getRestInterface().transfers()
@@ -63,9 +65,25 @@ public class PutioTransfersService extends Service {
 						});
 			}
 		});
-		fetchSubscription = transfersFetchObservable.subscribe(new Subscriber<List<PutioTransfer>>() {
+		subscriber = makeSubscriber();
+		fetchSubscription = transfersFetchObservable.subscribe(subscriber);
+	}
+
+	public BehaviorSubject<List<PutioTransfer>> getTransfersObservable() {
+		return transfers;
+	}
+
+	public void updateNow() {
+		subscriber.unsubscribe();
+		subscriber = makeSubscriber();
+		transfersFetchObservable.subscribe(subscriber);
+	}
+
+	private Subscriber<List<PutioTransfer>> makeSubscriber() {
+		return new Subscriber<List<PutioTransfer>>() {
 			@Override
 			public void onCompleted() { }
+
 			@Override
 			public void onError(Throwable e) {
 				transfers.onError(e);
@@ -76,6 +94,7 @@ public class PutioTransfersService extends Service {
 				}
 				transfersFetchObservable.delaySubscription(8, TimeUnit.SECONDS).subscribe(this);
 			}
+
 			@Override
 			public void onNext(List<PutioTransfer> transfersList) {
 				Collections.reverse(transfersList);
@@ -85,11 +104,7 @@ public class PutioTransfersService extends Service {
 				}
 				transfersFetchObservable.delaySubscription(8, TimeUnit.SECONDS).subscribe(this);
 			}
-		});
-	}
-
-	public BehaviorSubject<List<PutioTransfer>> getTransfersObservable() {
-		return transfers;
+		};
 	}
 	
 	@Override

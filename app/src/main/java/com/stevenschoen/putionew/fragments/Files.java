@@ -76,7 +76,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 
     private ActionMode actionMode;
 
-	private RecyclerView filesList;
+	private RecyclerView filesListView;
     private FilesAdapter filesAdapter;
 	private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -121,9 +121,9 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(getLayoutResId(), container, false);
 
-		filesList = (RecyclerView) view.findViewById(R.id.fileslist);
+		filesListView = (RecyclerView) view.findViewById(R.id.fileslist);
         if (getArguments() != null && getArguments().getBoolean("padForFab", false)) {
-            PutioUtils.padForFab(filesList);
+            PutioUtils.padForFab(filesListView);
         }
         if (!UIUtils.isTV(getActivity())) {
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
@@ -135,7 +135,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                     R.color.putio_accent);
 		}
         LinearLayoutManager filesManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        filesList.setLayoutManager(filesManager);
+        filesListView.setLayoutManager(filesManager);
 		filesAdapter = new FilesAdapter(state.fileData);
         filesAdapter.setOnItemClickListener(new FilesAdapter.OnItemClickListener() {
             @Override
@@ -255,7 +255,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
             @Override
             public void onChanged() {
                 if (state.currentFolder.id != state.origId) {
-                    filesList.scrollToPosition(0);
+                    filesListView.scrollToPosition(0);
                     getActivity().supportInvalidateOptionsMenu();
                 }
                 state.origId = state.currentFolder.id;
@@ -263,15 +263,15 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                 super.onChanged();
             }
         });
-		filesList.setAdapter(filesAdapter);
-        filesList.addItemDecoration(new DividerItemDecoration(getActivity(),
+		filesListView.setAdapter(filesAdapter);
+        filesListView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST,
                 (int) getResources().getDimension(R.dimen.files_divider_inset),
                 0));
-        filesList.setItemAnimator(new DefaultItemAnimator());
+        filesListView.setItemAnimator(new DefaultItemAnimator());
 		if (UIUtils.isTablet(getActivity())) {
-			filesList.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_INSET);
-            filesList.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+			filesListView.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_INSET);
+            filesListView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
 		}
 
 		loadingView = view.findViewById(R.id.files_loading);
@@ -327,19 +327,19 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     private void setViewMode(int mode) {
 		switch (mode) {
             case VIEWMODE_LIST:
-                filesList.setVisibility(View.VISIBLE);
+                filesListView.setVisibility(View.VISIBLE);
                 loadingView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.GONE);
                 emptySubfolderView.setVisibility(View.GONE);
                 break;
             case VIEWMODE_LOADING:
-                filesList.setVisibility(View.INVISIBLE);
+                filesListView.setVisibility(View.INVISIBLE);
                 loadingView.setVisibility(View.VISIBLE);
                 emptyView.setVisibility(View.GONE);
                 emptySubfolderView.setVisibility(View.GONE);
                 break;
             case VIEWMODE_EMPTY:
-                filesList.setVisibility(View.INVISIBLE);
+                filesListView.setVisibility(View.INVISIBLE);
                 loadingView.setVisibility(View.GONE);
                 if (state.currentFolder.id == 0 && !state.isSearch) {
                     emptyView.setVisibility(View.VISIBLE);
@@ -643,13 +643,13 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		setViewMode(VIEWMODE_LISTOREMPTY);
 
 		if (highlightFileId != -1) {
-            filesList.post(new Runnable() {
+            filesListView.post(new Runnable() {
                 @Override
                 public void run() {
                     int highlightPos = getIndexFromFileId(highlightFileId);
                     if (highlightPos != -1) {
-                        filesList.requestFocus();
-                        filesList.smoothScrollToPosition(highlightPos);
+                        filesListView.requestFocus();
+                        filesListView.smoothScrollToPosition(highlightPos);
                         highlightFileId = -1;
                     }
                 }

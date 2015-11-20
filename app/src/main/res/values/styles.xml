@@ -9,6 +9,21 @@
         <item name="dialogTheme">@style/Putio.Dialog</item>
         <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
 
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+    </style>
+
+    <style name="Theme.Putio.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/putio_accent</item>
+        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
+        <item name="colorAccent">@color/putio_accent</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:dialogTheme">@style/Putio.Dialog</item>
+        <item name="dialogTheme">@style/Putio.Dialog</item>
+        <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+
         <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
         <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
     </style>
@@ -21,7 +36,7 @@
         <item name="colorButtonNormal">@color/putio_accent</item>
     </style>
 
-    <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar" />
+    <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar"/>
 
     <style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="colorPrimary">@color/putio_accent</item>
@@ -37,7 +52,7 @@
         <item name="android:background">@null</item>
     </style>
 
-    <style name="Putio.TextAppearance.DialogTitle" parent="TextAppearance.AppCompat.Title" />
+    <style name="Putio.TextAppearance.DialogTitle" parent="TextAppearance.AppCompat.Title"/>
 
     <style name="ButtonBar">
         <item name="android:theme">@style/Theme.Putio</item>
@@ -66,9 +81,17 @@
         <item name="android:background">@drawable/putio_clickable_rounded</item>
     </style>
 
+    <style name="Theme.Putio.TransferViewButton" parent="Theme.Putio.Dark">
+        <item name="colorButtonNormal">#1FAE7D</item>
+    </style>
+
+    <style name="Putio.Button.TransferView" parent="Widget.AppCompat.Button.Small">
+        <item name="android:theme">@style/Theme.Putio.TransferViewButton</item>
+    </style>
+
     <declare-styleable name="com.stevenschoen.putio.SizePreference">
-        <attr name="minValue" format="integer" />
-        <attr name="maxValue" format="integer" />
+        <attr name="minValue" format="integer"/>
+        <attr name="maxValue" format="integer"/>
     </declare-styleable>
 
     <style name="Putio.Dialog" parent="Theme.AppCompat.Light.Dialog">

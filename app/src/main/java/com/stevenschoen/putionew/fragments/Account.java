@@ -9,9 +9,11 @@ import android.widget.TextView;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.account.PutioAccountInfo;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class Account extends NoClipSupportFragment {
 
@@ -27,8 +29,6 @@ public class Account extends NoClipSupportFragment {
 		super.onCreate(savedInstanceState);
 
 		this.utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
-
-		utils.getEventBus().register(this);
 	}
 	
 	@Override
@@ -47,25 +47,27 @@ public class Account extends NoClipSupportFragment {
 	}
 
 	public void invalidateAccountInfo() {
-		utils.getJobManager().addJobInBackground(new PutioRestInterface.GetAccountInfoJob(utils));
-	}
+		utils.getRestInterface().account()
+				.compose(this.<AccountInfoResponse>bindToLifecycle())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Action1<AccountInfoResponse>() {
+					@Override
+					public void call(AccountInfoResponse accountInfoResponse) {
+						PutioAccountInfo account = accountInfoResponse.getInfo();
+						PutioAccountInfo.DiskInfo disk = account.getDisk();
 
-	public void onEventMainThread(AccountInfoResponse result) {
-		PutioAccountInfo account = result.getInfo();
-		PutioAccountInfo.DiskInfo disk = account.getDisk();
-
-		textName.setText(account.getUsername());
-		textEmail.setText(account.getMail());
-		textDiskFree.setText(
-				PutioUtils.humanReadableByteCount(disk.getAvail(), false));
-		textDiskTotal.setText(getString(R.string.total_is,
-				PutioUtils.humanReadableByteCount(disk.getSize(), false)));
-	}
-
-	@Override
-	public void onDestroy() {
-		utils.getEventBus().unregister(this);
-
-		super.onDestroy();
+						textName.setText(account.getUsername());
+						textEmail.setText(account.getMail());
+						textDiskFree.setText(
+								PutioUtils.humanReadableByteCount(disk.getAvail(), false));
+						textDiskTotal.setText(getString(R.string.total_is,
+								PutioUtils.humanReadableByteCount(disk.getSize(), false)));
+					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						throwable.printStackTrace();
+					}
+				});
 	}
 }

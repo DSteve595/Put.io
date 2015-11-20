@@ -17,4 +17,6 @@
 
     <dimen name="files_row_padding">12dp</dimen>
     <dimen name="files_divider_inset">56dp</dimen>
+
+    <dimen name="transfers_card_padding">8dp</dimen>
 </resources>
