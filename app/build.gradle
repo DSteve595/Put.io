@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 93
-        versionName '3.1.5-beta1'
+        versionCode 94
+        versionName '3.1.5-beta2'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -42,6 +42,7 @@ dependencies {
     compile 'com.trello:rxlifecycle-components:0.3.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.path:android-priority-jobqueue:1.1.2'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.4.2@aar'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'

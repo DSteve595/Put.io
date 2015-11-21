@@ -1,6 +1,8 @@
 package com.stevenschoen.putionew;
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -51,6 +53,7 @@ import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -62,6 +65,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -76,6 +81,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.FuncN;
 
 public class PutioUtils {
 	public static final int TYPE_AUDIO = 1;
@@ -293,72 +299,68 @@ public class PutioUtils {
 		return null;
 	}
 
-	public void downloadFiles(final Context context, final int actionWhenDone, final PutioFile... files) {
-		class DownloadFileTask extends AsyncTask<Void, Integer, long[]> {
-			private boolean resolveRedirect = false;
-			private Dialog dialog;
+	public void downloadFile(Activity activity, int actionWhenDone, Uri downloadUri) {
 
+	}
+
+	public void downloadFiles(final Activity activity, final int actionWhenDone, final PutioFile... files) {
+		List<Observable<Long>> downloadIds = new ArrayList<>(files.length);
+		for (PutioFile file : files) {
+			if (file.isFolder()) {
+				long[] folder = new long[]{file.id};
+				downloadIds.add(downloadZipWithoutUrl(activity, folder, file.name));
+			} else {
+				downloadIds.add(downloadFileWithoutUrl(activity, file.id, file.name));
+			}
+		}
+
+		Observable.zip(downloadIds, new FuncN<long[]>() {
 			@Override
-			protected long[] doInBackground(Void... params) {
-				long[] downloadIds = new long[files.length];
-				for (int i = 0; i < files.length; i++) {
-					PutioFile file = files[i];
-					if (file.isFolder()) {
-						long[] folder = new long[]{file.id};
-						downloadIds[i] = downloadZipWithoutUrl(context, folder, file.name);
-					} else {
-						downloadIds[i] = downloadFileWithoutUrl(context, file.id, file.name);
-					}
+			public long[] call(Object... args) {
+				long[] downloadIds = new long[args.length];
+				for (int i = 0; i < args.length; i++) {
+					downloadIds[i] = (long) args[i];
 				}
-
 				return downloadIds;
 			}
-
+		}).subscribe(new Action1<long[]>() {
 			@Override
-			protected void onProgressUpdate(Integer... nothing) {
-				resolveRedirect = true;
-
-				dialog = showPutioDialog(context, context.getString(R.string.downloadpreparing), R.layout.dialog_loading);
-				dialog.setCanceledOnTouchOutside(false);
-			}
-
-			@Override
-			protected void onPostExecute(long[] downloadIds) {
-				if (resolveRedirect) {
-					dialog.dismiss();
-				}
-
+			public void call(long[] downloadIds) {
 				switch (actionWhenDone) {
 					case ACTION_OPEN:
-						Intent serviceOpenIntent = new Intent(context, PutioOpenFileService.class);
+						Intent serviceOpenIntent = new Intent(activity, PutioOpenFileService.class);
 						serviceOpenIntent.putExtra("downloadIds", downloadIds);
 						serviceOpenIntent.putExtra("id", files[0].id);
 						serviceOpenIntent.putExtra("filename", files[0].name);
 						serviceOpenIntent.putExtra("mode", actionWhenDone);
-						context.startService(serviceOpenIntent);
-						Toast.makeText(context, context.getString(R.string.downloadwillopen),
+						activity.startService(serviceOpenIntent);
+						Toast.makeText(activity, activity.getString(R.string.downloadwillopen),
 								Toast.LENGTH_LONG).show();
 						break;
 					case ACTION_NOTHING:
-						Toast.makeText(context, context.getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
+						Toast.makeText(activity, activity.getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
 						break;
 				}
 			}
-		}
-		new DownloadFileTask().execute();
+		}, new Action1<Throwable>() {
+			@Override
+			public void call(Throwable throwable) {
+				throwable.printStackTrace();
+			}
+		});
 	}
 
-	private long downloadFileWithoutUrl(final Context context, final long fileId, String filename) {
+	private Observable<Long> downloadFileWithoutUrl(final Activity activity, final long fileId, String filename) {
 		Uri uri = Uri.parse(getFileDownloadUrl(fileId));
-		return download(context, fileId, false, filename, uri);
+		return download(activity, fileId, false, filename, uri);
 	}
 
-	private long downloadZipWithoutUrl(final Context context, final long[] fileId, String filename) {
+	private Observable<Long> downloadZipWithoutUrl(final Activity activity, final long[] fileId, String filename) {
 		Uri uri = Uri.parse(getZipDownloadUrl(fileId));
-		return download(context, 0, true, filename + ".zip", uri);
+		return download(activity, 0, true, filename + ".zip", uri);
 	}
 
-	private long download(Context context, long fileId, boolean isZip, String filename, Uri uri) {
+	private Observable<Long> download(Activity activity, long fileId, boolean isZip, String filename, Uri uri) {
 		if (idIsDownloaded(fileId) && !isZip) {
 			deleteId(fileId);
 		}
@@ -370,23 +372,41 @@ public class PutioUtils {
 			name = fileId + File.separator + filename;
 		}
 
-		return download(context, uri, name);
+		return download(activity, uri, name);
 	}
 
-	public static long download(Context context, Uri uri, String path) {
-		String subPath = "put.io" + File.separator + path;
-		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + subPath);
-		file.getParentFile().mkdirs();
+	public static Observable<Long> download(final Activity activity, final Uri uri, final String path) {
+		return Observable.create(new Observable.OnSubscribe<Long>() {
+			@Override
+			public void call(final Subscriber<? super Long> subscriber) {
+				RxPermissions.getInstance(activity)
+						.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+						.subscribe(new Action1<Boolean>() {
+							@Override
+							public void call(Boolean granted) {
+								String subPath = "put.io" + File.separator + path;
+								File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + subPath);
+								file.getParentFile().mkdirs();
 
-		final DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-		DownloadManager.Request request = new DownloadManager.Request(uri);
+								final DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+								DownloadManager.Request request = new DownloadManager.Request(uri);
 
-		request.setDescription("put.io");
-		request.allowScanningByMediaScanner();
-		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
+								request.setDescription("put.io");
+								request.allowScanningByMediaScanner();
+								request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+								request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
 
-		return manager.enqueue(request);
+								subscriber.onNext(manager.enqueue(request));
+								subscriber.onCompleted();
+							}
+						}, new Action1<Throwable>() {
+							@Override
+							public void call(Throwable throwable) {
+								subscriber.onError(throwable);
+							}
+						});
+			}
+		});
 	}
 
 	public static void stream(Context context, String url, Uri[] subtitles, int type) {

@@ -399,7 +399,19 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                             name += (", " + files[i].name);
                         }
                     }
-                    PutioUtils.download(getActivity(), Uri.parse(utils.getZipDownloadUrl(fileIds)), name);
+					name += ".zip";
+                    PutioUtils.download(getActivity(), Uri.parse(utils.getZipDownloadUrl(fileIds)), name)
+                            .subscribe(new Action1<Long>() {
+                                @Override
+                                public void call(Long aLong) {
+                                    Toast.makeText(getContext(), getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                            });
                     dialog.dismiss();
                 }
             });
