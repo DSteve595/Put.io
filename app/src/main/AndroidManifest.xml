@@ -203,7 +203,7 @@
             android:name=".activities.TransfersActivity"
             android:excludeFromRecents="true"
             android:taskAffinity="com.stevenschoen.putio.transfersdialog"
-            android:theme="@style/Putio.Dialog" />
+            android:theme="@style/Putio.Dialog.NoTitle" />
 
         <!-- TV -->
         <activity
