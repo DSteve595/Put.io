@@ -32,6 +32,6 @@ public class UIUtils {
     }
 
 	public static boolean isTablet(Context context) {
-		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+		return (context.getResources().getBoolean(R.bool.split_layout));
 	}
 }
