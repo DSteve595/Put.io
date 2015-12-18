@@ -128,11 +128,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         if (!UIUtils.isTV(getActivity())) {
             swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
             swipeRefreshLayout.setOnRefreshListener(this);
-			swipeRefreshLayout.setColorSchemeResources(
-                    R.color.putio_accent,
-                    R.color.putio_accent,
-                    R.color.putio_accent,
-                    R.color.putio_accent);
+			swipeRefreshLayout.setColorSchemeResources(R.color.putio_accent);
 		}
         LinearLayoutManager filesManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         filesListView.setLayoutManager(filesManager);

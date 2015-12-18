@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.media.MediaRouteSelector;
 
+import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
 import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
 import com.stevenschoen.putionew.activities.BaseCastActivity;
 import com.stevenschoen.putionew.model.files.PutioFile;
@@ -51,12 +52,12 @@ public class PutioApplication extends Application {
 	}
 
     public void buildVideoCastManager() {
-        videoCastManager = VideoCastManager.initialize(this, PutioUtils.CAST_APPLICATION_ID, null, null);
-        videoCastManager.enableFeatures(
-                VideoCastManager.FEATURE_NOTIFICATION |
-                        VideoCastManager.FEATURE_LOCKSCREEN |
-                        VideoCastManager.FEATURE_DEBUGGING
-        );
+        CastConfiguration.Builder castConfigBuilder = new CastConfiguration.Builder(PutioUtils.CAST_APPLICATION_ID)
+                .enableNotification()
+                .enableLockScreen();
+        if (BuildConfig.DEBUG) castConfigBuilder.enableDebug();
+
+        videoCastManager = VideoCastManager.initialize(this, castConfigBuilder.build());
         videoCastManager.setVolumeStep(BaseCastActivity.VOLUME_INCREMENT);
         videoCastManager.setStopOnDisconnect(true);
     }
