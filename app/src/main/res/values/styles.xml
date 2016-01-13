@@ -8,6 +8,7 @@
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
         <item name="dialogTheme">@style/Putio.Dialog</item>
         <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+        <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:windowBackground">@android:color/white</item>
 
@@ -23,6 +24,7 @@
         <item name="android:dialogTheme">@style/Putio.Dialog</item>
         <item name="dialogTheme">@style/Putio.Dialog</item>
         <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+        <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
         <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
@@ -30,6 +32,7 @@
 
     <style name="Theme.Putio.FileDetails" parent="Theme.Putio">
         <item name="android:theme">@style/Theme.Putio</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">#9E9E9E</item>
         <item name="colorPrimaryDark">#757575</item>
         <item name="colorAccent">@color/putio_accent</item>
