@@ -1,3 +1,2 @@
 include ':app',
-        ':libraries:aFileChooser',
-        ':libraries:CastCompanionLibrary-android'
+        ':libraries:aFileChooser'

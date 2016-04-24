@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 95
-        versionName '3.1.5'
+        versionCode 96
+        versionName '3.1.6'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -26,26 +26,26 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:support-v13:23.1.1'
-    compile 'com.android.support:leanback-v17:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
-    compile 'com.android.support:palette-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:support-v13:23.3.0'
+    compile 'com.android.support:leanback-v17:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
+    compile 'com.android.support:palette-v7:23.3.0'
+    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.3'
     compile 'com.flipboard:bottomsheet-core:1.5.0'
     compile 'com.flipboard:bottomsheet-commons:1.5.0'
-    compile 'commons-io:commons-io:2.4'
-    compile 'joda-time:joda-time:2.9.1'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'com.trello:rxlifecycle:0.3.0'
-    compile 'com.trello:rxlifecycle-components:0.3.0'
+    compile 'commons-io:commons-io:2.5'
+    compile 'joda-time:joda-time:2.9.3'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.trello:rxlifecycle:0.5.0'
+    compile 'com.trello:rxlifecycle-components:0.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.path:android-priority-jobqueue:1.1.2'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.4.2@aar'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.5.1@aar'
     compile 'com.squareup.okhttp:okhttp:2.7.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile project(':libraries:aFileChooser')
-    compile project(':libraries:CastCompanionLibrary-android')
 }
