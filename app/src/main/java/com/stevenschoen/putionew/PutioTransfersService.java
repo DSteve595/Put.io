@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action1;
+import rx.functions.Func0;
 import rx.subjects.BehaviorSubject;
 
 public class PutioTransfersService extends Service {
@@ -36,9 +36,9 @@ public class PutioTransfersService extends Service {
 
 	private BehaviorSubject<List<PutioTransfer>> transfers;
 
-	private Observable<List<PutioTransfer>> transfersFetchObservable;
+	private Observable<TransfersListResponse> transfersFetchObservable;
 	private Subscription fetchSubscription;
-	Subscriber<List<PutioTransfer>> subscriber;
+	private Subscriber<TransfersListResponse> subscriber;
 	
 	@Override
 	public void onCreate() {
@@ -48,21 +48,10 @@ public class PutioTransfersService extends Service {
 
 		transfers = BehaviorSubject.create();
 
-		transfersFetchObservable = Observable.create(new Observable.OnSubscribe<List<PutioTransfer>>() {
+		transfersFetchObservable = Observable.defer(new Func0<Observable<TransfersListResponse>>() {
 			@Override
-			public void call(final Subscriber<? super List<PutioTransfer>> subscriber) {
-				utils.getRestInterface().transfers()
-						.subscribe(new Action1<TransfersListResponse>() {
-							@Override
-							public void call(TransfersListResponse transfersListResponse) {
-								subscriber.onNext(transfersListResponse.getTransfers());
-							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								subscriber.onError(throwable);
-							}
-						});
+			public Observable<TransfersListResponse> call() {
+				return utils.getRestInterface().transfers();
 			}
 		});
 		subscriber = makeSubscriber();
@@ -79,8 +68,8 @@ public class PutioTransfersService extends Service {
 		transfersFetchObservable.subscribe(subscriber);
 	}
 
-	private Subscriber<List<PutioTransfer>> makeSubscriber() {
-		return new Subscriber<List<PutioTransfer>>() {
+	private Subscriber<TransfersListResponse> makeSubscriber() {
+		return new Subscriber<TransfersListResponse>() {
 			@Override
 			public void onCompleted() { }
 
@@ -96,11 +85,12 @@ public class PutioTransfersService extends Service {
 			}
 
 			@Override
-			public void onNext(List<PutioTransfer> transfersList) {
-				Collections.reverse(transfersList);
+			public void onNext(TransfersListResponse response) {
+				List<PutioTransfer> responseTransfers = response.getTransfers();
+				Collections.reverse(responseTransfers);
 				List<PutioTransfer> oldTransfers = transfers.getValue();
-				if (oldTransfers == null || !oldTransfers.equals(transfersList)) {
-					transfers.onNext(transfersList);
+				if (oldTransfers == null || !oldTransfers.equals(responseTransfers)) {
+					transfers.onNext(responseTransfers);
 				}
 				transfersFetchObservable.delaySubscription(8, TimeUnit.SECONDS).subscribe(this);
 			}

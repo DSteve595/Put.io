@@ -96,7 +96,7 @@ public class PutioUtils {
 //	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
 
 	private PutioRestInterface putioRestInterface;
-	private FilesCache filesCache;
+	private FilesProvider filesProvider;
 	private JobManager jobManager;
 	private EventBus eventBus;
 
@@ -120,7 +120,7 @@ public class PutioUtils {
 		RestAdapter restAdapter = restAdapterBuilder.build();
 		this.putioRestInterface = restAdapter.create(PutioRestInterface.class);
 
-		this.filesCache = new FilesCache(context);
+		this.filesProvider = new FilesProvider(context, getRestInterface());
 		this.jobManager = new JobManager(context);
 		this.eventBus = new EventBus();
 	}
@@ -149,8 +149,8 @@ public class PutioUtils {
 		return putioRestInterface;
 	}
 
-	public FilesCache getFilesCache() {
-		return filesCache;
+	public FilesProvider getFilesProvider() {
+		return filesProvider;
 	}
 
 	public JobManager getJobManager() {

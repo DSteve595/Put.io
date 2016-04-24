@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.stevenschoen.putionew.AutoResizeTextView;
 import com.stevenschoen.putionew.DividerItemDecoration;
 import com.stevenschoen.putionew.FilesAdapter;
+import com.stevenschoen.putionew.FilesProvider;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
@@ -41,19 +42,17 @@ import com.stevenschoen.putionew.activities.DestinationFilesDialog;
 import com.stevenschoen.putionew.activities.FileDetailsActivity;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
-import com.stevenschoen.putionew.model.responses.CachedFilesListResponse;
-import com.stevenschoen.putionew.model.responses.FilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
-public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLayout.OnRefreshListener, FilesProvider.Receiver {
 
 	private static final int VIEWMODE_LIST = 1;
 	private static final int VIEWMODE_LISTOREMPTY = 2;
@@ -64,7 +63,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 
     private long highlightFileId = -1;
 
-    public interface Callbacks {
+	public interface Callbacks {
         void onFileSelected(PutioFile file);
         void onSomethingSelected();
         void currentFolderRefreshed();
@@ -115,6 +114,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         }
 
 		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
+		utils.getFilesProvider().register(this);
 	}
 
 	@Override
@@ -457,24 +457,24 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 			files[i] = getFileAtPosition(indeces[i]);
 		}
 		utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
-            @Override
-            public void onDeleteClicked() {
-                long[] ids = new long[indeces.length];
-                for (int i = 0; i < indeces.length; i++) {
-                    ids[i] = getFileAtPosition(indeces[i]).id;
-                }
-                for (long id : ids) {
-                    int index = getIndexFromFileId(id);
-                    getState().fileData.remove(index);
-                    filesAdapter.notifyItemRemoved(index);
-                }
-            }
+			@Override
+			public void onDeleteClicked() {
+				long[] ids = new long[indeces.length];
+				for (int i = 0; i < indeces.length; i++) {
+					ids[i] = getFileAtPosition(indeces[i]).id;
+				}
+				for (long id : ids) {
+					int index = getIndexFromFileId(id);
+					getState().fileData.remove(index);
+					filesAdapter.notifyItemRemoved(index);
+				}
+			}
 
-            @Override
-            public void onDeleteFinished() {
-                invalidateList(false);
-            }
-        }, files).show();
+			@Override
+			public void onDeleteFinished() {
+				invalidateList(false);
+			}
+		}, files).show();
 	}
 
     private void initMoveFile(final int... indeces) {
@@ -482,86 +482,71 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                 DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
         destinationFilesDialog.show(getFragmentManager(), "dialog");
         destinationFilesDialog.setCallbacks(new DestinationFilesDialog.Callbacks() {
-            @Override
-            public void onDestinationFolderSelected(PutioFile folder) {
-                long[] idsToMove = new long[indeces.length];
-                for (int i = 0; i < indeces.length; i++) {
-                    idsToMove[i] = getFileAtPosition(indeces[i]).id;
-                }
-                for (long id : idsToMove) {
-                    int index = getIndexFromFileId(id);
-                    getState().fileData.remove(index);
-                    filesAdapter.notifyItemRemoved(index);
-                }
-                long selectedFolderId = folder.id;
-                utils.getRestInterface().moveFile(PutioUtils.longsToString(idsToMove), selectedFolderId)
-                        .compose(Files.this.<BasePutioResponse.FileChangingResponse>bindToLifecycle())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
-                            @Override
-                            public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
-                                invalidateList(false);
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        });
-                Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
-            }
-        });
+			@Override
+			public void onDestinationFolderSelected(PutioFile folder) {
+				long[] idsToMove = new long[indeces.length];
+				for (int i = 0; i < indeces.length; i++) {
+					idsToMove[i] = getFileAtPosition(indeces[i]).id;
+				}
+				for (long id : idsToMove) {
+					int index = getIndexFromFileId(id);
+					getState().fileData.remove(index);
+					filesAdapter.notifyItemRemoved(index);
+				}
+				long selectedFolderId = folder.id;
+				utils.getRestInterface().moveFile(PutioUtils.longsToString(idsToMove), selectedFolderId)
+						.compose(Files.this.<BasePutioResponse.FileChangingResponse>bindToLifecycle())
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
+							@Override
+							public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
+								invalidateList(false);
+							}
+						}, new Action1<Throwable>() {
+							@Override
+							public void call(Throwable throwable) {
+								throwable.printStackTrace();
+							}
+						});
+				Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
+			}
+		});
     }
 
-	public void invalidateList(boolean useCache) {
-        if (useCache && UIUtils.isTV(getActivity())) {
-            useCache = false;
-        }
-
-        filesListObservable(useCache, utils, state.requestedId)
-                .compose(this.<FilesListResponse>bindToLifecycle())
+	public void invalidateList(final boolean useCache) {
+        filesListObservable(utils, state.requestedId)
+                .compose(this.<FilesProvider.FilesResponse>bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<FilesListResponse>() {
-                    @Override
-                    public void call(FilesListResponse filesListResponse) {
-                        if (filesListResponse != null && filesListResponse.getParent().id == state.requestedId) {
-                            state.isSearch = false;
-                            populateList(filesListResponse.getFiles(), filesListResponse.getParent());
-                            if (!(filesListResponse instanceof CachedFilesListResponse)) {
-                                if (swipeRefreshLayout != null)
-                                    swipeRefreshLayout.setRefreshing(false);
-                            }
-                        }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                });
+				.filter(new Func1<FilesProvider.FilesResponse, Boolean>() {
+					@Override
+					public Boolean call(FilesProvider.FilesResponse filesResponse) {
+						return (filesResponse.fresh || (useCache && !UIUtils.isTV(getContext())));
+					}
+				})
+                .subscribe(new Action1<FilesProvider.FilesResponse>() {
+					@Override
+					public void call(FilesProvider.FilesResponse response) {
+						if (response != null && response.parent.id == state.requestedId) {
+							state.isSearch = false;
+							populateList(response.files, response.parent);
+							if (response.fresh) {
+								if (swipeRefreshLayout != null)
+									swipeRefreshLayout.setRefreshing(false);
+							}
+						}
+					}
+				}, new Action1<Throwable>() {
+					@Override
+					public void call(Throwable throwable) {
+						throwable.printStackTrace();
+					}
+				});
 
 		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
 
-    private static Observable<FilesListResponse> filesListObservable(final boolean useCache, final PutioUtils utils, final long parentId) {
-        Observable<FilesListResponse> fetched = utils.getRestInterface().files(parentId);
-        fetched.subscribe(new Action1<FilesListResponse>() {
-            @Override
-            public void call(FilesListResponse filesListResponse) {
-                utils.getFilesCache().cache(filesListResponse, parentId);
-            }
-        });
-        return Observable.create(new Observable.OnSubscribe<FilesListResponse>() {
-            @Override
-            public void call(Subscriber<? super FilesListResponse> subscriber) {
-                if (useCache) {
-                    CachedFilesListResponse cached = utils.getFilesCache().getCached(parentId);
-                    if (cached != null) {
-                        subscriber.onNext(cached);
-                    }
-                }
-            }
-        }).mergeWith(fetched);
+    private Observable<FilesProvider.FilesResponse> filesListObservable(final PutioUtils utils, final long parentId) {
+        return utils.getFilesProvider().getFiles(this, true, parentId);
     }
 
 	@Override
@@ -743,8 +728,20 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	}
 
 	@Override
+	public void onDestroy() {
+		utils.getFilesProvider().unregister(this);
+
+		super.onDestroy();
+	}
+
+	@Override
 	public void onRefresh() {
 		invalidateList(false);
+	}
+
+	@Override
+	public PutioFile getCurrentFolder() {
+		return state.currentFolder;
 	}
 
     public static class State implements Parcelable {

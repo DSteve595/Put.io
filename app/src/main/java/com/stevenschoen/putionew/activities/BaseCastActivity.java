@@ -117,7 +117,14 @@ public abstract class BaseCastActivity extends BottomSheetActivity implements Pu
         } else {
             MediaMetadata metaData = new MediaMetadata(file.isVideo() ?
                     MediaMetadata.MEDIA_TYPE_MOVIE : MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-            metaData.putString(MediaMetadata.KEY_TITLE, FilenameUtils.removeExtension(file.name));
+            String fileTitle = FilenameUtils.removeExtension(file.name);
+            String title;
+            if (fileTitle.length() > 18) {
+                title = fileTitle.substring(0, 19);
+            } else {
+                title = fileTitle;
+            }
+            metaData.putString(MediaMetadata.KEY_TITLE, title);
             if (file.icon != null) metaData.addImage(new WebImage(Uri.parse(file.icon)));
             if (file.screenshot != null) metaData.addImage(new WebImage(Uri.parse(file.screenshot)));
 
