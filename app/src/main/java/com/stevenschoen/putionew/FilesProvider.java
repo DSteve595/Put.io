@@ -35,7 +35,7 @@ public class FilesProvider {
 	private PutioRestInterface restInterface;
 
 	private List<Receiver> receivers = new ArrayList<>(1);
-	private LinkedHashMap<Long, CacheEntry> cachedObservables = new LinkedHashMap<>(MAX_CACHED_PER_RECEIVER, 0.75f, true);
+	private final LinkedHashMap<Long, CacheEntry> cachedObservables = new LinkedHashMap<>(MAX_CACHED_PER_RECEIVER, 0.75f, true);
 	private DiskCache diskCache;
 
 	public FilesProvider(Context context, PutioRestInterface restInterface) {
@@ -47,16 +47,18 @@ public class FilesProvider {
 	public Observable<FilesResponse> getFiles(Receiver receiver, boolean refresh, long id) {
 		cleanCache(id);
 
-		CacheEntry mapEntry = cachedObservables.get(id);
-		if (mapEntry != null) {
-			if (refresh) {
-				updateFromNetwork(mapEntry.observable, id);
+		synchronized (cachedObservables) {
+			CacheEntry mapEntry = cachedObservables.get(id);
+			if (mapEntry != null) {
+				if (refresh) {
+					updateFromNetwork(mapEntry.observable, id);
+				}
+				return cachedObservables.get(id).observable;
+			} else {
+				BehaviorSubject<FilesResponse> observable = makeObservable(true, id);
+				cachedObservables.put(id, new CacheEntry(observable, receiver));
+				return observable;
 			}
-			return cachedObservables.get(id).observable;
-		} else {
-			BehaviorSubject<FilesResponse> observable = makeObservable(true, id);
-			cachedObservables.put(id, new CacheEntry(observable, receiver));
-			return observable;
 		}
 	}
 
@@ -65,19 +67,21 @@ public class FilesProvider {
 				.subscribe(new Action1<FilesListResponse>() {
 					@Override
 					public void call(FilesListResponse filesListResponse) {
-						FilesResponse response = new FilesResponse();
-						response.parent = filesListResponse.getParent();
-						response.files = filesListResponse.getFiles();
-						response.fresh = true;
-						subject.onNext(response);
-						diskCache.cache(filesListResponse, id);
+						synchronized (cachedObservables) {
+							FilesResponse response = new FilesResponse();
+							response.parent = filesListResponse.getParent();
+							response.files = filesListResponse.getFiles();
+							response.fresh = true;
+							subject.onNext(response);
+							diskCache.cache(filesListResponse, id);
 
-						CacheEntry cacheEntry = cachedObservables.get(id);
-						for (WeakReference<Receiver> receiverRef : cacheEntry.receivers) {
-							Receiver receiver = receiverRef.get();
-							if (receiver != null && receiver.getCurrentFolder().id == response.parent.id) {
-								prefetchFolders(receiver, response.files);
-								break;
+							CacheEntry cacheEntry = cachedObservables.get(id);
+							for (WeakReference<Receiver> receiverRef : cacheEntry.receivers) {
+								Receiver receiver = receiverRef.get();
+								if (receiver != null && receiver.getCurrentFolder().id == response.parent.id) {
+									prefetchFolders(receiver, response.files);
+									break;
+								}
 							}
 						}
 					}
@@ -119,11 +123,13 @@ public class FilesProvider {
 			if (foldersPrefetched < 4) {
 				PutioFile file = files.get(i);
 				if (file.isFolder()) {
-					CacheEntry mapEntry = cachedObservables.get(file.id);
-					if (mapEntry == null) {
-						BehaviorSubject<FilesResponse> observable = makeObservable(false, file.id);
-						cachedObservables.put(file.id, new CacheEntry(observable, receiver));
-						foldersPrefetched++;
+					synchronized (cachedObservables) {
+						CacheEntry mapEntry = cachedObservables.get(file.id);
+						if (mapEntry == null) {
+							BehaviorSubject<FilesResponse> observable = makeObservable(false, file.id);
+							cachedObservables.put(file.id, new CacheEntry(observable, receiver));
+							foldersPrefetched++;
+						}
 					}
 				}
 			} else {
@@ -141,51 +147,53 @@ public class FilesProvider {
 		int maximum = MAX_CACHED_PER_RECEIVER * receivers.size();
 
 		// Remove entries with no attached receivers
-		Iterator<Map.Entry<Long, CacheEntry>> iterator = cachedObservables.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<Long, CacheEntry> entry = iterator.next();
-			boolean remove = true;
-			for (WeakReference<Receiver> receiverRef : entry.getValue().receivers) {
-				Receiver receiver = receiverRef.get();
-				if (receiver != null) {
-					remove = false;
-					break;
+		synchronized (cachedObservables) {
+			Iterator<Map.Entry<Long, CacheEntry>> iterator = cachedObservables.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry<Long, CacheEntry> entry = iterator.next();
+				boolean remove = true;
+				for (WeakReference<Receiver> receiverRef : entry.getValue().receivers) {
+					Receiver receiver = receiverRef.get();
+					if (receiver != null) {
+						remove = false;
+						break;
+					}
+				}
+				if (remove) {
+					iterator.remove();
 				}
 			}
-			if (remove) {
-				iterator.remove();
-			}
-		}
 
-		int difference = cachedObservables.size() - maximum;
-		if (difference > 0) {
-			List<Long> idsToRemove = new ArrayList<>(difference);
+			int difference = cachedObservables.size() - maximum;
+			if (difference > 0) {
+				List<Long> idsToRemove = new ArrayList<>(difference);
 
-			List<Long> idsInOldestAccessedOrder = new ArrayList<>(cachedObservables.keySet());
-			for (long id : idsInOldestAccessedOrder) {
-				if (idsToRemove.size() == difference) {
-					break;
-				} else {
-					if (id != idToKeep) {
-						boolean idIsInUse = false;
-						for (WeakReference<Receiver> receiverRef : cachedObservables.get(id).receivers) {
-							Receiver receiver = receiverRef.get();
-							if (receiver != null) {
-								PutioFile currentFolder = receiver.getCurrentFolder();
-								if (id == currentFolder.id || id == currentFolder.parentId) {
-									idIsInUse = true;
-									break;
+				List<Long> idsInOldestAccessedOrder = new ArrayList<>(cachedObservables.keySet());
+				for (long id : idsInOldestAccessedOrder) {
+					if (idsToRemove.size() == difference) {
+						break;
+					} else {
+						if (id != idToKeep) {
+							boolean idIsInUse = false;
+							for (WeakReference<Receiver> receiverRef : cachedObservables.get(id).receivers) {
+								Receiver receiver = receiverRef.get();
+								if (receiver != null) {
+									PutioFile currentFolder = receiver.getCurrentFolder();
+									if (id == currentFolder.id || id == currentFolder.parentId) {
+										idIsInUse = true;
+										break;
+									}
 								}
 							}
-						}
-						if (!idIsInUse) {
-							idsToRemove.add(id);
+							if (!idIsInUse) {
+								idsToRemove.add(id);
+							}
 						}
 					}
 				}
-			}
-			for (long idToRemove : idsToRemove) {
-				cachedObservables.remove(idToRemove);
+				for (long idToRemove : idsToRemove) {
+					cachedObservables.remove(idToRemove);
+				}
 			}
 		}
 	}
