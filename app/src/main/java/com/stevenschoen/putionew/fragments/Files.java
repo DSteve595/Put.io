@@ -59,7 +59,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	private static final int VIEWMODE_LOADING = 3;
 	private static final int VIEWMODE_EMPTY = 4;
 	private static final int VIEWMODE_LISTORLOADING = 5;
-	private int viewMode = VIEWMODE_LIST;
 
     private long highlightFileId = -1;
 
