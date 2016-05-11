@@ -6,6 +6,8 @@ import android.os.Build;
 
 public class UIUtils {
 
+    private UIUtils() {}
+
 	public static boolean isTV(Context context) {
 		return context.getPackageManager().hasSystemFeature(
 				"android.hardware.type.television");

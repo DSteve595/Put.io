@@ -283,14 +283,12 @@ public class PutioUtils {
 		URL url = null;
 		try {
 			url = new URL("http://stevenschoen.com/putio/notifications2.json");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		try {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setConnectTimeout(8000);
 
 			return connection.getInputStream();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		} catch (SocketTimeoutException e) {
 			throw new SocketTimeoutException();
 		} catch (IOException e) {
@@ -496,14 +494,12 @@ public class PutioUtils {
 		URL url = null;
 		try {
 			url = new URL(baseUrl + "/files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}
-		try {
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			connection.setConnectTimeout(8000);
 
 			return connection.getInputStream();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
 		} catch (SocketTimeoutException e) {
 			throw new SocketTimeoutException();
 		} catch (Exception e) {

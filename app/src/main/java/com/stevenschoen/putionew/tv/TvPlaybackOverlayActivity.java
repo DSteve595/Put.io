@@ -101,11 +101,9 @@ public class TvPlaybackOverlayActivity extends Activity implements
     public void onFragmentFfwRwd(int position) {
 
         Log.d(TAG, "seek current time: " + position);
-        if (mPlaybackState == PlaybackState.PLAYING) {
-            if (position > 0) {
-                mVideoView.seekTo(position);
-                mVideoView.start();
-            }
+        if (mPlaybackState == PlaybackState.PLAYING && position > 0) {
+            mVideoView.seekTo(position);
+            mVideoView.start();
         }
     }
 

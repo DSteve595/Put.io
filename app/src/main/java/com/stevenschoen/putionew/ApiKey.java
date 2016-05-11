@@ -5,6 +5,8 @@ public class ApiKey {
     private static final String API_KEY /* = "API_KEY_HERE */;
     private static final String CLIENT_ID /* = "CLIENT_ID_HERE */;
 
+    private ApiKey() {}
+
     public static String getApiKey() {
         if (API_KEY == null) {
             throw new NullPointerException("Secret key not set. Get one at put.io and place it in ApiKey.java");

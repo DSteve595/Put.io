@@ -263,29 +263,27 @@ public class AddTransfers extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 0:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        final Uri uri = data.getData();
-                        try {
-                            selectedFileUri = uri;
-                            String filename = PutioUtils.getNameFromUri(AddTransfers.this, uri);
-                            textFilename.setText(filename);
-                            ContentResolver cr = getContentResolver();
-                            String mimetype = cr.getType(uri);
-                            if (mimetype == null) {
-                                mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                                        MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
-                            }
-                            if ((mimetype != null && mimetype.equals("application/x-bittorrent")) || filename.endsWith("torrent")) {
-                                textNotATorrent.animate().alpha(0);
-                            } else {
-                                textNotATorrent.animate().alpha(1);
-                            }
-                            selectedType = TYPE_FILE;
-                            updateView();
-                        } catch (Exception e) {
-                            Log.d("asdf", "File select error", e);
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    final Uri uri = data.getData();
+                    try {
+                        selectedFileUri = uri;
+                        String filename = PutioUtils.getNameFromUri(AddTransfers.this, uri);
+                        textFilename.setText(filename);
+                        ContentResolver cr = getContentResolver();
+                        String mimetype = cr.getType(uri);
+                        if (mimetype == null) {
+                            mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                                    MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
                         }
+                        if ((mimetype != null && mimetype.equals("application/x-bittorrent")) || filename.endsWith("torrent")) {
+                            textNotATorrent.animate().alpha(0);
+                        } else {
+                            textNotATorrent.animate().alpha(1);
+                        }
+                        selectedType = TYPE_FILE;
+                        updateView();
+                    } catch (Exception e) {
+                        Log.d("asdf", "File select error", e);
                     }
                 }
                 break;
