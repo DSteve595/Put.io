@@ -11,7 +11,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/context_copydownloadlink"
-        android:icon="@drawable/ic_action_copy_black"
+        android:icon="@drawable/ic_action_copy"
         android:orderInCategory="2"
         android:showAsAction="ifRoom"
         android:title="@string/copy_dl_link"

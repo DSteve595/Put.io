@@ -142,6 +142,16 @@ public class FileDetails extends NoClipSupportFragment {
         }
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_filedetails);
+        toolbar.setNavigationOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hasCallbacks()) {
+                    callbacks.onFileDetailsClosed();
+                } else {
+                    getActivity().finish();
+                }
+            }
+        });
         if (isAdded()) {
             if (UIUtils.isTablet(getActivity())) {
                 toolbar.inflateMenu(R.menu.menu_filedetails);
@@ -272,21 +282,8 @@ public class FileDetails extends NoClipSupportFragment {
 
         fetchFileData();
 
-        ImageButton buttonClose = (ImageButton) view.findViewById(R.id.button_filedetails_close);
-        buttonClose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (hasCallbacks()) {
-                    callbacks.onFileDetailsClosed();
-                } else {
-                    getActivity().finish();
-                }
-            }
-        });
-
         View buttonPlay = view.findViewById(R.id.button_filedetails_play);
         if (getCurrentFile().isMedia()) {
-            PutioUtils.setupFab(buttonPlay);
             buttonPlay.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

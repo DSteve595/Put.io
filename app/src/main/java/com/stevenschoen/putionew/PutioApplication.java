@@ -54,6 +54,8 @@ public class PutioApplication extends Application {
     public void buildVideoCastManager() {
         CastConfiguration.Builder castConfigBuilder = new CastConfiguration.Builder(PutioUtils.CAST_APPLICATION_ID)
                 .enableNotification()
+                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
+                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, false)
                 .enableLockScreen();
         if (BuildConfig.DEBUG) castConfigBuilder.enableDebug();
 
