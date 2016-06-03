@@ -151,12 +151,14 @@ public class Login extends AppCompatActivity {
                         break;
                 }
                 final View viewToRemove2 = viewToRemove;
-                viewToRemove.animate().setDuration(500).alpha(0).setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        viewToRemove2.setVisibility(View.INVISIBLE);
-                    }
-                });
+                if(viewToRemove != null) {
+                    viewToRemove.animate().setDuration(500).alpha(0).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            viewToRemove2.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
             }
 
             View viewToAdd = null;
@@ -171,10 +173,11 @@ public class Login extends AppCompatActivity {
                     viewToAdd = viewNoNetwork;
                     break;
             }
-            viewToAdd.setAlpha(0);
-            viewToAdd.setVisibility(View.VISIBLE);
-            viewToAdd.animate().setDuration(500).alpha(1);
-
+            if(viewToAdd != null) {
+                viewToAdd.setAlpha(0);
+                viewToAdd.setVisibility(View.VISIBLE);
+                viewToAdd.animate().setDuration(500).alpha(1);
+            }
             viewMode = mode;
         }
     }
