@@ -28,7 +28,7 @@ public class PutioTransfer implements Parcelable {
 					&& equalsNullSafe(transfer.createdTime, createdTime) && transfer.extract == extract
 					&& transfer.currentRatio == currentRatio && transfer.downSpeed == downSpeed
 					&& transfer.upSpeed == upSpeed && transfer.percentDone == percentDone
-					&& equalsNullSafe(transfer.status, status) && equalsNullSafe(transfer.status, status)
+					&& equalsNullSafe(transfer.status, status)
 					&& transfer.saveParentId == saveParentId);
 		}
 		return super.equals(o);

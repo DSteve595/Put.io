@@ -23,7 +23,6 @@ import rx.functions.Action1;
  * Created by simonreggiani on 15-01-11.
  */
 public class TvGridFragment extends android.support.v17.leanback.app.VerticalGridSupportFragment {
-    private static final String TAG = "VerticalGridFragment";
 
     private static final int NUM_COLUMNS = 3;
 
