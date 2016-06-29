@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	 android:startOffset="@android:integer/config_shortAnimTime">
+	<alpha
+		android:duration="@android:integer/config_shortAnimTime"
+		android:fromAlpha="0.0"
+		android:toAlpha="1.0"/>
+	<translate
+		android:duration="@android:integer/config_shortAnimTime"
+		android:fromYDelta="3%p"
+		android:interpolator="@android:interpolator/decelerate_quad"
+		android:toYDelta="0"/>
+</set>

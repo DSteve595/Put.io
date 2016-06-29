@@ -1,62 +1,58 @@
-<com.stevenschoen.putionew.CheckableLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:background="?attr/listChoiceBackgroundIndicator"
-    android:focusable="true"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingEnd="8dp"
-    android:paddingLeft="@dimen/files_row_padding"
-    android:paddingRight="8dp">
+<com.stevenschoen.putionew.CheckableLinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="64dp"
+	android:background="?attr/listChoiceBackgroundIndicator"
+	android:focusable="true"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	android:paddingEnd="8dp"
+	android:paddingStart="@dimen/files_row_padding">
 
-    <ImageView
-        android:id="@+id/icon_file_img"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:scaleType="fitCenter"
-        tools:src="@drawable/ic_launcher" />
+	<ImageView
+		android:id="@+id/icon_file_img"
+		android:layout_width="36dp"
+		android:layout_height="36dp"
+		android:scaleType="centerCrop"
+		tools:src="@drawable/ic_launcher"/>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_marginEnd="4dp"
+		android:layout_weight="1"
+		android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_file_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="16sp"
-            tools:text="File name" />
+		<TextView
+			android:id="@+id/text_file_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="12dp"
+			android:layout_marginTop="12dp"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:singleLine="true"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textSize="16sp"
+			tools:text="File name"/>
 
-        <TextView
-            android:id="@+id/text_file_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="14sp"
-            tools:text="File description" />
-    </LinearLayout>
+		<TextView
+			android:id="@+id/text_file_description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="12dp"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textSize="14sp"
+			tools:text="File description"/>
+	</LinearLayout>
 
-    <ImageView
-        android:id="@+id/icon_file_accessed"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_fileinfo_accessed"
-        android:tint="#B0B0B0" />
+	<ImageView
+		android:id="@+id/icon_file_accessed"
+		android:layout_width="16dp"
+		android:layout_height="16dp"
+		android:layout_gravity="center_vertical|end"
+		android:layout_marginEnd="8dp"
+		android:src="@drawable/ic_fileinfo_accessed"
+		android:tint="#B0B0B0"/>
 </com.stevenschoen.putionew.CheckableLinearLayout>

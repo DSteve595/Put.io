@@ -1,6 +1,7 @@
 package com.stevenschoen.putionew;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.media.MediaRouteSelector;
@@ -25,6 +26,10 @@ public class PutioApplication extends Application {
         }
         buildVideoCastManager();
 	}
+
+    public static PutioApplication get(Context context) {
+        return (PutioApplication) context.getApplicationContext();
+    }
 
     public boolean isLoggedIn() {
         if (utils != null) {

@@ -12,70 +12,70 @@ import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 public interface PutioRestInterface {
-	@GET("/files/list")
+	@GET("files/list")
 	Observable<FilesListResponse> files(@Query("parent_id") long parentId);
 
-	@GET("/files/search/{query}/page/-1")
+	@GET("files/search/{query}/page/-1")
 	Observable<FilesSearchResponse> searchFiles(@Path("query") String query);
 
-	@GET("/files/{id}")
+	@GET("files/{id}")
 	Observable<FileResponse> file(@Path("id") long id);
 
 	@FormUrlEncoded
-	@GET("/files/zip")
+	@GET("files/zip")
 	BasePutioResponse zip(@Field("file_ids") String ids);
 
-	@GET("/files/{id}/mp4")
+	@GET("files/{id}/mp4")
 	Mp4StatusResponse mp4Status(@Path("id") long id);
 
-	@POST("/files/{id}/mp4")
+	@POST("files/{id}/mp4")
 	BasePutioResponse convertToMp4(@Path("id") long id);
 
     @FormUrlEncoded
-    @POST("/files/create-folder")
+    @POST("files/create-folder")
     Observable<BasePutioResponse.FileChangingResponse> createFolder(@Field("name") String name, @Field("parent_id") long parentId);
 
     @FormUrlEncoded
-	@POST("/files/rename")
+	@POST("files/rename")
 	Observable<BasePutioResponse.FileChangingResponse> renameFile(@Field("file_id") long id, @Field("name") String name);
 
 	@FormUrlEncoded
-	@POST("/files/delete")
+	@POST("files/delete")
 	Observable<BasePutioResponse.FileChangingResponse> deleteFile(@Field("file_ids") String ids);
 
     @FormUrlEncoded
-    @POST("/files/move")
+    @POST("files/move")
     Observable<BasePutioResponse.FileChangingResponse> moveFile(@Field("file_ids") String ids, @Field("parent_id") long newParentId);
 
-	@GET("/transfers/list")
+	@GET("transfers/list")
 	Observable<TransfersListResponse> transfers();
 
 	@FormUrlEncoded
-	@POST("/transfers/add")
+	@POST("transfers/add")
 	Observable<PutioTransfer> addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, @Field("save_parent_id") long saveParentId);
 
     @FormUrlEncoded
-    @POST("/transfers/retry")
+    @POST("transfers/retry")
     Observable<BasePutioResponse> retryTransfer(@Field("id") long id);
 
 	@FormUrlEncoded
-	@POST("/transfers/cancel")
+	@POST("transfers/cancel")
 	Observable<BasePutioResponse> cancelTransfer(@Field("transfer_ids") String ids);
 
-	@POST("/transfers/clean")
+	@POST("transfers/clean")
 	Observable<BasePutioResponse> cleanTransfers(@Body String nothing);
 
-	@GET("/account/info")
+	@GET("account/info")
 	Observable<AccountInfoResponse> account();
 
 	public static abstract class PutioJob extends Job {

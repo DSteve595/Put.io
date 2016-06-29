@@ -1,10 +1,7 @@
 package com.stevenschoen.putionew.fragments;
 
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,37 +19,29 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.stevenschoen.putionew.AutoResizeTextView;
 import com.stevenschoen.putionew.DividerItemDecoration;
-import com.stevenschoen.putionew.FilesAdapter;
-import com.stevenschoen.putionew.FilesProvider;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
-import com.stevenschoen.putionew.activities.DestinationFilesDialog;
-import com.stevenschoen.putionew.activities.FileDetailsActivity;
+import com.stevenschoen.putionew.files.DestinationFolderDialogFragment;
+import com.stevenschoen.putionew.files.FilesAdapter;
 import com.stevenschoen.putionew.model.files.PutioFile;
-import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
+import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
-public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLayout.OnRefreshListener, FilesProvider.Receiver {
+public class Files extends RxAppCompatDialogFragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	private static final int VIEWMODE_LIST = 1;
 	private static final int VIEWMODE_LISTOREMPTY = 2;
@@ -113,60 +102,59 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
         }
 
 		utils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
-		utils.getFilesProvider().register(this);
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(getLayoutResId(), container, false);
 
-		filesListView = (RecyclerView) view.findViewById(R.id.fileslist);
+		filesListView = (RecyclerView) view.findViewById(R.id.folder_list);
         if (getArguments() != null && getArguments().getBoolean("padForFab", false)) {
             PutioUtils.padForFab(filesListView);
         }
         if (!UIUtils.isTV(getActivity())) {
-            swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.filesSwipeRefresh);
+            swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.folder_swiperefresh);
             swipeRefreshLayout.setOnRefreshListener(this);
 			swipeRefreshLayout.setColorSchemeResources(R.color.putio_accent);
 		}
         LinearLayoutManager filesManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         filesListView.setLayoutManager(filesManager);
-		filesAdapter = new FilesAdapter(state.fileData);
-        filesAdapter.setOnItemClickListener(new FilesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if (filesAdapter.isInCheckMode()) {
-                    filesAdapter.togglePositionChecked(position);
-                } else {
-                    if (hasCallbacks()) {
-                        callbacks.onSomethingSelected();
-                    }
-
-                    PutioFile file = getFileAtPosition(position);
-                    if (file.isFolder()) {
-                        state.isSearch = false;
-                        state.requestedId = file.id;
-                        invalidateList(true);
-                    } else {
-                        if (!UIUtils.isTablet(getActivity())) {
-                            Intent detailsIntent = new Intent(getActivity(),
-                                    FileDetailsActivity.class);
-                            detailsIntent.putExtra("fileData", file);
-                            startActivity(detailsIntent);
-                        } else {
-                            if (hasCallbacks()) {
-                                callbacks.onFileSelected(getFileAtPosition(position));
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                filesAdapter.togglePositionChecked(position);
-            }
-        });
+		filesAdapter = new FilesAdapter(state.fileData, null, null);
+//        filesAdapter.setOnItemClickListener(new FilesAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                if (filesAdapter.isInCheckMode()) {
+//                    filesAdapter.togglePositionChecked(position);
+//                } else {
+//                    if (hasCallbacks()) {
+//                        callbacks.onSomethingSelected();
+//                    }
+//
+//                    PutioFile file = getFileAtPosition(position);
+//                    if (file.isFolder()) {
+//                        state.isSearch = false;
+//                        state.requestedId = file.id;
+//                        invalidateList(true);
+//                    } else {
+//                        if (!UIUtils.isTablet(getActivity())) {
+//                            Intent detailsIntent = new Intent(getActivity(),
+//                                    FileDetailsActivity.class);
+//                            detailsIntent.putExtra("fileData", file);
+//                            startActivity(detailsIntent);
+//                        } else {
+//                            if (hasCallbacks()) {
+//                                callbacks.onFileSelected(getFileAtPosition(position));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onItemLongClick(View view, int position) {
+//                filesAdapter.togglePositionChecked(position);
+//            }
+//        });
         filesAdapter.setItemsCheckedChangedListener(new FilesAdapter.OnItemsCheckedChangedListener() {
             @Override
             public void onItemsCheckedChanged() {
@@ -189,7 +177,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                                 public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                                     inflate(mode, menu);
                                     if (filesAdapter.isInCheckMode()) {
-                                        mode.setTitle(getString(R.string.x_selected, filesAdapter.getCheckedCount()));
+                                        mode.setTitle(getString(R.string.x_selected, filesAdapter.checkedCount()));
                                     } else {
                                         mode.finish();
                                     }
@@ -198,10 +186,10 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 
                                 public void inflate(ActionMode mode, Menu menu) {
                                     menu.clear();
-                                    if (filesAdapter.getCheckedCount() > 1) {
-                                        mode.getMenuInflater().inflate(R.menu.context_files_multiple, menu);
+                                    if (filesAdapter.checkedCount() > 1) {
+//                                        mode.getMenuInflater().inflate(R.menu.context_files_multiple, menu);
                                     } else {
-                                        mode.getMenuInflater().inflate(R.menu.context_files_single, menu);
+                                        mode.getMenuInflater().inflate(R.menu.context_files, menu);
                                     }
                                 }
 
@@ -269,22 +257,22 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
             filesListView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
 		}
 
-		loadingView = view.findViewById(R.id.files_loading);
-		emptyView = view.findViewById(R.id.files_empty);
-		ImageButton buttonRefresh = (ImageButton) emptyView.findViewById(R.id.button_filesempty_refresh);
-		buttonRefresh.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				invalidateList(false);
-			}
-		});
-		emptySubfolderView = view.findViewById(R.id.files_empty_subfolder);
+//		loadingView = view.findViewById(R.id.files_loading);
+//		emptyView = view.findViewById(R.id.files_empty);
+//		ImageButton buttonRefresh = (ImageButton) emptyView.findViewById(R.id.button_filesempty_refresh);
+//		buttonRefresh.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				invalidateList(false);
+//			}
+//		});
+//		emptySubfolderView = view.findViewById(R.id.files_empty_subfolder);
 
-        viewCurrentFolder = view.findViewById(R.id.holder_files_currentfolder);
-        iconCurrentFolder = (ImageView) viewCurrentFolder.findViewById(R.id.icon_files_currentfolder);
-        textCurrentFolder = (AutoResizeTextView) viewCurrentFolder.findViewById(R.id.text_files_currentfolder);
-        textCurrentFolder.setMaxTextSize(20);
-        textCurrentFolder.setMinTextSize(18);
+//        viewCurrentFolder = view.findViewById(R.id.files_currentfolder_holder);
+//        iconCurrentFolder = (ImageView) viewCurrentFolder.findViewById(R.id.files_currentfolder_icon);
+//        textCurrentFolder = (AutoResizeTextView) viewCurrentFolder.findViewById(R.id.files_currentfolder_name);
+//        textCurrentFolder.setMaxTextSize(20);
+//        textCurrentFolder.setMinTextSize(18);
 
         refreshCurrentFolderView();
 
@@ -316,7 +304,7 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     }
 
     protected int getLayoutResId() {
-        return R.layout.files;
+        return R.layout.folder;
     }
 
     private void setViewMode(int mode) {
@@ -359,7 +347,6 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
                 }
                 break;
 		}
-		viewMode = mode;
 	}
 
     public void setCallbacks(Callbacks callbacks) {
@@ -371,55 +358,55 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     }
 
 	private void initDownloadFiles(final int... indeces) {
-        final PutioFile[] files = getFilesAtPositions(indeces);
-        if (indeces.length > 1) {
-            final Dialog dialog = PutioUtils.showPutioDialog(getActivity(), getString(R.string.download_files), R.layout.dialog_individualorzip);
-            Button buttonIndividual = (Button) dialog.findViewById(R.id.button_indidualorzip_individual);
-            buttonIndividual.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
-                    dialog.dismiss();
-                }
-            });
-            Button buttonZip = (Button) dialog.findViewById(R.id.button_indidualorzip_zip);
-            buttonZip.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    long fileIds[] = new long[files.length];
-                    String name = files[0].name;
-                    for (int i = 0; i < files.length; i++) {
-                        fileIds[i] = files[i].id;
-                        if (i > 0) {
-                            name += (", " + files[i].name);
-                        }
-                    }
-					name += ".zip";
-                    PutioUtils.download(getActivity(), Uri.parse(utils.getZipDownloadUrl(fileIds)), name)
-                            .subscribe(new Action1<Long>() {
-                                @Override
-                                public void call(Long aLong) {
-                                    Toast.makeText(getContext(), getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
-                                }
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
-                            });
-                    dialog.dismiss();
-                }
-            });
-            Button buttonCancel = (Button) dialog.findViewById(R.id.button_indidualorzip_cancel);
-            buttonCancel.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
-        } else if (indeces.length > 0) {
-            utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
-        }
+//        final PutioFile[] files = getFilesAtPositions(indeces);
+//        if (indeces.length > 1) {
+//            final Dialog dialog = PutioUtils.showPutioDialog(getActivity(), getString(R.string.download_files), R.layout.download_individualorzip);
+//            Button buttonIndividual = (Button) dialog.findViewById(R.id.button_indidualorzip_individual);
+//            buttonIndividual.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
+//                    dialog.dismiss();
+//                }
+//            });
+//            Button buttonZip = (Button) dialog.findViewById(R.id.button_indidualorzip_zip);
+//            buttonZip.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    long fileIds[] = new long[files.length];
+//                    String name = files[0].name;
+//                    for (int i = 0; i < files.length; i++) {
+//                        fileIds[i] = files[i].id;
+//                        if (i > 0) {
+//                            name += (", " + files[i].name);
+//                        }
+//                    }
+//					name += ".zip";
+//                    PutioUtils.download(getActivity(), Uri.parse(utils.getZipDownloadUrl(fileIds)), name)
+//                            .subscribe(new Action1<Long>() {
+//                                @Override
+//                                public void call(Long aLong) {
+//                                    Toast.makeText(getContext(), getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }, new Action1<Throwable>() {
+//                                @Override
+//                                public void call(Throwable throwable) {
+//                                    throwable.printStackTrace();
+//                                }
+//                            });
+//                    dialog.dismiss();
+//                }
+//            });
+//            Button buttonCancel = (Button) dialog.findViewById(R.id.button_indidualorzip_cancel);
+//            buttonCancel.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dialog.cancel();
+//                }
+//            });
+//        } else if (indeces.length > 0) {
+//            utils.downloadFiles(getActivity(), PutioUtils.ACTION_NOTHING, files);
+//        }
 	}
 
 	private void initCopyFileDownloadLink(int... indeces) {
@@ -436,18 +423,18 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 	}
 
 	private void initRenameFile(final int index) {
-        utils.renameFileDialog(getActivity(), new PutioUtils.RenameCallback() {
-            @Override
-            public void onRenameClicked(PutioFile file, String newName) {
-                getFileAtPosition(getIndexFromFileId(file.id)).name = newName;
-                filesAdapter.notifyItemChanged(index);
-            }
-
-            @Override
-            public void onRenameFinished() {
-                invalidateList(false);
-            }
-        }, getFileAtPosition(index)).show();
+//        utils.renameFileDialog(getActivity(), new PutioUtils.RenameCallback() {
+//            @Override
+//            public void onRenameClicked(PutioFile file, String newName) {
+//                getFileAtPosition(getIndexFromFileId(file.id)).name = newName;
+//                filesAdapter.notifyItemChanged(index);
+//            }
+//
+//            @Override
+//            public void onRenameFinished() {
+//                invalidateList(false);
+//            }
+//        }, getFileAtPosition(index)).show();
 	}
 
 	private void initDeleteFile(final int... indeces) {
@@ -455,98 +442,104 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 		for (int i = 0; i < indeces.length; i++) {
 			files[i] = getFileAtPosition(indeces[i]);
 		}
-		utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
-			@Override
-			public void onDeleteClicked() {
-				long[] ids = new long[indeces.length];
-				for (int i = 0; i < indeces.length; i++) {
-					ids[i] = getFileAtPosition(indeces[i]).id;
-				}
-				for (long id : ids) {
-					int index = getIndexFromFileId(id);
-					getState().fileData.remove(index);
-					filesAdapter.notifyItemRemoved(index);
-				}
-			}
-
-			@Override
-			public void onDeleteFinished() {
-				invalidateList(false);
-			}
-		}, files).show();
+//		utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
+//			@Override
+//			public void onDeleteClicked() {
+//				long[] ids = new long[indeces.length];
+//				for (int i = 0; i < indeces.length; i++) {
+//					ids[i] = getFileAtPosition(indeces[i]).id;
+//				}
+//				for (long id : ids) {
+//					int index = getIndexFromFileId(id);
+//					getState().fileData.remove(index);
+//					filesAdapter.notifyItemRemoved(index);
+//				}
+//			}
+//
+//			@Override
+//			public void onDeleteFinished() {
+//				invalidateList(false);
+//			}
+//		}, files).show();
 	}
 
     private void initMoveFile(final int... indeces) {
-        DestinationFilesDialog destinationFilesDialog = (DestinationFilesDialog)
-                DestinationFilesDialog.instantiate(getActivity(), DestinationFilesDialog.class.getName());
-        destinationFilesDialog.show(getFragmentManager(), "dialog");
-        destinationFilesDialog.setCallbacks(new DestinationFilesDialog.Callbacks() {
+        DestinationFolderDialogFragment destinationFilesDialog = (DestinationFolderDialogFragment)
+                DestinationFolderDialogFragment.instantiate(getActivity(), DestinationFolderDialogFragment.class.getName());
+//        destinationFilesDialog.show(getFragmentManager(), "dialog");
+        destinationFilesDialog.setCallbacks(new DestinationFolderDialogFragment.Callbacks() {
 			@Override
-			public void onDestinationFolderSelected(PutioFile folder) {
-				long[] idsToMove = new long[indeces.length];
-				for (int i = 0; i < indeces.length; i++) {
-					idsToMove[i] = getFileAtPosition(indeces[i]).id;
-				}
-				for (long id : idsToMove) {
-					int index = getIndexFromFileId(id);
-					getState().fileData.remove(index);
-					filesAdapter.notifyItemRemoved(index);
-				}
-				long selectedFolderId = folder.id;
-				utils.getRestInterface().moveFile(PutioUtils.longsToString(idsToMove), selectedFolderId)
-						.compose(Files.this.<BasePutioResponse.FileChangingResponse>bindToLifecycle())
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
-							@Override
-							public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
-								invalidateList(false);
-							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								throwable.printStackTrace();
-							}
-						});
-				Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
+			public void onSelectionEnded() {
+
 			}
+
+			@Override
+			public void onSelectionStarted() {
+
+			}
+
+//			@Override
+//			public void onDestinationFolderSelected(PutioFile folder) {
+//				long[] idsToMove = new long[indeces.length];
+//				for (int i = 0; i < indeces.length; i++) {
+//					idsToMove[i] = getFileAtPosition(indeces[i]).id;
+//				}
+//				for (long id : idsToMove) {
+//					int index = getIndexFromFileId(id);
+//					getState().fileData.remove(index);
+//					filesAdapter.notifyItemRemoved(index);
+//				}
+//				long selectedFolderId = folder.id;
+//				utils.getRestInterface().moveFile(PutioUtils.longsToString(idsToMove), selectedFolderId)
+//						.compose(Files.this.<BasePutioResponse.FileChangingResponse>bindToLifecycle())
+//						.observeOn(AndroidSchedulers.mainThread())
+//						.subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
+//							@Override
+//							public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
+//								invalidateList(false);
+//							}
+//						}, new Action1<Throwable>() {
+//							@Override
+//							public void call(Throwable throwable) {
+//								throwable.printStackTrace();
+//							}
+//						});
+//				Toast.makeText(getActivity(), getString(R.string.filemoved), Toast.LENGTH_SHORT).show();
+//			}
 		});
     }
 
 	public void invalidateList(final boolean useCache) {
-        filesListObservable(utils, state.requestedId)
-                .compose(this.<FilesProvider.FilesResponse>bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-				.filter(new Func1<FilesProvider.FilesResponse, Boolean>() {
-					@Override
-					public Boolean call(FilesProvider.FilesResponse filesResponse) {
-						return (filesResponse.fresh || (useCache && !UIUtils.isTV(getContext())));
-					}
-				})
-                .subscribe(new Action1<FilesProvider.FilesResponse>() {
-					@Override
-					public void call(FilesProvider.FilesResponse response) {
-						if (response != null && response.parent.id == state.requestedId) {
-							state.isSearch = false;
-							populateList(response.files, response.parent);
-							if (response.fresh) {
-								if (swipeRefreshLayout != null)
-									swipeRefreshLayout.setRefreshing(false);
-							}
-						}
-					}
-				}, new Action1<Throwable>() {
-					@Override
-					public void call(Throwable throwable) {
-						throwable.printStackTrace();
-					}
-				});
-
-		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
+//        filesListObservable(utils, state.requestedId)
+//                .compose(this.<FilesProvider.FilesResponse>bindToLifecycle())
+//                .observeOn(AndroidSchedulers.mainThread())
+//				.filter(new Func1<FilesProvider.FilesResponse, Boolean>() {
+//					@Override
+//					public Boolean call(FilesProvider.FilesResponse filesResponse) {
+//						return (filesResponse.fresh || (useCache && !UIUtils.isTV(getContext())));
+//					}
+//				})
+//                .subscribe(new Action1<FilesProvider.FilesResponse>() {
+//					@Override
+//					public void call(FilesProvider.FilesResponse response) {
+//						if (response != null && response.parent.id == state.requestedId) {
+//							state.isSearch = false;
+//							populateList(response.files, response.parent);
+//							if (response.fresh) {
+//								if (swipeRefreshLayout != null)
+//									swipeRefreshLayout.setRefreshing(false);
+//							}
+//						}
+//					}
+//				}, new Action1<Throwable>() {
+//					@Override
+//					public void call(Throwable throwable) {
+//						throwable.printStackTrace();
+//					}
+//				});
+//
+//		if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 	}
-
-    private Observable<FilesProvider.FilesResponse> filesListObservable(final PutioUtils utils, final long parentId) {
-        return utils.getFilesProvider().getFiles(this, true, parentId);
-    }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -573,15 +566,15 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_createfolder:
-                utils.createFolderDialog(getActivity(), new PutioUtils.CreateFolderCallback() {
-                    @Override
-                    public void onCreateFolderClicked() { }
-
-                    @Override
-                    public void onCreateFolderFinished() {
-                        invalidateList(false);
-                    }
-                }, state.currentFolder.id).show();
+//                utils.createFolderDialog(getActivity(), new PutioUtils.CreateFolderCallback() {
+//                    @Override
+//                    public void onCreateFolderClicked() { }
+//
+//                    @Override
+//                    public void onCreateFolderFinished() {
+//                        invalidateList(false);
+//                    }
+//                }, state.currentFolder.id).show();
                 return true;
         }
 
@@ -728,19 +721,12 @@ public class Files extends NoClipSupportDialogFragment implements SwipeRefreshLa
 
 	@Override
 	public void onDestroy() {
-		utils.getFilesProvider().unregister(this);
-
 		super.onDestroy();
 	}
 
 	@Override
 	public void onRefresh() {
 		invalidateList(false);
-	}
-
-	@Override
-	public PutioFile getCurrentFolder() {
-		return state.currentFolder;
 	}
 
     public static class State implements Parcelable {

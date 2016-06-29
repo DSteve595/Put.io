@@ -1,124 +1,129 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Putio" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/putio_accent</item>
-        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
-        <item name="colorAccent">@color/putio_accent</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:dialogTheme">@style/Putio.Dialog</item>
-        <item name="dialogTheme">@style/Putio.Dialog</item>
-        <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
-        <item name="android:windowLightStatusBar">true</item>
+	<style name="Theme.Putio" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/putio_accent</item>
+		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
+		<item name="colorAccent">@color/putio_accent</item>
+		<item name="windowActionModeOverlay">true</item>
+		<item name="android:dialogTheme">@style/Putio.Dialog</item>
+		<item name="dialogTheme">@style/Putio.Dialog</item>
+		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+		<item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:windowBackground">@android:color/white</item>
+		<item name="android:windowBackground">@android:color/white</item>
 
-        <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
-    </style>
+		<item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+		<item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+	</style>
 
-    <style name="Theme.Putio.Dark" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/putio_accent</item>
-        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
-        <item name="colorAccent">@color/putio_accent</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:dialogTheme">@style/Putio.Dialog</item>
-        <item name="dialogTheme">@style/Putio.Dialog</item>
-        <item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
-        <item name="android:windowLightStatusBar">true</item>
+	<style name="Theme.Putio.Dark" parent="Theme.AppCompat.NoActionBar">
+		<item name="colorPrimary">@color/putio_accent</item>
+		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
+		<item name="colorAccent">@color/putio_accent</item>
+		<item name="windowActionModeOverlay">true</item>
+		<item name="android:dialogTheme">@style/Putio.Dialog</item>
+		<item name="dialogTheme">@style/Putio.Dialog</item>
+		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+		<item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
-    </style>
+		<item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+		<item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+	</style>
 
-    <style name="Theme.Putio.FileDetails" parent="Theme.Putio">
-        <item name="android:theme">@style/Theme.Putio</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="colorPrimary">#9E9E9E</item>
-        <item name="colorPrimaryDark">#757575</item>
-        <item name="colorAccent">@color/putio_accent</item>
-        <item name="colorButtonNormal">@color/putio_accent</item>
-    </style>
+	<style name="Theme.Putio.FileDetails" parent="Theme.Putio">
+		<item name="android:theme">@style/Theme.Putio</item>
+		<item name="android:windowLightStatusBar">false</item>
+		<item name="colorPrimary">#9E9E9E</item>
+		<item name="colorPrimaryDark">#757575</item>
+		<item name="colorAccent">@color/putio_accent</item>
+		<item name="colorButtonNormal">@color/putio_accent</item>
+	</style>
 
-    <style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar"/>
+	<style name="Theme.Putio.DestinationFolder" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorAccent">@color/putio_accent</item>
+		<item name="colorButtonNormal">@color/putio_accent</item>
+	</style>
 
-    <style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorPrimary">@color/putio_accent</item>
-        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
-        <item name="colorAccent">@color/putio_accent</item>
-    </style>
+	<style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar"/>
 
-    <style name="Putio.CastMiniController" parent="Theme.Putio">
-        <item name="android:background">@color/putio_accent</item>
-    </style>
+	<style name="Putio.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
+		<item name="colorPrimary">@color/putio_accent</item>
+		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
+		<item name="colorAccent">@color/putio_accent</item>
+	</style>
 
-    <style name="Putio.ActionBar.Transparent" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@null</item>
-    </style>
+	<style name="Putio.CastMiniController" parent="Theme.Putio">
+		<item name="android:background">@color/putio_accent</item>
+	</style>
 
-    <style name="Putio.TextAppearance.DialogTitle" parent="TextAppearance.AppCompat.Title"/>
+	<style name="Putio.ActionBar.Transparent" parent="Widget.AppCompat.ActionBar">
+		<item name="android:background">@null</item>
+	</style>
 
-    <style name="ButtonBar">
-        <item name="android:theme">@style/Theme.Putio</item>
-        <item name="android:layout_margin">16dp</item>
-        <item name="android:layout_gravity">bottom|end</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_alignParentEnd">true</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:gravity">end</item>
-    </style>
+	<style name="Putio.TextAppearance.DialogTitle" parent="TextAppearance.AppCompat.Title"/>
 
-    <style name="ButtonBar.Button" parent="android:Widget.Holo.Light.Button.Small">
-        <item name="android:background">@drawable/putio_clickable_rounded_dark</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:minHeight">36dp</item>
-        <item name="android:minWidth">36dp</item>
-        <item name="android:layout_marginLeft">4dp</item>
-        <item name="android:layout_marginRight">4dp</item>
-    </style>
+	<style name="ButtonBar">
+		<item name="android:theme">@style/Theme.Putio</item>
+		<item name="android:layout_margin">16dp</item>
+		<item name="android:layout_gravity">bottom|end</item>
+		<item name="android:layout_alignParentRight">true</item>
+		<item name="android:layout_alignParentEnd">true</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:gravity">end</item>
+	</style>
 
-    <style name="ButtonBar.Button.Transparent" parent="ButtonBar.Button">
-        <item name="android:background">@drawable/putio_clickable_rounded</item>
-    </style>
+	<style name="ButtonBar.Button" parent="android:Widget.Holo.Light.Button.Small">
+		<item name="android:background">@drawable/putio_clickable_rounded_dark</item>
+		<item name="android:gravity">center</item>
+		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:paddingLeft">12dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:minHeight">36dp</item>
+		<item name="android:minWidth">36dp</item>
+		<item name="android:layout_marginLeft">4dp</item>
+		<item name="android:layout_marginRight">4dp</item>
+	</style>
 
-    <style name="Theme.Putio.TransferViewButton" parent="Theme.Putio.Dark">
-        <item name="colorButtonNormal">#1FAE7D</item>
-    </style>
+	<style name="ButtonBar.Button.Transparent" parent="ButtonBar.Button">
+		<item name="android:background">@drawable/putio_clickable_rounded</item>
+	</style>
 
-    <style name="Putio.Button.TransferView" parent="Widget.AppCompat.Button.Small">
-        <item name="android:theme">@style/Theme.Putio.TransferViewButton</item>
-    </style>
+	<style name="Theme.Putio.TransferViewButton" parent="Theme.Putio.Dark">
+		<item name="colorButtonNormal">#1FAE7D</item>
+	</style>
 
-    <declare-styleable name="com.stevenschoen.putio.SizePreference">
-        <attr name="minValue" format="integer"/>
-        <attr name="maxValue" format="integer"/>
-    </declare-styleable>
+	<style name="Putio.Button.TransferView" parent="Widget.AppCompat.Button.Small">
+		<item name="android:theme">@style/Theme.Putio.TransferViewButton</item>
+	</style>
 
-    <style name="Putio.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/putio_accent</item>
-        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
-        <item name="colorAccent">@color/putio_accent</item>
-        <item name="android:windowNoTitle">false</item>
-        <item name="windowNoTitle">false</item>
-    </style>
+	<declare-styleable name="com.stevenschoen.putio.SizePreference">
+		<attr name="minValue" format="integer"/>
+		<attr name="maxValue" format="integer"/>
+	</declare-styleable>
 
-    <style name="Putio.Dialog.NoTitle" parent="Putio.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowNoTitle">false</item>
-    </style>
+	<style name="Putio.Dialog" parent="Theme.AppCompat.Light.Dialog">
+		<item name="colorPrimary">@color/putio_accent</item>
+		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
+		<item name="colorAccent">@android:color/black</item>
+		<item name="android:windowNoTitle">false</item>
+		<item name="windowNoTitle">false</item>
+	</style>
 
-    <style name="Putio.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/putio_accent</item>
-        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
-        <item name="colorAccent">@color/putio_accent</item>
-    </style>
+	<style name="Putio.Dialog.NoTitle" parent="Putio.Dialog">
+		<item name="android:windowNoTitle">true</item>
+		<item name="windowNoTitle">false</item>
+	</style>
 
-    <style name="Putio.DialogOrActivity" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="colorPrimary">@color/putio_accent</item>
-        <item name="colorPrimaryDark">@color/putio_accent_dark</item>
-        <item name="colorAccent">@color/putio_accent</item>
-    </style>
+	<style name="Putio.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+		<item name="colorPrimary">@color/putio_accent</item>
+		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
+		<item name="colorAccent">@android:color/black</item>
+	</style>
+
+	<style name="Putio.DialogOrActivity" parent="Theme.AppCompat.Light.DialogWhenLarge">
+		<item name="colorPrimary">@color/putio_accent</item>
+		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
+		<item name="colorAccent">@color/putio_accent</item>
+	</style>
 </resources>

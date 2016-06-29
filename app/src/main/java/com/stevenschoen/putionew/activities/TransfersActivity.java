@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.model.PutioUploadInterface;
 import com.stevenschoen.putionew.model.responses.PutioTransferFileUploadResponse;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
@@ -33,8 +32,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-import retrofit.RestAdapter;
-import retrofit.mime.TypedFile;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import rx.functions.Action1;
 
 public class TransfersActivity extends BottomSheetActivity {
@@ -90,19 +89,15 @@ public class TransfersActivity extends BottomSheetActivity {
                 public void onClick(View v) {
                     Intent putioIntent = new Intent(TransfersActivity.this, Putio.class);
                     putioIntent.putExtra("goToTab", Putio.TAB_TRANSFERS);
-                    if (UIUtils.hasJellyBean()) {
-                        View content = findViewById(android.R.id.content);
-                        Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
-                                content,
-                                0,
-                                0,
-                                content.getWidth(),
-                                content.getHeight())
-                                .toBundle();
-                        startActivity(putioIntent, options);
-                    } else {
-                        startActivity(putioIntent);
-                    }
+					View content = findViewById(android.R.id.content);
+					Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
+							content,
+							0,
+							0,
+							content.getWidth(),
+							content.getHeight())
+							.toBundle();
+					startActivity(putioIntent, options);
                     finish();
                 }
             });
@@ -133,8 +128,7 @@ public class TransfersActivity extends BottomSheetActivity {
 		final UploadNotif notif = new UploadNotif();
 		notif.start();
 
-		RestAdapter uploadAdapter = utils.makeRestAdapterBuilder(PutioUtils.uploadBaseUrl).build();
-		PutioUploadInterface uploadInterface = uploadAdapter.create(PutioUploadInterface.class);
+		PutioUploadInterface uploadInterface = utils.makePutioRestInterface(PutioUtils.uploadBaseUrl).create(PutioUploadInterface.class);
 
 		File file;
 		if (torrentUri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
@@ -150,8 +144,8 @@ public class TransfersActivity extends BottomSheetActivity {
 		} else {
 			file = new File(torrentUri.getPath());
 		}
-		TypedFile typedFile = new TypedFile("application/x-bittorrent", file);
-		uploadInterface.uploadFile(typedFile, parentId)
+		RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-bittorrent"), file);
+		uploadInterface.uploadFile(requestBody, parentId)
 				.subscribe(new Action1<PutioTransferFileUploadResponse>() {
 					@Override
 					public void call(PutioTransferFileUploadResponse putioTransferFileUploadResponse) {

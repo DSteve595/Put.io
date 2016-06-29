@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,10 +20,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ipaulpro.afilechooser.FileChooserActivity;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.files.DestinationFolderActivity;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
 import org.apache.commons.io.FileUtils;
@@ -33,6 +33,13 @@ public class AddTransfers extends AppCompatActivity {
     public static final int TYPE_SELECTING = -1;
     public static final int TYPE_URL = 1;
     public static final int TYPE_FILE = 2;
+
+	public static final int REQUEST_DESTINATION_FOLDER = 1;
+	public static final int REQUEST_CHOOSE_FILE = 2;
+
+	public static final String EXTRA_STARTING_FOLDER = "starting_folder";
+
+	private static final String STATE_DESTINATION_FOLDER = "dest_folder";
 
     private int selectedType = TYPE_SELECTING;
 
@@ -52,7 +59,7 @@ public class AddTransfers extends AppCompatActivity {
 
     private TextView textFilename, textNotATorrent;
 
-    private long destinationFolderId = 0;
+    private PutioFile destinationFolder;
     private TextView buttonDestination;
 
     @Override
@@ -70,6 +77,15 @@ public class AddTransfers extends AppCompatActivity {
 		}
 
         setContentView(R.layout.dialog_addtransfer);
+
+		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_DESTINATION_FOLDER)) {
+			destinationFolder = savedInstanceState.getParcelable(STATE_DESTINATION_FOLDER);
+		} else if (getIntent().hasExtra(EXTRA_STARTING_FOLDER)) {
+			destinationFolder = getIntent().getParcelableExtra(EXTRA_STARTING_FOLDER);
+		}
+		if (destinationFolder == null) {
+			destinationFolder = PutioFile.makeRootFolder(getResources());
+		}
 
         addButton = (Button) findViewById(R.id.button_addtransfer_add);
         addButton.setOnClickListener(new OnClickListener() {
@@ -91,30 +107,11 @@ public class AddTransfers extends AppCompatActivity {
         buttonDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DestinationFilesDialog destinationDialog = (DestinationFilesDialog)
-                        DestinationFilesDialog.instantiate(AddTransfers.this, DestinationFilesDialog.class.getName());
-                destinationDialog.setCallbacks(new DestinationFilesDialog.Callbacks() {
-                    @Override
-                    public void onDestinationFolderSelected(PutioFile folder) {
-                        destinationFolderId = folder.id;
-                        buttonDestination.setText(folder.name);
-
-                        sharedPrefs.edit()
-                                .putLong("destinationFolderId", folder.id)
-                                .putString("destinationFolderName", folder.name)
-                                .apply();
-                    }
-                });
-                destinationDialog.show(getSupportFragmentManager(), "dialog");
+				Intent destinationFolderIntent = new Intent(AddTransfers.this, DestinationFolderActivity.class);
+				startActivityForResult(destinationFolderIntent, REQUEST_DESTINATION_FOLDER);
             }
         });
-        destinationFolderId = sharedPrefs.getLong("destinationFolderId", 0);
-        String destinationFolderName = sharedPrefs.getString("destinationFolderName", null);
-        if (destinationFolderName != null && !destinationFolderName.isEmpty()) {
-            buttonDestination.setText(destinationFolderName);
-        } else {
-            buttonDestination.setText("Your Files");
-        }
+		buttonDestination.setText(destinationFolder.name);
 
         buttonChooseUrl = findViewById(R.id.button_addtransfer_chooseurl);
         buttonChooseUrl.setOnClickListener(new OnClickListener() {
@@ -129,15 +126,10 @@ public class AddTransfers extends AppCompatActivity {
         buttonChooseFile.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (UIUtils.hasKitKat()) {
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.setType("application/x-bittorrent");
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    startActivityForResult(intent, 0);
-                } else {
-                    Intent intent = new Intent(AddTransfers.this, FileChooserActivity.class);
-                    startActivityForResult(intent, 0);
-                }
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("application/x-bittorrent");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, REQUEST_CHOOSE_FILE);
             }
         });
 
@@ -227,7 +219,7 @@ public class AddTransfers extends AppCompatActivity {
 			addTransferIntent.putExtra("mode", TYPE_URL);
 			addTransferIntent.putExtra("url", selectedUrl);
             addTransferIntent.putExtra("extract", checkBoxExtract.isChecked());
-            addTransferIntent.putExtra("saveParentId", destinationFolderId);
+            addTransferIntent.putExtra("saveParentId", destinationFolder.id);
 			startActivity(addTransferIntent);
 			finish();
 		} else {
@@ -245,7 +237,7 @@ public class AddTransfers extends AppCompatActivity {
                     Intent addTransferIntent = new Intent(AddTransfers.this, TransfersActivity.class);
                     addTransferIntent.putExtra("mode", TYPE_FILE);
                     addTransferIntent.putExtra("torrenturi", selectedFileUri);
-                    addTransferIntent.putExtra("parentId", destinationFolderId);
+                    addTransferIntent.putExtra("parentId", destinationFolder.id);
                     startActivity(addTransferIntent);
                     finish();
                 } else {
@@ -262,31 +254,44 @@ public class AddTransfers extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case 0:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    final Uri uri = data.getData();
-                    try {
-                        selectedFileUri = uri;
-                        String filename = PutioUtils.getNameFromUri(AddTransfers.this, uri);
-                        textFilename.setText(filename);
-                        ContentResolver cr = getContentResolver();
-                        String mimetype = cr.getType(uri);
-                        if (mimetype == null) {
-                            mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                                    MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
-                        }
-                        if ((mimetype != null && mimetype.equals("application/x-bittorrent")) || filename.endsWith("torrent")) {
-                            textNotATorrent.animate().alpha(0);
-                        } else {
-                            textNotATorrent.animate().alpha(1);
-                        }
-                        selectedType = TYPE_FILE;
-                        updateView();
-                    } catch (Exception e) {
-                        Log.d("asdf", "File select error", e);
-                    }
-                }
-                break;
+			case REQUEST_DESTINATION_FOLDER: {
+				if (resultCode == RESULT_OK && data != null) {
+					PutioFile folder = data.getParcelableExtra(DestinationFolderActivity.Companion.getRESULT_EXTRA_FOLDER());
+					destinationFolder = folder;
+					buttonDestination.setText(folder.name);
+				}
+			} break;
+            case REQUEST_CHOOSE_FILE: {
+				if (resultCode == RESULT_OK && data != null) {
+					final Uri uri = data.getData();
+					try {
+						selectedFileUri = uri;
+						String filename = PutioUtils.getNameFromUri(AddTransfers.this, uri);
+						textFilename.setText(filename);
+						ContentResolver cr = getContentResolver();
+						String mimetype = cr.getType(uri);
+						if (mimetype == null) {
+							mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+									MimeTypeMap.getFileExtensionFromUrl(uri.getPath()));
+						}
+						if ((mimetype != null && mimetype.equals("application/x-bittorrent")) || filename.endsWith("torrent")) {
+							textNotATorrent.animate().alpha(0);
+						} else {
+							textNotATorrent.animate().alpha(1);
+						}
+						selectedType = TYPE_FILE;
+						updateView();
+					} catch (Exception e) {
+						Log.d("asdf", "File select error", e);
+					}
+				}
+			} break;
         }
     }
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable(STATE_DESTINATION_FOLDER, destinationFolder);
+	}
 }

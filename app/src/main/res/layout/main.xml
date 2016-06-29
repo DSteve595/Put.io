@@ -1,46 +1,64 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipChildren="false">
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/main_root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:clipChildren="false">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/holder_castbar"
-        android:layout_below="@+id/holder_toolbar_main">
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/main_appbarlayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?attr/colorPrimary"
+		android:elevation="@dimen/appBarElevation"
+		app:layout_constraintTop_toTopOf="@id/main_root">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipChildren="false" />
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/main_toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:minHeight="?attr/actionBarSize"
+			android:theme="@style/Putio.Toolbar"
+			app:popupTheme="@style/ThemeOverlay.AppCompat"/>
+	</android.support.design.widget.AppBarLayout>
 
-        <include
-            android:id="@+id/button_addtransfer"
-            layout="@layout/fab_addtransfer"
-            android:layout_width="@dimen/fabSize"
-            android:layout_height="@dimen/fabSize"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/fabMargin" />
-    </RelativeLayout>
+	<FrameLayout
+		android:id="@+id/main_content_holder"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:clipChildren="false"
+		app:layout_constraintBottom_toTopOf="@+id/main_bottom_nav"
+		app:layout_constraintTop_toBottomOf="@id/main_appbarlayout"/>
 
-    <FrameLayout
-        android:id="@id/holder_castbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:clipChildren="false">
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/button_addtransfer"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="8dp"
+		android:src="@drawable/ic_fab_add"
+		app:fabSize="normal"
+		app:layout_constraintBottom_toTopOf="@id/main_bottom_nav"
+		app:layout_constraintEnd_toEndOf="@id/main_root"
+		app:relativeEnd="24dp"
+		app:useCompatPadding="true"/>
 
-        <include layout="@layout/castbar" />
-    </FrameLayout>
+	<com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+		android:id="@+id/main_bottom_nav"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:elevation="@dimen/appBarElevation"
+		app:layout_constraintBottom_toTopOf="@+id/holder_castbar"
+		tools:layout_height="64dp"/>
 
-    <include
-        android:id="@id/holder_toolbar_main"
-        layout="@layout/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
-</RelativeLayout>
+	<FrameLayout
+		android:id="@+id/holder_castbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:clipChildren="false"
+		app:layout_constraintBottom_toBottomOf="@id/main_root">
+
+		<include layout="@layout/castbar"/>
+	</FrameLayout>
+</android.support.constraint.ConstraintLayout>

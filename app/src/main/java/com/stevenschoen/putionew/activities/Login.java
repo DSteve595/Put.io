@@ -2,6 +2,7 @@ package com.stevenschoen.putionew.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -15,9 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.stevenschoen.putionew.ApiKey;
 import com.stevenschoen.putionew.R;
 
@@ -25,6 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class Login extends AppCompatActivity {
     public SharedPreferences sharedPrefs;
@@ -217,6 +219,7 @@ public class Login extends AppCompatActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
 
+        startActivity(new Intent(this, Putio.class));
         finish();
     }
 }

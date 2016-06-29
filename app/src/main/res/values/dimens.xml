@@ -19,4 +19,6 @@
     <dimen name="files_divider_inset">56dp</dimen>
 
     <dimen name="transfers_card_padding">8dp</dimen>
+
+    <dimen name="folder_front_elevation">8dp</dimen>
 </resources>

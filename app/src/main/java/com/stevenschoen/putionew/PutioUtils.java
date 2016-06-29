@@ -15,7 +15,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Outline;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -34,7 +33,6 @@ import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewOutlineProvider;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,9 +44,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.path.android.jobqueue.JobManager;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
@@ -61,7 +56,6 @@ import org.joda.time.DateTime;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -72,16 +66,20 @@ import java.util.Locale;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.greenrobot.event.EventBus;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.FuncN;
+import rx.schedulers.Schedulers;
 
 public class PutioUtils {
 	public static final int TYPE_AUDIO = 1;
@@ -96,15 +94,14 @@ public class PutioUtils {
 //	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
 
 	private PutioRestInterface putioRestInterface;
-	private FilesProvider filesProvider;
 	private JobManager jobManager;
 	private EventBus eventBus;
 
 	public String token;
 	public String tokenWithStuff;
 
-	public static final String baseUrl = "https://api.put.io/v2";
-	public static final String uploadBaseUrl = "https://upload.put.io/v2";
+	public static final String baseUrl = "https://api.put.io/v2/";
+	public static final String uploadBaseUrl = "https://upload.put.io/v2/";
 
 	private SharedPreferences sharedPrefs;
 
@@ -116,41 +113,44 @@ public class PutioUtils {
 		}
 		this.tokenWithStuff = "?oauth_token=" + token;
 
-		RestAdapter.Builder restAdapterBuilder = makeRestAdapterBuilder(baseUrl);
-		RestAdapter restAdapter = restAdapterBuilder.build();
-		this.putioRestInterface = restAdapter.create(PutioRestInterface.class);
+		this.putioRestInterface = makePutioRestInterface(baseUrl).create(PutioRestInterface.class);
 
-		this.filesProvider = new FilesProvider(context, getRestInterface());
 		this.jobManager = new JobManager(context);
 		this.eventBus = new EventBus();
 	}
 
-	public RestAdapter.Builder makeRestAdapterBuilder(String baseUrl) {
+	public Retrofit makePutioRestInterface(String baseUrl) {
 		Gson gson = new GsonBuilder()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.create();
 
-		Client client = new OkClient(new OkHttpClient());
-
-		return new RestAdapter.Builder()
-				.setEndpoint(baseUrl)
-//				.setLogLevel(RestAdapter.LogLevel.FULL)
-				.setConverter(new GsonConverter(gson))
-				.setClient(client)
-				.setRequestInterceptor(new RequestInterceptor() {
+		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+				.addInterceptor(new Interceptor() {
 					@Override
-					public void intercept(RequestFacade request) {
-						request.addQueryParam("oauth_token", token);
+					public Response intercept(Chain chain) throws IOException {
+						Request request = chain.request();
+						request = request.newBuilder()
+								.url(request.url().newBuilder()
+										.addQueryParameter("oauth_token", token)
+										.build())
+								.build();
+						return chain.proceed(request);
 					}
 				});
+		if (BuildConfig.DEBUG) {
+			clientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
+		}
+
+		return new Retrofit.Builder()
+				.baseUrl(baseUrl)
+				.client(clientBuilder.build())
+				.addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+				.addConverterFactory(GsonConverterFactory.create(gson))
+				.build();
 	}
 
 	public PutioRestInterface getRestInterface() {
 		return putioRestInterface;
-	}
-
-	public FilesProvider getFilesProvider() {
-		return filesProvider;
 	}
 
 	public JobManager getJobManager() {
@@ -175,77 +175,6 @@ public class PutioUtils {
 		return dialog;
 	}
 
-	public Dialog renameFileDialog(Context context, final RenameCallback callback, final PutioFile file) {
-		final Dialog renameDialog = PutioUtils.showPutioDialog(context, context.getString(R.string.renametitle), R.layout.dialog_rename);
-
-		final EditText textFileName = (EditText) renameDialog.findViewById(R.id.editText_fileName);
-		textFileName.setText(file.name);
-
-		final ImageButton btnUndoName = (ImageButton) renameDialog.findViewById(R.id.button_undoName);
-		btnUndoName.setEnabled(false);
-		btnUndoName.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				textFileName.setText(file.name);
-			}
-		});
-
-		textFileName.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				btnUndoName.setEnabled(!file.name.contentEquals(s) && !s.toString().isEmpty());
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
-
-		Button saveRename = (Button) renameDialog.findViewById(R.id.button_rename_save);
-		saveRename.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String newName = textFileName.getText().toString();
-				getRestInterface().renameFile(file.id, newName)
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
-							@Override
-							public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
-								if (callback != null) {
-									callback.onRenameFinished();
-								}
-							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								throwable.printStackTrace();
-							}
-						});
-				callback.onRenameClicked(file, newName);
-				renameDialog.dismiss();
-			}
-		});
-
-		Button cancelRename = (Button) renameDialog.findViewById(R.id.button_rename_cancel);
-		cancelRename.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				renameDialog.cancel();
-			}
-		});
-
-		return renameDialog;
-	}
-
-	public interface RenameCallback {
-		void onRenameClicked(PutioFile file, String newName);
-		void onRenameFinished();
-	}
-
 	public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
 		return new AlertDialog.Builder(context)
 				.setTitle(title)
@@ -261,8 +190,6 @@ public class PutioUtils {
 		}
 	}
 
-	// Content URIs are only returned on KitKat and higher
-	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public static String getNameFromUri(Context context, Uri uri) {
 		if (uri.getScheme().equals("file")) {
 			return new File(uri.getPath()).getName();
@@ -277,28 +204,6 @@ public class PutioUtils {
 		}
 
 		return null;
-	}
-
-	public InputStream getNotificationsJsonData() throws SocketTimeoutException {
-		URL url = null;
-		try {
-			url = new URL("http://stevenschoen.com/putio/notifications2.json");
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setConnectTimeout(8000);
-
-			return connection.getInputStream();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (SocketTimeoutException e) {
-			throw new SocketTimeoutException();
-		} catch (IOException e) {
-//			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public void downloadFile(Activity activity, int actionWhenDone, Uri downloadUri) {
-
 	}
 
 	public void downloadFiles(final Activity activity, final int actionWhenDone, final PutioFile... files) {
@@ -534,9 +439,10 @@ public class PutioUtils {
 	}
 
 	public static String resolveRedirect(String url) throws IOException {
-		OkHttpClient client = new OkHttpClient();
-		client.setFollowRedirects(true);
-		client.setFollowSslRedirects(true);
+		OkHttpClient client = new OkHttpClient.Builder()
+				.followRedirects(true)
+				.followSslRedirects(true)
+				.build();
 		Response response = client.newCall(new Request.Builder()
 				.url(url).build()).execute();
 		if (response.code() == 302) {
@@ -602,109 +508,6 @@ public class PutioUtils {
 		} else {
 			Toast.makeText(context, context.getString(R.string.filenotfound), Toast.LENGTH_LONG).show();
 		}
-	}
-
-	public Dialog deleteFilesDialog(final Context context, final DeleteCallback callback,
-									final PutioFile... filesToDelete) {
-		final Dialog deleteDialog = showPutioDialog(context,
-				context.getResources().getQuantityString(
-						R.plurals.deletetitle, filesToDelete.length),
-				R.layout.dialog_delete);
-
-		TextView textDeleteBody = (TextView) deleteDialog.findViewById(R.id.text_delete_body);
-		textDeleteBody.setText(context.getResources()
-				.getQuantityString(R.plurals.deletebody, filesToDelete.length));
-
-		Button deleteDelete = (Button) deleteDialog.findViewById(R.id.button_delete_delete);
-		deleteDelete.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				long[] idsToDelete = new long[filesToDelete.length];
-				for (int i = 0; i < filesToDelete.length; i++) {
-					idsToDelete[i] = filesToDelete[i].id;
-				}
-				getRestInterface().deleteFile(longsToString(idsToDelete))
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
-							@Override
-							public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
-								if (callback != null) {
-									callback.onDeleteFinished();
-								}
-							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								throwable.printStackTrace();
-							}
-						});
-				Toast.makeText(context, context.getString(R.string.filedeleted), Toast.LENGTH_SHORT).show();
-				deleteDialog.dismiss();
-
-				if (callback != null) {
-					callback.onDeleteClicked();
-				}
-			}
-		});
-
-		Button cancelDelete = (Button) deleteDialog.findViewById(R.id.button_delete_cancel);
-		cancelDelete.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				deleteDialog.cancel();
-			}
-		});
-
-		return deleteDialog;
-	}
-
-	public interface DeleteCallback {
-		void onDeleteClicked();
-		void onDeleteFinished();
-	}
-
-	public Dialog createFolderDialog(Context context, final CreateFolderCallback callback, final long parentId) {
-		final Dialog createFolderDialog = showPutioDialog(context, context.getString(R.string.create_folder), R.layout.dialog_createfolder);
-
-		final EditText textName = (EditText) createFolderDialog.findViewById(R.id.text_createfolder_name);
-
-		Button buttonCreate = (Button) createFolderDialog.findViewById(R.id.button_createfolder_create);
-		buttonCreate.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getRestInterface().createFolder(textName.getText().toString(), parentId)
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(new Action1<BasePutioResponse.FileChangingResponse>() {
-							@Override
-							public void call(BasePutioResponse.FileChangingResponse fileChangingResponse) {
-								if (callback != null) {
-									callback.onCreateFolderFinished();
-								}
-							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								throwable.printStackTrace();
-							}
-						});
-				createFolderDialog.dismiss();
-
-				if (callback != null) {
-					callback.onCreateFolderClicked();
-				}
-			}
-		});
-
-		Button buttonCancel = (Button) createFolderDialog.findViewById(R.id.button_createfolder_cancel);
-		buttonCancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createFolderDialog.cancel();
-			}
-		});
-
-		return createFolderDialog;
 	}
 
 	public interface CreateFolderCallback {
@@ -794,18 +597,6 @@ public class PutioUtils {
 
 	public static float pxFromDp(Context context, float dp) {
 		return dp * context.getResources().getDisplayMetrics().density;
-	}
-
-	public static void setupFab(View floatingActionButton) {
-		if (UIUtils.hasLollipop()) {
-			floatingActionButton.setOutlineProvider(new ViewOutlineProvider() {
-				@Override
-				public void getOutline(View view, Outline outline) {
-					outline.setOval(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-				}
-			});
-			floatingActionButton.setClipToOutline(true);
-		}
 	}
 
 	public static void padForFab(View viewToPad) {

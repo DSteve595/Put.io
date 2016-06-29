@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.fragments.FileDetails;
+import com.stevenschoen.putionew.files.FileDetails;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class FileDetailsActivity extends BaseCastActivity {

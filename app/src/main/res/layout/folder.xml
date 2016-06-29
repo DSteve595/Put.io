@@ -1,0 +1,82 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@android:color/white">
+
+	<android.support.v4.widget.SwipeRefreshLayout
+		android:id="@+id/folder_swiperefresh"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/files_currentfolder_holder">
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/folder_list"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:clipToPadding="false"
+			android:paddingTop="8dp"/>
+	</android.support.v4.widget.SwipeRefreshLayout>
+
+	<FrameLayout
+		android:id="@+id/files_currentfolder_holder"
+		android:layout_width="match_parent"
+		android:layout_height="64dp"
+		android:layout_alignParentTop="true"
+		android:background="#F8F8F8"
+		android:elevation="2dp">
+
+		<ImageButton
+			android:id="@+id/files_currentfolder_back"
+			android:layout_width="48dp"
+			android:layout_height="match_parent"
+			android:layout_marginStart="4dp"
+			android:background="?selectableItemBackgroundBorderless"
+			android:paddingEnd="10dp"
+			android:paddingStart="10dp"
+			android:scaleType="fitCenter"
+			android:src="@drawable/ic_back"/>
+
+		<com.stevenschoen.putionew.AutoResizeTextView
+			android:id="@+id/files_currentfolder_name"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginStart="52dp"
+			android:ellipsize="end"
+			android:gravity="center_vertical"
+			android:maxLines="2"
+			android:paddingEnd="8dp"
+			android:paddingStart="8dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"
+			tools:text="Folder name"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_gravity="bottom"
+			android:background="?android:listDivider"/>
+	</FrameLayout>
+
+	<FrameLayout
+		android:id="@+id/folder_selection_holder"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="36dp"
+		android:background="@android:color/white"
+		android:elevation="6dp"/>
+
+	<include
+		android:id="@+id/files_empty_subfolder"
+		layout="@layout/filesempty_subfolder"/>
+
+	<include
+		android:id="@+id/files_empty"
+		layout="@layout/filesempty"/>
+
+	<include
+		android:id="@+id/files_loading"
+		layout="@layout/filesloading"/>
+</RelativeLayout>

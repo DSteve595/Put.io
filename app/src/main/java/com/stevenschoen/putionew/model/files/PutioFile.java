@@ -1,9 +1,11 @@
 package com.stevenschoen.putionew.model.files;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.stevenschoen.putionew.PutioUtils;
+import com.stevenschoen.putionew.R;
 
 public class PutioFile implements Parcelable {
 	public boolean isShared;
@@ -57,6 +59,15 @@ public class PutioFile implements Parcelable {
 
         return base + streamOrStreamMp4 + utils.tokenWithStuff;
     }
+
+	public static PutioFile makeRootFolder(Resources resources) {
+		PutioFile root = new PutioFile();
+		root.id = 0;
+		root.contentType = "application/x-directory";
+		root.name = resources.getString(R.string.files);
+
+		return root;
+	}
 
 	@Override
 	public int describeContents() {

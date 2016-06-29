@@ -1,0 +1,47 @@
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/download_individualorzip_root"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/download_individualorzip_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:navigationIcon="@drawable/ic_toolbar_nav_close_black"
+		app:title="@string/download_files"/>
+
+	<TextView
+		android:id="@+id/download_individualorzip_body"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:paddingEnd="32dp"
+		android:paddingStart="32dp"
+		android:text="@string/individual_or_zip"
+		android:textAppearance="@style/TextAppearance.AppCompat"
+		android:textSize="16sp"
+		app:layout_constraintTop_toBottomOf="@+id/download_individualorzip_toolbar"/>
+
+	<Button
+		android:id="@+id/download_individualorzip_zip"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:layout_marginTop="32dp"
+		android:text="@string/zip"
+		app:layout_constraintBottom_toBottomOf="@+id/download_individualorzip_root"
+		app:layout_constraintEnd_toEndOf="@+id/download_individualorzip_root"
+		app:layout_constraintTop_toBottomOf="@+id/download_individualorzip_body"/>
+
+	<Button
+		android:id="@+id/download_individualorzip_individual"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/individually"
+		app:layout_constraintBaseline_toBaselineOf="@+id/download_individualorzip_zip"
+		app:layout_constraintEnd_toStartOf="@+id/download_individualorzip_zip"/>
+</android.support.constraint.ConstraintLayout>

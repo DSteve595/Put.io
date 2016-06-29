@@ -27,6 +27,7 @@ import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.TransfersAdapter;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public final class Transfers extends NoClipSupportFragment {
+public final class Transfers extends RxFragment {
 
 	private List<PutioTransfer> transfers = new ArrayList<>();
 	private RecyclerView transfersListView;

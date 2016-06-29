@@ -24,8 +24,6 @@
             app:navigationIcon="@drawable/ic_action_maximize_black"
             app:popupTheme="@style/ThemeOverlay.AppCompat"
             app:title="@string/transfers" />
-
-        <include layout="@layout/shadow_actionbar" />
     </LinearLayout>
 
     <fragment

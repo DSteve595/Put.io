@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/destination_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="#F8F8F8"
+		app:title="@string/choose_folder"/>
+
+	<FrameLayout
+		android:id="@+id/destination_activity_root"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"/>
+
+	<LinearLayout
+		android:id="@+id/buttonbar"
+		style="@style/ButtonBar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+
+		<Button
+			android:id="@+id/destination_cancel"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/cancel"/>
+
+		<Button
+			android:id="@+id/destination_choose"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/choose_folder"/>
+	</LinearLayout>
+</LinearLayout>

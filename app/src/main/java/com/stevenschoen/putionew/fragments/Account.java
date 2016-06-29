@@ -11,11 +11,12 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.model.account.PutioAccountInfo;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class Account extends NoClipSupportFragment {
+public class Account extends RxFragment {
 
 	private PutioUtils utils;
 
