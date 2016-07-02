@@ -38,7 +38,7 @@ class DestinationFolderActivity : AppCompatActivity() {
 
         findViewById(R.id.destination_choose).setOnClickListener {
             setResult(RESULT_OK, Intent().apply {
-                putExtra(RESULT_EXTRA_FOLDER, fragment!!.getCurrentFolder())
+                putExtra(RESULT_EXTRA_FOLDER, fragment!!.currentFile)
             })
             finish()
         }

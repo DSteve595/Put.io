@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import com.stevenschoen.putionew.UIUtils;
 import com.stevenschoen.putionew.files.NewFilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.fragments.Transfers;
+import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 import com.stevenschoen.putionew.tv.TvActivity;
 
@@ -160,7 +162,7 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 
 		if (savedInstanceState == null) {
 			Account accountFragment = (Account) Fragment.instantiate(this, Account.class.getName());
-			NewFilesFragment filesFragment = NewFilesFragment.Companion.newInstance(null);
+			NewFilesFragment filesFragment = NewFilesFragment.Companion.newInstance(this, null);
 			Transfers transfersFragment = (Transfers) Fragment.instantiate(this, Transfers.class.getName());
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.main_content_holder, accountFragment, FRAGTAG_ACCOUNT)
@@ -191,16 +193,14 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
             @Override
             public void onClick(View v) {
                 Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class)
-						.putExtra(AddTransfers.EXTRA_STARTING_FOLDER, getFilesFragment().getCurrentFolder());
+						.putExtra(AddTransfers.EXTRA_STARTING_FOLDER, getFilesFragment().getCurrentFile());
                 Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(buttonAddTransfer,
                         0, 0,
                         buttonAddTransfer.getWidth(), buttonAddTransfer.getHeight()).toBundle();
                 ActivityCompat.startActivity(Putio.this, addTransferActivityIntent, options);
             }
         });
-		if (getFilesFragment().isSelecting()) {
-			hideAddTransferFab(false);
-		}
+		updateAddTransferFab(false);
     }
 
 	@Override
@@ -211,23 +211,28 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 				@Override
 				public void onSelectionStarted() {
 					if (init) {
-						hideAddTransferFab(true);
+						updateAddTransferFab(true);
 					}
 				}
-
 				@Override
 				public void onSelectionEnded() {
-					showAddTransferFab(true);
+					updateAddTransferFab(true);
+				}
+				@Override
+				public void onCurrentFileChanged() {
+					updateAddTransferFab(true);
 				}
 			});
 		}
 	}
 
-	private void showAddTransferFab(boolean animate) {
-		if (!showingAddTransfer) {
+	private void updateAddTransferFab(boolean animate) {
+		boolean shouldShow = shouldShowAddTransferFab();
+		if (shouldShow && !showingAddTransfer) {
 			showingAddTransfer = true;
 			if (animate) {
 				buttonAddTransfer.animate()
+						.setInterpolator(new FastOutSlowInInterpolator())
 						.scaleX(1f)
 						.scaleY(1f);
 			} else {
@@ -237,14 +242,11 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 			buttonAddTransfer.setEnabled(true);
 			buttonAddTransfer.setFocusable(true);
 			buttonAddTransfer.setClickable(true);
-		}
-	}
-
-	private void hideAddTransferFab(boolean animate) {
-		if (showingAddTransfer) {
+		} else if (!shouldShow && showingAddTransfer) {
 			showingAddTransfer = false;
 			if (animate) {
 				buttonAddTransfer.animate()
+						.setInterpolator(new FastOutSlowInInterpolator())
 						.scaleX(0f)
 						.scaleY(0f);
 			} else {
@@ -254,6 +256,31 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 			buttonAddTransfer.setEnabled(false);
 			buttonAddTransfer.setFocusable(false);
 			buttonAddTransfer.setClickable(false);
+		}
+	}
+
+	private boolean shouldShowAddTransferFab() {
+		switch (bottomNavView.getCurrentItem()) {
+			case TAB_ACCOUNT: return false;
+			case TAB_FILES: {
+				NewFilesFragment filesFragment = getFilesFragment();
+				if (filesFragment.isSelecting()) {
+					return false;
+				} else {
+					PutioFile currentFile = filesFragment.getCurrentFile();
+					if (currentFile == null) {
+						return true;
+					} else {
+						if (currentFile.isFolder()) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+			case TAB_TRANSFERS: return true;
+			default: return true;
 		}
 	}
 
@@ -279,6 +306,12 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 		bottomNavView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 			@Override
 			public boolean onTabSelected(int position, boolean wasSelected) {
+				bottomNavView.post(new Runnable() {
+					@Override
+					public void run() {
+						updateAddTransferFab(true);
+					}
+				});
 				switch (position) {
 					case TAB_ACCOUNT:
 					case TAB_FILES:

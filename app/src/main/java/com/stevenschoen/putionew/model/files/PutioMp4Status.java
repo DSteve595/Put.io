@@ -3,24 +3,32 @@ package com.stevenschoen.putionew.model.files;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PutioMp4Status implements Parcelable {
-    private String status;
-	private long size;
+	public Status status;
+	@SerializedName("percent_done")
+	public int percentDone;
+	public long size;
 
-    public PutioMp4Status(String status) {
-        this.status = status;
-    }
+	public PutioMp4Status() { }
 
-	public String getStatus() {
-		return status;
-	}
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-	public long getSize() {
-		return size;
+	public enum Status {
+		@SerializedName("NOT_AVAILABLE")
+		NotAvailable,
+		@SerializedName("IN_QUEUE")
+		InQueue,
+		@SerializedName("PREPARING")
+		Preparing,
+		@SerializedName("CONVERTING")
+		Converting,
+		@SerializedName("FINISHING")
+		Finishing,
+		@SerializedName("COMPLETED")
+		Completed,
+		@SerializedName("ERROR")
+		Error,
+		AlreadyMp4 // Not from the server, just used to clarify
 	}
 
 	@Override
@@ -33,14 +41,16 @@ public class PutioMp4Status implements Parcelable {
 	}
 
 	private void readFromParcel(Parcel in) {
-		this.status = in.readString();
-		this.size = in.readLong();
+		status = Status.values()[in.readInt()];
+		percentDone = in.readInt();
+		size = in.readLong();
 	}
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeString(this.status);
-		out.writeLong(this.size);
+		out.writeInt(status.ordinal());
+		out.writeInt(percentDone);
+		out.writeLong(size);
 	}
 
 	public static final Creator CREATOR = new Creator() {

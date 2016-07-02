@@ -25,9 +25,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     val diskCache = DiskCache()
 
     private val folderSubject = BehaviorSubject.create<FolderResponse>()
-    fun folder(): Observable<FolderResponse> {
-        return folderSubject.observeOn(AndroidSchedulers.mainThread())
-    }
+    fun folder() = folderSubject.observeOn(AndroidSchedulers.mainThread())
 
     fun getCachedFile() {
         Observable.fromCallable {

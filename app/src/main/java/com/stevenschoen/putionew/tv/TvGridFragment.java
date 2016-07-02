@@ -40,16 +40,7 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
 
         mUtils = ((PutioApplication) getActivity().getApplication()).getPutioUtils();
 
-        mUtils.getEventBus().register(this);
-
         setupFragment();
-    }
-
-    @Override
-    public void onDestroy() {
-        mUtils.getEventBus().unregister(this);
-
-        super.onDestroy();
     }
 
     private void setupFragment() {
@@ -127,8 +118,5 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
     public void goBack() {
         mCurrentFolderId = mCurrentFolder.parentId;
         loadFiles();
-    }
-
-    public void onEvent(Object event) {
     }
 }

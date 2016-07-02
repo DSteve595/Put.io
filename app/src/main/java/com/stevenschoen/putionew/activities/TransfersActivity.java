@@ -124,7 +124,6 @@ public class TransfersActivity extends BottomSheetActivity {
 	}
 
 	private void addTransferFile(Uri torrentUri, long parentId) {
-		Log.d("asdf", "add file: " + torrentUri);
 		final UploadNotif notif = new UploadNotif();
 		notif.start();
 

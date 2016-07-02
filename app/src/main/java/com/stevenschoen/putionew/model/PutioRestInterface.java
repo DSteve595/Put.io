@@ -1,8 +1,5 @@
 package com.stevenschoen.putionew.model;
 
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
-import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.stevenschoen.putionew.model.responses.FileResponse;
@@ -36,10 +33,10 @@ public interface PutioRestInterface {
 	BasePutioResponse zip(@Field("file_ids") String ids);
 
 	@GET("files/{id}/mp4")
-	Mp4StatusResponse mp4Status(@Path("id") long id);
+	Observable<Mp4StatusResponse> mp4Status(@Path("id") long id);
 
 	@POST("files/{id}/mp4")
-	BasePutioResponse convertToMp4(@Path("id") long id);
+	Observable<BasePutioResponse> convertToMp4(@Path("id") long id);
 
     @FormUrlEncoded
     @POST("files/create-folder")
@@ -77,64 +74,4 @@ public interface PutioRestInterface {
 
 	@GET("account/info")
 	Observable<AccountInfoResponse> account();
-
-	public static abstract class PutioJob extends Job {
-		private PutioUtils utils;
-        
-        protected PutioJob(PutioUtils utils) {
-            this(new Params(0).requireNetwork(), utils);
-        }
-
-		protected PutioJob(Params params, PutioUtils utils) {
-			super(params);
-			this.utils = utils;
-		}
-
-		@Override
-		public abstract void onRun() throws Throwable;
-
-		protected PutioUtils getUtils() {
-			return utils;
-		}
-
-		@Override
-		public void onAdded() { }
-
-		@Override
-		protected void onCancel() { }
-
-		@Override
-		protected boolean shouldReRunOnThrowable(Throwable throwable) {
-			return false;
-		}
-	}
-
-	public static class GetMp4StatusJob extends PutioJob {
-		private long id;
-
-		public GetMp4StatusJob(PutioUtils utils, long id) {
-			super(utils);
-			this.id = id;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			Mp4StatusResponse networkResponse = getUtils().getRestInterface().mp4Status(id);
-			getUtils().getEventBus().post(networkResponse);
-		}
-	}
-
-	public static class PostConvertToMp4Job extends PutioJob {
-		private long id;
-
-		public PostConvertToMp4Job(PutioUtils utils, long id) {
-			super(utils);
-			this.id = id;
-		}
-
-		@Override
-		public void onRun() throws Throwable {
-			getUtils().getRestInterface().convertToMp4(id);
-		}
-	}
 }

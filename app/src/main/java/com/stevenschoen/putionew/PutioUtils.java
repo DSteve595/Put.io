@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -28,22 +27,17 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.path.android.jobqueue.JobManager;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
@@ -65,7 +59,6 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.greenrobot.event.EventBus;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -76,7 +69,6 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
@@ -94,8 +86,6 @@ public class PutioUtils {
 //	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
 
 	private PutioRestInterface putioRestInterface;
-	private JobManager jobManager;
-	private EventBus eventBus;
 
 	public String token;
 	public String tokenWithStuff;
@@ -114,9 +104,6 @@ public class PutioUtils {
 		this.tokenWithStuff = "?oauth_token=" + token;
 
 		this.putioRestInterface = makePutioRestInterface(baseUrl).create(PutioRestInterface.class);
-
-		this.jobManager = new JobManager(context);
-		this.eventBus = new EventBus();
 	}
 
 	public Retrofit makePutioRestInterface(String baseUrl) {
@@ -151,14 +138,6 @@ public class PutioUtils {
 
 	public PutioRestInterface getRestInterface() {
 		return putioRestInterface;
-	}
-
-	public JobManager getJobManager() {
-		return jobManager;
-	}
-
-	public EventBus getEventBus() {
-		return eventBus;
 	}
 
 	public class NoTokenException extends Exception { }

@@ -32,29 +32,35 @@ class FolderFragment : RxFragment() {
         val STATE_CHECKED_IDS = "checked_ids"
 
         val EXTRA_FOLDER = "folder"
+        val EXTRA_PAD_FOR_FAB = "padforfab"
         val EXTRA_CAN_SELECT = "can_select"
         val EXTRA_SHOW_SEARCH = "show_search"
         val EXTRA_SHOW_CREATEFOLDER = "show_createfolder"
 
         val REQUEST_CHOOSE_MOVE_DESTINATION = 1
 
+        val FRAGTAG_SELECTION = "selection"
+        val FRAGTAG_RENAME = "rename"
+        val FRAGTAG_DOWNLOAD_INDIVIDUALORZIP = "dl_indivorzip"
+        val FRAGTAG_DELETE = "delete"
+
         fun newInstance(context: Context, folder: PutioFile,
-                        canSelect: Boolean, showSearch: Boolean, showCreateFolder: Boolean): FolderFragment {
+                        padForFab: Boolean, canSelect: Boolean, showSearch: Boolean, showCreateFolder: Boolean): FolderFragment {
+            if (!folder.isFolder) {
+                throw IllegalStateException("FolderFragment created on a file, not a folder: ${folder.name} (ID ${folder.id})")
+            }
             val args = Bundle()
             args.putParcelable(EXTRA_FOLDER, folder)
+            args.putBoolean(EXTRA_PAD_FOR_FAB, padForFab)
             args.putBoolean(EXTRA_CAN_SELECT, canSelect)
             args.putBoolean(EXTRA_SHOW_SEARCH, showSearch)
             args.putBoolean(EXTRA_SHOW_CREATEFOLDER, showCreateFolder)
             return Fragment.instantiate(context, FolderFragment::class.java.name, args) as FolderFragment
         }
-
-        val FRAGTAG_SELECTION = "selection"
-        val FRAGTAG_RENAME = "rename"
-        val FRAGTAG_DOWNLOAD_INDIVIDUALORZIP = "dl_indivorzip"
-        val FRAGTAG_DELETE = "delete"
     }
 
     val folder by lazy { arguments.getParcelable<PutioFile>(EXTRA_FOLDER) }
+    val padForFab by lazy { arguments.getBoolean(EXTRA_PAD_FOR_FAB) }
     val canSelect by lazy { arguments.getBoolean(EXTRA_CAN_SELECT) }
     val showSearch by lazy { arguments.getBoolean(EXTRA_SHOW_SEARCH) }
     val showCreateFolder by lazy { arguments.getBoolean(EXTRA_SHOW_CREATEFOLDER) }
@@ -78,10 +84,6 @@ class FolderFragment : RxFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (!folder.isFolder) {
-            throw IllegalStateException("FolderFragment created on a file, not a folder: ${folder.name} (ID ${folder.id})")
-        }
 
         setHasOptionsMenu(true)
 
@@ -143,7 +145,7 @@ class FolderFragment : RxFragment() {
             filesView = findViewById(R.id.folder_list) as RecyclerView
             filesView.adapter = filesAdapter
             filesView.layoutManager = LinearLayoutManager(context)
-            PutioUtils.padForFab(filesView)
+            if (padForFab) PutioUtils.padForFab(filesView)
             swipeRefreshView = findViewById(R.id.folder_swiperefresh) as SwipeRefreshLayout
             swipeRefreshView.setColorSchemeResources(R.color.putio_accent)
             swipeRefreshView.setOnRefreshListener {
@@ -374,16 +376,6 @@ class FolderFragment : RxFragment() {
                 }
             }
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = parentFragment as Callbacks
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        callbacks = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

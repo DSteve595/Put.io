@@ -478,7 +478,12 @@ public class Files extends RxAppCompatDialogFragment implements SwipeRefreshLayo
 
 			}
 
-//			@Override
+			@Override
+			public void onCurrentFileChanged() {
+
+			}
+
+			//			@Override
 //			public void onDestinationFolderSelected(PutioFile folder) {
 //				long[] idsToMove = new long[indeces.length];
 //				for (int i = 0; i < indeces.length; i++) {

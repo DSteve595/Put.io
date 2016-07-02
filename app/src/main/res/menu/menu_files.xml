@@ -7,6 +7,7 @@
 		android:hint="@string/searchyourfiles"
 		android:orderInCategory="1"
 		android:title="@string/search"
+		android:visible="false"
 		app:actionViewClass="android.support.v7.widget.SearchView"
 		app:showAsAction="ifRoom"/>
 
