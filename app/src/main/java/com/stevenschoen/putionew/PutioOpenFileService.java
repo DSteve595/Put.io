@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.IBinder;
 
 import com.stevenschoen.putionew.activities.FileFinished;
-import com.stevenschoen.putionew.activities.Putio;
 
 public class PutioOpenFileService extends Service {
 	DownloadManager downloadManager;
@@ -19,7 +18,7 @@ public class PutioOpenFileService extends Service {
 	String filename;
 	int mode;
 	
-	IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(Putio.fileDownloadUpdateIntent);
+	IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(PutioActivity.fileDownloadUpdateIntent);
 
 	@Override
 	public void onCreate() {

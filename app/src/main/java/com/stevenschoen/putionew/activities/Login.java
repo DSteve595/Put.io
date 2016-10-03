@@ -17,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.stevenschoen.putionew.ApiKey;
+import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.R;
 
 import org.json.JSONException;
@@ -219,7 +220,7 @@ public class Login extends AppCompatActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
 
-        startActivity(new Intent(this, Putio.class));
+        startActivity(new Intent(this, PutioActivity.class));
         finish();
     }
 }

@@ -6,6 +6,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
+import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.R;
 
 public final class Preferences extends PreferenceActivity implements
@@ -28,7 +29,7 @@ public final class Preferences extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(PREFERENCE_KEY)) {
-			sendBroadcast(new Intent(Putio.checkCacheSizeIntent));
+			sendBroadcast(new Intent(PutioActivity.checkCacheSizeIntent));
 		}
 	}
 

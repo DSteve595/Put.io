@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="ButtonBar.Button" parent="android:Widget.Material.Light.Button">
-        <item name="android:theme">@style/Theme.Putio</item>
-    </style>
-
-    <style name="ButtonBar.Button.Transparent" parent="android:Widget.Material.Light.Button.Borderless" />
-</resources>

@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew.fragments;
+package com.stevenschoen.putionew.transfers;
 
 import android.app.Activity;
 import android.content.ComponentName;

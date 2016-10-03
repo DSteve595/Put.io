@@ -2,6 +2,8 @@ package com.stevenschoen.putionew.files
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
@@ -17,8 +19,8 @@ import java.util.*
 open class NewFilesFragment : RxFragment() {
 
     companion object {
-        val STATE_FILES = "files"
-        val STATE_CURRENT_FILE = "current_file"
+        val STATE_PAGES = "pages"
+        val STATE_CURRENT_PAGE = "current_page"
 
         val EXTRA_FOLDER = "folder"
 
@@ -32,20 +34,21 @@ open class NewFilesFragment : RxFragment() {
     }
 
     open val canSelect = true
+    open val choosingFolder = false
     open val showSearch = true
     open val showCreateFolder = true
     open val padForFab = true
 
     var callbacks: Callbacks? = null
 
-    val files = ArrayList<PutioFile>()
-    var currentFile: PutioFile? = null
+    val pages = ArrayList<Page>()
+    var currentPage: Page? = null
         get() = if (pagerView != null) {
-            files[pagerView!!.currentItem]
+            pages[pagerView!!.currentItem]
         } else {
             field
         }
-    val filesFragmentsAdapter by lazy { FileFragmentsPagerAdapter() }
+    val filesFragmentsAdapter by lazy { PageFragmentsPagerAdapter() }
     var pagerView: ViewPager? = null
     val pageChangeListener = PageChangeListener()
     var isSelecting = false
@@ -56,14 +59,14 @@ open class NewFilesFragment : RxFragment() {
         setHasOptionsMenu(true)
 
         if (savedInstanceState != null) {
-            files.addAll(savedInstanceState.getParcelableArrayList(STATE_FILES))
-            if (savedInstanceState.containsKey(STATE_CURRENT_FILE)) {
-                currentFile = savedInstanceState.getParcelable(STATE_CURRENT_FILE)
+            pages.addAll(savedInstanceState.getParcelableArrayList(STATE_PAGES))
+            if (savedInstanceState.containsKey(STATE_CURRENT_PAGE)) {
+                currentPage = savedInstanceState.getParcelable(STATE_CURRENT_PAGE)
             }
         } else if (arguments.containsKey(EXTRA_FOLDER)) {
-            files.add(arguments.getParcelable(EXTRA_FOLDER))
+            pages.add(Page(arguments.getParcelable<PutioFile>(EXTRA_FOLDER)))
         } else {
-            files.add(PutioFile.makeRootFolder(resources))
+            pages.add(Page(PutioFile.makeRootFolder(resources)))
         }
         filesFragmentsAdapter.notifyDataSetChanged()
     }
@@ -99,24 +102,38 @@ open class NewFilesFragment : RxFragment() {
     }
 
     fun addFile(file: PutioFile) {
-        val iter = files.listIterator()
+        val iter = pages.listIterator()
         var foundParentIndex = -1
-        for (existingFile in iter) {
-            if (existingFile.id == file.parentId) {
-                foundParentIndex = iter.previousIndex()
-                break
+        for (existingPage in iter) {
+            if (existingPage.type == Page.Type.File) {
+                if (existingPage.file!!.id == file.parentId) {
+                    foundParentIndex = iter.previousIndex()
+                    break
+                }
             }
         }
         if (foundParentIndex != -1) {
-            files.add(foundParentIndex + 1, file)
-            while (files.size > (foundParentIndex + 2)) {
-                files.removeAt(files.lastIndex)
+            pages.add(foundParentIndex + 1, Page(file))
+            while (pages.size > (foundParentIndex + 2)) {
+                pages.removeAt(pages.lastIndex)
             }
         } else {
-            files.add(file)
+            pages.add(Page(file))
         }
+
         filesFragmentsAdapter.notifyDataSetChanged()
-        pagerView!!.setCurrentItem(files.lastIndex, true)
+        pagerView!!.setCurrentItem(pages.lastIndex, true)
+    }
+
+    fun addSearch(query: String) {
+        val currentIndex = pagerView!!.currentItem
+        while (pages.lastIndex > currentIndex) {
+            pages.removeAt(pages.lastIndex)
+        }
+        pages.add(Page(query, pages.last().file!!))
+
+        filesFragmentsAdapter.notifyDataSetChanged()
+        pagerView!!.setCurrentItem(pages.lastIndex, true)
     }
 
     fun goBack(): Boolean {
@@ -128,13 +145,13 @@ open class NewFilesFragment : RxFragment() {
                 pagerView!!.setCurrentItem(pagerView!!.currentItem - 1, true)
                 return true
             }
-        } else if (pagerView!!.currentItem != files.lastIndex) {
-            pagerView!!.setCurrentItem(files.lastIndex, true)
+        } else if (pagerView!!.currentItem != pages.lastIndex) {
+            pagerView!!.setCurrentItem(pages.lastIndex, true)
             return true
-        } else if (files.size > 1) {
+        } else if (pages.size > 1) {
             pageChangeListener.isGoingBack = true
             pageChangeListener.removeCount++
-            pagerView!!.setCurrentItem(files.lastIndex - 1, true)
+            pagerView!!.setCurrentItem(pages.lastIndex - 1, true)
             return true
         } else {
             return false
@@ -145,18 +162,25 @@ open class NewFilesFragment : RxFragment() {
         super.onAttachFragment(childFragment)
 
         when (childFragment) {
-            is FolderFragment -> childFragment.callbacks = object : FolderFragment.Callbacks {
-                override fun onFileSelected(file: PutioFile) = addFile(file)
-                override fun onBackSelected() {
-                    goBack()
-                }
-                override fun onSelectionStarted() {
-                    isSelecting = true
-                    callbacks?.onSelectionStarted()
-                }
-                override fun onSelectionEnded() {
-                    isSelecting = false
-                    callbacks?.onSelectionEnded()
+            is FolderFragment, is SearchFragment -> {
+                childFragment as FileListFragment<FileListFragment.Callbacks>
+                childFragment.callbacks = object : FileListFragment.Callbacks {
+                    override fun onFileSelected(file: PutioFile) {
+                        if (!choosingFolder || file.isFolder) {
+                            addFile(file)
+                        }
+                    }
+                    override fun onBackSelected() {
+                        goBack()
+                    }
+                    override fun onSelectionStarted() {
+                        isSelecting = true
+                        callbacks?.onSelectionStarted()
+                    }
+                    override fun onSelectionEnded() {
+                        isSelecting = false
+                        callbacks?.onSelectionEnded()
+                    }
                 }
             }
             is FileDetailsFragment -> childFragment.callbacks = object : FileDetailsFragment.Callbacks {
@@ -169,37 +193,58 @@ open class NewFilesFragment : RxFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(STATE_FILES, files)
-        if (pagerView != null) {
-            outState.putParcelable(STATE_CURRENT_FILE, currentFile)
-        }
+        outState.putParcelableArrayList(STATE_PAGES, pages)
+        outState.putParcelable(STATE_CURRENT_PAGE, currentPage)
     }
 
-    inner class FileFragmentsPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
+    inner class PageFragmentsPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
 
         override fun getItem(position: Int): Fragment {
-            val file = files[position]
-            if (file.isFolder) {
-                return FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
-            } else {
-                return FileDetailsFragment.newInstance(context, file)
+            val page = pages[position]
+            when (page.type) {
+                Page.Type.File -> {
+                    val file = page.file!!
+                    if (file.isFolder) {
+                        return FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
+                    } else {
+                        return FileDetailsFragment.newInstance(context, file)
+                    }
+                }
+                Page.Type.Search -> {
+                    return SearchFragment.newInstance(context, page.searchQuery!!, page.parentFolder!!, canSelect)
+                }
             }
         }
 
         override fun getItemPosition(obj: Any): Int {
-            if (obj is FolderFragment) {
-                val index = files.indexOf(obj.folder)
-                if (index != -1) {
-                    return index
-                } else {
+            when (obj) {
+                is FolderFragment -> {
+                    for ((index, page) in pages.withIndex()) {
+                        if (page.type == Page.Type.File && page.file!! == obj.folder) {
+                            return index
+                        }
+                    }
                     return POSITION_NONE
                 }
+                is SearchFragment -> {
+                    for ((index, page) in pages.withIndex()) {
+                        if (page.type == Page.Type.Search &&
+                                page.searchQuery!! == obj.query && page.parentFolder!! == obj.parentFolder) {
+                            return index
+                        }
+                    }
+                    return POSITION_NONE
+                }
+                else -> return POSITION_NONE
             }
-            return POSITION_NONE
         }
 
         override fun getItemId(position: Int): Long {
-            return files[position].id
+            val page = pages[position]
+            when (page.type) {
+                Page.Type.File -> return page.file!!.id
+                Page.Type.Search -> return page.searchQuery!!.hashCode() + page.parentFolder!!.id
+            }
         }
 
         override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
@@ -211,7 +256,7 @@ open class NewFilesFragment : RxFragment() {
             }
         }
 
-        override fun getCount() = files.size
+        override fun getCount() = pages.size
     }
 
     inner class PageChangeListener : ViewPager.SimpleOnPageChangeListener() {
@@ -228,10 +273,71 @@ open class NewFilesFragment : RxFragment() {
                 if (isGoingBack) {
                     isGoingBack = false
                     while (removeCount > 0) {
-                        files.removeAt(files.lastIndex)
+                        pages.removeAt(pages.lastIndex)
                         removeCount--
                     }
                     filesFragmentsAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
+    class Page : Parcelable {
+
+        val type: Type
+        var file: PutioFile? = null
+        var searchQuery: String? = null
+        var parentFolder: PutioFile? = null
+
+        constructor(file: PutioFile) {
+            this.type = Type.File
+            this.file = file
+        }
+
+        constructor(searchQuery: String, parentFolder: PutioFile) {
+            this.type = Type.Search
+            this.searchQuery = searchQuery
+            this.parentFolder = parentFolder
+        }
+
+        constructor(source: Parcel) {
+            this.type = Type.values()[source.readInt()]
+            when (type) {
+                Type.File -> this.file = source.readParcelable(PutioFile::class.java.classLoader)
+                Type.Search -> {
+                    this.searchQuery = source.readString()
+                    this.parentFolder = source.readParcelable(PutioFile::class.java.classLoader)
+                }
+            }
+        }
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeInt(type.ordinal)
+            when (type) {
+                Type.File -> dest.writeParcelable(file, flags)
+                Type.Search -> {
+                    dest.writeString(searchQuery)
+                    dest.writeParcelable(parentFolder, flags)
+                }
+            }
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        enum class Type {
+            File, Search
+        }
+
+        companion object {
+            @JvmField val CREATOR: Parcelable.Creator<Page> = object : Parcelable.Creator<Page> {
+                override fun createFromParcel(source: Parcel): Page {
+                    return Page(source)
+                }
+
+                override fun newArray(size: Int): Array<Page?> {
+                    return arrayOfNulls(size)
                 }
             }
         }

@@ -37,9 +37,9 @@
 			android:value="@integer/google_play_services_version"/>
 
 		<activity
-			android:name=".activities.Putio"
+			android:name=".PutioActivity"
 			android:label="@string/putio"
-			android:launchMode="singleTop">
+			android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
@@ -60,18 +60,20 @@
 		<activity android:name=".activities.Login"/>
 		<activity
 			android:name=".activities.Preferences"
-			android:parentActivityName=".activities.Putio">
+			android:parentActivityName=".PutioActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.Putio"/>
+				android:value=".PutioActivity"/>
 		</activity>
 		<activity
 			android:name=".activities.FileFinished"
 			android:theme="@style/Putio.Dialog"/>
 		<activity
-			android:name=".activities.AddTransfers"
-			android:label="@string/add_transfers"
-			android:theme="@style/Putio.Dialog.NoTitle">
+			android:name=".NewAddTransferActivity"
+			android:excludeFromRecents="true"
+			android:label="@string/add_transfer"
+			android:taskAffinity="com.stevenschoen.putionew.addtransfertask"
+			android:theme="@style/Theme.Putio.Translucent">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW"/>
 
@@ -132,6 +134,16 @@
 				<data
 					android:pathPattern=".*\\.torrent"
 					android:scheme="file"/>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+
+				<data
+					android:mimeType="application/x-bittorrent"
+					android:scheme="content"/>
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW"/>
@@ -144,23 +156,23 @@
 		</activity>
 		<activity
 			android:name=".activities.AboutActivity"
-			android:parentActivityName=".activities.Putio"
+			android:parentActivityName=".PutioActivity"
 			android:theme="@style/Putio.DialogOrActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.Putio"/>
+				android:value=".PutioActivity"/>
 		</activity>
 
 		<activity
 			android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"
 			android:label="@string/putio"
 			android:launchMode="singleTask"
-			android:parentActivityName=".activities.Putio"
+			android:parentActivityName=".PutioActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Putio.CastPlayer">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".activities.Putio"/>
+				android:value=".PutioActivity"/>
 		</activity>
 
 		<receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver">
@@ -191,7 +203,7 @@
 		</service>
 
 		<activity
-			android:name=".activities.TransfersActivity"
+			android:name=".transfers.TransfersActivity"
 			android:excludeFromRecents="true"
 			android:taskAffinity="com.stevenschoen.putio.transfersdialog"
 			android:theme="@style/Putio.Dialog.NoTitle"/>

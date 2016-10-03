@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:paddingBottom="24dp">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="56dp"
+		android:gravity="start|center_vertical"
+		android:paddingStart="16dp"
+		android:text="@string/add_transfer"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+	<android.support.v7.widget.AppCompatButton
+		android:id="@+id/addtransfer_picktype_link"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?selectableItemBackground"
+		android:drawablePadding="24dp"
+		android:drawableStart="@drawable/addtransfer_link"
+		android:drawableTint="?android:textColorPrimary"
+		android:gravity="start|center_vertical"
+		android:paddingStart="24dp"
+		android:text="@string/addtransfer_type_url"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+	<android.support.v7.widget.AppCompatButton
+		android:id="@+id/addtransfer_picktype_file"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?selectableItemBackground"
+		android:drawablePadding="24dp"
+		android:drawableStart="@drawable/addtransfer_file"
+		android:drawableTint="?android:textColorPrimary"
+		android:gravity="start|center_vertical"
+		android:paddingStart="24dp"
+		android:text="@string/addtransfer_type_file"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+</LinearLayout>

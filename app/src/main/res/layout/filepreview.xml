@@ -47,11 +47,11 @@
 
 	<de.ankri.views.AutoScaleTextView
 		android:id="@+id/filepreview_title"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:background="?selectableItemBackground"
 		android:ellipsize="end"
-		android:gravity="bottom"
+		android:gravity="start|bottom"
 		android:maxLines="2"
 		android:paddingBottom="24dp"
 		android:paddingEnd="24dp"

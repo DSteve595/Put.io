@@ -58,8 +58,7 @@
                 android:layout_height="96dp"
                 android:contentDescription="@string/addtransfer_type_url"
                 android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_addtransfer_magnet" />
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -88,8 +87,7 @@
                 android:layout_height="96dp"
                 android:contentDescription="@string/addtransfer_type_file"
                 android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_addtransfer_file" />
+                android:scaleType="fitCenter" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -102,7 +100,7 @@
     </LinearLayout>
 
     <include
-        layout="@layout/addtransfer_url"
+        layout="@layout/addtransfer_link"
         android:layout_width="256dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

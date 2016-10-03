@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Build;
 
 public class UIUtils {

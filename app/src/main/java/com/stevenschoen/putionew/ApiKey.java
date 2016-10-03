@@ -2,8 +2,8 @@ package com.stevenschoen.putionew;
 
 public class ApiKey {
     // Remove the surrounding comments after adding your key.
-    private static final String API_KEY /* = "API_KEY_HERE */;
-    private static final String CLIENT_ID /* = "CLIENT_ID_HERE */;
+    private static final String API_KEY = "FWV0N7ES";
+    private static final String CLIENT_ID = "83";
 
     private ApiKey() {}
 

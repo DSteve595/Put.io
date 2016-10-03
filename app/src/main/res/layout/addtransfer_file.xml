@@ -1,52 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/holder_addtransfer_file"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/addtransfer_file_root"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+	<TextView
+		android:id="@+id/addtransfer_file_file"
+		android:layout_width="match_parent"
+		android:layout_height="64dp"
+		android:layout_alignParentTop="true"
+		android:layout_marginTop="8dp"
+		android:layout_toStartOf="@+id/addtransfer_file_clear"
+		android:background="?selectableItemBackground"
+		android:drawablePadding="16dp"
+		android:drawableStart="@drawable/addtransfer_file"
+		android:ellipsize="middle"
+		android:fontFamily="sans-serif-condensed"
+		android:gravity="center_vertical"
+		android:maxLines="2"
+		android:paddingStart="24dp"
+		android:textAppearance="@style/TextAppearance.AppCompat"
+		android:textSize="18sp"
+		tools:text="file name.torrent"/>
 
-        <de.ankri.views.AutoScaleTextView
-            android:id="@+id/text_addtransfer_filename"
-            android:layout_width="0dp"
-            android:layout_height="96dp"
-            android:layout_weight="1"
-            android:ellipsize="middle"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:paddingStart="16dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="20sp"
-            app:minTextSize="16sp"
-            tools:text="file name.torrent" />
+	<ImageButton
+		android:id="@+id/addtransfer_file_clear"
+		android:layout_width="48dp"
+		android:layout_height="match_parent"
+		android:layout_alignBottom="@id/addtransfer_file_file"
+		android:layout_alignParentEnd="true"
+		android:layout_alignTop="@id/addtransfer_file_file"
+		android:layout_marginEnd="4dp"
+		android:layout_marginStart="4dp"
+		android:background="?selectableItemBackgroundBorderless"
+		android:contentDescription="@string/cancel"
+		android:paddingEnd="8dp"
+		android:paddingStart="8dp"
+		android:src="@drawable/ic_close"/>
 
-        <ImageButton
-            android:id="@+id/button_addtransfer_cancelfile"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/cancel"
-            android:src="@drawable/ic_close" />
-    </LinearLayout>
+	<de.ankri.views.AutoScaleTextView
+		android:id="@+id/addtransfer_file_notatorrent"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/addtransfer_file_file"
+		android:layout_marginBottom="12dp"
+		android:layout_marginTop="4dp"
+		android:paddingStart="16dp"
+		android:text="@string/notatorrent"
+		android:textAppearance="@style/TextAppearance.AppCompat.Small"
+		android:textColor="@color/putio_lightred"/>
 
-    <de.ankri.views.AutoScaleTextView
-        android:id="@+id/text_addtransfer_notatorrent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:alpha="0"
-        android:gravity="bottom"
-        android:text="@string/notatorrent"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/putio_lightred"
-        tools:alpha="1" />
-</LinearLayout>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/addtransfer_file_notatorrent"
+		android:layout_marginTop="8dp"
+		android:gravity="end"
+		android:orientation="horizontal"
+		android:paddingBottom="8dp"
+		android:paddingEnd="12dp">
+
+		<Button
+			android:id="@+id/addtransfer_file_cancel"
+			style="@style/ButtonBar.Button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:text="@string/cancel"/>
+
+		<Button
+			android:id="@+id/addtransfer_file_add"
+			style="@style/ButtonBar.Button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minWidth="48dp"
+			android:text="@string/add"/>
+	</LinearLayout>
+</RelativeLayout>

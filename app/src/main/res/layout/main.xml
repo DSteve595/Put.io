@@ -1,19 +1,52 @@
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/main_root"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:clipChildren="false">
 
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@+id/main_bottom_nav"
+		android:layout_below="@+id/main_appbarlayout">
+
+		<FrameLayout
+			android:id="@+id/main_content_holder"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:clipChildren="false"/>
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/main_addtransfer"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentEnd="true"
+			android:layout_marginBottom="16dp"
+			android:layout_marginEnd="16dp"
+			android:src="@drawable/ic_fab_add"
+			app:fabSize="normal"/>
+	</RelativeLayout>
+
+	<FrameLayout
+		android:id="@+id/holder_castbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:clipChildren="false">
+
+		<include layout="@layout/castbar"/>
+	</FrameLayout>
+
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/main_appbarlayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
 		android:background="?attr/colorPrimary"
-		android:elevation="@dimen/appBarElevation"
-		app:layout_constraintTop_toTopOf="@id/main_root">
+		android:elevation="@dimen/appBarElevation">
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/main_toolbar"
@@ -24,41 +57,10 @@
 			app:popupTheme="@style/ThemeOverlay.AppCompat"/>
 	</android.support.design.widget.AppBarLayout>
 
-	<FrameLayout
-		android:id="@+id/main_content_holder"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:clipChildren="false"
-		app:layout_constraintBottom_toTopOf="@+id/main_bottom_nav"
-		app:layout_constraintTop_toBottomOf="@id/main_appbarlayout"/>
-
-	<android.support.design.widget.FloatingActionButton
-		android:id="@+id/button_addtransfer"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="8dp"
-		android:src="@drawable/ic_fab_add"
-		app:fabSize="normal"
-		app:layout_constraintBottom_toTopOf="@id/main_bottom_nav"
-		app:layout_constraintEnd_toEndOf="@id/main_root"
-		app:relativeEnd="24dp"
-		app:useCompatPadding="true"/>
-
 	<com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 		android:id="@+id/main_bottom_nav"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:elevation="@dimen/appBarElevation"
-		app:layout_constraintBottom_toTopOf="@+id/holder_castbar"
-		tools:layout_height="64dp"/>
-
-	<FrameLayout
-		android:id="@+id/holder_castbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:clipChildren="false"
-		app:layout_constraintBottom_toBottomOf="@id/main_root">
-
-		<include layout="@layout/castbar"/>
-	</FrameLayout>
-</android.support.constraint.ConstraintLayout>
+		android:layout_above="@id/holder_castbar"
+		android:elevation="@dimen/appBarElevation"/>
+</RelativeLayout>

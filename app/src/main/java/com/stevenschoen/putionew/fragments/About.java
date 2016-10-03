@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.activities.Putio;
 
 public class About extends Fragment {
 
@@ -51,7 +51,7 @@ public class About extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			Intent homeIntent = new Intent(getActivity(), Putio.class);
+			Intent homeIntent = new Intent(getActivity(), PutioActivity.class);
 			NavUtils.navigateUpTo(getActivity(), homeIntent);
 			return true;
 		}

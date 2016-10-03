@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.UIUtils;
@@ -28,7 +29,7 @@ public class AboutActivity extends BaseCastActivity {
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			Intent homeIntent = new Intent(this, Putio.class);
+			Intent homeIntent = new Intent(this, PutioActivity.class);
             NavUtils.navigateUpTo(this, homeIntent);
 			return true;
 		}

@@ -2,11 +2,10 @@ package com.stevenschoen.putionew.files
 
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.widget.TextView
+import android.widget.EditText
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment
@@ -15,8 +14,6 @@ class RenameFragment : RxAppCompatDialogFragment() {
 
     companion object {
         val EXTRA_FILE = "file"
-
-        val STATE_NAME = "name"
 
         fun newInstance(context: Context, file: PutioFile): RenameFragment {
             val args = Bundle()
@@ -29,7 +26,7 @@ class RenameFragment : RxAppCompatDialogFragment() {
 
     var callbacks: Callbacks? = null
 
-    lateinit var nameView: TextView
+    lateinit var nameView: EditText
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = AlertDialog.Builder(context)
@@ -41,14 +38,14 @@ class RenameFragment : RxAppCompatDialogFragment() {
                 .setNegativeButton(R.string.cancel, null)
                 .show()
 
-        nameView = dialog.findViewById(R.id.rename_name) as TextView
+        nameView = dialog.findViewById(R.id.rename_name) as EditText
         if (savedInstanceState == null) {
-            nameView.text = file.name
+            nameView.setText(file.name)
         }
 
         val undoView = dialog.findViewById(R.id.rename_undo)!!
         undoView.setOnClickListener {
-            nameView.text = file.name
+            nameView.setText(file.name)
         }
 
         return dialog
@@ -56,7 +53,6 @@ class RenameFragment : RxAppCompatDialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(STATE_NAME, nameView.text.toString())
     }
 
     interface Callbacks {

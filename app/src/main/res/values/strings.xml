@@ -12,6 +12,7 @@
     <string name="rename">Rename</string>
     <string name="add">Add</string>
     <string name="play">Play</string>
+    <string name="add_transfer">Add transfer</string>
     <string name="add_transfers">Add transfers</string>
     <string name="create_folder">Create folder</string>
     <string name="create">Create</string>
@@ -94,7 +95,7 @@
     <string name="readytopaste">The download link is ready to be pasted.</string>
     <string name="cachesize">Cache size</string>
     <string name="cacheexplanation">How much space should be used for the cache?\nThis won\'t affect your downloaded files.</string>
-    <string name="addtransfer_type_url">URL</string>
+    <string name="addtransfer_type_url">Magnet link</string>
     <string name="addtransfer_type_file">Torrent file</string>
     <string name="download_files">Download files</string>
     <string name="individual_or_zip">Do you want to download these files as individual downloads or as a ZIP archive?</string>
@@ -114,6 +115,7 @@
     <string name="destination_is">Destination:</string>
     <string name="choose_folder">Choose folder</string>
     <string name="x_per_sec">%s/sec</string>
+    <string name="in_x">in %s</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Uploading torrent</string>

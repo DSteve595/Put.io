@@ -161,14 +161,6 @@ public class PutioUtils {
 				.show();
 	}
 
-	public static String convertStreamToString(InputStream is) {
-		try {
-			return new java.util.Scanner(is).useDelimiter("\\A").next();
-		} catch (java.util.NoSuchElementException e) {
-			return "";
-		}
-	}
-
 	public static String getNameFromUri(Context context, Uri uri) {
 		if (uri.getScheme().equals("file")) {
 			return new File(uri.getPath()).getName();

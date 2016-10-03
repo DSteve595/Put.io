@@ -47,7 +47,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
 
     var refreshSubscription: Subscription? = null
     fun refreshFolder(onlyIfStaleOrEmpty: Boolean = false) {
-        if (onlyIfStaleOrEmpty && hasFresh()) return
+        if (onlyIfStaleOrEmpty && (hasFresh() || isRefreshing())) return
         refreshSubscription?.unsubscribe()
         refreshSubscription = api.files(folder.id).subscribe({ response ->
             refreshSubscription = null

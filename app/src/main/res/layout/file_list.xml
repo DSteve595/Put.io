@@ -9,7 +9,7 @@
 		android:id="@+id/folder_swiperefresh"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@+id/files_currentfolder_holder">
+		android:layout_below="@+id/files_currentview_holder">
 
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/folder_list"
@@ -20,7 +20,7 @@
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 	<FrameLayout
-		android:id="@+id/files_currentfolder_holder"
+		android:id="@+id/files_currentview_holder"
 		android:layout_width="match_parent"
 		android:layout_height="64dp"
 		android:layout_alignParentTop="true"
@@ -28,7 +28,7 @@
 		android:elevation="2dp">
 
 		<ImageButton
-			android:id="@+id/files_currentfolder_back"
+			android:id="@+id/files_currentview_back"
 			android:layout_width="48dp"
 			android:layout_height="match_parent"
 			android:layout_marginStart="4dp"
@@ -51,6 +51,36 @@
 			android:textAppearance="@style/TextAppearance.AppCompat.Title"
 			tools:text="Folder name"/>
 
+		<LinearLayout
+			android:id="@+id/folder_currentsearch_holder"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			tools:visibility="gone">
+
+			<TextView
+				android:id="@+id/folder_currentsearch_query"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="52dp"
+				android:layout_marginTop="12dp"
+				android:paddingEnd="8dp"
+				android:paddingStart="8dp"
+				android:textAppearance="@style/TextAppearance.AppCompat.Title"
+				tools:text="&quot;Search query&quot;"/>
+
+			<TextView
+				android:id="@+id/folder_currentsearch_parent"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="52dp"
+				android:paddingEnd="8dp"
+				android:paddingStart="8dp"
+				android:textAppearance="@style/TextAppearance.AppCompat"
+				android:textSize="14sp"
+				tools:text="in Folder name"/>
+		</LinearLayout>
+
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
@@ -71,10 +101,6 @@
 	<include
 		android:id="@+id/files_empty_subfolder"
 		layout="@layout/filesempty_subfolder"/>
-
-	<include
-		android:id="@+id/files_empty"
-		layout="@layout/filesempty"/>
 
 	<include
 		android:id="@+id/files_loading"

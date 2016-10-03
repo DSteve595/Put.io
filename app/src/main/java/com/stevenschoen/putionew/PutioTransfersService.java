@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.stevenschoen.putionew.activities.Putio;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
@@ -77,7 +76,7 @@ public class PutioTransfersService extends Service {
 			public void onError(Throwable e) {
 				transfers.onError(e);
 				if (!utils.isConnected(PutioTransfersService.this)) {
-					Intent noNetworkIntent = new Intent(Putio.noNetworkIntent);
+					Intent noNetworkIntent = new Intent(PutioActivity.noNetworkIntent);
 					noNetworkIntent.putExtra("from", "transfers");
 					sendBroadcast(noNetworkIntent);
 				}

@@ -20,7 +20,7 @@ class DestinationFolderActivity : AppCompatActivity() {
 
         var fragment = getFragment()
         if (fragment == null) {
-            fragment = Fragment.instantiate(this, DestinationFolderDialogFragment::class.java.name, Bundle()) as DestinationFolderDialogFragment
+            fragment = Fragment.instantiate(this, DestinationFolderFragment::class.java.name, Bundle()) as DestinationFolderFragment
             supportFragmentManager.beginTransaction()
                     .add(R.id.destination_activity_root, fragment)
                     .commitNow()
@@ -38,13 +38,13 @@ class DestinationFolderActivity : AppCompatActivity() {
 
         findViewById(R.id.destination_choose).setOnClickListener {
             setResult(RESULT_OK, Intent().apply {
-                putExtra(RESULT_EXTRA_FOLDER, fragment!!.currentFile)
+                putExtra(RESULT_EXTRA_FOLDER, fragment!!.currentPage!!.file)
             })
             finish()
         }
     }
 
-    fun getFragment() = supportFragmentManager.findFragmentById(R.id.destination_activity_root) as DestinationFolderDialogFragment?
+    fun getFragment() = supportFragmentManager.findFragmentById(R.id.destination_activity_root) as DestinationFolderFragment?
 
     override fun onBackPressed() {
         if (!getFragment()!!.goBack()) {

@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew.activities;
+package com.stevenschoen.putionew;
 
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -9,8 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -22,13 +20,13 @@ import android.view.View.OnClickListener;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.stevenschoen.putionew.PutioApplication;
-import com.stevenschoen.putionew.PutioUtils;
-import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.UIUtils;
+import com.stevenschoen.putionew.activities.AboutActivity;
+import com.stevenschoen.putionew.activities.BaseCastActivity;
+import com.stevenschoen.putionew.activities.Login;
+import com.stevenschoen.putionew.activities.Preferences;
 import com.stevenschoen.putionew.files.NewFilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
-import com.stevenschoen.putionew.fragments.Transfers;
+import com.stevenschoen.putionew.transfers.Transfers;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 import com.stevenschoen.putionew.tv.TvActivity;
@@ -37,7 +35,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 
-public class Putio extends BaseCastActivity implements Transfers.Callbacks {
+public class PutioActivity extends BaseCastActivity implements Transfers.Callbacks {
 
     public static final int TAB_ACCOUNT = 0;
     public static final int TAB_FILES = 1;
@@ -57,8 +55,8 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 
 	private AHBottomNavigation bottomNavView;
 
-    private View buttonAddTransfer;
-	private boolean showingAddTransfer = true;
+    private View addTransferView;
+	private boolean showingAddTransferFab = true;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,9 +86,9 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
         }
 
         IntentFilter checkCacheSizeIntentFilter = new IntentFilter(
-                Putio.checkCacheSizeIntent);
+                PutioActivity.checkCacheSizeIntent);
         IntentFilter noNetworkIntentFilter = new IntentFilter(
-                Putio.noNetworkIntent);
+                PutioActivity.noNetworkIntent);
 
         registerReceiver(checkCacheSizeReceiver, checkCacheSizeIntentFilter);
         registerReceiver(noNetworkReceiver, noNetworkIntentFilter);
@@ -111,7 +109,7 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
             if (intent.getAction() != null) {
                 if (intent.getAction().equals(Intent.ACTION_SEARCH) && getFilesFragment() != null) {
                     String query = intent.getStringExtra(SearchManager.QUERY);
-//                    getFilesFragment().initSearch(query);
+                    getFilesFragment().addSearch(query);
                 }
             }
         }
@@ -121,9 +119,7 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        try {
-            outState.putInt("currentTab", bottomNavView.getCurrentItem());
-		} catch (NullPointerException e) { }
+		outState.putInt("currentTab", bottomNavView.getCurrentItem());
     }
 
     @Override
@@ -138,14 +134,14 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(Putio.this, Preferences.class);
-                Putio.this.startActivity(settingsIntent);
+                Intent settingsIntent = new Intent(PutioActivity.this, Preferences.class);
+                PutioActivity.this.startActivity(settingsIntent);
                 return true;
             case R.id.menu_logout:
                 logOut();
                 return true;
             case R.id.menu_about:
-                Intent aboutIntent = new Intent(Putio.this, AboutActivity.class);
+                Intent aboutIntent = new Intent(PutioActivity.this, AboutActivity.class);
                 startActivity(aboutIntent);
                 return true;
         }
@@ -188,74 +184,99 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
         }
         selectTab(navItem, false);
 
-        buttonAddTransfer = findViewById(R.id.button_addtransfer);
-        buttonAddTransfer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent addTransferActivityIntent = new Intent(Putio.this, AddTransfers.class)
-						.putExtra(AddTransfers.EXTRA_STARTING_FOLDER, getFilesFragment().getCurrentFile());
-                Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(buttonAddTransfer,
-                        0, 0,
-                        buttonAddTransfer.getWidth(), buttonAddTransfer.getHeight()).toBundle();
-                ActivityCompat.startActivity(Putio.this, addTransferActivityIntent, options);
-            }
-        });
+		addTransferView = findViewById(R.id.main_addtransfer);
+		addTransferView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				PutioFile destinationFolder = null;
+				if (bottomNavView.getCurrentItem() == TAB_FILES) {
+					destinationFolder = getFilesFragment().getCurrentPage().getFile();
+				}
+				Intent addTransferIntent = new Intent(PutioActivity.this, NewAddTransferActivity.class);
+				if (destinationFolder != null) {
+					addTransferIntent.putExtra(NewAddTransferActivity.EXTRA_DESTINATION_FOLDER, destinationFolder);
+				}
+				startActivity(addTransferIntent);
+			}
+		});
 		updateAddTransferFab(false);
     }
 
 	@Override
 	public void onAttachFragment(Fragment fragment) {
 		super.onAttachFragment(fragment);
-		if (fragment.getTag().equals(FRAGTAG_FILES)) {
-			((NewFilesFragment) fragment).setCallbacks(new NewFilesFragment.Callbacks() {
-				@Override
-				public void onSelectionStarted() {
-					if (init) {
+		switch (fragment.getTag()) {
+			case FRAGTAG_FILES:
+				((NewFilesFragment) fragment).setCallbacks(new NewFilesFragment.Callbacks() {
+					@Override
+					public void onSelectionStarted() {
+						if (init) {
+							updateAddTransferFab(true);
+						}
+					}
+
+					@Override
+					public void onSelectionEnded() {
 						updateAddTransferFab(true);
 					}
-				}
-				@Override
-				public void onSelectionEnded() {
-					updateAddTransferFab(true);
-				}
-				@Override
-				public void onCurrentFileChanged() {
-					updateAddTransferFab(true);
-				}
-			});
+
+					@Override
+					public void onCurrentFileChanged() {
+						updateAddTransferFab(true);
+					}
+				});
+				break;
+//			case FRAGTAG_ADDTRANSFER_PICKTYPE:
+//				((AddTransferPickTypeFragment) fragment).setCallbacks(new AddTransferPickTypeFragment.Callbacks() {
+//					@Override
+//					public void onLinkSelected() {
+//
+//					}
+//
+//					@Override
+//					public void onFileSelected() {
+//						AddTransferFileFragment fragment = (AddTransferFileFragment) Fragment.instantiate(
+//								PutioActivity.this, AddTransferFileFragment.class.getName());
+//						fragment.show(getSupportFragmentManager(), "a");
+//					}
+//				});
 		}
 	}
 
 	private void updateAddTransferFab(boolean animate) {
 		boolean shouldShow = shouldShowAddTransferFab();
-		if (shouldShow && !showingAddTransfer) {
-			showingAddTransfer = true;
+		if (shouldShow && !showingAddTransferFab) {
+			showingAddTransferFab = true;
 			if (animate) {
-				buttonAddTransfer.animate()
+				addTransferView.animate()
 						.setInterpolator(new FastOutSlowInInterpolator())
+						.alpha(1f)
 						.scaleX(1f)
 						.scaleY(1f);
 			} else {
-				buttonAddTransfer.setScaleX(1f);
-				buttonAddTransfer.setScaleY(1f);
+				addTransferView.setAlpha(1f);
+				addTransferView.setScaleX(1f);
+				addTransferView.setScaleY(1f);
 			}
-			buttonAddTransfer.setEnabled(true);
-			buttonAddTransfer.setFocusable(true);
-			buttonAddTransfer.setClickable(true);
-		} else if (!shouldShow && showingAddTransfer) {
-			showingAddTransfer = false;
+			addTransferView.setEnabled(true);
+			addTransferView.setFocusable(true);
+			addTransferView.setClickable(true);
+		} else if (!shouldShow && showingAddTransferFab) {
+			showingAddTransferFab = false;
 			if (animate) {
-				buttonAddTransfer.animate()
+				addTransferView.animate()
 						.setInterpolator(new FastOutSlowInInterpolator())
+						.alpha(0f)
 						.scaleX(0f)
 						.scaleY(0f);
 			} else {
-				buttonAddTransfer.setScaleX(0f);
-				buttonAddTransfer.setScaleY(0f);
+				addTransferView.setAlpha(0f);
+				addTransferView.setScaleX(0f);
+				addTransferView.setScaleY(0f);
 			}
-			buttonAddTransfer.setEnabled(false);
-			buttonAddTransfer.setFocusable(false);
-			buttonAddTransfer.setClickable(false);
+			addTransferView.setEnabled(false);
+			addTransferView.setFocusable(false);
+			addTransferView.setClickable(false);
 		}
 	}
 
@@ -267,14 +288,18 @@ public class Putio extends BaseCastActivity implements Transfers.Callbacks {
 				if (filesFragment.isSelecting()) {
 					return false;
 				} else {
-					PutioFile currentFile = filesFragment.getCurrentFile();
-					if (currentFile == null) {
+					NewFilesFragment.Page currentPage = filesFragment.getCurrentPage();
+					if (currentPage == null) {
 						return true;
 					} else {
-						if (currentFile.isFolder()) {
-							return true;
-						} else {
+						if (currentPage.getType() == NewFilesFragment.Page.Type.Search) {
 							return false;
+						} else {
+							if (currentPage.getFile().isFolder()) {
+								return true;
+							} else {
+								return false;
+							}
 						}
 					}
 				}

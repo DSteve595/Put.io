@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.stevenschoen.putionew.R
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.BehaviorSubject
@@ -29,15 +30,39 @@ class FileSelectionFragment : Fragment() {
         }
 
         val renameView = view.findViewById(R.id.file_selection_rename)
-        renameView.setOnClickListener { callbacks?. onRenameSelected()}
+        renameView.setOnClickListener { callbacks?.onRenameSelected()}
+        renameView.setOnLongClickListener {
+            Toast.makeText(context, R.string.rename, Toast.LENGTH_SHORT).show()
+            true
+        }
+
         val downloadView = view.findViewById(R.id.file_selection_download)
         downloadView.setOnClickListener { callbacks?.onDownloadSelected() }
+        downloadView.setOnLongClickListener {
+            Toast.makeText(context, R.string.download, Toast.LENGTH_SHORT).show()
+            true
+        }
+
         val copyLinkView = view.findViewById(R.id.file_selection_copylink)
         copyLinkView.setOnClickListener { callbacks?.onCopyLinkSelected() }
+        copyLinkView.setOnLongClickListener {
+            Toast.makeText(context, R.string.copy_dl_link, Toast.LENGTH_SHORT).show()
+            true
+        }
+
         val moveView = view.findViewById(R.id.file_selection_move)
         moveView.setOnClickListener { callbacks?.onMoveSelected() }
+        moveView.setOnLongClickListener {
+            Toast.makeText(context, R.string.move, Toast.LENGTH_SHORT).show()
+            true
+        }
+
         val deleteView = view.findViewById(R.id.file_selection_delete)
         deleteView.setOnClickListener { callbacks?.onDeleteSelected() }
+        deleteView.setOnLongClickListener {
+            Toast.makeText(context, R.string.delete, Toast.LENGTH_SHORT).show()
+            true
+        }
 
         val titleView = view.findViewById(R.id.file_selection_title) as TextView
 
