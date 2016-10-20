@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.stevenschoen.putionew.PutioApplication
@@ -284,98 +284,29 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     abstract fun isRefreshing(): Boolean
 
     inner class ActionModeHelper() {
-        val useFloating = true
-
-        var supportActionMode: ActionMode? = null
-
         fun hasActionMode(): Boolean {
-            if (useFloating) {
-                return getSelectionFragment() != null
-            } else {
-                return (supportActionMode != null)
-            }
+            return getSelectionFragment() != null
         }
 
         fun invalidateActionMode() {
-            if (useFloating) {
-                val count = filesAdapter!!.checkedCount()
-                if (count == 0) {
-                    childFragmentManager.beginTransaction()
-                            .remove(getSelectionFragment())
-                            .commitNow()
-                    callbacks?.onSelectionEnded()
-                } else {
-                    getSelectionFragment()!!.amountSelected.onNext(count)
-                }
+            val count = filesAdapter!!.checkedCount()
+            if (count == 0) {
+                childFragmentManager.beginTransaction()
+                        .remove(getSelectionFragment())
+                        .commitNow()
+                callbacks?.onSelectionEnded()
             } else {
-                supportActionMode!!.invalidate()
+                getSelectionFragment()!!.amountSelected.onNext(count)
             }
         }
 
         fun startFloatingActionMode() {
             callbacks?.onSelectionStarted()
-            if (useFloating) {
-                val selectionFragment = Fragment.instantiate(context, FileSelectionFragment::class.java.name) as FileSelectionFragment
-                childFragmentManager.beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .add(R.id.folder_selection_holder, selectionFragment, FolderFragment.FRAGTAG_SELECTION)
-                        .commitNow()
-            } else {
-                supportActionMode = (activity as AppCompatActivity).startSupportActionMode(object : ActionMode.Callback {
-                    override fun onCreateActionMode(actionMode: ActionMode, menu: Menu): Boolean {
-                        if (filesAdapter!!.isInCheckMode()) {
-                            actionMode.menuInflater.inflate(R.menu.context_files, menu)
-                            return true
-                        } else {
-                            return false
-                        }
-                    }
-
-                    override fun onPrepareActionMode(actionMode: ActionMode, menu: Menu): Boolean {
-                        if (filesAdapter!!.isInCheckMode()) {
-                            actionMode.title = getString(R.string.x_selected, filesAdapter!!.checkedCount())
-                        } else {
-                            actionMode.finish()
-                        }
-                        return true
-                    }
-
-                    override fun onActionItemClicked(actionMode: ActionMode, item: MenuItem): Boolean {
-//                        val checkedPositions = filesAdapter!!.getCheckedPositions()
-//
-//                        when (item.itemId) {
-//                            R.id.context_download -> {
-//                                initDownloadFiles(*checkedPositions)
-//                                return true
-//                            }
-//                            R.id.context_copydownloadlink -> {
-//                                initCopyFileDownloadLink(*checkedPositions)
-//                                return true
-//                            }
-//                            R.id.context_rename -> {
-//                                initRenameFile(checkedPositions[0])
-//                                return true
-//                            }
-//                            R.id.context_delete -> {
-//                                initDeleteFile(*checkedPositions)
-//                                return true
-//                            }
-//                            R.id.context_move -> {
-//                                initMoveFile(*checkedPositions)
-//                                return true
-//                            }
-//                        }
-
-                        return true
-                    }
-
-                    override fun onDestroyActionMode(actionMode: ActionMode) {
-                        filesAdapter!!.clearChecked()
-                        callbacks?.onSelectionEnded()
-                        supportActionMode = null
-                    }
-                })
-            }
+            val selectionFragment = Fragment.instantiate(context, FileSelectionFragment::class.java.name) as FileSelectionFragment
+            childFragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .add(R.id.folder_selection_holder, selectionFragment, FolderFragment.FRAGTAG_SELECTION)
+                    .commitNow()
         }
     }
 

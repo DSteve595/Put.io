@@ -2,6 +2,7 @@ package com.stevenschoen.putionew.activities
 
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
@@ -17,7 +18,7 @@ import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioSubtitle
 import org.apache.commons.io.FilenameUtils
 
-abstract class BaseCastActivity : BottomSheetActivity(), PutioApplication.CastCallbacks {
+abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCallbacks {
 
     private var initCast: Boolean = false
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:paddingBottom="24dp">
+
+	<TextView
+		android:id="@+id/transfer_options_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start|center_vertical"
+		android:minHeight="56dp"
+		android:paddingStart="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"
+		android:textSize="16sp"/>
+
+	<android.support.v7.widget.AppCompatButton
+		android:id="@+id/transfer_options_retry"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?selectableItemBackground"
+		android:drawablePadding="24dp"
+		android:drawableStart="@drawable/transfer_options_retry"
+		android:drawableTint="?android:textColorPrimary"
+		android:gravity="start|center_vertical"
+		android:paddingStart="24dp"
+		android:text="@string/retry"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+	<android.support.v7.widget.AppCompatButton
+		android:id="@+id/transfer_options_remove"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?selectableItemBackground"
+		android:drawablePadding="24dp"
+		android:drawableStart="@drawable/transfer_options_remove"
+		android:drawableTint="?android:textColorPrimary"
+		android:gravity="start|center_vertical"
+		android:paddingStart="24dp"
+		android:text="@string/remove"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+</LinearLayout>

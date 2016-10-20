@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +16,8 @@ import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.activities.BottomSheetActivity;
 
-public class TransfersActivity extends BottomSheetActivity {
+public class TransfersActivity extends AppCompatActivity {
 
 	SharedPreferences sharedPrefs;
 

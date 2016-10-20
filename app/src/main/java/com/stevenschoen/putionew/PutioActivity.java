@@ -32,10 +32,11 @@ import com.stevenschoen.putionew.transfers.Transfers;
 import com.stevenschoen.putionew.tv.TvActivity;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class PutioActivity extends BaseCastActivity implements Transfers.Callbacks {
+public class PutioActivity extends BaseCastActivity {
 
     public static final int TAB_ACCOUNT = 0;
     public static final int TAB_FILES = 1;
@@ -227,6 +228,14 @@ public class PutioActivity extends BaseCastActivity implements Transfers.Callbac
 						}
 					});
 					break;
+				case FRAGTAG_TRANSFERS: {
+					((Transfers) fragment).setCallbacks(new Transfers.Callbacks() {
+						@Override
+						public void onTransferSelected(@NotNull PutioTransfer transfer) {
+							showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId);
+						}
+					});
+				}
 			}
 		}
 	}
@@ -333,7 +342,7 @@ public class PutioActivity extends BaseCastActivity implements Transfers.Callbac
 		});
     }
 
-    public void showFilesAndHighlightFile(long parentId, long id) {
+	public void showFilesAndHighlightFile(long parentId, long id) {
         selectTab(TAB_FILES, true);
 //        getFilesFragment().highlightFile(parentId, id);
     }
@@ -348,11 +357,6 @@ public class PutioActivity extends BaseCastActivity implements Transfers.Callbac
 
     private Transfers getTransfersFragment() {
 		return (Transfers) getSupportFragmentManager().findFragmentByTag(FRAGTAG_TRANSFERS);
-    }
-
-    @Override
-    public void onTransferSelected(PutioTransfer transfer) {
-        showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId);
     }
 
     private BroadcastReceiver checkCacheSizeReceiver = new BroadcastReceiver() {
