@@ -26,9 +26,9 @@ import com.stevenschoen.putionew.activities.Login;
 import com.stevenschoen.putionew.activities.Preferences;
 import com.stevenschoen.putionew.files.NewFilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
-import com.stevenschoen.putionew.transfers.Transfers;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
+import com.stevenschoen.putionew.transfers.Transfers;
 import com.stevenschoen.putionew.tv.TvActivity;
 
 import org.apache.commons.io.FileUtils;
@@ -205,41 +205,29 @@ public class PutioActivity extends BaseCastActivity implements Transfers.Callbac
 	@Override
 	public void onAttachFragment(Fragment fragment) {
 		super.onAttachFragment(fragment);
-		switch (fragment.getTag()) {
-			case FRAGTAG_FILES:
-				((NewFilesFragment) fragment).setCallbacks(new NewFilesFragment.Callbacks() {
-					@Override
-					public void onSelectionStarted() {
-						if (init) {
+		if (fragment.getTag() != null) {
+			switch (fragment.getTag()) {
+				case FRAGTAG_FILES:
+					((NewFilesFragment) fragment).setCallbacks(new NewFilesFragment.Callbacks() {
+						@Override
+						public void onSelectionStarted() {
+							if (init) {
+								updateAddTransferFab(true);
+							}
+						}
+
+						@Override
+						public void onSelectionEnded() {
 							updateAddTransferFab(true);
 						}
-					}
 
-					@Override
-					public void onSelectionEnded() {
-						updateAddTransferFab(true);
-					}
-
-					@Override
-					public void onCurrentFileChanged() {
-						updateAddTransferFab(true);
-					}
-				});
-				break;
-//			case FRAGTAG_ADDTRANSFER_PICKTYPE:
-//				((AddTransferPickTypeFragment) fragment).setCallbacks(new AddTransferPickTypeFragment.Callbacks() {
-//					@Override
-//					public void onLinkSelected() {
-//
-//					}
-//
-//					@Override
-//					public void onFileSelected() {
-//						AddTransferFileFragment fragment = (AddTransferFileFragment) Fragment.instantiate(
-//								PutioActivity.this, AddTransferFileFragment.class.getName());
-//						fragment.show(getSupportFragmentManager(), "a");
-//					}
-//				});
+						@Override
+						public void onCurrentFileChanged() {
+							updateAddTransferFab(true);
+						}
+					});
+					break;
+			}
 		}
 	}
 
@@ -316,8 +304,6 @@ public class PutioActivity extends BaseCastActivity implements Transfers.Callbac
     }
 
     private void setupLayout() {
-        initCastBar();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 

@@ -65,10 +65,6 @@
 		<item name="colorAccent">@color/putio_accent</item>
 	</style>
 
-	<style name="Putio.CastMiniController" parent="Theme.Putio">
-		<item name="android:background">@color/putio_accent</item>
-	</style>
-
 	<style name="Putio.ActionBar.Transparent" parent="Widget.AppCompat.ActionBar">
 		<item name="android:background">@null</item>
 	</style>

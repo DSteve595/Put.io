@@ -41,6 +41,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
+import com.stevenschoen.putionew.model.files.PutioSubtitle;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -83,7 +84,7 @@ public class PutioUtils {
 
 	public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
 //    public static final String CAST_APPLICATION_ID = "C18ACC9E";
-//	public static final String CAST_APPLICATION_ID = "2B3BFF06"; // Put.io's
+//	public static final String CAST_APPLICATION_ID = "79E32AF2"; // Put.io's
 
 	private PutioRestInterface putioRestInterface;
 
@@ -283,7 +284,7 @@ public class PutioUtils {
 		});
 	}
 
-	public static void stream(Context context, String url, Uri[] subtitles, int type) {
+	public void stream(Context context, PutioFile file, String url, List<PutioSubtitle> subtitles, int type) {
 		Intent streamIntent = new Intent();
 		streamIntent.setAction(Intent.ACTION_VIEW);
 		String typeString;
@@ -300,11 +301,22 @@ public class PutioUtils {
 			return;
 		}
 		streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
-		if (subtitles != null && subtitles.length > 0) {
-			streamIntent.putExtra("subs", subtitles);
+
+		if (subtitles != null && !subtitles.isEmpty()) {
+			Uri[] subtitleUris = new Uri[subtitles.size()];
+			String[] subtitleNames = new String[subtitles.size()];
+
+			for (int i = 0; i < subtitles.size(); i++) {
+				PutioSubtitle subtitle = subtitles.get(i);
+				subtitleUris[i] = Uri.parse(subtitle.getUrl(PutioSubtitle.FORMAT_SRT, file.id, tokenWithStuff));
+				subtitleNames[i] = subtitle.getLanguage();
+			}
+
+			streamIntent.putExtra("subs", subtitleUris);
+			streamIntent.putExtra("subs.name", subtitleNames);
 		}
 
-		try {
+			try {
 			context.startActivity(streamIntent);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(context, context.getString(R.string.noactivityfound), Toast.LENGTH_LONG).show();
@@ -312,7 +324,7 @@ public class PutioUtils {
 	}
 
 	public void getStreamUrlAndPlay(final Context context, final PutioFile file, String url) {
-		class GetStreamUrlAndPlay extends AsyncTask<String, Void, String> {
+		class GetStreamUrlAndPlay extends AsyncTask<String, Void, GetStreamUrlAndPlayResult> {
 			Dialog gettingStreamDialog;
 
 			@Override
@@ -327,25 +339,35 @@ public class PutioUtils {
 						GetStreamUrlAndPlay.this.cancel(true);
 					}
 				});
+				gettingStreamDialog.show();
 			}
 
 			@Override
-			protected String doInBackground(String... params) {
+			protected GetStreamUrlAndPlayResult doInBackground(String... params) {
+				GetStreamUrlAndPlayResult result = new GetStreamUrlAndPlayResult();
+
+				String finalUrl = params[0];
 				try {
-					return PutioUtils.resolveRedirect(params[0]);
+					finalUrl = resolveRedirect(params[0]);
 				} catch (IOException e) {
 //                    No redirect
-					return params[0];
 				}
+				result.url = finalUrl;
+
+				result.subtitles = getRestInterface().subtitles(file.id).toBlocking().first().getSubtitles();
+
+				return result;
 			}
 
 			@Override
-			public void onPostExecute(String finalUrl) {
+			public void onPostExecute(GetStreamUrlAndPlayResult result) {
 				try {
 					if (gettingStreamDialog.isShowing()) {
 						gettingStreamDialog.dismiss();
 					}
-				} catch (IllegalArgumentException e) { }
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				}
 				int type;
 				if (file.contentType.contains("audio")) {
 					type = PutioUtils.TYPE_AUDIO;
@@ -355,15 +377,16 @@ public class PutioUtils {
 					type = PutioUtils.TYPE_VIDEO;
 				}
 
-				String subtitleUrl = PutioUtils.baseUrl + "/files/" + file.id +
-						"/subtitles/default" + tokenWithStuff;
-				Uri[] subtitles = new Uri[] { Uri.parse(subtitleUrl) };
-
-				PutioUtils.stream(context, finalUrl, subtitles, type);
+				stream(context, file, result.url, result.subtitles, type);
 			}
 		}
 
 		new GetStreamUrlAndPlay().execute(url);
+	}
+
+	private static class GetStreamUrlAndPlayResult {
+		String url;
+		List<PutioSubtitle> subtitles;
 	}
 
 	public InputStream getDefaultSubtitleData(long id) throws SocketTimeoutException {

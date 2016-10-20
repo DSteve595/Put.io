@@ -116,6 +116,7 @@
     <string name="choose_folder">Choose folder</string>
     <string name="x_per_sec">%s/sec</string>
     <string name="in_x">in %s</string>
+    <string name="media_route_menu_title">Play on&#8230;</string>
 
     <!-- Notification stuff -->
     <string name="notification_title_uploading_torrent">Uploading torrent</string>

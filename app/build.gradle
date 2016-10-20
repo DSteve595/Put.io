@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 99
         versionName '4.0-beta2'
     }
@@ -32,14 +32,14 @@ android {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v13:24.2.1'
-    compile 'com.android.support:leanback-v17:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.android.support:palette-v7:24.2.1'
-    compile 'com.google.android.libraries.cast.companionlibrary:ccl:2.8.4'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:support-v13:25.0.0'
+    compile 'com.android.support:leanback-v17:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:cardview-v7:25.0.0'
+    compile 'com.android.support:palette-v7:25.0.0'
+    compile 'com.google.android.gms:play-services-cast-framework:9.6.1'
     compile 'com.flipboard:bottomsheet-core:1.5.1'
     compile 'com.flipboard:bottomsheet-commons:1.5.1'
     compile 'commons-io:commons-io:2.5'
@@ -54,9 +54,9 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.1@aar'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.0@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.aurelhubert:ahbottomnavigation:1.5.0'
+    compile 'com.aurelhubert:ahbottomnavigation:1.5.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
 }
 repositories {

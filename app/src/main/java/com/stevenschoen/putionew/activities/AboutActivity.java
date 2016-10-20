@@ -20,8 +20,6 @@ public class AboutActivity extends BaseCastActivity {
 			getWindow().setLayout((int) PutioUtils.pxFromDp(this, 380), (int) PutioUtils.pxFromDp(this, 500));
 		} else {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            initCastBar();
 		}
 	}
 

@@ -6,6 +6,7 @@ import com.stevenschoen.putionew.model.responses.FileResponse;
 import com.stevenschoen.putionew.model.responses.FilesListResponse;
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse;
 import com.stevenschoen.putionew.model.responses.Mp4StatusResponse;
+import com.stevenschoen.putionew.model.responses.SubtitlesListResponse;
 import com.stevenschoen.putionew.model.responses.TransfersListResponse;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
 
@@ -27,6 +28,9 @@ public interface PutioRestInterface {
 
 	@GET("files/{id}")
 	Observable<FileResponse> file(@Path("id") long id);
+
+	@GET("files/{id}/subtitles")
+	Observable<SubtitlesListResponse> subtitles(@Path("id") long id);
 
 	@FormUrlEncoded
 	@GET("files/zip")

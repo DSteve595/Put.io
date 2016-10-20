@@ -36,6 +36,10 @@
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version"/>
 
+		<meta-data
+			android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+			android:value="com.stevenschoen.putionew.CastOptionsProvider"/>
+
 		<activity
 			android:name=".PutioActivity"
 			android:label="@string/putio"
@@ -164,25 +168,18 @@
 		</activity>
 
 		<activity
-			android:name="com.google.android.libraries.cast.companionlibrary.cast.player.VideoCastControllerActivity"
+			android:name=".ExpandedControlsActivity"
 			android:label="@string/putio"
 			android:launchMode="singleTask"
-			android:parentActivityName=".PutioActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Putio.CastPlayer">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+			</intent-filter>
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".PutioActivity"/>
 		</activity>
-
-		<receiver android:name="com.google.android.libraries.cast.companionlibrary.remotecontrol.VideoIntentReceiver">
-			<intent-filter>
-				<action android:name="android.media.AUDIO_BECOMING_NOISY"/>
-				<action android:name="android.intent.action.MEDIA_BUTTON"/>
-				<action android:name="com.google.android.libraries.cast.companionlibrary.action.toggleplayback"/>
-				<action android:name="com.google.android.libraries.cast.companionlibrary.action.stop"/>
-			</intent-filter>
-		</receiver>
 
 		<receiver android:name=".OpenDownloadReceiver">
 			<intent-filter>
@@ -192,15 +189,6 @@
 
 		<service android:name=".PutioOpenFileService"/>
 		<service android:name=".PutioTransfersService"/>
-		<service
-			android:name="com.google.android.libraries.cast.companionlibrary.notification.VideoCastNotificationService"
-			android:exported="false">
-			<intent-filter>
-				<action android:name="com.google.android.libraries.cast.companionlibrary.action.toggleplayback"/>
-				<action android:name="com.google.android.libraries.cast.companionlibrary.action.stop"/>
-				<action android:name="com.google.android.libraries.cast.companionlibrary.action.notificationvisibility"/>
-			</intent-filter>
-		</service>
 
 		<activity
 			android:name=".transfers.TransfersActivity"

@@ -12,12 +12,12 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.stevenschoen.putionew.transfers.TransfersActivity
 import com.stevenschoen.putionew.model.PutioUploadInterface
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.transfers.AddTransferFileFragment
 import com.stevenschoen.putionew.transfers.AddTransferPickTypeFragment
 import com.stevenschoen.putionew.transfers.AddTransferUrlFragment
+import com.stevenschoen.putionew.transfers.TransfersActivity
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

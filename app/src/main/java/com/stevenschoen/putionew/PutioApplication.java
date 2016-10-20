@@ -4,16 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.media.MediaRouteSelector;
 
-import com.google.android.libraries.cast.companionlibrary.cast.CastConfiguration;
-import com.google.android.libraries.cast.companionlibrary.cast.VideoCastManager;
-import com.stevenschoen.putionew.activities.BaseCastActivity;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class PutioApplication extends Application {
 	private PutioUtils utils;
-    private VideoCastManager videoCastManager;
 
 	@Override
 	public void onCreate() {
@@ -24,7 +19,6 @@ public class PutioApplication extends Application {
         } catch (PutioUtils.NoTokenException e) {
             // User is not logged in
         }
-        buildVideoCastManager();
 	}
 
     public static PutioApplication get(Context context) {
@@ -55,27 +49,6 @@ public class PutioApplication extends Application {
 	public PutioUtils getPutioUtils() {
 		return utils;
 	}
-
-    public void buildVideoCastManager() {
-        CastConfiguration.Builder castConfigBuilder = new CastConfiguration.Builder(PutioUtils.CAST_APPLICATION_ID)
-                .enableNotification()
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_PLAY_PAUSE, true)
-                .addNotificationAction(CastConfiguration.NOTIFICATION_ACTION_DISCONNECT, false)
-                .enableLockScreen();
-        if (BuildConfig.DEBUG) castConfigBuilder.enableDebug();
-
-        videoCastManager = VideoCastManager.initialize(this, castConfigBuilder.build());
-        videoCastManager.setVolumeStep(BaseCastActivity.VOLUME_INCREMENT);
-        videoCastManager.setStopOnDisconnect(true);
-    }
-
-    public VideoCastManager getVideoCastManager() {
-        return videoCastManager;
-    }
-
-    public MediaRouteSelector getMediaRouteSelector() {
-        return videoCastManager.getMediaRouteSelector();
-    }
 
     public interface CastCallbacks {
         void load(PutioFile file, String url, PutioUtils utils);
