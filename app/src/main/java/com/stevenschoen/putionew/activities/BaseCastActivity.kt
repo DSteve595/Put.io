@@ -74,7 +74,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     }
 
     override fun load(file: PutioFile, url: String, utils: PutioUtils) {
-        if (castContext == null || !castContext!!.isAppVisible) {
+        if (castContext == null || castContext!!.sessionManager.currentCastSession == null) {
             utils.getStreamUrlAndPlay(this, file, url)
         } else {
             fun play(subtitles: List<PutioSubtitle>? = null) {

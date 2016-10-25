@@ -8,8 +8,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 100
-        versionName '4.0 beta 3'
+        versionCode 101
+        versionName '4.0 beta 4'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -55,7 +55,7 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.0@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.aurelhubert:ahbottomnavigation:1.5.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta1'
 }
 repositories {
     mavenCentral()
