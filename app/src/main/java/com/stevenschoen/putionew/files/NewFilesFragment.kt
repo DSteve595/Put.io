@@ -81,7 +81,8 @@ open class NewFilesFragment : RxFragment() {
                 val folderFrontElevation = resources.getDimension(R.dimen.folder_front_elevation)
 
                 pagerView!!.setPageTransformer(true) { page, position ->
-                    if (position < -1) {
+                    page.visibility = View.VISIBLE
+                    if (position <= -1) {
                         page.translationZ = 0f
                     } else {
                         page.translationZ = (position + 1) * folderFrontElevation
@@ -89,7 +90,7 @@ open class NewFilesFragment : RxFragment() {
                     if (position < 0) {
                         if (position == -1f) {
                             // To prevent the previous page from being clickable through the current page
-                            page.translationX == 0f
+                            page.visibility = View.INVISIBLE
                         } else {
                             page.translationX = page.width * (-position * 0.5f)
                         }
