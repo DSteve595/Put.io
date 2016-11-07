@@ -57,7 +57,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
 
     var filesAdapter: FilesAdapter? = null
 
-    val actionModeHelper by lazy { ActionModeHelper() }
+    val selectionHelper by lazy { SelectionHelper() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,12 +77,12 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 })
         filesAdapter!!.setItemsCheckedChangedListener(object : FilesAdapter.OnItemsCheckedChangedListener {
             override fun onItemsCheckedChanged() {
-                if (!actionModeHelper.hasActionMode()) {
+                if (!selectionHelper.isShowing()) {
                     if (filesAdapter!!.isInCheckMode()) {
-                        actionModeHelper.startFloatingActionMode()
+                        selectionHelper.show()
                     }
                 } else {
-                    actionModeHelper.invalidateActionMode()
+                    selectionHelper.invalidate()
                 }
             }
         })
@@ -283,12 +283,12 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     abstract fun refresh()
     abstract fun isRefreshing(): Boolean
 
-    inner class ActionModeHelper() {
-        fun hasActionMode(): Boolean {
+    inner class SelectionHelper() {
+        fun isShowing(): Boolean {
             return getSelectionFragment() != null
         }
 
-        fun invalidateActionMode() {
+        fun invalidate() {
             val count = filesAdapter!!.checkedCount()
             if (count == 0) {
                 childFragmentManager.beginTransaction()
@@ -300,7 +300,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             }
         }
 
-        fun startFloatingActionMode() {
+        fun show() {
             callbacks?.onSelectionStarted()
             val selectionFragment = Fragment.instantiate(context, FileSelectionFragment::class.java.name) as FileSelectionFragment
             childFragmentManager.beginTransaction()

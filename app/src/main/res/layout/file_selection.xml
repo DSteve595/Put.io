@@ -26,23 +26,10 @@
 		tools:text="1 selected"/>
 
 	<ImageButton
-		android:id="@+id/file_selection_rename"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp"
-		android:scaleType="fitCenter"
-		android:src="@drawable/ic_selection_rename"/>
-
-	<ImageButton
 		android:id="@+id/file_selection_download"
 		android:layout_width="48dp"
 		android:layout_height="match_parent"
 		android:background="?selectableItemBackgroundBorderless"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp"
-		android:scaleType="fitCenter"
 		android:src="@drawable/ic_selection_download"/>
 
 	<ImageButton
@@ -50,29 +37,20 @@
 		android:layout_width="48dp"
 		android:layout_height="match_parent"
 		android:background="?selectableItemBackgroundBorderless"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp"
-		android:scaleType="fitCenter"
 		android:src="@drawable/ic_selection_copy"/>
-
-	<ImageButton
-		android:id="@+id/file_selection_move"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp"
-		android:scaleType="fitCenter"
-		android:src="@drawable/ic_selection_move"/>
 
 	<ImageButton
 		android:id="@+id/file_selection_delete"
 		android:layout_width="48dp"
 		android:layout_height="match_parent"
 		android:background="?selectableItemBackgroundBorderless"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp"
-		android:scaleType="fitCenter"
 		android:src="@drawable/ic_selection_delete"/>
+
+	<ImageButton
+		android:id="@+id/file_selection_more"
+		android:layout_width="48dp"
+		android:layout_height="match_parent"
+		android:background="?selectableItemBackgroundBorderless"
+		android:src="@drawable/ic_selection_more"/>
 
 </LinearLayout>

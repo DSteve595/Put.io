@@ -2,7 +2,10 @@ package com.stevenschoen.putionew.files
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.PopupMenuCompat
+import android.support.v7.widget.PopupMenu
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -29,13 +32,6 @@ class FileSelectionFragment : Fragment() {
             callbacks?.onCancel()
         }
 
-        val renameView = view.findViewById(R.id.file_selection_rename)
-        renameView.setOnClickListener { callbacks?.onRenameSelected()}
-        renameView.setOnLongClickListener {
-            Toast.makeText(context, R.string.rename, Toast.LENGTH_SHORT).show()
-            true
-        }
-
         val downloadView = view.findViewById(R.id.file_selection_download)
         downloadView.setOnClickListener { callbacks?.onDownloadSelected() }
         downloadView.setOnLongClickListener {
@@ -50,13 +46,6 @@ class FileSelectionFragment : Fragment() {
             true
         }
 
-        val moveView = view.findViewById(R.id.file_selection_move)
-        moveView.setOnClickListener { callbacks?.onMoveSelected() }
-        moveView.setOnLongClickListener {
-            Toast.makeText(context, R.string.move, Toast.LENGTH_SHORT).show()
-            true
-        }
-
         val deleteView = view.findViewById(R.id.file_selection_delete)
         deleteView.setOnClickListener { callbacks?.onDeleteSelected() }
         deleteView.setOnLongClickListener {
@@ -64,15 +53,34 @@ class FileSelectionFragment : Fragment() {
             true
         }
 
+        val idRename = 1
+        val idMove = 2
+
+        val moreView = view.findViewById(R.id.file_selection_more)
+        moreView.setOnClickListener {
+            val popup = PopupMenu(context, moreView)
+            if (amountSelected.value == 1) popup.menu.add(0, idRename, 0, R.string.rename)
+            popup.menu.add(0, idMove, 0, R.string.move)
+            popup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    idRename -> {
+                        callbacks?.onRenameSelected();
+                        return@setOnMenuItemClickListener true
+                    }
+                    idMove -> {
+                        callbacks?.onMoveSelected()
+                        return@setOnMenuItemClickListener true
+                    }
+                }
+                false
+            }
+            popup.show()
+        }
+
         val titleView = view.findViewById(R.id.file_selection_title) as TextView
 
         fun updateAmount(amount: Int) {
             titleView.text = getString(R.string.x_selected, amount)
-            if (amount > 1) {
-                renameView.visibility = View.GONE
-            } else {
-                renameView.visibility = View.VISIBLE
-            }
         }
 
         if (savedInstanceState != null) {
