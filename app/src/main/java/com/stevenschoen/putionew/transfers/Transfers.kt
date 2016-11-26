@@ -111,7 +111,7 @@ class Transfers : RxFragment() {
                     emptyView!!.visibility = View.GONE
                     noNetworkView!!.visibility = View.VISIBLE
                 }
-                VIEWMODE_LISTOREMPTY -> if (transfers == null || transfers.isEmpty()) {
+                VIEWMODE_LISTOREMPTY -> if (transfers.isEmpty()) {
                     setViewMode(VIEWMODE_EMPTY)
                 } else {
                     setViewMode(VIEWMODE_LIST)

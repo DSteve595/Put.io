@@ -6,6 +6,7 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.util.Log
 import com.stevenschoen.putionew.PutioBaseLoader
+import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -31,19 +32,13 @@ class SearchLoader(context: Context, private val parentFolder: PutioFile, val qu
     }
 
     fun isRefreshing(): Boolean {
-        if (searchSubscription != null && !searchSubscription!!.isUnsubscribed) {
-            return true
-        } else {
-            return false
-        }
+        return searchSubscription != null && !searchSubscription!!.isUnsubscribed
     }
 
     companion object {
-        private val LOADER_ID = 372895
-
         fun get(loaderManager: LoaderManager, context: Context, parentFolder: PutioFile, query: String): SearchLoader {
             return loaderManager.initLoader(
-                    LOADER_ID, null, object : Callbacks(context) {
+                    getUniqueLoaderId(SearchLoader::class.java), null, object : Callbacks(context) {
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
                     return SearchLoader(context, parentFolder, query)
                 }

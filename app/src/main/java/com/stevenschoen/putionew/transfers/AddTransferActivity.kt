@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew
+package com.stevenschoen.putionew.transfers
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,12 +12,12 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.stevenschoen.putionew.PutioActivity
+import com.stevenschoen.putionew.PutioApplication
+import com.stevenschoen.putionew.PutioUtils
+import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.PutioUploadInterface
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.stevenschoen.putionew.transfers.AddTransferFileFragment
-import com.stevenschoen.putionew.transfers.AddTransferPickTypeFragment
-import com.stevenschoen.putionew.transfers.AddTransferUrlFragment
-import com.stevenschoen.putionew.transfers.TransfersActivity
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -25,7 +25,7 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 
-class NewAddTransferActivity : AppCompatActivity() {
+class AddTransferActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DESTINATION_FOLDER = "dest_folder"
@@ -91,7 +91,7 @@ class NewAddTransferActivity : AppCompatActivity() {
 
     fun showLinkFragmentIfNotShowing(link: String? = null) {
         if (supportFragmentManager.findFragmentByTag(FRAGTAG_ADDTRANSFER_LINK) == null) {
-            val fileFragment = AddTransferUrlFragment.newInstance(this@NewAddTransferActivity, link)
+            val fileFragment = AddTransferUrlFragment.newInstance(this@AddTransferActivity, link)
             val transaction = supportFragmentManager.beginTransaction()
             transaction.addToBackStack("url")
             fileFragment.show(transaction, FRAGTAG_ADDTRANSFER_LINK)
@@ -100,7 +100,7 @@ class NewAddTransferActivity : AppCompatActivity() {
 
     fun showFileFragmentIfNotShowing(torrentUri: Uri? = null) {
         if (supportFragmentManager.findFragmentByTag(FRAGTAG_ADDTRANSFER_FILE) == null) {
-            val fileFragment = AddTransferFileFragment.newInstance(this@NewAddTransferActivity, torrentUri)
+            val fileFragment = AddTransferFileFragment.newInstance(this@AddTransferActivity, torrentUri)
             val transaction = supportFragmentManager.beginTransaction()
             transaction.addToBackStack("file")
             fileFragment.show(transaction, FRAGTAG_ADDTRANSFER_FILE)
@@ -169,7 +169,7 @@ class NewAddTransferActivity : AppCompatActivity() {
         private val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         fun start() {
-            val notifBuilder = NotificationCompat.Builder(this@NewAddTransferActivity)
+            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity)
             notifBuilder
                     .setOngoing(true)
                     .setCategory(NotificationCompat.CATEGORY_PROGRESS)
@@ -186,7 +186,7 @@ class NewAddTransferActivity : AppCompatActivity() {
             } catch (e: IllegalArgumentException) {
                 notifBuilder
                         .setContentIntent(PendingIntent.getActivity(
-                                this@NewAddTransferActivity, 0, Intent(this@NewAddTransferActivity, PutioActivity::class.java), 0))
+                                this@AddTransferActivity, 0, Intent(this@AddTransferActivity, PutioActivity::class.java), 0))
                 notif = notifBuilder.build()
                 notif.ledARGB = Color.parseColor("#FFFFFF00")
                 notifManager.notify(1, notif)
@@ -195,7 +195,7 @@ class NewAddTransferActivity : AppCompatActivity() {
         }
 
         fun succeeded() {
-            val notifBuilder = NotificationCompat.Builder(this@NewAddTransferActivity)
+            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity)
             notifBuilder
                     .setOngoing(false)
                     .setAutoCancel(true)
@@ -205,11 +205,11 @@ class NewAddTransferActivity : AppCompatActivity() {
                     .setContentTitle(getString(R.string.notification_title_uploaded_torrent))
                     .setContentText(getString(R.string.notification_body_uploaded_torrent))
                     .setSmallIcon(R.drawable.ic_notificon_transfer)
-            val viewTransfersIntent = Intent(this@NewAddTransferActivity, TransfersActivity::class.java)
+            val viewTransfersIntent = Intent(this@AddTransferActivity, TransfersActivity::class.java)
             viewTransfersIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             notifBuilder
                     .setContentIntent(PendingIntent.getActivity(
-                            this@NewAddTransferActivity, 0, viewTransfersIntent, PendingIntent.FLAG_CANCEL_CURRENT))
+                            this@AddTransferActivity, 0, viewTransfersIntent, PendingIntent.FLAG_CANCEL_CURRENT))
             //				notifBuilder.addAction(R.drawable.ic_notif_watch, "Watch", null) TODO
             notifBuilder
                     .setTicker(getString(R.string.notification_ticker_uploaded_torrent))
@@ -220,7 +220,7 @@ class NewAddTransferActivity : AppCompatActivity() {
         }
 
         fun failed() {
-            val notifBuilder = NotificationCompat.Builder(this@NewAddTransferActivity)
+            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity)
             notifBuilder
                     .setOngoing(false)
                     .setAutoCancel(true)
@@ -231,7 +231,7 @@ class NewAddTransferActivity : AppCompatActivity() {
                     .setContentText(getString(R.string.notification_body_error))
                     .setSmallIcon(R.drawable.ic_notificon_transfer)
             val retryNotifIntent = PendingIntent.getActivity(
-                    this@NewAddTransferActivity, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+                    this@AddTransferActivity, 0, intent, PendingIntent.FLAG_ONE_SHOT)
             notifBuilder
                     .addAction(
                             R.drawable.ic_notif_retry,

@@ -1,6 +1,6 @@
 package com.stevenschoen.putionew.files
 
-class DestinationFolderFragment : NewFilesFragment() {
+class DestinationFolderFragment : FilesFragment() {
     override val canSelect = false
     override val choosingFolder = true
     override val showSearch = false

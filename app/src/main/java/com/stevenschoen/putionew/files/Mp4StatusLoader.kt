@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.stevenschoen.putionew.PutioBaseLoader
+import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
 import rx.Observable
@@ -73,11 +74,9 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
     }
 
     companion object {
-        private val LOADER_ID = 2
-
         fun get(loaderManager: LoaderManager, context: Context, file: PutioFile): Mp4StatusLoader {
             return loaderManager.initLoader(
-                    LOADER_ID, null, object : Callbacks(context) {
+                    getUniqueLoaderId(Mp4StatusLoader::class.java), null, object : Callbacks(context) {
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
                     return Mp4StatusLoader(context, file)
                 }

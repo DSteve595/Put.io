@@ -8,6 +8,7 @@ import android.util.Log
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.stevenschoen.putionew.PutioBaseLoader
+import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.responses.FilesListResponse
 import org.apache.commons.io.FileUtils
@@ -60,11 +61,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     }
 
     fun isRefreshing(): Boolean {
-        if (refreshSubscription != null && !refreshSubscription!!.isUnsubscribed) {
-            return true
-        } else {
-            return false
-        }
+        return refreshSubscription != null && !refreshSubscription!!.isUnsubscribed
     }
 
     fun hasFresh(): Boolean = (folderSubject.hasValue() && folderSubject.value.fresh)
@@ -111,11 +108,9 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     }
 
     companion object {
-        private val LOADER_ID = 1
-
         fun get(loaderManager: LoaderManager, context: Context, folder: PutioFile): FolderLoader {
             return loaderManager.initLoader(
-                    LOADER_ID, null, object : Callbacks(context) {
+                    getUniqueLoaderId(FolderLoader::class.java), null, object : Callbacks(context) {
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
                     return FolderLoader(context, folder)
                 }

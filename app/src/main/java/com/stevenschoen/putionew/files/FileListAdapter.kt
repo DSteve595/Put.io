@@ -13,9 +13,9 @@ import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import java.util.*
 
-class FilesAdapter(private val data: List<PutioFile>,
-                   val onFileClicked: (file: PutioFile, holder: FileHolder) -> Unit,
-                   val onFileLongClicked: (file: PutioFile, holder: FileHolder) -> Unit) : RecyclerView.Adapter<FilesAdapter.FileHolder>() {
+class FileListAdapter(private val data: List<PutioFile>,
+                      val onFileClicked: (file: PutioFile, holder: FileHolder) -> Unit,
+                      val onFileLongClicked: (file: PutioFile, holder: FileHolder) -> Unit) : RecyclerView.Adapter<FileListAdapter.FileHolder>() {
 
     private var itemsCheckedChangedListener: OnItemsCheckedChangedListener? = null
 

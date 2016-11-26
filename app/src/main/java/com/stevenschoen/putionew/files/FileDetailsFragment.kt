@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.files
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
@@ -23,20 +22,14 @@ import com.stevenschoen.putionew.model.files.PutioMp4Status
 import com.trello.rxlifecycle.components.support.RxFragment
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
 import rx.android.schedulers.AndroidSchedulers
-import java.io.IOException
 
 class FileDetailsFragment : RxFragment() {
 
     companion object {
-        private val MP4_NOT_AVAILABLE = "NOT_AVAILABLE"
-        private val MP4_AVAILABLE = "COMPLETED"
-        private val MP4_IN_QUEUE = "IN_QUEUE"
-        private val MP4_CONVERTING = "CONVERTING"
-        private val MP4_ALREADY = "internal_ALREADY"
-
         val EXTRA_FILE = "file"
 
         val FRAGTAG_RENAME = "rename"
+        val FRAGTAG_DELETE = "delete";
 
         fun newInstance(context: Context, file: PutioFile): FileDetailsFragment {
             if (file.isFolder) {
@@ -49,7 +42,8 @@ class FileDetailsFragment : RxFragment() {
     }
 
     val file by lazy {arguments.getParcelable<PutioFile>(EXTRA_FILE)}
-    
+
+    var screenshotLoader: FileScreenshotLoader? = null
     var mp4StatusLoader: Mp4StatusLoader? = null
 
     lateinit var toolbarView: Toolbar
@@ -69,14 +63,14 @@ class FileDetailsFragment : RxFragment() {
     val utils by lazy { PutioApplication.get(context).putioUtils }
 
     private var imagePreview: ImageView? = null
-    private var imagePreviewStock: ImageView? = null
+    private var imagePreviewPlaceholder: ImageView? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.filedetails, container, false)
 
         toolbarView = view.findViewById(R.id.filedetails_toolbar) as Toolbar
         toolbarView.setNavigationOnClickListener {
-            callbacks!!.onFileDetailsClosed()
+            callbacks!!.onFileDetailsClosed(false)
         }
         toolbarView.inflateMenu(R.menu.menu_filedetails)
         if (file.isMedia) {
@@ -122,7 +116,7 @@ class FileDetailsFragment : RxFragment() {
         titleView.text = file.name
         titleView.setOnClickListener {
             val renameFragment = RenameFragment.newInstance(context, file)
-            renameFragment.show(childFragmentManager, FolderFragment.FRAGTAG_RENAME)
+            renameFragment.show(childFragmentManager, FRAGTAG_RENAME)
         }
 
         val holderInfo = view.findViewById(R.id.holder_fileinfo) as ViewGroup
@@ -181,14 +175,17 @@ class FileDetailsFragment : RxFragment() {
         if (file.isMedia) {
             buttonPlay.setOnClickListener {
                 var mp4 = false
-//                if (mp4Status != null) {
-//                    if (mp4Status!!.status == MP4_AVAILABLE) {
-//                        mp4 = checkBoxMp4Available!!.isChecked
-//                    }
-//                } else if (currentFile.isMp4Available) {
-//                    mp4 = checkBoxMp4Available!!.isChecked
-//                }
-//
+                if (file.isVideo) {
+                    val mp4Status = mp4StatusLoader!!.lastMp4Status()
+                    if (mp4Status != null) {
+                        if (mp4Status == PutioMp4Status.Status.Completed) {
+                            mp4 = checkBoxMp4Available.isChecked
+                        }
+                    } else if (file.isMp4Available) {
+                        mp4 = checkBoxMp4Available.isChecked
+                    }
+                }
+
                 val url = file.getStreamUrl(utils, mp4)
                 castCallbacks!!.load(file, url, utils)
             }
@@ -197,39 +194,13 @@ class FileDetailsFragment : RxFragment() {
             buttonPlay.visibility = View.GONE
         }
 
-        imagePreviewStock = view.findViewById(R.id.filepreview_image_placeholder) as ImageView
+        imagePreviewPlaceholder = view.findViewById(R.id.filepreview_image_placeholder) as ImageView
         Picasso.with(context)
                 .load(file.icon)
                 .transform(PutioUtils.BlurTransformation(activity, 4f))
-                .into(imagePreviewStock)
+                .into(imagePreviewPlaceholder)
 
         imagePreview = view.findViewById(R.id.filepreview_image) as ImageView
-
-        class getPreviewTask : AsyncTask<Void, Void, Bitmap>() {
-            override fun doInBackground(vararg nothing: Void): Bitmap? {
-                try {
-                    return Picasso.with(activity).load(file.screenshot).get()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-
-                return null
-            }
-
-            public override fun onPostExecute(bitmap: Bitmap?) {
-                if (bitmap != null && isAdded) {
-//                    state!!.imagePreviewBitmap = bitmap
-                    refreshImagePreview(true)
-                }
-            }
-        }
-        if (file.screenshot != null && file.screenshot != "null") {
-//            if (state!!.imagePreviewBitmap != null) {
-//                refreshImagePreview(false)
-//            } else {
-//                getPreviewTask().execute()
-//            }
-        }
 
         return view
     }
@@ -237,6 +208,14 @@ class FileDetailsFragment : RxFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (isAdded) {
+            screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
+            screenshotLoader!!.load(true)
+            screenshotLoader!!.screenshot()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        it?.let { updateImagePreview(it, true) }
+                    }
+
             if (file.isVideo) {
                 mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
                 mp4StatusLoader!!.mp4Status()
@@ -252,7 +231,7 @@ class FileDetailsFragment : RxFragment() {
     override fun onAttachFragment(childFragment: Fragment) {
         super.onAttachFragment(childFragment)
         when (childFragment.tag) {
-            FolderFragment.FRAGTAG_RENAME -> {
+            FRAGTAG_RENAME -> {
                 childFragment as RenameFragment
                 childFragment.callbacks = object : RenameFragment.Callbacks {
                     override fun onRenamed(newName: String) {
@@ -261,6 +240,19 @@ class FileDetailsFragment : RxFragment() {
                                 .renameFile(file.id, newName)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe()
+                    }
+                }
+            }
+            FRAGTAG_DELETE -> {
+                childFragment as ConfirmDeleteFragment
+                childFragment.callbacks = object : ConfirmDeleteFragment.Callbacks {
+                    override fun onDeleteSelected() {
+                        PutioApplication.get(context).putioUtils.restInterface
+                                .deleteFile(file.id.toString())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    callbacks!!.onFileDetailsClosed(true)
+                                }
                     }
                 }
             }
@@ -302,17 +294,8 @@ class FileDetailsFragment : RxFragment() {
     }
 
     private fun initDeleteFile() {
-        //        utils.deleteFilesDialog(getActivity(), new PutioUtils.DeleteCallback() {
-        //            @Override
-        //            public void onDeleteClicked() { }
-        //
-        //            @Override
-        //            public void onDeleteFinished() {
-        //                if (callbacks != null) {
-        //                    callbacks.onFileDetailsClosed();
-        //                }
-        //            }
-        //        }, getCurrentFile()).show();
+        val confirmDeleteFragment = ConfirmDeleteFragment.newInstance(context, 1)
+        confirmDeleteFragment.show(childFragmentManager, FRAGTAG_DELETE)
     }
 
     private fun updateMp4View(status: PutioMp4Status?) {
@@ -373,41 +356,35 @@ class FileDetailsFragment : RxFragment() {
         }
     }
 
-    private fun refreshImagePreview(animate: Boolean) {
-//        if (previewBitmap != null) {
-//            if (animate) {
-//                refreshImagePreview(false)
-//                imagePreview!!.alpha = 0f
-//                imagePreview!!.animate().alpha(1f)
-//            } else {
-//                imagePreview!!.setImageBitmap(previewBitmap)
-//                imagePreview!!.postInvalidate()
-//                if (UIUtils.hasLollipop() && !UIUtils.isTablet(activity)) {
-//                    Palette.from(previewBitmap!!).generate { palette ->
-//                        if (isAdded) {
-//                            val darkMuted = palette.darkMutedSwatch
-//                            if (darkMuted != null) {
-//                                val statusBarAnim = ValueAnimator.ofObject(ArgbEvaluator(),
-//                                        activity.window.statusBarColor, darkMuted.rgb)
-//                                statusBarAnim.addUpdateListener { animation ->
-//                                    if (isAdded && activity.window != null) {
-//                                        activity.window.statusBarColor = animation.animatedValue as Int
-//                                    } else {
-//                                        animation.cancel()
-//                                    }
+    private fun updateImagePreview(bitmap: Bitmap, animate: Boolean) {
+        if (animate) {
+            updateImagePreview(bitmap, false)
+            imagePreview!!.alpha = 0f
+            imagePreview!!.animate().alpha(1f)
+        } else {
+            imagePreview!!.setImageBitmap(bitmap)
+            imagePreview!!.postInvalidate()
+//            if (UIUtils.hasLollipop()) {
+//                Palette.from(bitmap).generate { palette ->
+//                    if (isAdded) {
+//                        val darkMuted = palette.darkMutedSwatch
+//                        if (darkMuted != null) {
+//                            val statusBarAnim = ValueAnimator.ofObject(ArgbEvaluator(),
+//                                    activity.window.statusBarColor, darkMuted.rgb)
+//                            statusBarAnim.addUpdateListener { animation ->
+//                                if (isAdded && activity.window != null) {
+//                                    activity.window.statusBarColor = animation.animatedValue as Int
+//                                } else {
+//                                    animation.cancel()
 //                                }
-//                                statusBarAnim.start()
 //                            }
+//                            statusBarAnim.start()
 //                        }
 //                    }
 //                }
 //            }
-//        }
+        }
     }
-
-//    private fun shouldCheckForMp4Updates(): Boolean {
-//        return mp4Status!!.status == MP4_IN_QUEUE || mp4Status!!.status == MP4_CONVERTING
-//    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -420,6 +397,6 @@ class FileDetailsFragment : RxFragment() {
     }
 
     interface Callbacks {
-        fun onFileDetailsClosed()
+        fun onFileDetailsClosed(refreshParent: Boolean)
     }
 }

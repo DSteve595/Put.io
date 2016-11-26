@@ -2,10 +2,8 @@ package com.stevenschoen.putionew.files
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.PopupMenuCompat
 import android.support.v7.widget.PopupMenu
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView

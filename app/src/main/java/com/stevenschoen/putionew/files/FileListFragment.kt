@@ -55,14 +55,14 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
 
     val files = ArrayList<PutioFile>()
 
-    var filesAdapter: FilesAdapter? = null
+    var filesAdapter: FileListAdapter? = null
 
     val selectionHelper by lazy { SelectionHelper() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        filesAdapter = FilesAdapter(files,
+        filesAdapter = FileListAdapter(files,
                 onFileClicked = { file, fileHolder ->
                     if (filesAdapter!!.isInCheckMode()) {
                         filesAdapter!!.togglePositionChecked(fileHolder.adapterPosition)
@@ -75,7 +75,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         filesAdapter!!.togglePositionChecked(fileHolder.adapterPosition)
                     }
                 })
-        filesAdapter!!.setItemsCheckedChangedListener(object : FilesAdapter.OnItemsCheckedChangedListener {
+        filesAdapter!!.setItemsCheckedChangedListener(object : FileListAdapter.OnItemsCheckedChangedListener {
             override fun onItemsCheckedChanged() {
                 if (!selectionHelper.isShowing()) {
                     if (filesAdapter!!.isInCheckMode()) {
@@ -91,9 +91,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             files.addAll(savedInstanceState.getParcelableArrayList(STATE_FILES))
             filesAdapter!!.addCheckedIds(*savedInstanceState.getLongArray(STATE_CHECKED_IDS))
         }
-        getSelectionFragment()?.let {
-            it.amountSelected.onNext(filesAdapter!!.checkedCount())
-        }
+        getSelectionFragment()?.amountSelected?.onNext(filesAdapter!!.checkedCount())
         if (filesAdapter!!.isInCheckMode()) {
             callbacks?.onSelectionStarted()
         }

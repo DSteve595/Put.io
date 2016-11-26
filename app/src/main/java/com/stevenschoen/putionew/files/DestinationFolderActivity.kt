@@ -47,7 +47,7 @@ class DestinationFolderActivity : AppCompatActivity() {
     fun getFragment() = supportFragmentManager.findFragmentById(R.id.destination_activity_root) as DestinationFolderFragment?
 
     override fun onBackPressed() {
-        if (!getFragment()!!.goBack()) {
+        if (!getFragment()!!.goBack(true)) {
             super.onBackPressed()
         }
     }

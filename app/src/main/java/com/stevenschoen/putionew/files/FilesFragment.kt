@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle.components.support.RxFragment
 import java.util.*
 
-open class NewFilesFragment : RxFragment() {
+open class FilesFragment : RxFragment() {
 
     companion object {
         val STATE_PAGES = "pages"
@@ -24,12 +25,12 @@ open class NewFilesFragment : RxFragment() {
 
         val EXTRA_FOLDER = "folder"
 
-        fun newInstance(context: Context, folder: PutioFile?): NewFilesFragment {
+        fun newInstance(context: Context, folder: PutioFile?): FilesFragment {
             val args = Bundle()
             if (folder != null) {
                 args.putParcelable(EXTRA_FOLDER, folder)
             }
-            return Fragment.instantiate(context, NewFilesFragment::class.java.name, args) as NewFilesFragment
+            return Fragment.instantiate(context, FilesFragment::class.java.name, args) as FilesFragment
         }
     }
 
@@ -48,7 +49,7 @@ open class NewFilesFragment : RxFragment() {
         } else {
             field
         }
-    val filesFragmentsAdapter by lazy { PageFragmentsPagerAdapter() }
+    val fileListFragmentsAdapter by lazy { PageFragmentsPagerAdapter() }
     var pagerView: ViewPager? = null
     val pageChangeListener = PageChangeListener()
     var isSelecting = false
@@ -68,13 +69,13 @@ open class NewFilesFragment : RxFragment() {
         } else {
             pages.add(Page(PutioFile.makeRootFolder(resources)))
         }
-        filesFragmentsAdapter.notifyDataSetChanged()
+        fileListFragmentsAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.newfiles, container, false).apply {
             pagerView = findViewById(R.id.newfiles_pager) as ViewPager
-            pagerView!!.adapter = filesFragmentsAdapter
+            pagerView!!.adapter = fileListFragmentsAdapter
             pagerView!!.addOnPageChangeListener(pageChangeListener)
 
             if (UIUtils.hasLollipop()) {
@@ -102,7 +103,38 @@ open class NewFilesFragment : RxFragment() {
         }
     }
 
+    fun findPageWithIndexForFragment(fragment: FileListFragment<*>): IndexedValue<Page>? {
+        val idToCompare: Long
+
+        when (fragment) {
+            is FolderFragment -> idToCompare = Page.makeUniqueId(fragment.folder)
+            is SearchFragment -> idToCompare = Page.makeUniqueId(fragment.query, fragment.parentFolder)
+            else -> throw RuntimeException()
+        }
+
+        pages.forEachIndexed { index, page ->
+            if (page.getUniqueId() == idToCompare) {
+                return IndexedValue(index, page)
+            }
+        }
+        return null
+    }
+
+    fun removePagesAfterIndex(position: Int, notifyAdapterIfChanged: Boolean) {
+        var changed = false
+        while (pages.lastIndex > position) {
+            pages.removeAt(pages.lastIndex)
+            changed = true
+        }
+
+        if (notifyAdapterIfChanged && changed) {
+            fileListFragmentsAdapter.notifyDataSetChanged()
+        }
+    }
+
     fun addFile(file: PutioFile) {
+        removePagesAfterIndex(pagerView!!.currentItem, false)
+
         val iter = pages.listIterator()
         var foundParentIndex = -1
         for (existingPage in iter) {
@@ -115,29 +147,24 @@ open class NewFilesFragment : RxFragment() {
         }
         if (foundParentIndex != -1) {
             pages.add(foundParentIndex + 1, Page(file))
-            while (pages.size > (foundParentIndex + 2)) {
-                pages.removeAt(pages.lastIndex)
-            }
+            removePagesAfterIndex(foundParentIndex + 1, false)
         } else {
             pages.add(Page(file))
         }
 
-        filesFragmentsAdapter.notifyDataSetChanged()
+        fileListFragmentsAdapter.notifyDataSetChanged()
         pagerView!!.setCurrentItem(pages.lastIndex, true)
     }
 
     fun addSearch(query: String) {
-        val currentIndex = pagerView!!.currentItem
-        while (pages.lastIndex > currentIndex) {
-            pages.removeAt(pages.lastIndex)
-        }
+        removePagesAfterIndex(pagerView!!.currentItem, false)
         pages.add(Page(query, pages.last().file!!))
 
-        filesFragmentsAdapter.notifyDataSetChanged()
+        fileListFragmentsAdapter.notifyDataSetChanged()
         pagerView!!.setCurrentItem(pages.lastIndex, true)
     }
 
-    fun goBack(): Boolean {
+    fun goBack(goToLastPageIfNotSelected: Boolean): Boolean {
         if (pageChangeListener.isGoingBack) {
             if (pagerView!!.currentItem == 0) {
                 return false
@@ -146,7 +173,7 @@ open class NewFilesFragment : RxFragment() {
                 pagerView!!.setCurrentItem(pagerView!!.currentItem - 1, true)
                 return true
             }
-        } else if (pagerView!!.currentItem != pages.lastIndex) {
+        } else if (goToLastPageIfNotSelected && pagerView!!.currentItem != pages.lastIndex) {
             pagerView!!.setCurrentItem(pages.lastIndex, true)
             return true
         } else if (pages.size > 1) {
@@ -172,7 +199,11 @@ open class NewFilesFragment : RxFragment() {
                         }
                     }
                     override fun onBackSelected() {
-                        goBack()
+                        val pageWithIndex = findPageWithIndexForFragment(childFragment)
+                        pageWithIndex?.let {
+                            removePagesAfterIndex(it.index, true)
+                        }
+                        goBack(false)
                     }
                     override fun onSelectionStarted() {
                         isSelecting = true
@@ -185,8 +216,12 @@ open class NewFilesFragment : RxFragment() {
                 }
             }
             is FileDetailsFragment -> childFragment.callbacks = object : FileDetailsFragment.Callbacks {
-                override fun onFileDetailsClosed() {
-                    goBack()
+                override fun onFileDetailsClosed(refreshParent: Boolean) {
+                    goBack(false)
+                    if (refreshParent) {
+                        val parentListFragment = fileListFragmentsAdapter.getFragmentAt(pagerView!!.currentItem) as FileListFragment<*>
+                        parentListFragment.refresh()
+                    }
                 }
             }
         }
@@ -199,6 +234,8 @@ open class NewFilesFragment : RxFragment() {
     }
 
     inner class PageFragmentsPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
+
+        private val fragments = SparseArray<Fragment>()
 
         override fun getItem(position: Int): Fragment {
             val page = pages[position]
@@ -215,6 +252,13 @@ open class NewFilesFragment : RxFragment() {
                     return SearchFragment.newInstance(context, page.searchQuery!!, page.parentFolder!!, canSelect)
                 }
             }
+        }
+
+        override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+            val fragment = super.instantiateItem(container, position) as Fragment
+            fragments.put(position, fragment)
+
+            return fragment
         }
 
         override fun getItemPosition(obj: Any): Int {
@@ -241,11 +285,7 @@ open class NewFilesFragment : RxFragment() {
         }
 
         override fun getItemId(position: Int): Long {
-            val page = pages[position]
-            when (page.type) {
-                Page.Type.File -> return page.file!!.id
-                Page.Type.Search -> return page.searchQuery!!.hashCode() + page.parentFolder!!.id
-            }
+            return pages[position].getUniqueId()
         }
 
         override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
@@ -255,9 +295,12 @@ open class NewFilesFragment : RxFragment() {
                         .remove(`object` as Fragment)
                         .commit()
             }
+            fragments.removeAt(position)
         }
 
         override fun getCount() = pages.size
+
+        fun getFragmentAt(position: Int) = fragments[position]
     }
 
     inner class PageChangeListener : ViewPager.SimpleOnPageChangeListener() {
@@ -277,7 +320,7 @@ open class NewFilesFragment : RxFragment() {
                         pages.removeAt(pages.lastIndex)
                         removeCount--
                     }
-                    filesFragmentsAdapter.notifyDataSetChanged()
+                    fileListFragmentsAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -299,6 +342,13 @@ open class NewFilesFragment : RxFragment() {
             this.type = Type.Search
             this.searchQuery = searchQuery
             this.parentFolder = parentFolder
+        }
+
+        fun getUniqueId(): Long {
+            when (type) {
+                Type.File -> return makeUniqueId(file!!)
+                Type.Search -> return makeUniqueId(searchQuery!!, parentFolder!!)
+            }
         }
 
         constructor(source: Parcel) {
@@ -332,6 +382,13 @@ open class NewFilesFragment : RxFragment() {
         }
 
         companion object {
+            fun makeUniqueId(file: PutioFile): Long {
+                return file.id
+            }
+            fun makeUniqueId(searchQuery: String, parentFolder: PutioFile): Long {
+                return searchQuery.hashCode() + parentFolder.id
+            }
+
             @JvmField val CREATOR: Parcelable.Creator<Page> = object : Parcelable.Creator<Page> {
                 override fun createFromParcel(source: Parcel): Page {
                     return Page(source)

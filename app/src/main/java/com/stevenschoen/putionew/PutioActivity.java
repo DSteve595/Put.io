@@ -24,10 +24,11 @@ import com.stevenschoen.putionew.activities.AboutActivity;
 import com.stevenschoen.putionew.activities.BaseCastActivity;
 import com.stevenschoen.putionew.activities.Login;
 import com.stevenschoen.putionew.activities.Preferences;
-import com.stevenschoen.putionew.files.NewFilesFragment;
+import com.stevenschoen.putionew.files.FilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
+import com.stevenschoen.putionew.transfers.AddTransferActivity;
 import com.stevenschoen.putionew.transfers.Transfers;
 import com.stevenschoen.putionew.tv.TvActivity;
 
@@ -159,7 +160,7 @@ public class PutioActivity extends BaseCastActivity {
 
 		if (savedInstanceState == null) {
 			Account accountFragment = (Account) Fragment.instantiate(this, Account.class.getName());
-			NewFilesFragment filesFragment = NewFilesFragment.Companion.newInstance(this, null);
+			FilesFragment filesFragment = FilesFragment.Companion.newInstance(this, null);
 			Transfers transfersFragment = (Transfers) Fragment.instantiate(this, Transfers.class.getName());
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.main_content_holder, accountFragment, FRAGTAG_ACCOUNT)
@@ -193,9 +194,9 @@ public class PutioActivity extends BaseCastActivity {
 				if (bottomNavView.getCurrentItem() == TAB_FILES) {
 					destinationFolder = getFilesFragment().getCurrentPage().getFile();
 				}
-				Intent addTransferIntent = new Intent(PutioActivity.this, NewAddTransferActivity.class);
+				Intent addTransferIntent = new Intent(PutioActivity.this, AddTransferActivity.class);
 				if (destinationFolder != null) {
-					addTransferIntent.putExtra(NewAddTransferActivity.EXTRA_DESTINATION_FOLDER, destinationFolder);
+					addTransferIntent.putExtra(AddTransferActivity.EXTRA_DESTINATION_FOLDER, destinationFolder);
 				}
 				startActivity(addTransferIntent);
 			}
@@ -209,7 +210,7 @@ public class PutioActivity extends BaseCastActivity {
 		if (fragment.getTag() != null) {
 			switch (fragment.getTag()) {
 				case FRAGTAG_FILES:
-					((NewFilesFragment) fragment).setCallbacks(new NewFilesFragment.Callbacks() {
+					((FilesFragment) fragment).setCallbacks(new FilesFragment.Callbacks() {
 						@Override
 						public void onSelectionStarted() {
 							if (init) {
@@ -281,15 +282,15 @@ public class PutioActivity extends BaseCastActivity {
 		switch (bottomNavView.getCurrentItem()) {
 			case TAB_ACCOUNT: return false;
 			case TAB_FILES: {
-				NewFilesFragment filesFragment = getFilesFragment();
+				FilesFragment filesFragment = getFilesFragment();
 				if (filesFragment.isSelecting()) {
 					return false;
 				} else {
-					NewFilesFragment.Page currentPage = filesFragment.getCurrentPage();
+					FilesFragment.Page currentPage = filesFragment.getCurrentPage();
 					if (currentPage == null) {
 						return true;
 					} else {
-						if (currentPage.getType() == NewFilesFragment.Page.Type.Search) {
+						if (currentPage.getType() == FilesFragment.Page.Type.Search) {
 							return false;
 						} else {
 							if (currentPage.getFile().isFolder()) {
@@ -351,8 +352,8 @@ public class PutioActivity extends BaseCastActivity {
 		return (Account) getSupportFragmentManager().findFragmentByTag(FRAGTAG_ACCOUNT);
 	}
 
-    private NewFilesFragment getFilesFragment() {
-        return (NewFilesFragment) getSupportFragmentManager().findFragmentByTag(FRAGTAG_FILES);
+    private FilesFragment getFilesFragment() {
+        return (FilesFragment) getSupportFragmentManager().findFragmentByTag(FRAGTAG_FILES);
     }
 
     private Transfers getTransfersFragment() {
@@ -378,7 +379,7 @@ public class PutioActivity extends BaseCastActivity {
 	@Override
     public void onBackPressed() {
         if (bottomNavView.getCurrentItem() == TAB_FILES) {
-			if (!getFilesFragment().goBack()) {
+			if (!getFilesFragment().goBack(true)) {
 				super.onBackPressed();
 			}
 		} else {
