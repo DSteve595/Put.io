@@ -254,7 +254,7 @@ public class PutioUtils {
 		return Observable.create(new Observable.OnSubscribe<Long>() {
 			@Override
 			public void call(final Subscriber<? super Long> subscriber) {
-				RxPermissions.getInstance(activity)
+				new RxPermissions(activity)
 						.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 						.subscribe(new Action1<Boolean>() {
 							@Override
