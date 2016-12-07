@@ -83,7 +83,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
                 else
                     MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
                 val title = FilenameUtils.removeExtension(file.name).let {
-                    if (it.length < 18) {
+                    if (it.length <= 18) {
                         it
                     } else {
                         it.substring(0, 19)
