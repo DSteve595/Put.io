@@ -16,7 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.stevenschoen.putionew.ApiKey;
 import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.R;
 
@@ -49,7 +48,8 @@ public class Login extends AppCompatActivity {
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        final String loginUrl = "https://api.put.io/v2/oauth2/authenticate?client_id=" + ApiKey.getClientId() + "&response_type=token&redirect_uri=http://stevenschoen.com/callback.php";
+        String clientId = getString(R.string.putio_client_id);
+        final String loginUrl = "https://api.put.io/v2/oauth2/authenticate?client_id=" + clientId + "&response_type=token&redirect_uri=http://stevenschoen.com/callback.php";
 
         StrictMode.setThreadPolicy(new ThreadPolicy.Builder().permitNetwork().build());
 
@@ -111,31 +111,14 @@ public class Login extends AppCompatActivity {
                 String code = strings[1];
 
                 final String finalUrl = "https://api.put.io/v2/oauth2/access_token?client_id=" +
-                        ApiKey.getClientId() + "&client_secret=" +
-                        ApiKey.getApiKey() + "&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
+                        getString(R.string.putio_client_id) + "&client_secret=" +
+                        getString(R.string.putio_api_key) + "&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
 						+ code;
                 saveTokenFromWeb(finalUrl);
             } else if (url.contains("token=")) {
                 saveToken(url.substring(url.indexOf("token=") + 6));
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//		MenuItem buttonTokenLogin = menu.add("Alternate login");
-//		buttonTokenLogin.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//		buttonTokenLogin.setIcon(android.R.drawable.ic_menu_preferences);
-//		buttonTokenLogin.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//			
-//			public boolean onMenuItemClick(MenuItem item) {
-//				Dialog tokenLoginDialog = new Dialog(Setup.this, R.style.Putio_Dialog);
-//				tokenLoginDialog.setContentView(R.layout.dialog_tokenlogin);
-//				return false;
-//			}
-//		});
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     private void setViewMode(int mode) {

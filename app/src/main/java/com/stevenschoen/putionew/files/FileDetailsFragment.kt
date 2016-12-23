@@ -106,10 +106,6 @@ class FileDetailsFragment : RxFragment() {
             val preview = view.findViewById(R.id.filepreview)
             preview.elevation = PutioUtils.pxFromDp(activity, 2f)
             toolbarView.elevation = resources.getDimension(R.dimen.appBarElevation)
-
-            if (UIUtils.isTablet(activity)) {
-                view.elevation = resources.getDimension(R.dimen.tabletFileDetailsElevation)
-            }
         }
 
         titleView = view.findViewById(R.id.filepreview_title) as TextView

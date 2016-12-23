@@ -6,7 +6,7 @@
     android:foreground="?attr/selectableItemBackground"
     app:cardElevation="1dp">
 
-    <com.stevenschoen.putionew.TransferProgressBarView
+    <com.stevenschoen.putionew.transfers.TransferProgressBarView
         android:id="@+id/transfer_progressbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

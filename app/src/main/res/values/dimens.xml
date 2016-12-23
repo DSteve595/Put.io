@@ -5,14 +5,9 @@
     <dimen name="fabSizeHalfNegative">-32dp</dimen>
     <dimen name="fabMargin">16dp</dimen>
 
-    <dimen name="fileDetailsMaxHeight">600dp</dimen>
-
-    <dimen name="fabElevation">2dp</dimen>
     <dimen name="appBarElevation">4dp</dimen>
-    <dimen name="tabletFileDetailsElevation">2dp</dimen>
 
     <dimen name="padding_small">8dp</dimen>
-    <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>
 
     <dimen name="files_row_padding">12dp</dimen>

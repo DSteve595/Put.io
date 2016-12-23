@@ -4,15 +4,21 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.Crashlytics;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
-public class PutioApplication extends Application {
+import io.fabric.sdk.android.Fabric;
+
+public class PutioApplication extends MultiDexApplication {
 	private PutioUtils utils;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		Fabric.with(this, new Crashlytics());
 
         try {
             buildUtils();

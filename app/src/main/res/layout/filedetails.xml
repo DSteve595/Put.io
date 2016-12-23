@@ -50,7 +50,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentBottom="true"
 			android:layout_marginBottom="32dp"
-			android:src="@drawable/mr_ic_play_light"
+			android:src="@drawable/ic_media_play_light"
 			app:elevation="2dp"
 			app:fabSize="normal"/>
 	</RelativeLayout>

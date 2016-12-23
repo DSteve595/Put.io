@@ -8,9 +8,7 @@
     <color name="putio_accent_half">#80FDCE45</color>
     <color name="putio_accent_quarter">#40FDCE45</color>
     <color name="putio_green">#00A000</color>
-    <color name="putio_error">#F0BE76</color>
     <color name="putio_lightred">#FF4040</color>
 
-    <color name="putio_divider">#80808080</color>
-
+    <color name="putio_divider">#1f000000</color>
 </resources>

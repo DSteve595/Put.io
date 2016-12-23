@@ -20,10 +20,8 @@ import android.view.View.OnClickListener;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.stevenschoen.putionew.activities.AboutActivity;
-import com.stevenschoen.putionew.activities.BaseCastActivity;
 import com.stevenschoen.putionew.activities.Login;
-import com.stevenschoen.putionew.activities.Preferences;
+import com.stevenschoen.putionew.cast.BaseCastActivity;
 import com.stevenschoen.putionew.files.FilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.model.files.PutioFile;
@@ -135,10 +133,6 @@ public class PutioActivity extends BaseCastActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_settings:
-                Intent settingsIntent = new Intent(PutioActivity.this, Preferences.class);
-                PutioActivity.this.startActivity(settingsIntent);
-                return true;
             case R.id.menu_logout:
                 logOut();
                 return true;
@@ -153,8 +147,6 @@ public class PutioActivity extends BaseCastActivity {
 
     private void init(Bundle savedInstanceState) {
         init = true;
-
-        initCast();
 
         setContentView(R.layout.main);
 
@@ -409,10 +401,10 @@ public class PutioActivity extends BaseCastActivity {
 				ft.attach(getTransfersFragment());
 			} break;
 		}
-		ft.commit();
+		ft.commitNow();
 	}
 
-    private void selectTab(int position, boolean animate) {
+	private void selectTab(int position, boolean animate) {
         if (bottomNavView.getCurrentItem() != position) {
             bottomNavView.setCurrentItem(position, false);
 			showFragment(position, animate);

@@ -82,10 +82,6 @@ public class PutioUtils {
 	public static final int ACTION_NOTHING = 1;
 	public static final int ACTION_OPEN = 2;
 
-	public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
-//    public static final String CAST_APPLICATION_ID = "C18ACC9E";
-//	public static final String CAST_APPLICATION_ID = "79E32AF2"; // Put.io's
-
 	private PutioRestInterface putioRestInterface;
 
 	public String token;

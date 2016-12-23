@@ -7,6 +7,7 @@
 		<item name="android:dialogTheme">@style/Putio.Dialog</item>
 		<item name="dialogTheme">@style/Putio.Dialog</item>
 		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
 
 		<item name="android:windowLightStatusBar">true</item>
 		<item name="android:windowBackground">@android:color/white</item>
@@ -22,6 +23,7 @@
 		<item name="android:dialogTheme">@style/Putio.Dialog</item>
 		<item name="dialogTheme">@style/Putio.Dialog</item>
 		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
 
 		<item name="android:windowLightStatusBar">true</item>
 
@@ -36,6 +38,7 @@
 		<item name="android:dialogTheme">@style/Putio.Dialog</item>
 		<item name="dialogTheme">@style/Putio.Dialog</item>
 		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
+		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
 
 		<item name="android:windowIsTranslucent">true</item>
 		<item name="android:windowBackground">@android:color/transparent</item>
@@ -50,11 +53,13 @@
 		<item name="colorPrimaryDark">#757575</item>
 		<item name="colorAccent">@color/putio_accent</item>
 		<item name="colorButtonNormal">@color/putio_accent</item>
+		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
 	</style>
 
 	<style name="Theme.Putio.DestinationFolder" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorAccent">@color/putio_accent</item>
 		<item name="colorButtonNormal">@color/putio_accent</item>
+		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
 	</style>
 
 	<style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar"/>
@@ -108,8 +113,6 @@
 		<item name="colorPrimary">@color/putio_accent</item>
 		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
 		<item name="colorAccent">@android:color/black</item>
-		<item name="android:windowNoTitle">false</item>
-		<item name="windowNoTitle">false</item>
 	</style>
 
 	<style name="Putio.Dialog.NoTitle" parent="Putio.Dialog">
@@ -127,5 +130,11 @@
 		<item name="colorPrimary">@color/putio_accent</item>
 		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
 		<item name="colorAccent">@color/putio_accent</item>
+
+		<item name="android:windowLightStatusBar">true</item>
+	</style>
+
+	<style name="Putio.CastMiniController" parent="CastMiniController">
+		<item name="castProgressBarColor">?colorPrimary</item>
 	</style>
 </resources>
