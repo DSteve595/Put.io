@@ -14,7 +14,7 @@ import java.util.List;
 public class CastOptionsProvider implements OptionsProvider {
 
 	public static final String CAST_APPLICATION_ID = "E5977464"; // Styled media receiver
-//    public static final String CAST_APPLICATION_ID = "C18ACC9E";
+//	public static final String CAST_APPLICATION_ID = "C18ACC9E";
 //	public static final String CAST_APPLICATION_ID = "79E32AF2"; // Put.io's
 
 	@Override

@@ -2,6 +2,7 @@ package com.stevenschoen.putionew.cast
 
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
@@ -16,6 +17,7 @@ import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioSubtitle
 import org.apache.commons.io.FilenameUtils
+import rx.android.schedulers.AndroidSchedulers
 
 abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCallbacks {
 
@@ -32,15 +34,13 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     }
 
     override fun load(file: PutioFile, url: String, utils: PutioUtils) {
-        if (castContext == null || castSession == null) {
-            utils.getStreamUrlAndPlay(this, file, url)
-        } else {
+        if (castContext != null && castSession != null && castSession!!.remoteMediaClient != null && castSession!!.isConnected) {
             fun play(subtitles: List<PutioSubtitle>? = null) {
                 val metaData = MediaMetadata(
                         if (file.isVideo)
-                    MediaMetadata.MEDIA_TYPE_MOVIE
-                else
-                    MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
+                            MediaMetadata.MEDIA_TYPE_MOVIE
+                        else
+                            MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
                 val title = FilenameUtils.removeExtension(file.name).let {
                     if (it.length <= 18) {
                         it
@@ -80,6 +80,8 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
             } else {
                 play()
             }
+        } else {
+            utils.getStreamUrlAndPlay(this, file, url)
         }
     }
 }

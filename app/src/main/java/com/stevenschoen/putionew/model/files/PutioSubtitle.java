@@ -28,7 +28,7 @@ public class PutioSubtitle {
     }
 
     public String getUrl(String format, long fileId, String tokenWithStuff) {
-        return PutioUtils.baseUrl + "/files/" + fileId + "/subtitles/" + getKey() + tokenWithStuff
+        return PutioUtils.baseUrl + "files/" + fileId + "/subtitles/" + getKey() + tokenWithStuff
                 + "&format=" + format;
     }
 }

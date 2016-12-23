@@ -10,10 +10,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.*
 import com.stevenschoen.putionew.PutioApplication.CastCallbacks
@@ -29,7 +26,7 @@ class FileDetailsFragment : RxFragment() {
         val EXTRA_FILE = "file"
 
         val FRAGTAG_RENAME = "rename"
-        val FRAGTAG_DELETE = "delete";
+        val FRAGTAG_DELETE = "delete"
 
         fun newInstance(context: Context, file: PutioFile): FileDetailsFragment {
             if (file.isFolder) {
@@ -235,7 +232,9 @@ class FileDetailsFragment : RxFragment() {
                         PutioApplication.get(context).putioUtils.restInterface
                                 .renameFile(file.id, newName)
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe()
+                                .subscribe({ }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                                })
                     }
                 }
             }

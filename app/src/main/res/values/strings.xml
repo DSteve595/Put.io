@@ -67,6 +67,7 @@
     <string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
     <string name="couldntgetdownloadlink">There was a problem getting the download link.</string>
     <string name="noactivityfound">No installed apps can open this.</string>
+    <string name="network_error">Network error!</string>
 
     <!-- Other stuff -->
     <string name="account">Account</string>

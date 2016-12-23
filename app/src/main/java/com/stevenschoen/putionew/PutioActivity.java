@@ -66,6 +66,7 @@ public class PutioActivity extends BaseCastActivity {
             Intent tvIntent = new Intent(this, TvActivity.class);
             startActivity(tvIntent);
             finish();
+			return;
         }
 
         PutioApplication application = (PutioApplication) getApplication();

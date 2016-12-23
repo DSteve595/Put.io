@@ -23,8 +23,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 105
-        versionName '4.0.3'
+        versionCode 106
+        versionName '4.0.4'
         multiDexEnabled true
     }
     buildTypes {
