@@ -132,6 +132,8 @@
 		<item name="colorAccent">@color/putio_accent</item>
 
 		<item name="android:windowLightStatusBar">true</item>
+
+		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
 	</style>
 
 	<style name="Putio.CastMiniController" parent="CastMiniController">

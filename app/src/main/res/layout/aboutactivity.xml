@@ -14,10 +14,11 @@
 		android:tag="about"
 		tools:layout="@layout/about"/>
 
-	<fragment
-		android:id="@+id/about_cast"
-		class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+	<FrameLayout
+		android:id="@+id/about_castbar_holder"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content">
+
+	</FrameLayout>
 
 </LinearLayout>

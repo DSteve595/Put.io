@@ -226,10 +226,13 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         PutioApplication.get(context).putioUtils.restInterface
                                 .renameFile(getCheckedFiles().first().id, newName)
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
+                                .subscribe({
                                     filesAdapter!!.clearChecked()
                                     refresh()
-                                }
+                                }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                                    error.printStackTrace()
+                                })
                     }
                 }
             }
@@ -244,9 +247,11 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         val filename = checkedFiles.take(5).joinToString(separator = ", ", transform = { it.name }) + ".zip"
                         PutioUtils.download(activity,
                                 Uri.parse(PutioApplication.get(context).putioUtils.getZipDownloadUrl(*filesAdapter!!.checkedIds.toLongArray())), filename)
-                                .subscribe {
+                                .subscribe({
                                     Toast.makeText(context, getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show()
-                                }
+                                }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                                })
                     }
                     override fun onCanceled() { }
                 }
@@ -258,10 +263,12 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         PutioApplication.get(context).putioUtils.restInterface
                                 .deleteFile(PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()))
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
+                                .subscribe({
                                     filesAdapter!!.clearChecked()
                                     refresh()
-                                }
+                                }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                                })
                     }
                 }
             }

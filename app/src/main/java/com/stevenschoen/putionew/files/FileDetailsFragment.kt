@@ -127,9 +127,11 @@ class FileDetailsFragment : RxFragment() {
             }
             textMp4Available = infoMp4Available.findViewById(R.id.text_fileinfo_mp4) as TextView
             infoMp4NotAvailable.setOnClickListener { view ->
-                PutioApplication.get(context).putioUtils.restInterface.convertToMp4(file.id).subscribe() {
+                PutioApplication.get(context).putioUtils.restInterface.convertToMp4(file.id).subscribe({
                     mp4StatusLoader!!.startRefreshing()
-                }
+                }, { error ->
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                })
                 updateMp4View(null)
                 view.isEnabled = false
             }
@@ -205,17 +207,21 @@ class FileDetailsFragment : RxFragment() {
             screenshotLoader!!.load(true)
             screenshotLoader!!.screenshot()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
+                    .subscribe({
                         it?.let { updateImagePreview(it, true) }
-                    }
+                    }, { error ->
+                        Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                    })
 
             if (file.isVideo) {
                 mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
                 mp4StatusLoader!!.mp4Status()
                         .bindToLifecycle(this)
-                        .subscribe { status ->
+                        .subscribe({ status ->
                             updateMp4View(status)
-                        }
+                        }, { error ->
+                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                        })
                 mp4StatusLoader!!.refreshOnce()
             }
         }
@@ -245,9 +251,12 @@ class FileDetailsFragment : RxFragment() {
                         PutioApplication.get(context).putioUtils.restInterface
                                 .deleteFile(file.id.toString())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
+                                .subscribe({
                                     callbacks!!.onFileDetailsClosed(true)
-                                }
+                                }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                                    error.printStackTrace()
+                                })
                     }
                 }
             }

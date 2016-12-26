@@ -37,11 +37,6 @@
 		android:layout_alignParentBottom="true"
 		android:background="#F8F8F8"
 		android:elevation="@dimen/appBarElevation">
-
-		<fragment
-			class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
 	</FrameLayout>
 
 	<android.support.design.widget.AppBarLayout

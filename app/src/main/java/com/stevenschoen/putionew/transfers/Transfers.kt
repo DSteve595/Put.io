@@ -11,8 +11,11 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.stevenschoen.putionew.*
+import com.stevenschoen.putionew.PutioApplication
+import com.stevenschoen.putionew.PutioTransfersService
 import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder
+import com.stevenschoen.putionew.PutioUtils
+import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.responses.BasePutioResponse
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
 import com.trello.rxlifecycle.components.support.RxFragment

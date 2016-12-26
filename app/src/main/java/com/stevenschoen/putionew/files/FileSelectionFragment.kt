@@ -86,7 +86,7 @@ class FileSelectionFragment : Fragment() {
         }
         amountSelected
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(::updateAmount)
+                .subscribe(::updateAmount, { error -> Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()})
 
         return view
     }

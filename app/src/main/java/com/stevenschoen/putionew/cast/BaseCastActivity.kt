@@ -1,9 +1,10 @@
 package com.stevenschoen.putionew.cast
 
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
+import android.view.ViewGroup
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.MediaTrack
@@ -17,14 +18,34 @@ import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioSubtitle
 import org.apache.commons.io.FilenameUtils
-import rx.android.schedulers.AndroidSchedulers
 
 abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCallbacks {
+
+    companion object {
+        const val FRAGTAG_CAST_MINI_CONTROLLER = "mini_cast"
+    }
 
     protected val castContext: CastContext?
         get() = CastContext.getSharedInstance(this)
     protected val castSession: CastSession?
         get() = castContext?.sessionManager?.currentCastSession
+
+    open val castMiniControllerContainerId: Int? = null
+    var inflatedCastMiniController = false
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        castMiniControllerContainerId?.let { containerId ->
+            if (CastOptionsProvider.isCastSdkAvailable(this@BaseCastActivity)) {
+                if (!inflatedCastMiniController) {
+                    val holder = findViewById(containerId) as ViewGroup
+                    layoutInflater.inflate(R.layout.cast_mini_controller_putio, holder)
+                    inflatedCastMiniController = true
+                }
+            }
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_cast, menu)

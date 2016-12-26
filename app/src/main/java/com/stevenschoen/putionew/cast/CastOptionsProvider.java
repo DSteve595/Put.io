@@ -7,6 +7,8 @@ import com.google.android.gms.cast.framework.OptionsProvider;
 import com.google.android.gms.cast.framework.SessionProvider;
 import com.google.android.gms.cast.framework.media.CastMediaOptions;
 import com.google.android.gms.cast.framework.media.NotificationOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.stevenschoen.putionew.ExpandedControlsActivity;
 
 import java.util.List;
@@ -33,5 +35,9 @@ public class CastOptionsProvider implements OptionsProvider {
 	@Override
 	public List<SessionProvider> getAdditionalSessionProviders(Context context) {
 		return null;
+	}
+
+	public static boolean isCastSdkAvailable(Context context) {
+		return (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
 	}
 }

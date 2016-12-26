@@ -35,6 +35,7 @@ class FileScreenshotLoader(context: Context, val file: PutioFile) : PutioBaseLoa
             screenshotSubject.onNext(response)
         }, { error ->
             subscription = null
+            screenshotSubject.onError(error)
             error.printStackTrace()
         })
     }

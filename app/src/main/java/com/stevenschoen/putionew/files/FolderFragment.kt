@@ -117,11 +117,13 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                                 .createFolder(folderName, folder.id)
                                 .bindToLifecycle(this@FolderFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe { response ->
+                                .subscribe({ response ->
                                     if (response.status == "OK") {
                                         folderLoader!!.refreshFolder(false)
                                     }
-                                }
+                                }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                                })
                     }
                 }
             }
@@ -133,7 +135,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
         folderLoader = FolderLoader.get(loaderManager, context, folder)
         folderLoader!!.folder()
                 .bindToLifecycle(this)
-                .subscribe { response ->
+                .subscribe({ response ->
                     files.clear()
                     files.addAll(response.files)
                     filesAdapter!!.notifyDataSetChanged()
@@ -141,7 +143,9 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                         swipeRefreshView.isRefreshing = false
                     }
                     updateViewState()
-                }
+                }, { error ->
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                })
         folderLoader!!.getCachedFile()
         folderLoader!!.refreshFolder(onlyIfStaleOrEmpty = true)
         updateViewState()
@@ -172,6 +176,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                                 .subscribe({ fileChangingResponse ->
                                     folderLoader!!.refreshFolder()
                                 }, { error ->
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                     error.printStackTrace()
                                 })
 

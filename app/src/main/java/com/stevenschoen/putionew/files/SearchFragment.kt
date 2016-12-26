@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
@@ -47,13 +48,15 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
         searchLoader = SearchLoader.get(loaderManager, context, parentFolder, query)
         searchLoader!!.search()
                 .bindToLifecycle(this)
-                .subscribe { response ->
+                .subscribe({ response ->
                     files.clear()
                     files.addAll(response)
                     filesAdapter!!.notifyDataSetChanged()
                     swipeRefreshView.isRefreshing = false
                     updateViewState()
-                }
+                }, { error ->
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                })
         searchLoader!!.refreshSearch(onlyIfEmpty = true)
         updateViewState()
     }

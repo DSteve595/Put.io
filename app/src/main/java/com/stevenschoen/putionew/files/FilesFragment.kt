@@ -293,7 +293,7 @@ open class FilesFragment : RxFragment() {
             if (position >= count) {
                 childFragmentManager.beginTransaction()
                         .remove(`object` as Fragment)
-                        .commit()
+                        .commitNow()
             }
             fragments.removeAt(position)
         }

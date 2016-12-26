@@ -23,8 +23,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 106
-        versionName '4.0.4'
+        versionCode 107
+        versionName '4.0.5'
         multiDexEnabled true
     }
     buildTypes {
@@ -68,20 +68,20 @@ dependencies {
         transitive = true;
     }
     compile 'commons-io:commons-io:2.5'
-    compile 'joda-time:joda-time:2.9.6'
+    compile 'joda-time:joda-time:2.9.7'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.trello:rxlifecycle:1.0'
     compile 'com.trello:rxlifecycle-components:1.0'
     compile 'com.trello:rxlifecycle-kotlin:1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.2'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
+    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0@aar'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.aurelhubert:ahbottomnavigation:2.0.1'
+    compile 'com.aurelhubert:ahbottomnavigation:2.0.2'
 }
 repositories {
     mavenCentral()

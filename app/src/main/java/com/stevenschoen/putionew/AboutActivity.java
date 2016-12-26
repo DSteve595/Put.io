@@ -30,4 +30,9 @@ public class AboutActivity extends BaseCastActivity {
 		}
 		return (super.onOptionsItemSelected(menuItem));
 	}
+
+	@Override
+	public Integer getCastMiniControllerContainerId() {
+		return R.id.about_castbar_holder;
+	}
 }

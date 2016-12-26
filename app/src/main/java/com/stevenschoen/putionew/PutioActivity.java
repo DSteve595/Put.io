@@ -97,6 +97,8 @@ public class PutioActivity extends BaseCastActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+
         handleIntent(intent);
     }
 
@@ -422,7 +424,12 @@ public class PutioActivity extends BaseCastActivity {
         super.onDestroy();
     }
 
-    public void checkCacheSize() {
+	@Override
+	public Integer getCastMiniControllerContainerId() {
+		return R.id.holder_castbar;
+	}
+
+	public void checkCacheSize() {
         int maxSize = sharedPrefs.getInt("maxCacheSizeMb", 20);
         File cache = getCacheDir();
         if (FileUtils.sizeOf(cache) >= (FileUtils.ONE_MB * maxSize)) {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
-import android.util.Log
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.stevenschoen.putionew.PutioBaseLoader
@@ -38,12 +37,15 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         }
                 .filter { it != null }
                 .subscribeOn(Schedulers.io())
-                .subscribe { cachedResponse ->
+                .subscribe({ cachedResponse ->
                     cachedResponse!!
                     if (!folderSubject.hasValue() || !folderSubject.value.fresh) {
                         folderSubject.onNext(FolderResponse(false, cachedResponse.parent, cachedResponse.files))
                     }
-                }
+                }, { error ->
+                    error.printStackTrace()
+                    diskCache.deleteCached(folder.id)
+                })
     }
 
     var refreshSubscription: Subscription? = null
@@ -56,7 +58,8 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
             folderSubject.onNext(FolderResponse(true, response.parent, response.files))
         }, { error ->
             refreshSubscription = null
-            Log.d("asdf", "error: $error")
+            folderSubject?.onError(error)
+            error.printStackTrace()
         })
     }
 
@@ -100,6 +103,11 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
             }
 
             return null
+        }
+
+        fun deleteCached(parentId: Long) {
+            val file = getFile(parentId)
+            file.delete()
         }
 
         private fun getFile(parentId: Long): File {
