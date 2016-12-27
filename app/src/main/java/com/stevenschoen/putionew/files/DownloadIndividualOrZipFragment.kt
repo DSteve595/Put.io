@@ -2,14 +2,14 @@ package com.stevenschoen.putionew.files
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.stevenschoen.putionew.AutoExpandingBottomSheetDialogFragment
 import com.stevenschoen.putionew.R
 
-class DownloadIndividualOrZipFragment : BottomSheetDialogFragment() {
+class DownloadIndividualOrZipFragment : AutoExpandingBottomSheetDialogFragment() {
 
     var callbacks: Callbacks? = null
 

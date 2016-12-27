@@ -1,13 +1,13 @@
 package com.stevenschoen.putionew.transfers
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.stevenschoen.putionew.AutoExpandingBottomSheetDialogFragment
 import com.stevenschoen.putionew.R
 
-class AddTransferPickTypeFragment : BottomSheetDialogFragment() {
+class AddTransferPickTypeFragment : AutoExpandingBottomSheetDialogFragment() {
 
     var callbacks: Callbacks? = null
 

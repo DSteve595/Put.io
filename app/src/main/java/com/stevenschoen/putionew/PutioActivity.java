@@ -20,7 +20,7 @@ import android.view.View.OnClickListener;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.stevenschoen.putionew.activities.Login;
+import com.stevenschoen.putionew.activities.LoginActivity;
 import com.stevenschoen.putionew.cast.BaseCastActivity;
 import com.stevenschoen.putionew.files.FilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
@@ -50,7 +50,6 @@ public class PutioActivity extends BaseCastActivity {
     private SharedPreferences sharedPrefs;
 
     public static final String checkCacheSizeIntent = "com.stevenschoen.putionew.checkcachesize";
-    public static final String fileDownloadUpdateIntent = "com.stevenschoen.putionew.filedownloadupdate";
     public static final String noNetworkIntent = "com.stevenschoen.putionew.nonetwork";
 
 	private AHBottomNavigation bottomNavView;
@@ -73,7 +72,7 @@ public class PutioActivity extends BaseCastActivity {
         if (application.isLoggedIn()) {
             init(savedInstanceState);
         } else {
-            Intent setupIntent = new Intent(this, Login.class);
+            Intent setupIntent = new Intent(this, LoginActivity.class);
             startActivity(setupIntent);
 
             finish();

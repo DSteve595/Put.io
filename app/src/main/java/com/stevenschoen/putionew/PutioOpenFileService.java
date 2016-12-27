@@ -17,8 +17,6 @@ public class PutioOpenFileService extends Service {
 	int id;
 	String filename;
 	int mode;
-	
-	IntentFilter fileDownloadUpdateIntentFilter = new IntentFilter(PutioActivity.fileDownloadUpdateIntent);
 
 	@Override
 	public void onCreate() {
@@ -33,14 +31,14 @@ public class PutioOpenFileService extends Service {
 		this.id = intent.getExtras().getInt("id");
 		this.filename = intent.getExtras().getString("filename");
 		this.mode = intent.getExtras().getInt("mode");
-		
+
 		IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
 		registerReceiver(downloadReceiver, intentFilter);
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		return Service.START_STICKY;
 	}
-	
+
 	private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {

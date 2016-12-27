@@ -60,7 +60,7 @@
 				android:name="android.app.default_searchable"
 				android:value=".activities.Putio"/>
 		</activity>
-		<activity android:name=".activities.Login"/>
+		<activity android:name=".activities.LoginActivity"/>
 		<activity
 			android:name=".activities.FileFinished"
 			android:theme="@style/Putio.Dialog"/>
