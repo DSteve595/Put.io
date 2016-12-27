@@ -18,6 +18,7 @@ import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle.components.support.RxFragment
+import com.trello.rxlifecycle.kotlin.bindToLifecycle
 import rx.android.schedulers.AndroidSchedulers
 import java.util.*
 
@@ -225,13 +226,14 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                     override fun onRenamed(newName: String) {
                         PutioApplication.get(context).putioUtils.restInterface
                                 .renameFile(getCheckedFiles().first().id, newName)
+                                .bindToLifecycle(this@FileListFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
                                     filesAdapter!!.clearChecked()
                                     refresh()
                                 }, { error ->
-                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                     error.printStackTrace()
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
                 }
@@ -250,6 +252,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                                 .subscribe({
                                     Toast.makeText(context, getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show()
                                 }, { error ->
+                                    error.printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
@@ -262,11 +265,13 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                     override fun onDeleteSelected() {
                         PutioApplication.get(context).putioUtils.restInterface
                                 .deleteFile(PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()))
+                                .bindToLifecycle(this@FileListFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
                                     filesAdapter!!.clearChecked()
                                     refresh()
                                 }, { error ->
+                                    error.printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }

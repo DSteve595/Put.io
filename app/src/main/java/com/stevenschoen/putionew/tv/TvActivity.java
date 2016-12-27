@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import com.stevenschoen.putionew.PutioApplication;
 import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
-import com.stevenschoen.putionew.activities.Login;
+import com.stevenschoen.putionew.activities.LoginActivity;
 
 /**
  * Created by simonreggiani on 15-01-10.
@@ -23,7 +23,7 @@ public class TvActivity extends FragmentActivity {
         if (application.isLoggedIn()) {
             init();
         } else {
-            Intent setupIntent = new Intent(this, Login.class);
+            Intent setupIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(setupIntent, 0);
         }
 

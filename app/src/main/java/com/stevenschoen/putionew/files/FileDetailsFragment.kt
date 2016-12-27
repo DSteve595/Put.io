@@ -127,11 +127,16 @@ class FileDetailsFragment : RxFragment() {
             }
             textMp4Available = infoMp4Available.findViewById(R.id.text_fileinfo_mp4) as TextView
             infoMp4NotAvailable.setOnClickListener { view ->
-                PutioApplication.get(context).putioUtils.restInterface.convertToMp4(file.id).subscribe({
-                    mp4StatusLoader!!.startRefreshing()
-                }, { error ->
-                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                })
+                PutioApplication.get(context).putioUtils.restInterface
+                        .convertToMp4(file.id)
+                        .bindToLifecycle(this@FileDetailsFragment)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            mp4StatusLoader!!.startRefreshing()
+                        }, { error ->
+                            error.printStackTrace()
+                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                        })
                 updateMp4View(null)
                 view.isEnabled = false
             }
@@ -206,20 +211,24 @@ class FileDetailsFragment : RxFragment() {
             screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
             screenshotLoader!!.load(true)
             screenshotLoader!!.screenshot()
+                    .bindToLifecycle(this@FileDetailsFragment)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         it?.let { updateImagePreview(it, true) }
                     }, { error ->
+                        error.printStackTrace()
                         Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                     })
 
             if (file.isVideo) {
                 mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
                 mp4StatusLoader!!.mp4Status()
-                        .bindToLifecycle(this)
+                        .bindToLifecycle(this@FileDetailsFragment)
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ status ->
                             updateMp4View(status)
                         }, { error ->
+                            error.printStackTrace()
                             Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                         })
                 mp4StatusLoader!!.refreshOnce()
@@ -239,6 +248,7 @@ class FileDetailsFragment : RxFragment() {
                                 .renameFile(file.id, newName)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ }, { error ->
+                                    error.printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
@@ -250,12 +260,13 @@ class FileDetailsFragment : RxFragment() {
                     override fun onDeleteSelected() {
                         PutioApplication.get(context).putioUtils.restInterface
                                 .deleteFile(file.id.toString())
+                                .bindToLifecycle(this@FileDetailsFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
                                     callbacks!!.onFileDetailsClosed(true)
                                 }, { error ->
-                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                     error.printStackTrace()
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
                 }

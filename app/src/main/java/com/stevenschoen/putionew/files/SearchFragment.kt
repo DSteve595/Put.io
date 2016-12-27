@@ -55,6 +55,7 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
                     swipeRefreshView.isRefreshing = false
                     updateViewState()
                 }, { error ->
+                    error.printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
         searchLoader!!.refreshSearch(onlyIfEmpty = true)

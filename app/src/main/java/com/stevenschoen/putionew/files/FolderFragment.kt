@@ -122,6 +122,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                                         folderLoader!!.refreshFolder(false)
                                     }
                                 }, { error ->
+                                    error.printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
@@ -144,6 +145,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                     }
                     updateViewState()
                 }, { error ->
+                    error.printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
         folderLoader!!.getCachedFile()
@@ -169,15 +171,15 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                 if (resultCode == Activity.RESULT_OK) {
                     view?.post {
                         val destinationFolder = data!!.getParcelableExtra<PutioFile>(DestinationFolderActivity.RESULT_EXTRA_FOLDER)
-                        PutioApplication.get(context).putioUtils.restInterface.moveFile(
-                                PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()), destinationFolder.id)
+                        PutioApplication.get(context).putioUtils.restInterface
+                                .moveFile(PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()), destinationFolder.id)
                                 .bindToLifecycle(this@FolderFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ fileChangingResponse ->
                                     folderLoader!!.refreshFolder()
                                 }, { error ->
-                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                     error.printStackTrace()
+                                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
 
                     }
