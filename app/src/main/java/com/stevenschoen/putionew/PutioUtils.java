@@ -55,6 +55,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -199,14 +200,13 @@ public class PutioUtils {
 			public void call(long[] downloadIds) {
 				switch (actionWhenDone) {
 					case ACTION_OPEN:
+						if (files.length > 1) {
+							throw new IllegalArgumentException("Download started with ACTION_OPEN but more than one file: " + Arrays.toString(files));
+						}
 						Intent serviceOpenIntent = new Intent(activity, PutioOpenFileService.class);
-						serviceOpenIntent.putExtra("downloadIds", downloadIds);
-						serviceOpenIntent.putExtra("id", files[0].id);
-						serviceOpenIntent.putExtra("filename", files[0].name);
-						serviceOpenIntent.putExtra("mode", actionWhenDone);
+						serviceOpenIntent.putExtra(PutioOpenFileService.EXTRA_DOWNLOAD_ID, downloadIds[0]);
 						activity.startService(serviceOpenIntent);
-						Toast.makeText(activity, activity.getString(R.string.downloadwillopen),
-								Toast.LENGTH_LONG).show();
+						Toast.makeText(activity, activity.getString(R.string.downloadwillopen), Toast.LENGTH_LONG).show();
 						break;
 					case ACTION_NOTHING:
 						Toast.makeText(activity, activity.getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();

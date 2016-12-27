@@ -60,9 +60,10 @@
 				android:name="android.app.default_searchable"
 				android:value=".activities.Putio"/>
 		</activity>
-		<activity android:name=".activities.LoginActivity"/>
+		<activity android:name=".LoginActivity"/>
 		<activity
-			android:name=".activities.FileFinished"
+			android:label="@string/downloadfinishedopentitle"
+			android:name=".files.FileFinishedActivity"
 			android:theme="@style/Putio.Dialog"/>
 		<activity
 			android:name=".transfers.AddTransferActivity"

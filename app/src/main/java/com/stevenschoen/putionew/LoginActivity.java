@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew.activities;
+package com.stevenschoen.putionew;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,9 +14,6 @@ import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import com.stevenschoen.putionew.PutioActivity;
-import com.stevenschoen.putionew.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

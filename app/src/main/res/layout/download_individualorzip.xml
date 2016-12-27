@@ -7,8 +7,10 @@
 
 	<android.support.v7.widget.Toolbar
 		android:id="@+id/download_individualorzip_toolbar"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
 		app:navigationIcon="@drawable/ic_toolbar_nav_close_black"
 		app:title="@string/download_files"/>
 
@@ -32,7 +34,7 @@
 		android:layout_marginBottom="16dp"
 		android:layout_marginTop="32dp"
 		android:text="@string/zip"
-		app:layout_constraintBottom_toBottomOf="@+id/download_individualorzip_root"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="@+id/download_individualorzip_root"
 		app:layout_constraintTop_toBottomOf="@+id/download_individualorzip_body"/>
 

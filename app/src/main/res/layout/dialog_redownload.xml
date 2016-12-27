@@ -1,42 +1,43 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="12dp">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingTop="12dp">
 
-    <TextView
-        android:id="@+id/text_redownloadbody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="?attr/dialogPreferredPadding"
-        android:layout_marginRight="?attr/dialogPreferredPadding"
-        android:text="@string/redownloadfordlbody" />
+	<TextView
+		android:id="@+id/text_redownloadbody"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="?attr/dialogPreferredPadding"
+		android:layout_marginRight="?attr/dialogPreferredPadding"
+		android:text="@string/redownloadfordlbody"/>
 
-    <LinearLayout
-        android:id="@+id/buttonbar"
-        style="@style/ButtonBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_redownloadbody">
+	<LinearLayout
+		android:id="@+id/buttonbar"
+		style="@style/ButtonBar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/text_redownloadbody">
 
-        <Button
-            android:id="@+id/button_redownload_cancel"
-            style="@style/ButtonBar.Button.Transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel" />
+		<Button
+			android:id="@+id/button_redownload_cancel"
+			style="@style/ButtonBar.Button.Transparent"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/cancel"/>
 
-        <Button
-            android:id="@+id/button_redownload_download"
-            style="@style/ButtonBar.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/redownload" />
+		<Button
+			android:id="@+id/button_redownload_download"
+			style="@style/ButtonBar.Button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/redownload"/>
 
-        <Button
-            android:id="@+id/button_redownload_open"
-            style="@style/ButtonBar.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/open" />
-    </LinearLayout>
+		<Button
+			android:id="@+id/button_redownload_open"
+			style="@style/ButtonBar.Button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/open"/>
+	</LinearLayout>
 </RelativeLayout>

@@ -154,7 +154,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             val downloadFragment = Fragment.instantiate(context, DownloadIndividualOrZipFragment::class.java.name) as DownloadIndividualOrZipFragment
             downloadFragment.show(childFragmentManager, FolderFragment.FRAGTAG_DOWNLOAD_INDIVIDUALORZIP)
         } else if (checkedFiles.size == 1) {
-            PutioApplication.get(context).putioUtils.downloadFiles(activity, PutioUtils.ACTION_NOTHING, *checkedFiles.toTypedArray())
+            PutioApplication.get(context).putioUtils.downloadFiles(activity, PutioUtils.ACTION_NOTHING, checkedFiles.first())
         } else {
             throw IllegalStateException("Download started with no file IDs!")
         }
@@ -198,7 +198,6 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                     }
                     override fun onDownloadSelected() {
                         selectionDownloadFiles()
-                        filesAdapter!!.clearChecked()
                     }
                     override fun onCopyLinkSelected() {
                         selectionCopyLinks()
@@ -243,6 +242,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 childFragment.callbacks = object : DownloadIndividualOrZipFragment.Callbacks {
                     override fun onIndividualSelected() {
                         PutioApplication.get(context).putioUtils.downloadFiles(activity, PutioUtils.ACTION_NOTHING, *getCheckedFiles().toTypedArray())
+                        filesAdapter!!.clearChecked()
                     }
                     override fun onZipSelected() {
                         val checkedFiles = getCheckedFiles()
@@ -255,6 +255,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                                     error.printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
+                        filesAdapter!!.clearChecked()
                     }
                     override fun onCanceled() { }
                 }

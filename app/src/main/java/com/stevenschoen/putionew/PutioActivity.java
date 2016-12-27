@@ -20,7 +20,6 @@ import android.view.View.OnClickListener;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.stevenschoen.putionew.activities.LoginActivity;
 import com.stevenschoen.putionew.cast.BaseCastActivity;
 import com.stevenschoen.putionew.files.FilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
