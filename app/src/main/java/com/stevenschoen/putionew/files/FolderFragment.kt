@@ -19,36 +19,6 @@ import rx.android.schedulers.AndroidSchedulers
 
 class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
 
-    companion object {
-        const val EXTRA_FOLDER = "folder"
-        const val EXTRA_PAD_FOR_FAB = "padforfab"
-        const val EXTRA_SHOW_SEARCH = "show_search"
-        const val EXTRA_SHOW_CREATEFOLDER = "show_createfolder"
-
-        const val REQUEST_CHOOSE_MOVE_DESTINATION = 1
-
-        const val FRAGTAG_SELECTION = "selection"
-        const val FRAGTAG_RENAME = "rename"
-        const val FRAGTAG_DOWNLOAD_INDIVIDUALORZIP = "dl_indivorzip"
-        const val FRAGTAG_DELETE = "delete"
-        const val FRAGTAG_CREATE_FOLDER = "create_folder"
-
-        fun newInstance(context: Context, folder: PutioFile,
-                        canSelect: Boolean,
-                        padForFab: Boolean, showSearch: Boolean, showCreateFolder: Boolean): FolderFragment {
-            if (!folder.isFolder) {
-                throw IllegalStateException("FolderFragment created on a file, not a folder: ${folder.name} (ID ${folder.id})")
-            }
-            val args = Bundle()
-            args.putParcelable(EXTRA_FOLDER, folder)
-            args.putBoolean(EXTRA_PAD_FOR_FAB, padForFab)
-            args.putBoolean(EXTRA_SHOW_SEARCH, showSearch)
-            args.putBoolean(EXTRA_SHOW_CREATEFOLDER, showCreateFolder)
-            return addArguments(Fragment.instantiate(context, FolderFragment::class.java.name, args) as FolderFragment,
-                    canSelect)
-        }
-    }
-
     val folder by lazy { arguments.getParcelable<PutioFile>(EXTRA_FOLDER) }
     val padForFab by lazy { arguments.getBoolean(EXTRA_PAD_FOR_FAB) }
     val showSearch by lazy { arguments.getBoolean(EXTRA_SHOW_SEARCH) }
@@ -195,5 +165,35 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     override fun isRefreshing(): Boolean {
         return folderLoader!!.isRefreshing()
+    }
+
+    companion object {
+        const val EXTRA_FOLDER = "folder"
+        const val EXTRA_PAD_FOR_FAB = "padforfab"
+        const val EXTRA_SHOW_SEARCH = "show_search"
+        const val EXTRA_SHOW_CREATEFOLDER = "show_createfolder"
+
+        const val REQUEST_CHOOSE_MOVE_DESTINATION = 1
+
+        const val FRAGTAG_SELECTION = "selection"
+        const val FRAGTAG_RENAME = "rename"
+        const val FRAGTAG_DOWNLOAD_INDIVIDUALORZIP = "dl_indivorzip"
+        const val FRAGTAG_DELETE = "delete"
+        const val FRAGTAG_CREATE_FOLDER = "create_folder"
+
+        fun newInstance(context: Context, folder: PutioFile,
+                        canSelect: Boolean,
+                        padForFab: Boolean, showSearch: Boolean, showCreateFolder: Boolean): FolderFragment {
+            if (!folder.isFolder) {
+                throw IllegalStateException("FolderFragment created on a file, not a folder: ${folder.name} (ID ${folder.id})")
+            }
+            val args = Bundle()
+            args.putParcelable(EXTRA_FOLDER, folder)
+            args.putBoolean(EXTRA_PAD_FOR_FAB, padForFab)
+            args.putBoolean(EXTRA_SHOW_SEARCH, showSearch)
+            args.putBoolean(EXTRA_SHOW_CREATEFOLDER, showCreateFolder)
+            return addArguments(Fragment.instantiate(context, FolderFragment::class.java.name, args) as FolderFragment,
+                    canSelect)
+        }
     }
 }

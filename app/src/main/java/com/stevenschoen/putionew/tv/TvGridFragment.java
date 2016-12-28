@@ -70,7 +70,7 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
     }
 
     private void loadFolder(PutioFile folder) {
-        mCurrentFolderId = folder.id;
+        mCurrentFolderId = folder.getId();
         loadFiles();
     }
 
@@ -116,7 +116,7 @@ public class TvGridFragment extends android.support.v17.leanback.app.VerticalGri
     }
 
     public void goBack() {
-        mCurrentFolderId = mCurrentFolder.parentId;
+        mCurrentFolderId = mCurrentFolder.getParentId();
         loadFiles();
     }
 }

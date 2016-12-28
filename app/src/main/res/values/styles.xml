@@ -8,6 +8,9 @@
 		<item name="dialogTheme">@style/Putio.Dialog</item>
 		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
 		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
+		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
+		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+
 
 		<item name="android:windowLightStatusBar">true</item>
 		<item name="android:windowBackground">@android:color/white</item>
@@ -24,6 +27,8 @@
 		<item name="dialogTheme">@style/Putio.Dialog</item>
 		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
 		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
+		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
+		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
 		<item name="android:windowLightStatusBar">true</item>
 
@@ -39,6 +44,8 @@
 		<item name="dialogTheme">@style/Putio.Dialog</item>
 		<item name="alertDialogTheme">@style/Putio.Dialog.Alert</item>
 		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
+		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
+		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
 		<item name="android:windowIsTranslucent">true</item>
 		<item name="android:windowBackground">@android:color/transparent</item>
@@ -54,12 +61,16 @@
 		<item name="colorAccent">@color/putio_accent</item>
 		<item name="colorButtonNormal">@color/putio_accent</item>
 		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
+		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
+		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 	</style>
 
 	<style name="Theme.Putio.DestinationFolder" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorAccent">@color/putio_accent</item>
 		<item name="colorButtonNormal">@color/putio_accent</item>
 		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
+		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
+		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 	</style>
 
 	<style name="Theme.Putio.CastPlayer" parent="Theme.AppCompat.NoActionBar"/>
@@ -93,10 +104,6 @@
 		<item name="android:paddingLeft">16dp</item>
 		<item name="android:paddingRight">16dp</item>
 		<item name="android:minWidth">48dp</item>
-	</style>
-
-	<style name="ButtonBar.Button.Transparent" parent="ButtonBar.Button">
-		<item name="android:background">@drawable/putio_clickable_rounded</item>
 	</style>
 
 	<style name="Theme.Putio.TransferViewButton" parent="Theme.Putio.Dark">
@@ -137,9 +144,15 @@
 		<item name="android:windowLightStatusBar">true</item>
 
 		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
+		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
+		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 	</style>
 
 	<style name="Putio.CastMiniController" parent="CastMiniController">
 		<item name="castProgressBarColor">?colorPrimary</item>
+	</style>
+
+	<style name="Putio.CastExpandedController" parent="CastExpandedController">
+		<item name="castControlButtons">@array/cast_expanded_controller_control_buttons</item>
 	</style>
 </resources>

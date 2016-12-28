@@ -165,7 +165,7 @@ class FileDetailsFragment : RxFragment() {
 
         val infoSize = holderInfo.findViewById(R.id.holder_fileinfo_size)
         val textSize = infoSize.findViewById(R.id.text_fileinfo_size) as TextView
-        textSize.text = PutioUtils.humanReadableByteCount(file.size, false)
+        textSize.text = PutioUtils.humanReadableByteCount(file.size!!, false)
 
         val infoCrc32 = holderInfo.findViewById(R.id.holder_fileinfo_crc32)
         val textCrc32 = infoCrc32.findViewById(R.id.text_fileinfo_crc32) as TextView
@@ -181,7 +181,7 @@ class FileDetailsFragment : RxFragment() {
                         if (mp4Status == PutioMp4Status.Status.Completed) {
                             mp4 = checkBoxMp4Available.isChecked
                         }
-                    } else if (file.isMp4Available) {
+                    } else if (file.isMp4Available!!) {
                         mp4 = checkBoxMp4Available.isChecked
                     }
                 }
@@ -331,7 +331,7 @@ class FileDetailsFragment : RxFragment() {
                     infoMp4Already.visibility = View.GONE
                     infoMp4Available.visibility = View.GONE
                     infoMp4Converting.visibility = View.VISIBLE
-                    infoMp4ConvertingText.text = getString(R.string.converting_mp4) + " (${status.percentDone}%)"
+                    infoMp4ConvertingText.text = "${getString(R.string.converting_mp4)} (${status.percentDone}%)"
                     infoMp4NotAvailable.visibility = View.GONE
                 }
                 PutioMp4Status.Status.Completed -> {

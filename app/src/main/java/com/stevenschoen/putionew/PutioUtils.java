@@ -50,16 +50,10 @@ import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -179,10 +173,10 @@ public class PutioUtils {
 		List<Observable<Long>> downloadIds = new ArrayList<>(files.length);
 		for (PutioFile file : files) {
 			if (file.isFolder()) {
-				long[] folder = new long[]{file.id};
-				downloadIds.add(downloadZipWithoutUrl(activity, folder, file.name));
+				long[] folder = new long[]{file.getId()};
+				downloadIds.add(downloadZipWithoutUrl(activity, folder, file.getName()));
 			} else {
-				downloadIds.add(downloadFileWithoutUrl(activity, file.id, file.name));
+				downloadIds.add(downloadFileWithoutUrl(activity, file.getId(), file.getName()));
 			}
 		}
 
@@ -304,7 +298,7 @@ public class PutioUtils {
 
 			for (int i = 0; i < subtitles.size(); i++) {
 				PutioSubtitle subtitle = subtitles.get(i);
-				subtitleUris[i] = Uri.parse(subtitle.getUrl(PutioSubtitle.FORMAT_SRT, file.id, tokenWithStuff));
+				subtitleUris[i] = Uri.parse(subtitle.getUrl(PutioSubtitle.FORMAT_SRT, file.getId(), tokenWithStuff));
 				subtitleNames[i] = subtitle.getLanguage();
 			}
 
@@ -350,7 +344,7 @@ public class PutioUtils {
 				}
 				result.url = finalUrl;
 
-				result.subtitles = getRestInterface().subtitles(file.id).toBlocking().first().getSubtitles();
+				result.subtitles = getRestInterface().subtitles(file.getId()).toBlocking().first().getSubtitles();
 
 				return result;
 			}
@@ -365,9 +359,9 @@ public class PutioUtils {
 					e.printStackTrace();
 				}
 				int type;
-				if (file.contentType.contains("audio")) {
+				if (file.getContentType().contains("audio")) {
 					type = PutioUtils.TYPE_AUDIO;
-				} else if (file.contentType.contains("video")) {
+				} else if (file.getContentType().contains("video")) {
 					type = PutioUtils.TYPE_VIDEO;
 				} else {
 					type = PutioUtils.TYPE_VIDEO;
@@ -385,26 +379,8 @@ public class PutioUtils {
 		List<PutioSubtitle> subtitles;
 	}
 
-	public InputStream getDefaultSubtitleData(long id) throws SocketTimeoutException {
-		URL url = null;
-		try {
-			url = new URL(baseUrl + "/files/" + id + "/subtitles/default" + tokenWithStuff + "&format=webvtt");
-			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setConnectTimeout(8000);
-
-			return connection.getInputStream();
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		} catch (SocketTimeoutException e) {
-			throw new SocketTimeoutException();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public void copyDownloadLink(final Context context, PutioFile file) {
-		String url = baseUrl + "/files/" + file.id + "/download" + tokenWithStuff;
+		String url = baseUrl + "files/" + file.getId() + "/download" + tokenWithStuff;
 		copy(context, "Download link", url);
 		Toast.makeText(context, context.getString(R.string.readytopaste),
 				Toast.LENGTH_SHORT).show();
@@ -413,7 +389,7 @@ public class PutioUtils {
 	public void copyZipDownloadLink(Context context, PutioFile... files) {
 		long[] fileIds = new long[files.length];
 		for (int i = 0; i < files.length; i++) {
-			fileIds[i] = files[i].id;
+			fileIds[i] = files[i].getId();
 		}
 		String url = getZipDownloadUrl(fileIds);
 		copy(context, "Download link", url);
@@ -443,12 +419,12 @@ public class PutioUtils {
 	}
 
 	public String getFileDownloadUrl(long id) {
-		return baseUrl + "/files/" + id + "/download" + tokenWithStuff;
+		return baseUrl + "files/" + id + "/download" + tokenWithStuff;
 	}
 
 	public String getZipDownloadUrl(long... ids) {
 		String idsString = longsToString(ids);
-		return baseUrl + "/files/zip?file_ids=" + idsString + tokenWithStuff.replace("?", "&"); // TODO hacky
+		return baseUrl + "files/zip?file_ids=" + idsString + tokenWithStuff.replace("?", "&"); // TODO hacky
 	}
 
 	public static boolean idIsDownloaded(long id) {

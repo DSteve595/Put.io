@@ -15,7 +15,7 @@
 		android:layout_width="36dp"
 		android:layout_height="36dp"
 		android:scaleType="centerCrop"
-		tools:src="@drawable/ic_launcher"/>
+		tools:src="@drawable/ic_putio_folder_accent"/>
 
 	<LinearLayout
 		android:layout_width="0dp"

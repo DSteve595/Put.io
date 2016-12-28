@@ -239,11 +239,10 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
     private void updatePlaybackRow() {
         if (mPlaybackControlsRow.getItem() != null) {
             PutioFile item = (PutioFile) mPlaybackControlsRow.getItem();
-            item.name = mFile.name;
         }
         if (SHOW_IMAGE) {
             mPlaybackControlsRowTarget = new PicassoPlaybackControlsRowTarget(mPlaybackControlsRow);
-            updateVideoImage(URI.create(mFile.screenshot));
+            updateVideoImage(URI.create(mFile.getScreenshot()));
         }
         mRowsAdapter.notifyArrayItemRangeChanged(0, 1);
         mPlaybackControlsRow.setTotalTime(getDuration());
@@ -346,8 +345,8 @@ public class TvPlaybackOverlayFragment extends android.support.v17.leanback.app.
         @Override
         protected void onBindDescription(ViewHolder viewHolder, Object item) {
             PutioFile file = (PutioFile) item;
-            viewHolder.getTitle().setText(file.name);
-            viewHolder.getSubtitle().setText(PutioUtils.humanReadableByteCount(file.size, false));
+            viewHolder.getTitle().setText(file.getName());
+            viewHolder.getSubtitle().setText(PutioUtils.humanReadableByteCount(file.getSize(), false));
         }
     }
 

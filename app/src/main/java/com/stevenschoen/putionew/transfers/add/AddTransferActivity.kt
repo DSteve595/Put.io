@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew.transfers
+package com.stevenschoen.putionew.transfers.add
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -18,6 +18,7 @@ import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.PutioUploadInterface
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.transfers.TransfersActivity
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -27,21 +28,10 @@ import java.io.IOException
 
 class AddTransferActivity : AppCompatActivity() {
 
-    companion object {
-        const val EXTRA_DESTINATION_FOLDER = "dest_folder"
+    var prechosenDestinationFolder: PutioFile? = null
 
-        const val FRAGTAG_ADDTRANSFER_PICKTYPE = "add_type"
-        const val FRAGTAG_ADDTRANSFER_FILE = "file"
-        const val FRAGTAG_ADDTRANSFER_LINK = "link"
-    }
-
-    val destinationFolder by lazy {
-        if (intent.hasExtra(EXTRA_DESTINATION_FOLDER)) {
-            intent.getParcelableExtra<PutioFile>(EXTRA_DESTINATION_FOLDER)
-        } else {
-            PutioFile.makeRootFolder(resources)
-        }
-    }
+    val hasPrechosenDestinationFolder: Boolean
+        get() = (intent.extras?.containsKey(EXTRA_PRECHOSEN_DESTINATION_FOLDER)) ?: false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +40,11 @@ class AddTransferActivity : AppCompatActivity() {
             startActivity(Intent(this, PutioActivity::class.java))
             finish()
             return
+        }
+
+
+        if (intent.hasExtra(EXTRA_PRECHOSEN_DESTINATION_FOLDER)) {
+            prechosenDestinationFolder = intent.extras.getParcelable(EXTRA_PRECHOSEN_DESTINATION_FOLDER)
         }
 
         if (intent != null) {
@@ -82,7 +77,7 @@ class AddTransferActivity : AppCompatActivity() {
 
     fun showPickTypeFragmentIfNotShowing() {
         if (supportFragmentManager.findFragmentByTag(FRAGTAG_ADDTRANSFER_PICKTYPE) == null) {
-            val pickTypeFragment = Fragment.instantiate(this, AddTransferPickTypeFragment::class.java.name) as AddTransferPickTypeFragment
+            val pickTypeFragment = Fragment.instantiate(this, PickTypeFragment::class.java.name) as PickTypeFragment
             val transaction = supportFragmentManager.beginTransaction()
             transaction.addToBackStack("pick")
             pickTypeFragment.show(transaction, FRAGTAG_ADDTRANSFER_PICKTYPE)
@@ -91,7 +86,7 @@ class AddTransferActivity : AppCompatActivity() {
 
     fun showLinkFragmentIfNotShowing(link: String? = null) {
         if (supportFragmentManager.findFragmentByTag(FRAGTAG_ADDTRANSFER_LINK) == null) {
-            val fileFragment = AddTransferUrlFragment.newInstance(this@AddTransferActivity, link)
+            val fileFragment = FromUrlFragment.newInstance(this@AddTransferActivity, link)
             val transaction = supportFragmentManager.beginTransaction()
             transaction.addToBackStack("url")
             fileFragment.show(transaction, FRAGTAG_ADDTRANSFER_LINK)
@@ -100,7 +95,7 @@ class AddTransferActivity : AppCompatActivity() {
 
     fun showFileFragmentIfNotShowing(torrentUri: Uri? = null) {
         if (supportFragmentManager.findFragmentByTag(FRAGTAG_ADDTRANSFER_FILE) == null) {
-            val fileFragment = AddTransferFileFragment.newInstance(this@AddTransferActivity, torrentUri)
+            val fileFragment = FromFileFragment.newInstance(this@AddTransferActivity, torrentUri)
             val transaction = supportFragmentManager.beginTransaction()
             transaction.addToBackStack("file")
             fileFragment.show(transaction, FRAGTAG_ADDTRANSFER_FILE)
@@ -163,6 +158,11 @@ class AddTransferActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    fun getDestinationFolder(fileOrUrlFragment: BaseFragment?): PutioFile {
+        prechosenDestinationFolder?.let { return it }
+        return fileOrUrlFragment!!.destinationPickerFragment!!.destination
     }
 
     inner class UploadNotif {
@@ -249,8 +249,8 @@ class AddTransferActivity : AppCompatActivity() {
         super.onAttachFragment(fragment)
         when (fragment.tag) {
             FRAGTAG_ADDTRANSFER_PICKTYPE -> {
-                fragment as AddTransferPickTypeFragment
-                fragment.callbacks = object : AddTransferPickTypeFragment.Callbacks {
+                fragment as PickTypeFragment
+                fragment.callbacks = object : PickTypeFragment.Callbacks {
                     override fun onLinkSelected() {
                         showLinkFragmentIfNotShowing()
                     }
@@ -260,23 +260,31 @@ class AddTransferActivity : AppCompatActivity() {
                 }
             }
             FRAGTAG_ADDTRANSFER_LINK -> {
-                fragment as AddTransferUrlFragment
-                fragment.callbacks = object : AddTransferUrlFragment.Callbacks {
+                fragment as FromUrlFragment
+                fragment.callbacks = object : FromUrlFragment.Callbacks {
                     override fun onLinkSelected(link: String, extract: Boolean) {
-                        uploadTransferUrl(link, destinationFolder.id, extract)
+                        uploadTransferUrl(link, getDestinationFolder(fragment).id, extract)
                         finish()
                     }
                 }
             }
             FRAGTAG_ADDTRANSFER_FILE -> {
-                fragment as AddTransferFileFragment
-                fragment.callbacks = object : AddTransferFileFragment.Callbacks {
+                fragment as FromFileFragment
+                fragment.callbacks = object : FromFileFragment.Callbacks {
                     override fun onFileSelected(torrentUri: Uri) {
-                        uploadTransferFile(torrentUri, destinationFolder.id)
+                        uploadTransferFile(torrentUri, getDestinationFolder(fragment).id)
                         finish()
                     }
                 }
             }
         }
+    }
+
+    companion object {
+        const val EXTRA_PRECHOSEN_DESTINATION_FOLDER = "init_dest_folder"
+
+        const val FRAGTAG_ADDTRANSFER_PICKTYPE = "add_type"
+        const val FRAGTAG_ADDTRANSFER_FILE = "file"
+        const val FRAGTAG_ADDTRANSFER_LINK = "link"
     }
 }

@@ -1,6 +1,7 @@
 package com.stevenschoen.putionew.files
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,18 +61,20 @@ class FileListAdapter(private val data: List<PutioFile>,
     }
 
     override fun onBindViewHolder(holder: FileHolder, position: Int) {
-        if (holder.root is Checkable) {
-            (holder.root as Checkable).isChecked = isPositionChecked(position)
+        if (holder.itemView is Checkable) {
+            holder.itemView.isChecked = isPositionChecked(position)
         }
 
         val file = data[position]
 
         holder.textName.text = file.name
-        holder.textDescription.text = PutioUtils.humanReadableByteCount(file.size, false)
-        if (file.icon != null && !file.icon.isEmpty()) {
-            if (file.icon.endsWith("folder.png")) {
-                Picasso.with(holder.iconImg.context).load(R.drawable.ic_putio_folder).into(holder.iconImg)
-            } else {
+        holder.textDescription.text = PutioUtils.humanReadableByteCount(file.size!!, false)
+        Log.d("addtransfer_pick_destination", "${file.name} isFolder: ${file.isFolder}")
+        if (file.isFolder) {
+            Picasso.with(holder.iconImg.context).cancelRequest(holder.iconImg)
+            holder.iconImg.setImageResource(R.drawable.ic_putio_folder_accent)
+        } else {
+            if (!file.icon.isNullOrEmpty()) {
                 Picasso.with(holder.iconImg.context).load(file.icon).into(holder.iconImg)
             }
         }
@@ -171,17 +174,17 @@ class FileListAdapter(private val data: List<PutioFile>,
         fun onItemsCheckedChanged()
     }
 
-    inner class FileHolder(var root: View) : RecyclerView.ViewHolder(root) {
-        val textName = root.findViewById(R.id.text_file_name) as TextView
-        val textDescription = root.findViewById(R.id.text_file_description) as TextView
-        val iconImg = root.findViewById(R.id.icon_file_img) as ImageView
-        val iconAccessed = root.findViewById(R.id.icon_file_accessed) as ImageView
+    inner class FileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textName = itemView.findViewById(R.id.text_file_name) as TextView
+        val textDescription = itemView.findViewById(R.id.text_file_description) as TextView
+        val iconImg = itemView.findViewById(R.id.icon_file_img) as ImageView
+        val iconAccessed = itemView.findViewById(R.id.icon_file_accessed) as ImageView
 
         init {
-            root.setOnClickListener {
+            itemView.setOnClickListener {
                 onFileClicked.invoke(data[adapterPosition], this)
             }
-            root.setOnLongClickListener {
+            itemView.setOnLongClickListener {
                 onFileLongClicked.invoke(data[adapterPosition], this)
                 true
             }

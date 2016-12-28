@@ -80,6 +80,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
                             setMediaTracks(subtitles.orEmpty().mapIndexed { i, sub ->
                                 MediaTrack.Builder(i.toLong(), MediaTrack.TYPE_TEXT)
                                         .setContentId(sub.getUrl(PutioSubtitle.FORMAT_WEBVTT, file.id, utils.tokenWithStuff))
+                                        .setContentType("text/vtt")
                                         .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
                                         .setName(sub.name)
                                         .setLanguage(sub.language)

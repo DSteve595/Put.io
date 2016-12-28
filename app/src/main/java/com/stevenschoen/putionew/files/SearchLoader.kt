@@ -27,7 +27,7 @@ class SearchLoader(context: Context, private val parentFolder: PutioFile, val qu
             searchSubject.onNext(response.files)
         }, { error ->
             searchSubscription = null
-            Log.d("asdf", "error: $error")
+            Log.d("addtransfer_pick_destination", "error: $error")
         })
     }
 

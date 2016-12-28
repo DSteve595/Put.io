@@ -21,7 +21,7 @@
 
 		<Button
 			android:id="@+id/button_redownload_cancel"
-			style="@style/ButtonBar.Button.Transparent"
+			style="@style/ButtonBar.Button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/cancel"/>

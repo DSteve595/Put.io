@@ -52,16 +52,16 @@ public class TvPutioFileCardPresenter extends Presenter {
         PutioFile file = (PutioFile) item;
         ImageCardView cardView = (ImageCardView) viewHolder.view;
 
-        cardView.setTitleText(file.name);
+        cardView.setTitleText(file.getName());
         //cardView.setContentText(PutioUtils.humanReadableByteCount(file.size, false));
         cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
         ImageView mainImageView = cardView.getMainImageView();
         if (file.isFolder()) {
             cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            Picasso.with(mContext).load(R.drawable.ic_putio_folder).into(mainImageView);
+            Picasso.with(mContext).load(R.drawable.ic_putio_folder_accent).into(mainImageView);
         } else {
             cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_CROP);
-            Picasso.with(mContext).load(file.screenshot).into(mainImageView);
+            Picasso.with(mContext).load(file.getScreenshot()).into(mainImageView);
         }
 
         if (file.isAccessed()) {

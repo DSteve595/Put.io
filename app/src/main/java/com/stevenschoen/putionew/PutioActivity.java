@@ -25,8 +25,8 @@ import com.stevenschoen.putionew.files.FilesFragment;
 import com.stevenschoen.putionew.fragments.Account;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.transfers.PutioTransfer;
-import com.stevenschoen.putionew.transfers.AddTransferActivity;
 import com.stevenschoen.putionew.transfers.Transfers;
+import com.stevenschoen.putionew.transfers.add.AddTransferActivity;
 import com.stevenschoen.putionew.tv.TvActivity;
 
 import org.apache.commons.io.FileUtils;
@@ -189,7 +189,7 @@ public class PutioActivity extends BaseCastActivity {
 				}
 				Intent addTransferIntent = new Intent(PutioActivity.this, AddTransferActivity.class);
 				if (destinationFolder != null) {
-					addTransferIntent.putExtra(AddTransferActivity.EXTRA_DESTINATION_FOLDER, destinationFolder);
+					addTransferIntent.putExtra(AddTransferActivity.EXTRA_PRECHOSEN_DESTINATION_FOLDER, destinationFolder);
 				}
 				startActivity(addTransferIntent);
 			}

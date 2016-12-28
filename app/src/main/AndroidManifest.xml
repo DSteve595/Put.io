@@ -66,7 +66,7 @@
 			android:name=".files.FileFinishedActivity"
 			android:theme="@style/Putio.Dialog"/>
 		<activity
-			android:name=".transfers.AddTransferActivity"
+			android:name=".transfers.add.AddTransferActivity"
 			android:excludeFromRecents="true"
 			android:label="@string/add_transfer"
 			android:taskAffinity="com.stevenschoen.putionew.addtransfertask"

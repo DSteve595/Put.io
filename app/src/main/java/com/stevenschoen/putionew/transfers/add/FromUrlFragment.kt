@@ -1,11 +1,9 @@
-package com.stevenschoen.putionew.transfers
+package com.stevenschoen.putionew.transfers.add
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,18 +14,7 @@ import com.stevenschoen.putionew.R
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.BehaviorSubject
 
-class AddTransferUrlFragment : AppCompatDialogFragment() {
-
-    companion object {
-        val EXTRA_PRECHOSEN_LINK = "link"
-
-        fun newInstance(context: Context, preChosenLink: String?): AddTransferUrlFragment {
-            val args = Bundle()
-            preChosenLink?.let { args.putString(EXTRA_PRECHOSEN_LINK, it) }
-
-            return Fragment.instantiate(context, AddTransferUrlFragment::class.java.name, args) as AddTransferUrlFragment
-        }
-    }
+class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
 
     var callbacks: Callbacks? = null
 
@@ -35,8 +22,6 @@ class AddTransferUrlFragment : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setStyle(DialogFragment.STYLE_NO_TITLE, theme)
 
         if (savedInstanceState != null) {
 
@@ -98,5 +83,16 @@ class AddTransferUrlFragment : AppCompatDialogFragment() {
 
     interface Callbacks {
         fun onLinkSelected(link: String, extract: Boolean)
+    }
+
+    companion object {
+        val EXTRA_PRECHOSEN_LINK = "link"
+
+        fun newInstance(context: Context, preChosenLink: String?): FromUrlFragment {
+            val args = Bundle()
+            preChosenLink?.let { args.putString(EXTRA_PRECHOSEN_LINK, it) }
+
+            return Fragment.instantiate(context, FromUrlFragment::class.java.name, args) as FromUrlFragment
+        }
     }
 }

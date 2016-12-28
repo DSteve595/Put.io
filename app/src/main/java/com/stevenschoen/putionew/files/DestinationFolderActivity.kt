@@ -9,10 +9,6 @@ import com.stevenschoen.putionew.R
 
 class DestinationFolderActivity : AppCompatActivity() {
 
-    companion object {
-        val RESULT_EXTRA_FOLDER = "folder"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,7 +24,7 @@ class DestinationFolderActivity : AppCompatActivity() {
 
         val toolbarView = findViewById(R.id.destination_toolbar) as Toolbar
         setSupportActionBar(toolbarView)
-        toolbarView.setNavigationIcon(R.drawable.ic_toolbarnav_close)
+        toolbarView.setNavigationIcon(R.drawable.ic_toolbar_nav_close_black)
         toolbarView.setNavigationOnClickListener { finish() }
 
         findViewById(R.id.destination_cancel).setOnClickListener {
@@ -50,5 +46,9 @@ class DestinationFolderActivity : AppCompatActivity() {
         if (!getFragment()!!.goBack(true)) {
             super.onBackPressed()
         }
+    }
+
+    companion object {
+        val RESULT_EXTRA_FOLDER = "folder"
     }
 }

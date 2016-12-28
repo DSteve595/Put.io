@@ -1,13 +1,11 @@
-package com.stevenschoen.putionew.transfers
+package com.stevenschoen.putionew.transfers.add
 
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,23 +16,7 @@ import com.stevenschoen.putionew.R
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.BehaviorSubject
 
-class AddTransferFileFragment : AppCompatDialogFragment() {
-
-    companion object {
-        val STATE_TORRENT_URI = "uri"
-        val STATE_DID_FIRST_REQUEST = "did_first"
-
-        val EXTRA_PRECHOSEN_TORRENT_URI = "uri"
-
-        val REQUEST_CHOOSE_FILE = 1
-
-        fun newInstance(context: Context, preChosenTorrentUri: Uri?): AddTransferFileFragment {
-            val args = Bundle()
-            preChosenTorrentUri?.let { args.putParcelable(EXTRA_PRECHOSEN_TORRENT_URI, it) }
-
-            return Fragment.instantiate(context, AddTransferFileFragment::class.java.name, args) as AddTransferFileFragment
-        }
-    }
+class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) {
 
     var callbacks: Callbacks? = null
 
@@ -43,8 +25,6 @@ class AddTransferFileFragment : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setStyle(DialogFragment.STYLE_NO_TITLE, theme)
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_TORRENT_URI)) {
@@ -160,5 +140,21 @@ class AddTransferFileFragment : AppCompatDialogFragment() {
 
     interface Callbacks {
         fun onFileSelected(torrentUri: Uri)
+    }
+
+    companion object {
+        val STATE_TORRENT_URI = "uri"
+        val STATE_DID_FIRST_REQUEST = "did_first"
+
+        val EXTRA_PRECHOSEN_TORRENT_URI = "uri"
+
+        val REQUEST_CHOOSE_FILE = 1
+
+        fun newInstance(context: Context, preChosenTorrentUri: Uri?): FromFileFragment {
+            val args = Bundle()
+            preChosenTorrentUri?.let { args.putParcelable(EXTRA_PRECHOSEN_TORRENT_URI, it) }
+
+            return Fragment.instantiate(context, FromFileFragment::class.java.name, args) as FromFileFragment
+        }
     }
 }

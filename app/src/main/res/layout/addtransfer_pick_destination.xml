@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="36dp"
+	android:background="?selectableItemBackground"
+	android:orientation="horizontal">
+
+	<ImageView
+		android:layout_width="24dp"
+		android:layout_height="match_parent"
+		android:layout_gravity="center_vertical"
+		android:src="@drawable/ic_putio_folder_black"
+		android:tint="#8A000000"
+		android:tintMode="src_in"/>
+
+	<TextView
+		android:id="@+id/addtransfer_pick_destination_name"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_marginStart="16dp"
+		android:layout_weight="1"
+		android:fontFamily="sans-serif-condensed"
+		android:gravity="center_vertical"
+		android:lines="1"
+		android:textAppearance="@style/TextAppearance.AppCompat"
+		android:textColor="?android:textColorSecondary"
+		android:textSize="18sp"
+		tools:text="Files"/>
+
+</LinearLayout>
