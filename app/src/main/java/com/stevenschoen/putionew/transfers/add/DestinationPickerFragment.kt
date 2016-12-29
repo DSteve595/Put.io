@@ -53,11 +53,11 @@ class DestinationPickerFragment : Fragment() {
         return view
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            destinationSubject.onNext(data.extras.getParcelable(DestinationFolderActivity.RESULT_EXTRA_FOLDER))
+            destinationSubject.onNext(data!!.extras.getParcelable(DestinationFolderActivity.RESULT_EXTRA_FOLDER))
         }
     }
 
