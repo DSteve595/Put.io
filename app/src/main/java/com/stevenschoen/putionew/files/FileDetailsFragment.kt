@@ -226,10 +226,14 @@ class FileDetailsFragment : RxFragment() {
                         .bindToLifecycle(this@FileDetailsFragment)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ status ->
-                            updateMp4View(status)
+                            if (isAdded) {
+                                updateMp4View(status)
+                            }
                         }, { error ->
-                            error.printStackTrace()
-                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                            if (isAdded) {
+                                error.printStackTrace()
+                                Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                            }
                         })
                 mp4StatusLoader!!.refreshOnce()
             }

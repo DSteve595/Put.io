@@ -55,7 +55,7 @@ public class TransfersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent putioIntent = new Intent(TransfersActivity.this, PutioActivity.class);
-                    putioIntent.putExtra("goToTab", PutioActivity.TAB_TRANSFERS);
+                    putioIntent.putExtra(PutioActivity.EXTRA_GO_TO_TAB, PutioActivity.TAB_TRANSFERS);
 					View content = findViewById(android.R.id.content);
 					Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(
 							content,
