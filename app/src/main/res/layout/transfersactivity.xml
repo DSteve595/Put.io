@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/transfersactivity_transfersfragment"
-        android:name="com.stevenschoen.putionew.transfers.Transfers"
+        android:name="com.stevenschoen.putionew.transfers.TransfersFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".transfers.TransfersActivity"

@@ -16,7 +16,7 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class Account extends RxFragment {
+public class AccountFragment extends RxFragment {
 
 	private PutioUtils utils;
 

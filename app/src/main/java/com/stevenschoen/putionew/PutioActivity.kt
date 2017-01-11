@@ -18,10 +18,10 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.stevenschoen.putionew.cast.BaseCastActivity
 import com.stevenschoen.putionew.files.FilesFragment
-import com.stevenschoen.putionew.fragments.Account
+import com.stevenschoen.putionew.fragments.AccountFragment
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
-import com.stevenschoen.putionew.transfers.Transfers
+import com.stevenschoen.putionew.transfers.TransfersFragment
 import com.stevenschoen.putionew.transfers.add.AddTransferActivity
 import com.stevenschoen.putionew.tv.TvActivity
 
@@ -139,9 +139,9 @@ class PutioActivity : BaseCastActivity() {
         setContentView(R.layout.main)
 
         if (savedInstanceState == null) {
-            val accountFragment = Fragment.instantiate(this, Account::class.java.name) as Account
+            val accountFragment = Fragment.instantiate(this, AccountFragment::class.java.name) as AccountFragment
             val filesFragment = FilesFragment.newInstance(this, null)
-            val transfersFragment = Fragment.instantiate(this, Transfers::class.java.name) as Transfers
+            val transfersFragment = Fragment.instantiate(this, TransfersFragment::class.java.name) as TransfersFragment
             supportFragmentManager.beginTransaction()
                     .add(R.id.main_content_holder, accountFragment, FRAGTAG_ACCOUNT)
                     .detach(accountFragment)
@@ -201,9 +201,9 @@ class PutioActivity : BaseCastActivity() {
                     }
                 }
                 FRAGTAG_TRANSFERS -> {
-                    (fragment as Transfers).callbacks = object : Transfers.Callbacks {
+                    (fragment as TransfersFragment).callbacks = object : TransfersFragment.Callbacks {
                         override fun onTransferSelected(transfer: PutioTransfer) {
-                            showFilesAndHighlightFile(transfer.saveParentId, transfer.fileId)
+                            showFilesAndGoToFile(transfer.saveParentId, transfer.fileId)
                         }
                     }
                 }
@@ -308,19 +308,19 @@ class PutioActivity : BaseCastActivity() {
         })
     }
 
-    fun showFilesAndHighlightFile(parentId: Long, id: Long) {
+    fun showFilesAndGoToFile(parentId: Long, id: Long) {
         selectTab(TAB_FILES, true)
-//        getFilesFragment().highlightFile(parentId, id);
+        filesFragment!!.goToFile(parentId, id);
     }
 
-    private val accountFragment: Account
-        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_ACCOUNT) as Account
+    private val accountFragment: AccountFragment
+        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_ACCOUNT) as AccountFragment
 
     private val filesFragment: FilesFragment?
         get() = supportFragmentManager.findFragmentByTag(FRAGTAG_FILES) as FilesFragment
 
-    private val transfersFragment: Transfers
-        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_TRANSFERS) as Transfers
+    private val transfersFragment: TransfersFragment
+        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_TRANSFERS) as TransfersFragment
 
     private val noNetworkReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

@@ -125,7 +125,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (isAdded) {
+        if (isVisible) {
             view!!.post {
                 if (!userVisibleHint && filesAdapter!!.isInCheckMode()) {
                     filesAdapter!!.clearChecked()

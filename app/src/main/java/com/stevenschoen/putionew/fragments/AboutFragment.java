@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.R;
 
-public class About extends Fragment {
+public class AboutFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -48,8 +48,10 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_cast, menu)
-        CastButtonFactory.setUpMediaRouteButton(this, menu, R.id.menu_cast)
+        if (CastOptionsProvider.isCastSdkAvailable(this)) {
+            menuInflater.inflate(R.menu.menu_cast, menu)
+            CastButtonFactory.setUpMediaRouteButton(this, menu, R.id.menu_cast)
+        }
 
         return true
     }

@@ -11,10 +11,15 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.UIUtils
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle.components.support.RxFragment
+import com.trello.rxlifecycle.kotlin.bindToLifecycle
+import retrofit2.adapter.rxjava.HttpException
+import rx.android.schedulers.AndroidSchedulers
 import java.util.*
 
 open class FilesFragment : RxFragment() {
@@ -159,6 +164,50 @@ open class FilesFragment : RxFragment() {
     fun addSearch(query: String) {
         removePagesAfterIndex(pagerView!!.currentItem, false)
         pages.add(Page(query, pages.last().file!!))
+
+        fileListFragmentsAdapter.notifyDataSetChanged()
+        pagerView!!.setCurrentItem(pages.lastIndex, true)
+    }
+
+    fun goToFile(parentId: Long, id: Long) {
+        var found = false
+        var parentIndex = 0
+        pages.listIterator().apply {
+            while (hasNext()) {
+                val nextPage = next()
+                if (nextPage.type == Page.Type.Search) {
+                    removePagesAfterIndex(previousIndex() - 1, false)
+                    break
+                } else {
+                    if (nextPage.file!!.id == parentId) {
+                        parentIndex = previousIndex()
+                        var targetIndex = parentIndex
+                        if (hasNext()) {
+                            val childPage = next()
+                            if (childPage.file!!.id == id) {
+                                found = true
+                                targetIndex = previousIndex()
+                            }
+                        }
+                        removePagesAfterIndex(targetIndex, false)
+                        break
+                    }
+                }
+            }
+        }
+        if (!found) {
+            removePagesAfterIndex(parentIndex, false)
+            PutioApplication.get(context).putioUtils.restInterface.file(id)
+                    .bindToLifecycle(this@FilesFragment)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ result ->
+                        addFile(result.file)
+                    }, { error ->
+                        if (error is HttpException && error.code() == 404) {
+                            Toast.makeText(context, R.string.filenotfound, Toast.LENGTH_LONG).show()
+                        }
+                    })
+        }
 
         fileListFragmentsAdapter.notifyDataSetChanged()
         pagerView!!.setCurrentItem(pages.lastIndex, true)

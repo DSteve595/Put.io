@@ -226,7 +226,7 @@ class FileDetailsFragment : RxFragment() {
                         .bindToLifecycle(this@FileDetailsFragment)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ status ->
-                            if (isAdded) {
+                            if (isVisible) {
                                 updateMp4View(status)
                             }
                         }, { error ->

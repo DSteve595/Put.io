@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew.files
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +68,6 @@ class FileListAdapter(private val data: List<PutioFile>,
 
         holder.textName.text = file.name
         holder.textDescription.text = PutioUtils.humanReadableByteCount(file.size!!, false)
-        Log.d("addtransfer_pick_destination", "${file.name} isFolder: ${file.isFolder}")
         if (file.isFolder) {
             Picasso.with(holder.iconImg.context).cancelRequest(holder.iconImg)
             holder.iconImg.setImageResource(R.drawable.ic_putio_folder_accent)

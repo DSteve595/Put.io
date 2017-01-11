@@ -25,7 +25,19 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import java.util.*
 
-class Transfers : RxFragment() {
+class TransfersFragment : RxFragment() {
+
+    companion object {
+        private val VIEWMODE_LIST = 1
+        private val VIEWMODE_LISTOREMPTY = 2
+        private val VIEWMODE_LOADING = -1
+        private val VIEWMODE_EMPTY = -2
+        private val VIEWMODE_NONETWORK = 3
+
+        const val FRAGTAG_OPTIONS = "options"
+    }
+
+    var callbacks: Callbacks? = null
 
     private val transfers = ArrayList<PutioTransfer>()
     private var transfersListView: RecyclerView? = null
@@ -39,8 +51,6 @@ class Transfers : RxFragment() {
     private var loadingView: View? = null
     private var emptyView: View? = null
     private var noNetworkView: View? = null
-
-    var callbacks: Callbacks? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,7 +173,7 @@ class Transfers : RxFragment() {
             R.id.menu_clearfinished -> {
                 utils!!.restInterface
                         .cleanTransfers("")
-                        .bindToLifecycle(this@Transfers)
+                        .bindToLifecycle(this@TransfersFragment)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(makeUpdateNowSubscriber())
                 return true
@@ -176,7 +186,7 @@ class Transfers : RxFragment() {
     private fun initRetryTransfer(transfer: PutioTransfer) {
         utils!!.restInterface
                 .retryTransfer(transfer.id)
-                .bindToLifecycle(this@Transfers)
+                .bindToLifecycle(this@TransfersFragment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(makeUpdateNowSubscriber())
         hideOptionsIfShowing()
@@ -186,7 +196,7 @@ class Transfers : RxFragment() {
         if (transfer.status == "COMPLETED") {
             utils!!.restInterface
                     .cancelTransfer(PutioUtils.longsToString(transfer.id))
-                    .bindToLifecycle(this@Transfers)
+                    .bindToLifecycle(this@TransfersFragment)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(makeUpdateNowSubscriber())
         } else {
@@ -254,7 +264,7 @@ class Transfers : RxFragment() {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as TransfersServiceBinder
             transfersService = binder.service
-            transfersService!!.transfersObservable.bindToLifecycle(this@Transfers)
+            transfersService!!.transfersObservable.bindToLifecycle(this@TransfersFragment)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result ->
                         updateTransfers(result)
@@ -268,15 +278,5 @@ class Transfers : RxFragment() {
 
     interface Callbacks {
         fun onTransferSelected(transfer: PutioTransfer)
-    }
-
-    companion object {
-        private val VIEWMODE_LIST = 1
-        private val VIEWMODE_LISTOREMPTY = 2
-        private val VIEWMODE_LOADING = -1
-        private val VIEWMODE_EMPTY = -2
-        private val VIEWMODE_NONETWORK = 3
-
-        const val FRAGTAG_OPTIONS = "options"
     }
 }
