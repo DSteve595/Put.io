@@ -118,7 +118,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                     error.printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
-        folderLoader!!.getCachedFile()
+        folderLoader!!.publishCachedFileIfNeeded()
         folderLoader!!.refreshFolder(onlyIfStaleOrEmpty = true)
         updateViewState()
     }

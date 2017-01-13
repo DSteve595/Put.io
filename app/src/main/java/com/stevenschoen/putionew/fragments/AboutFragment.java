@@ -5,16 +5,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.stevenschoen.putionew.PutioActivity;
 import com.stevenschoen.putionew.R;
 
 public class AboutFragment extends Fragment {
@@ -45,16 +42,5 @@ public class AboutFragment extends Fragment {
         }
 		
 		return view;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		switch (menuItem.getItemId()) {
-		case android.R.id.home:
-			Intent homeIntent = new Intent(getActivity(), PutioActivity.class);
-			NavUtils.navigateUpTo(getActivity(), homeIntent);
-			return true;
-		}
-		return (super.onOptionsItemSelected(menuItem));
 	}
 }

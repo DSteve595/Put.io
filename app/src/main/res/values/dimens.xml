@@ -16,4 +16,7 @@
     <dimen name="transfers_card_padding">8dp</dimen>
 
     <dimen name="folder_front_elevation">8dp</dimen>
+
+    <dimen name="tv_layer_offset">40dp</dimen>
+    <dimen name="tv_layer_elevation">6dp</dimen>
 </resources>
