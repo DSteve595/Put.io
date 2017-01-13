@@ -186,7 +186,7 @@
 		<activity
 			android:name=".tv.TvActivity"
 			android:label="@string/putio"
-			android:theme="@style/Theme.Leanback">
+			android:theme="@style/Theme.Putio.Tv">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
@@ -196,7 +196,7 @@
 		<activity
 			android:name=".tv.TvPlaybackOverlayActivity"
 			android:label="@string/putio"
-			android:theme="@style/Theme.Leanback"/>
+			android:theme="@style/Theme.Putio.Tv"/>
 	</application>
 
 </manifest>

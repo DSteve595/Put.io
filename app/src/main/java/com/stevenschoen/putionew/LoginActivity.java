@@ -194,7 +194,6 @@ public class LoginActivity extends AppCompatActivity {
     private void saveToken(String token) {
         sharedPrefs.edit().putString("token", token).commit();
         Toast.makeText(this, R.string.loginsuccess, Toast.LENGTH_SHORT).show();
-        setResult(RESULT_OK);
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();

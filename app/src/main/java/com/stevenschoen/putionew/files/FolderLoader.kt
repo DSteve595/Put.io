@@ -22,39 +22,36 @@ import java.io.IOException
 
 class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseLoader(context) {
 
-    val diskCache = DiskCache()
+    val diskCache by lazy { DiskCache() }
 
     private val folderSubject = BehaviorSubject.create<FolderResponse>()
     fun folder() = folderSubject.observeOn(AndroidSchedulers.mainThread())
 
-    fun getCachedFile() {
-        Observable.fromCallable {
-            if (diskCache.isCached(folder.id)) {
-                return@fromCallable diskCache.getCached(folder.id)
-            } else {
-                return@fromCallable null
-            }
+    fun publishCachedFileIfNeeded() {
+        fun isNeeded() = (!folderSubject.hasValue() || !folderSubject.value.fresh)
+        if (isNeeded()) {
+            Observable.fromCallable { return@fromCallable if (diskCache.isCached(folder.id)) diskCache.getCached(folder.id) else null }
+                    .subscribeOn(Schedulers.io())
+                    .filter { it != null }
+                    .subscribe({ cachedResponse ->
+                        cachedResponse!!
+                        if (isNeeded()) {
+                            folderSubject.onNext(FolderResponse(false, cachedResponse.parent, cachedResponse.files))
+                        }
+                    }, { error ->
+                        error.printStackTrace()
+                        diskCache.deleteCached(folder.id)
+                    })
         }
-                .filter { it != null }
-                .subscribeOn(Schedulers.io())
-                .subscribe({ cachedResponse ->
-                    cachedResponse!!
-                    if (!folderSubject.hasValue() || !folderSubject.value.fresh) {
-                        folderSubject.onNext(FolderResponse(false, cachedResponse.parent, cachedResponse.files))
-                    }
-                }, { error ->
-                    error.printStackTrace()
-                    diskCache.deleteCached(folder.id)
-                })
     }
 
     var refreshSubscription: Subscription? = null
-    fun refreshFolder(onlyIfStaleOrEmpty: Boolean = false) {
+    fun refreshFolder(onlyIfStaleOrEmpty: Boolean = false, cache: Boolean = true) {
         if (onlyIfStaleOrEmpty && (hasFresh() || isRefreshing())) return
         refreshSubscription?.unsubscribe()
         refreshSubscription = api.files(folder.id).subscribe({ response ->
             refreshSubscription = null
-            diskCache.cache(response)
+            if (cache) diskCache.cache(response)
             folderSubject.onNext(FolderResponse(true, response.parent, response.files))
         }, { error ->
             refreshSubscription = null
