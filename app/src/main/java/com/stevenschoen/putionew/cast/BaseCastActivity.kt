@@ -21,10 +21,6 @@ import org.apache.commons.io.FilenameUtils
 
 abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCallbacks {
 
-    companion object {
-        const val FRAGTAG_CAST_MINI_CONTROLLER = "mini_cast"
-    }
-
     protected val castContext: CastContext?
         get() = CastContext.getSharedInstance(this)
     protected val castSession: CastSession?
@@ -57,7 +53,8 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     }
 
     override fun load(file: PutioFile, url: String, utils: PutioUtils) {
-        if (castContext != null && castSession != null && castSession!!.remoteMediaClient != null && castSession!!.isConnected) {
+        if (CastOptionsProvider.isCastSdkAvailable(this) &&
+                castContext != null && castSession != null && castSession!!.remoteMediaClient != null && castSession!!.isConnected) {
             fun play(subtitles: List<PutioSubtitle>? = null) {
                 val metaData = MediaMetadata(
                         if (file.isVideo)
