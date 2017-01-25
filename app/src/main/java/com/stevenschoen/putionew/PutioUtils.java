@@ -50,6 +50,7 @@ import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +66,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
@@ -340,11 +342,21 @@ public class PutioUtils {
 				try {
 					finalUrl = resolveRedirect(params[0]);
 				} catch (IOException e) {
-//                    No redirect
+					// No redirect, not a problem
 				}
 				result.url = finalUrl;
 
-				result.subtitles = getRestInterface().subtitles(file.getId()).toBlocking().first().getSubtitles();
+				try {
+					result.subtitles = getRestInterface().subtitles(file.getId()).toBlocking().first().getSubtitles();
+				} catch (RuntimeException e) {
+					Throwable cause = e.getCause();
+					if (cause instanceof UnknownHostException) {
+						// No subtitles, not a problem
+					} else {
+						e.printStackTrace();
+						Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+					}
+				}
 
 				return result;
 			}
@@ -488,7 +500,9 @@ public class PutioUtils {
 		removeRemove.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Observable<BasePutioResponse> cancelObservable = getRestInterface().cancelTransfer(PutioUtils.longsToString(idsToDelete));
+				Observable<BasePutioResponse> cancelObservable = getRestInterface()
+						.cancelTransfer(PutioUtils.longsToString(idsToDelete))
+						.observeOn(AndroidSchedulers.mainThread());
 				if (subscriber != null) {
 					cancelObservable.subscribe(subscriber);
 				} else {
