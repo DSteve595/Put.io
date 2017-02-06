@@ -488,11 +488,6 @@ public class PutioUtils {
 		}
 	}
 
-	public interface CreateFolderCallback {
-		void onCreateFolderClicked();
-		void onCreateFolderFinished();
-	}
-
 	public Dialog removeTransferDialog(final Context context, final Subscriber<BasePutioResponse> subscriber, final long... idsToDelete) {
 		final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
