@@ -1,4 +1,4 @@
-#Put.io for Android!
+# Put.io for Android!
 
 This app is unofficial and is not affiliated with Put.io in any way.
 
@@ -7,13 +7,13 @@ Bug reports and pull requests always welcome.
 Free on the Play Store: https://play.google.com/store/apps/details?id=com.stevenschoen.putionew
 
 
-###Coming soon:
+### Coming soon:
 	
 Other languages (please contribute translations!)
 
 <a href='https://pledgie.com/campaigns/24005'><img alt='Click here to lend your support to: Put.io for Android and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/24005.png?skin_name=chrome' border='0' ></a>
 
-##Build instructions:
+## Build instructions:
 
 - Clone and update submodule dependencies:
 ```
@@ -25,7 +25,7 @@ git submodule init && git submodule update
 - Place your API key and client ID into `ApiKey.java`.
 - Build project via gradle.
 
-###Libraries used:
+### Libraries used:
 
 Picasso by Square: http://square.github.io/picasso/
 
