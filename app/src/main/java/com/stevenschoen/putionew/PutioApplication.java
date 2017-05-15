@@ -8,6 +8,8 @@ import android.support.multidex.MultiDexApplication;
 import com.crashlytics.android.Crashlytics;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import io.fabric.sdk.android.Fabric;
 
 public class PutioApplication extends MultiDexApplication {
@@ -18,6 +20,8 @@ public class PutioApplication extends MultiDexApplication {
 		super.onCreate();
 
 		Fabric.with(this, new Crashlytics());
+
+        JodaTimeAndroid.init(this);
 
         try {
             buildUtils();

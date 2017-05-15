@@ -1,5 +1,6 @@
 package com.stevenschoen.putionew.cast
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -32,8 +33,8 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        castMiniControllerContainerId?.let { containerId ->
-            if (CastOptionsProvider.isCastSdkAvailable(this@BaseCastActivity)) {
+        if (isCastSdkAvailable) {
+            castMiniControllerContainerId?.let { containerId ->
                 if (!inflatedCastMiniController) {
                     val holder = findViewById(containerId) as ViewGroup
                     layoutInflater.inflate(R.layout.cast_mini_controller_putio, holder)
@@ -44,7 +45,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (CastOptionsProvider.isCastSdkAvailable(this)) {
+        if (isCastSdkAvailable) {
             menuInflater.inflate(R.menu.menu_cast, menu)
             CastButtonFactory.setUpMediaRouteButton(this, menu, R.id.menu_cast)
         }
@@ -106,3 +107,6 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
         }
     }
 }
+
+val Context.isCastSdkAvailable
+    get() = CastOptionsProvider.isCastSdkAvailable(this)

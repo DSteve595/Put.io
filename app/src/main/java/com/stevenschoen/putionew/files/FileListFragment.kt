@@ -285,6 +285,15 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
         return filesAdapter!!.checkedIds.map { id -> files.find { it.id == id }!! }
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        view?.post {
+            if (!userVisibleHint && filesAdapter!!.isInCheckMode()) {
+                filesAdapter!!.clearChecked()
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(STATE_FILES, files)

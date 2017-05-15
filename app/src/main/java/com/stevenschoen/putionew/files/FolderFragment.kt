@@ -123,17 +123,6 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
         updateViewState()
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisible) {
-            view!!.post {
-                if (!userVisibleHint && filesAdapter!!.isInCheckMode()) {
-                    filesAdapter!!.clearChecked()
-                }
-            }
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
