@@ -62,8 +62,8 @@
 		</activity>
 		<activity android:name=".LoginActivity"/>
 		<activity
-			android:label="@string/downloadfinishedopentitle"
 			android:name=".files.FileFinishedActivity"
+			android:label="@string/downloadfinishedopentitle"
 			android:theme="@style/Putio.Dialog"/>
 		<activity
 			android:name=".transfers.add.AddTransferActivity"
@@ -194,9 +194,8 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".tv.TvPlaybackOverlayActivity"
-			android:label="@string/putio"
-			android:theme="@style/Theme.Putio.Tv"/>
+			android:name=".tv.TvPlayerActivity"
+			android:theme="@style/Theme.Putio.Tv.Player"/>
 	</application>
 
 </manifest>

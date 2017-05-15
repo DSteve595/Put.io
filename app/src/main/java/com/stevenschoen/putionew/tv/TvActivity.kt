@@ -27,8 +27,8 @@ class TvActivity : FragmentActivity() {
         if (application.isLoggedIn) {
             init()
         } else {
-            val setupIntent = Intent(this, LoginActivity::class.java)
-            startActivity(setupIntent)
+            val loginIntent = Intent(this, LoginActivity::class.java)
+            startActivity(loginIntent)
             finish()
             return
         }

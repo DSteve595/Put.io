@@ -50,7 +50,7 @@ data class PutioFile(
     fun getStreamUrl(utils: PutioUtils, mp4: Boolean): String {
         val base = PutioUtils.baseUrl + "files/" + id
         val streamOrStreamMp4: String
-        if (mp4) {
+        if (mp4 && !isMp4) {
             streamOrStreamMp4 = "/mp4/stream"
         } else {
             streamOrStreamMp4 = "/stream"

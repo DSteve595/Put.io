@@ -1,6 +1,7 @@
 package com.stevenschoen.putionew.tv
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v17.leanback.app.VerticalGridSupportFragment
 import android.support.v17.leanback.widget.ArrayObjectAdapter
@@ -60,6 +61,16 @@ class TvFolderFragment : VerticalGridSupportFragment() {
             exitTransition = Slide(Gravity.END)
         }
 
+        loader = FolderLoader.get(loaderManager, context, folder)
+        loader.refreshFolder(onlyIfStaleOrEmpty = true, cache = false)
+        loader.folder()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    populateGrid(it.files)
+                }, { error ->
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                })
+
         title = folder.name
 
         gridPresenter = GridPresenter()
@@ -91,22 +102,11 @@ class TvFolderFragment : VerticalGridSupportFragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        loader = FolderLoader.get(loaderManager, context, folder)
-        loader.refreshFolder(onlyIfStaleOrEmpty = true, cache = false)
-        loader.folder()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    populateGrid(it.files)
-                }, { error ->
-                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                })
-    }
-
     private fun playVideo(file: PutioFile) {
-        TvPlaybackOverlayActivity.launch(activity, file)
+        startActivity(Intent(context, TvPlayerActivity::class.java).apply {
+            putExtra(TvPlayerActivity.EXTRA_VIDEO, file)
+            putExtra(TvPlayerActivity.EXTRA_USE_MP4, file.isMp4Available)
+        })
     }
 
     private fun populateGrid(files: List<PutioFile>) {
@@ -115,7 +115,6 @@ class TvFolderFragment : VerticalGridSupportFragment() {
     }
 
     inner class GridPresenter : VerticalGridPresenter() {
-
         init {
             numberOfColumns = NUM_COLUMNS
         }
