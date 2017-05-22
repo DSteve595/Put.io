@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.stevenschoen.putionew.*
 import com.stevenschoen.putionew.PutioApplication.CastCallbacks
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
+import com.stevenschoen.putionew.model.responses.Mp4StatusResponse
 import com.trello.rxlifecycle.components.support.RxFragment
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
 import rx.android.schedulers.AndroidSchedulers
@@ -61,6 +63,40 @@ class FileDetailsFragment : RxFragment() {
 
     private var imagePreview: ImageView? = null
     private var imagePreviewPlaceholder: ImageView? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
+        screenshotLoader!!.load(true)
+        screenshotLoader!!.screenshot()
+                .bindToLifecycle(this@FileDetailsFragment)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    it?.let { updateImagePreview(it, true) }
+                }, { error ->
+                    error.printStackTrace()
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                })
+
+        if (file.isVideo && !file.isMp4) {
+            mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
+            mp4StatusLoader!!.mp4Status()
+                    .bindToLifecycle(this@FileDetailsFragment)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ status ->
+                        if (isVisible) {
+                            updateMp4View(status)
+                        }
+                    }, { error ->
+                        if (isAdded) {
+                            error.printStackTrace()
+                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                        }
+                    })
+            mp4StatusLoader!!.refreshOnce()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.filedetails, container, false)
@@ -121,26 +157,30 @@ class FileDetailsFragment : RxFragment() {
         infoMp4Converting = holderInfo.findViewById(R.id.holder_fileinfo_mp4_converting)
         infoMp4ConvertingText = infoMp4Converting.findViewById(R.id.fileinfo_mp4_converting_text) as TextView
         if (file.isVideo) {
-            checkBoxMp4Available = infoMp4Available.findViewById(R.id.checkbox_fileinfo_mp4) as CheckBox
-            checkBoxMp4Available.setOnCheckedChangeListener { buttonView, isChecked ->
-                updateMp4View(mp4StatusLoader!!.lastMp4Status())
-            }
-            textMp4Available = infoMp4Available.findViewById(R.id.text_fileinfo_mp4) as TextView
-            infoMp4NotAvailable.setOnClickListener { view ->
-                PutioApplication.get(context).putioUtils.restInterface
-                        .convertToMp4(file.id)
-                        .bindToLifecycle(this@FileDetailsFragment)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            mp4StatusLoader!!.startRefreshing()
-                        }, { error ->
-                            error.printStackTrace()
-                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                        })
+            if (file.isMp4) {
+                updateMp4View(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
+            } else {
+                checkBoxMp4Available = infoMp4Available.findViewById(R.id.checkbox_fileinfo_mp4) as CheckBox
+                checkBoxMp4Available.setOnCheckedChangeListener { buttonView, isChecked ->
+                    updateMp4View(mp4StatusLoader!!.lastMp4Status())
+                }
+                textMp4Available = infoMp4Available.findViewById(R.id.text_fileinfo_mp4) as TextView
+                infoMp4NotAvailable.setOnClickListener { view ->
+                    PutioApplication.get(context).putioUtils.restInterface
+                            .convertToMp4(file.id)
+                            .bindToLifecycle(this@FileDetailsFragment)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                mp4StatusLoader!!.startRefreshing()
+                            }, { error ->
+                                error.printStackTrace()
+                                Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                            })
+                    updateMp4View(null)
+                    view.isEnabled = false
+                }
                 updateMp4View(null)
-                view.isEnabled = false
             }
-            updateMp4View(null)
         } else {
             infoMp4Checking.visibility = View.GONE
             infoMp4Already.visibility = View.GONE
@@ -203,41 +243,6 @@ class FileDetailsFragment : RxFragment() {
         imagePreview = view.findViewById(R.id.filepreview_image) as ImageView
 
         return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (isAdded) {
-            screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
-            screenshotLoader!!.load(true)
-            screenshotLoader!!.screenshot()
-                    .bindToLifecycle(this@FileDetailsFragment)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        it?.let { updateImagePreview(it, true) }
-                    }, { error ->
-                        error.printStackTrace()
-                        Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                    })
-
-            if (file.isVideo) {
-                mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
-                mp4StatusLoader!!.mp4Status()
-                        .bindToLifecycle(this@FileDetailsFragment)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ status ->
-                            if (isVisible) {
-                                updateMp4View(status)
-                            }
-                        }, { error ->
-                            if (isAdded) {
-                                error.printStackTrace()
-                                Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                            }
-                        })
-                mp4StatusLoader!!.refreshOnce()
-            }
-        }
     }
 
     override fun onAttachFragment(childFragment: Fragment) {

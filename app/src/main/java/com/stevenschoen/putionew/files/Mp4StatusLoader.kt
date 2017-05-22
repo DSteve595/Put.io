@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
+import android.util.Log
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
@@ -22,7 +23,7 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
     fun mp4Status() = mp4StatusSubject.observeOn(AndroidSchedulers.mainThread())
     fun lastMp4Status() = mp4StatusSubject.value
 
-    private val observable = Observable.defer { api.mp4Status(file.id) }
+    private val observable = Observable.defer { Log.d("asdf", "refreshing"); api.mp4Status(file.id) }
     private var subscription: Subscription? = null
     private fun makeSubscription() = observable.repeatWhen {
         it.delay(4, TimeUnit.SECONDS)

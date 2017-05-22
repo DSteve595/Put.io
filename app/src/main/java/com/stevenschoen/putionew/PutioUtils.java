@@ -354,7 +354,9 @@ public class PutioUtils {
 						// No subtitles, not a problem
 					} else {
 						e.printStackTrace();
-						Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+						if (context != null) {
+							Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+						}
 					}
 				}
 
