@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -42,6 +43,7 @@ class TvPlayerActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.tv_player)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         val bandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
