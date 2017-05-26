@@ -216,7 +216,7 @@ class FileDetailsFragment : RxFragment() {
             buttonPlay.setOnClickListener {
                 var mp4 = false
                 if (file.isVideo) {
-                    val mp4Status = mp4StatusLoader!!.lastMp4Status()
+                    val mp4Status = mp4StatusLoader?.lastMp4Status()
                     if (mp4Status != null) {
                         if (mp4Status == PutioMp4Status.Status.Completed) {
                             mp4 = checkBoxMp4Available.isChecked
