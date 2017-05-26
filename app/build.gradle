@@ -24,8 +24,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 115
-        versionName '4.1-beta2'
+        versionCode 116
+        versionName '4.1'
         multiDexEnabled true
     }
     buildTypes {
@@ -86,7 +86,7 @@ dependencies {
     compile 'nz.bradcampbell:paperparcel:2.0.1'
     compile 'nz.bradcampbell:paperparcel-kotlin:2.0.1'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.1'
-    compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
+    compile 'com.google.android.exoplayer:exoplayer:r2.4.1'
 }
 repositories {
     mavenCentral()
