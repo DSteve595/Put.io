@@ -22,7 +22,6 @@
   <string name="download">Baixar</string>
   <string name="redownload">Baixar novamente</string>
   <string name="open">Abrir</string>
-  <string name="ok">OK</string>
   <string name="delete">Excluir</string>
   <string name="search">Pesquisar</string>
   <string name="retry">Tente novamente</string>
@@ -36,13 +35,13 @@
   <string name="gettingstreamurlbody">Só um segundo&#8230;</string>
   <string name="renametitle">Renomear esse arquivo?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Excluir este arquivo?</item>
-        <item quantity="other">Remover estes arquivos?</item>
-    </plurals>
+    <item quantity="one">Excluir este arquivo?</item>
+    <item quantity="other">Remover estes arquivos?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Só poderá ter de volta se adicionar o arquivo novamente.</item>
-        <item quantity="other">Só poderá recuperá-los adicionando novamente os arquivos.</item>
-    </plurals>
+    <item quantity="one">Só poderá ter de volta se adicionar o arquivo novamente.</item>
+    <item quantity="other">Só poderá recuperá-los adicionando novamente os arquivos.</item>
+  </plurals>
   <string name="removetransfertitle">Remover esta transferência?</string>
   <string name="removetransferbody">O download será cancelado.</string>
   <string name="downloadwillopen">O arquivo será aberto assim que terminar o download.</string>
@@ -70,7 +69,6 @@
   <string name="loginsuccess">Conectado com sucesso!</string>
   <string name="folder_name">Nome da pasta</string>
   <string name="x_selected">%d selecionado/os</string>
-  <string name="total_is">Total: %s</string>
   <string name="loading">Carregando&#8230;</string>
   <string name="created_on_x_at_x">Criado em %1$s às %2$s</string>
   <string name="accessed_on_x_at_x">Acessado em %1$s às %2$s</string>
@@ -83,14 +81,12 @@
   <string name="filedeleted">Arquivo excluído!</string>
   <string name="filemoved">Arquivo movido!</string>
   <string name="transferremoved">Transferência removida!</string>
-  <string name="ratio_is">Ratio: %s</string>
   <string name="hey">Ei!</string>
   <string name="readytopaste">O link para download está pronto para ser colado.</string>
   <string name="addtransfer_type_file">Arquivo torrent</string>
   <string name="download_files">Baixar arquivos</string>
   <string name="individual_or_zip">Você quer baixar esses arquivos como downloads individuais ou como um arquivo ZIP?</string>
   <string name="individually">Individualmente</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Copie o link para download</string>
   <string name="copyingdownloadlink">Copiar o link para download</string>
   <string name="filenotfound">O arquivo não pôde ser encontrado. Ele foi excluído?</string>

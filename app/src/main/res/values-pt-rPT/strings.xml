@@ -17,10 +17,8 @@
   <string name="log_out">Sair</string>
   <string name="about">Acerca</string>
   <string name="apply">Aplicar</string>
-  <string name="download">Download</string>
   <string name="redownload">Download novamente</string>
   <string name="open">Abrir</string>
-  <string name="ok">OK</string>
   <string name="delete">Apagar</string>
   <string name="search">Procurar</string>
   <string name="remove">Remover</string>
@@ -32,13 +30,13 @@
   <string name="gettingstreamurlbody">Só um segundo&#8230;</string>
   <string name="renametitle">Renomear este ficheiro?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Remover este ficheiro?</item>
-        <item quantity="other">Remover estes ficheiros?</item>
-    </plurals>
+    <item quantity="one">Remover este ficheiro?</item>
+    <item quantity="other">Remover estes ficheiros?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Só pode voltar a tê-lo se o adicionar novamente.</item>
-        <item quantity="other">Só pode voltar a tê-los se os adicionar novamente.</item>
-    </plurals>
+    <item quantity="one">Só pode voltar a tê-lo se o adicionar novamente.</item>
+    <item quantity="other">Só pode voltar a tê-los se os adicionar novamente.</item>
+  </plurals>
   <string name="removetransfertitle">Remover esta transferência?</string>
   <string name="removetransferbody">O download será cancelado.</string>
   <string name="downloadwillopen">O ficheiro será aberto assim que terminar o download.</string>

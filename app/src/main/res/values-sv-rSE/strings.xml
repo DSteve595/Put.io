@@ -32,13 +32,13 @@
   <string name="gettingstreamurlbody">Bara en sekund&#8230;</string>
   <string name="renametitle">Ändra namn på filen?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Ta bort denna fil?</item>
-        <item quantity="other">Ta bort dessa filer?</item>
-    </plurals>
+    <item quantity="one">Ta bort denna fil?</item>
+    <item quantity="other">Ta bort dessa filer?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Du kan bara få tillbaka den genom att lägga till den igen.</item>
-        <item quantity="other">Du kan bara få tillbaka dem genom att lägga till dem igen.</item>
-    </plurals>
+    <item quantity="one">Du kan bara få tillbaka den genom att lägga till den igen.</item>
+    <item quantity="other">Du kan bara få tillbaka dem genom att lägga till dem igen.</item>
+  </plurals>
   <string name="removetransfertitle">Ta bort denna överföring?</string>
   <string name="removetransferbody">Nedladdningen avbryts.</string>
   <string name="downloadwillopen">Filen öppnas så fort den laddats ned.</string>
@@ -65,7 +65,6 @@
   <string name="transfers">Överföringar</string>
   <string name="loginsuccess">Inloggning lyckades!</string>
   <string name="total_is">Totalt: %s</string>
-  <string name="size_is">%s</string>
   <string name="loading">Laddar&#8230;</string>
   <string name="applychanges">Du har osparade ändringar för %1$s.\nSpara dem?</string>
   <string name="pasteurls">Klistra in webbadresser här</string>
@@ -75,7 +74,6 @@
   <string name="filedeleted">Filen har raderats!</string>
   <string name="filemoved">Filen har flyttats!</string>
   <string name="transferremoved">Överföringen har borttagits!</string>
-  <string name="ratio_is">Ratio: %s</string>
   <string name="hey">Hallå!</string>
   <string name="readytopaste">Nedladdningslänken är redo att klistras in.</string>
   <string name="addtransfer_type_file">Torrent-fil</string>
@@ -87,7 +85,6 @@
   <string name="convert_mp4">Konvertera till MP4</string>
   <string name="converting_mp4">MP4 konvertering pågår&#8230;</string>
   <string name="mp4_available">MP4 tillgänglig</string>
-  <string name="destination_is">Destination:</string>
   <string name="choose_folder">Välj mapp</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Laddar upp torrent</string>

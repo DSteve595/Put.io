@@ -36,9 +36,9 @@
   <string name="gettingstreamurlbody">Csak egy másodperc&#8230;</string>
   <string name="renametitle">Átnevezi a fájlt?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Törli a fájlt?</item>
-        <item quantity="other">Törli ezeket a fájlokat?</item>
-    </plurals>
+    <item quantity="one">Törli a fájlt?</item>
+    <item quantity="other">Törli ezeket a fájlokat?</item>
+  </plurals>
   <string name="removetransferbody">A letöltés le lesz állítva.</string>
   <string name="downloadfinishedopentitle">Fájl megnyitása?</string>
   <string name="downloadfinishedbody">%1$s befejezte a letöltést.</string>
@@ -79,7 +79,6 @@
   <string name="download_files">Fájlok letöltése</string>
   <string name="individual_or_zip">Ezeket a fájlokat különálló letöltésekként vagy ZIP-archívumban kívánja letölteni?</string>
   <string name="individually">Külön-külön</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Letöltési link másolása</string>
   <string name="copyingdownloadlink">Letöltés link másolása</string>
   <string name="go_to_previous_folder">Vissza az előző mappához</string>

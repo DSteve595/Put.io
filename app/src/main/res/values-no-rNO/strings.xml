@@ -20,7 +20,6 @@
   <string name="download">Last ned</string>
   <string name="redownload">Last ned på nytt</string>
   <string name="open">Åpne</string>
-  <string name="ok">OK</string>
   <string name="delete">Slette</string>
   <string name="search">Søk</string>
   <string name="retry">Prøv på nytt</string>
@@ -32,13 +31,13 @@
   <string name="gettingstreamurlbody">Vent&#8230;</string>
   <string name="renametitle">Gi nytt navn?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Slette?</item>
-        <item quantity="other">Slette filene?</item>
-    </plurals>
+    <item quantity="one">Slette?</item>
+    <item quantity="other">Slette filene?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Du kan bare få det tilbake ved å legge til på nytt.</item>
-        <item quantity="other">Du kan bare få det tilbake ved å legge til alt på nytt.</item>
-    </plurals>
+    <item quantity="one">Du kan bare få det tilbake ved å legge til på nytt.</item>
+    <item quantity="other">Du kan bare få det tilbake ved å legge til alt på nytt.</item>
+  </plurals>
   <string name="removetransfertitle">Fjerne denne overføringen?</string>
   <string name="removetransferbody">Nedlastingen vil bli avbrutt.</string>
   <string name="downloadwillopen">Filen åpnes når den er lastet ned.</string>

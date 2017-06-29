@@ -3,7 +3,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
   <!-- Short commands and responses -->
   <string name="yes">Si</string>
-  <string name="no">No</string>
   <string name="save">Guardar</string>
   <string name="cancel">Cancelar</string>
   <string name="close">Cerrar</string>
@@ -21,7 +20,6 @@
   <string name="download">Descargar</string>
   <string name="redownload">Descargar de nuevo</string>
   <string name="open">Abrir</string>
-  <string name="ok">OK</string>
   <string name="delete">Eliminar</string>
   <string name="search">Buscar</string>
   <string name="retry">Reintentar</string>
@@ -35,9 +33,9 @@
   <string name="gettingstreamurlbody">Un momento&#8230;</string>
   <string name="renametitle">¿Renombrar este archivo?</string>
   <plurals name="deletetitle">
-        <item quantity="one">¿Eliminar este archivo?</item>
-        <item quantity="other">¿Eliminar estos archivos?</item>
-    </plurals>
+    <item quantity="one">¿Eliminar este archivo?</item>
+    <item quantity="other">¿Eliminar estos archivos?</item>
+  </plurals>
   <string name="removetransferbody">Se cancelará la descarga.</string>
   <string name="downloadfinishedopentitle">¿Abrir archivo?</string>
   <string name="downloadpreparing">Preparando la descarga</string>
@@ -48,12 +46,10 @@
   <string name="account">Cuenta</string>
   <string name="files">Archivos</string>
   <string name="transfers">Transferencias</string>
-  <string name="total_is">Total: %s</string>
   <string name="loading">Cargando&#8230;</string>
   <string name="transferremoved">Transferencia eliminada!</string>
   <string name="addtransfer_type_file">Archivo torrent</string>
   <string name="download_files">Descargar archivos</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Copiar el enlace de descarga</string>
   <!-- Notification stuff -->
   <string name="notification_ticker_uploaded_torrent">Torrent subido</string>

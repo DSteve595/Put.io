@@ -32,13 +32,13 @@
   <string name="gettingstreamurlbody">Einen Moment &#8230;</string>
   <string name="renametitle">Diese Datei umbenennen?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Diese Datei löschen?</item>
-        <item quantity="other">Diese Dateien löschen?</item>
-    </plurals>
+    <item quantity="one">Diese Datei löschen?</item>
+    <item quantity="other">Diese Dateien löschen?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Du kannst es nur zurückbekommen, indem du es neu hinzufügst.</item>
-        <item quantity="other">Du kannst sie nur zurückbekommen, indem du sie neu hinzufügst.</item>
-    </plurals>
+    <item quantity="one">Du kannst es nur zurückbekommen, indem du es neu hinzufügst.</item>
+    <item quantity="other">Du kannst sie nur zurückbekommen, indem du sie neu hinzufügst.</item>
+  </plurals>
   <string name="removetransfertitle">Diese Übertragung entfernen?</string>
   <string name="removetransferbody">Der Download wird abgebrochen.</string>
   <string name="downloadwillopen">Deine Datei wird geöffnet, sobald der Download abgeschlossen ist.</string>
@@ -75,7 +75,6 @@
   <string name="filemoved">Dateien verschoben!</string>
   <string name="transferremoved">Transfer entfernt!</string>
   <string name="ratio_is">Verhältnis: %s</string>
-  <string name="hey">Hey!</string>
   <string name="readytopaste">Der Download-Link kann eingefügt werden.</string>
   <string name="addtransfer_type_file">Torrent-Datei</string>
   <string name="copy_dl_link">Download-Link kopieren</string>

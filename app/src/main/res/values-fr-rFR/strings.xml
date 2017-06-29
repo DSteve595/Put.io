@@ -36,13 +36,13 @@
   <string name="gettingstreamurlbody">Juste une seconde&#8230;</string>
   <string name="renametitle">Renommer ce fichier ?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Supprimer ce fichier ?</item>
-        <item quantity="other">Supprimer ces fichiers ?</item>
-    </plurals>
+    <item quantity="one">Supprimer ce fichier ?</item>
+    <item quantity="other">Supprimer ces fichiers ?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Vous pouvez le récupérer en l\'ajoutant à nouveau.</item>
-        <item quantity="other">Vous pouvez les récupérer en les ajoutant à nouveau.</item>
-    </plurals>
+    <item quantity="one">Vous pouvez le récupérer en l\'ajoutant à nouveau.</item>
+    <item quantity="other">Vous pouvez les récupérer en les ajoutant à nouveau.</item>
+  </plurals>
   <string name="removetransfertitle">Supprimer ce transfert ?</string>
   <string name="removetransferbody">Le téléchargement va être annulé.</string>
   <string name="downloadwillopen">Votre fichier s\'ouvrira dès qu\'il aura fini d\'être téléchargé.</string>
@@ -90,7 +90,6 @@
   <string name="download_files">Télécharger les fichiers</string>
   <string name="individual_or_zip">Voulez-vous télécharger ces fichiers individuellement ou sous forme d\'archive ZIP ?</string>
   <string name="individually">Individuellement</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Copier le lien de téléchargement</string>
   <string name="copyingdownloadlink">Lien de téléchagement en cours de copie</string>
   <string name="filenotfound">Le fichier n\'a pu être trouvé. A-t-il été supprimé ?</string>
@@ -117,7 +116,6 @@
   <string name="logged_in_as">Connecté comme</string>
   <string name="available_storage">Stockage disponible</string>
   <!-- About screen -->
-  <string name="version_x">Version %s</string>
   <string name="appbysteven">Application Android par Steven Schoen.</string>
   <string name="codedwithlove">Développé avec amour, attention, et cafféine.</string>
   <string name="notaffiliated">Non affilié avec Put.io.</string>

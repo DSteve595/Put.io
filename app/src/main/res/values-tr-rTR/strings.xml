@@ -36,13 +36,13 @@
   <string name="gettingstreamurlbody">Az sonra&#8230;</string>
   <string name="renametitle">Dosya yeniden adlandırılsın mı?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Dosya silinsin mi?</item>
-        <item quantity="other">Dosyalar silinsin mi?</item>
-    </plurals>
+    <item quantity="one">Dosya silinsin mi?</item>
+    <item quantity="other">Dosyalar silinsin mi?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
-        <item quantity="other">Ancak hepsini baştan ekleyerek geri getirebilirsiniz.</item>
-    </plurals>
+    <item quantity="one">Ancak baştan ekleyerek geri getirebilirsiniz.</item>
+    <item quantity="other">Ancak hepsini baştan ekleyerek geri getirebilirsiniz.</item>
+  </plurals>
   <string name="removetransfertitle">Bu transfer kaldırılsın mı?</string>
   <string name="removetransferbody">İndirme iptal edilecek.</string>
   <string name="downloadwillopen">İndirme bitince dosya açılacak.</string>
@@ -84,13 +84,11 @@
   <string name="filemoved">Dosya taşındı!</string>
   <string name="transferremoved">Transfer kaldırıldı!</string>
   <string name="ratio_is">Oran: %s</string>
-  <string name="hey">Hey!</string>
   <string name="readytopaste">İndirme bağlantısı yapıştırılmaya hazır.</string>
   <string name="addtransfer_type_file">Torrent dosyası</string>
   <string name="download_files">Dosyaları indir</string>
   <string name="individual_or_zip">Tek tek dosyalar halinde mi indirmek istersiniz, yoksa bir ZIP arşivi halinde mi?</string>
   <string name="individually">Tek tek</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">İndirme bağlantısını kopyala</string>
   <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
   <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>

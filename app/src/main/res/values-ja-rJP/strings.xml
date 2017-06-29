@@ -22,7 +22,6 @@
   <string name="download">ダウンロード</string>
   <string name="redownload">再ダウンロード</string>
   <string name="open">開く</string>
-  <string name="ok">OK</string>
   <string name="delete">削除</string>
   <string name="search">検索</string>
   <string name="retry">再試行</string>
@@ -36,13 +35,11 @@
   <string name="gettingstreamurlbody">お待ちください&#8230;</string>
   <string name="renametitle">このファイルの名前を変更しますか?</string>
   <plurals name="deletetitle">
-        <item quantity="one">このファイルを削除しますか?</item>
-        <item quantity="other">これらのファイルを削除しますか?</item>
-    </plurals>
+    <item quantity="other">これらのファイルを削除しますか?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">再度すべて追加することで元に戻すことができます。</item>
-        <item quantity="other">再度それらをすべて追加することで元に戻すことができます。</item>
-    </plurals>
+    <item quantity="other">再度それらをすべて追加することで元に戻すことができます。</item>
+  </plurals>
   <string name="removetransfertitle">この転送を削除しますか?</string>
   <string name="removetransferbody">ダウンロードはキャンセルされます。</string>
   <string name="downloadwillopen">ダウンロードが終了するとすぐにファイルを開きます。</string>
@@ -90,7 +87,6 @@
   <string name="download_files">ファイルをダウンロード</string>
   <string name="individual_or_zip">これらのファイルを 個別にダウンロードしますか、それとも ZIP アーカイブとしてダウンロードしますか?</string>
   <string name="individually">個別</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">ダウンロード リンクをコピー</string>
   <string name="copyingdownloadlink">ダウンロード リンクのコピー中</string>
   <string name="filenotfound">ファイルが見つかりませんでした。削除されていますか?</string>

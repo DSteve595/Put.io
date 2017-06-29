@@ -3,7 +3,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
   <!-- Short commands and responses -->
   <string name="yes">Sì</string>
-  <string name="no">No</string>
   <string name="save">Salva</string>
   <string name="cancel">Annulla</string>
   <string name="close">Chiudere</string>
@@ -36,13 +35,13 @@
   <string name="gettingstreamurlbody">Un momento&#8230;</string>
   <string name="renametitle">Rinominare questo file?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Eliminare questo file?</item>
-        <item quantity="other">Eliminare questi file?</item>
-    </plurals>
+    <item quantity="one">Eliminare questo file?</item>
+    <item quantity="other">Eliminare questi file?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Puoi averlo disponibile solo aggiungendolo di nuovo.</item>
-        <item quantity="other">Puoi averli disponibili solo aggiungendoli di nuovo.</item>
-    </plurals>
+    <item quantity="one">Puoi averlo disponibile solo aggiungendolo di nuovo.</item>
+    <item quantity="other">Puoi averli disponibili solo aggiungendoli di nuovo.</item>
+  </plurals>
   <string name="removetransfertitle">Eliminare questo trasferimento?</string>
   <string name="removetransferbody">Il download sarà annullato.</string>
   <string name="downloadwillopen">Il file verrà aperto appena è finito il download.</string>
@@ -64,7 +63,6 @@
   <string name="couldntgetdownloadlink">C\'è stato un problema nel recuperare il collegamento per il download.</string>
   <string name="noactivityfound">Nessuna applicazione installata può aprire questo file.</string>
   <!-- Other stuff -->
-  <string name="account">Account</string>
   <string name="files">File</string>
   <string name="transfers">Trasferimenti</string>
   <string name="loginsuccess">Login avvenuto con successo!</string>
@@ -90,7 +88,6 @@
   <string name="download_files">Scarica file</string>
   <string name="individual_or_zip">Vuoi scaricare questi file come download singoli o come un archivio ZIP?</string>
   <string name="individually">Singolarmente</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Copia il link per il download</string>
   <string name="copyingdownloadlink">Copia il link per il download in corso</string>
   <string name="filenotfound">Il file non è stato trovato. È stato per caso eliminato?</string>

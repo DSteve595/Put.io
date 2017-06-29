@@ -36,13 +36,13 @@
   <string name="gettingstreamurlbody">Even geduld alstublieft&#8230;</string>
   <string name="renametitle">Dit bestand hernoemen?</string>
   <plurals name="deletetitle">
-        <item quantity="one">Dit bestand verwijderen?</item>
-        <item quantity="other">Deze bestanden verwijderen?</item>
-    </plurals>
+    <item quantity="one">Dit bestand verwijderen?</item>
+    <item quantity="other">Deze bestanden verwijderen?</item>
+  </plurals>
   <plurals name="deletebody">
-        <item quantity="one">Je kan het alleen terugkrijgen door het opnieuw toe te voegen.</item>
-        <item quantity="other">Je kan ze alleen terugkrijgen door het opnieuw toe te voegen.</item>
-    </plurals>
+    <item quantity="one">Je kan het alleen terugkrijgen door het opnieuw toe te voegen.</item>
+    <item quantity="other">Je kan ze alleen terugkrijgen door het opnieuw toe te voegen.</item>
+  </plurals>
   <string name="removetransfertitle">Deze overdracht verwijderen?</string>
   <string name="removetransferbody">De download zal worden geannuleerd.</string>
   <string name="downloadwillopen">Uw bestand wordt geopend, zodra het klaar is met downloaden.</string>
@@ -64,7 +64,6 @@
   <string name="couldntgetdownloadlink">Er was een probleem om de downloadlink op te halen.</string>
   <string name="noactivityfound">Er is geen app geïnstalleerd die dit kan openen.</string>
   <!-- Other stuff -->
-  <string name="account">Account</string>
   <string name="files">Bestanden</string>
   <string name="transfers">Overdrachten</string>
   <string name="loginsuccess">Succesvol ingelogd!</string>
@@ -84,13 +83,11 @@
   <string name="filemoved">Bestand verplaatst!</string>
   <string name="transferremoved">Overdracht verwijderd!</string>
   <string name="ratio_is">Verhouding: %s</string>
-  <string name="hey">Hey!</string>
   <string name="readytopaste">De downloadlink is klaar om te worden geplakt.</string>
   <string name="addtransfer_type_file">Torrent-bestand</string>
   <string name="download_files">Bestanden downloaden</string>
   <string name="individual_or_zip">Wilt u deze bestanden als afzonderlijke downloads of als een ZIP-archief downloaden?</string>
   <string name="individually">Individueel</string>
-  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Kopieer downloadlink</string>
   <string name="copyingdownloadlink">Downloadlink kopiëren</string>
   <string name="filenotfound">Het bestand kon niet worden gevonden. Was het verwijderd?</string>
