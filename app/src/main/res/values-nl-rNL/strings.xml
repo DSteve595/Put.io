@@ -21,6 +21,8 @@
   <string name="apply">Toepassen</string>
   <string name="download">Downloaden</string>
   <string name="redownload">Opnieuw downloaden</string>
+  <string name="open">Open</string>
+  <string name="ok">OK</string>
   <string name="delete">Verwijderen</string>
   <string name="search">Zoeken</string>
   <string name="retry">Opnieuw proberen</string>
