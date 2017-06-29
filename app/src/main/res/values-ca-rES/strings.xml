@@ -3,13 +3,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
   <!-- Short commands and responses -->
   <string name="yes">Sí</string>
+  <string name="no">No</string>
   <string name="save">Desa</string>
   <string name="cancel">Cancel·la</string>
   <string name="refresh">Refresca</string>
   <string name="rename">Canvia el nom</string>
   <string name="add">Afegir</string>
   <string name="play">Reproduir</string>
+  <string name="add_transfers">Afegix transferències</string>
+  <string name="settings">Paràmetres</string>
   <string name="log_in">Connecta\'t</string>
+  <string name="log_out">Sortir</string>
+  <string name="about">Sobre</string>
   <string name="apply">Aplica</string>
   <string name="download">Descarregar</string>
   <string name="redownload">Re-Descarregar</string>
