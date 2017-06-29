@@ -17,8 +17,10 @@
   <string name="log_out">Ausloggen</string>
   <string name="about">Über</string>
   <string name="apply">Bestätigen</string>
+  <string name="download">Download</string>
   <string name="redownload">Erneut herunterladen</string>
   <string name="open">Öffnen</string>
+  <string name="ok">OK</string>
   <string name="delete">Löschen</string>
   <string name="search">Suchen</string>
   <string name="retry">Erneut versuchen</string>
