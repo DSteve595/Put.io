@@ -22,6 +22,7 @@
   <string name="download">Télécharger</string>
   <string name="redownload">Re-télécharger</string>
   <string name="open">Ouvrir</string>
+  <string name="ok">OK</string>
   <string name="delete">Supprimer</string>
   <string name="search">Rechercher</string>
   <string name="retry">Réessayer</string>
