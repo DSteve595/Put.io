@@ -1,139 +1,138 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="putio">Put.io</string>
+	<string name="putio" translatable="false">Put.io</string>
 
-    <!-- Short commands and responses -->
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="close">Close</string>
-    <string name="refresh">Refresh</string>
-    <string name="rename">Rename</string>
-    <string name="add">Add</string>
-    <string name="play">Play</string>
-    <string name="add_transfer">Add transfer</string>
-    <string name="add_transfers">Add transfers</string>
-    <string name="create_folder">Create folder</string>
-    <string name="create">Create</string>
-    <string name="settings">Settings</string>
-    <string name="log_in">Log in</string>
-    <string name="log_out">Log out</string>
-    <string name="about">About</string>
-    <string name="apply">Apply</string>
-    <string name="download">Download</string>
-    <string name="redownload">Re-download</string>
-    <string name="open">Open</string>
-    <string name="ok">OK</string>
-    <string name="delete">Delete</string>
-    <string name="search">Search</string>
-    <string name="retry">Retry</string>
-    <string name="remove">Remove</string>
-    <string name="undo">Undo</string>
-    <string name="move">Move</string>
-    <string name="more">More</string>
-    <string name="maximize">Maximize</string>
+	<!-- Short commands and responses -->
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="save">Save</string>
+	<string name="cancel">Cancel</string>
+	<string name="close">Close</string>
+	<string name="refresh">Refresh</string>
+	<string name="rename">Rename</string>
+	<string name="add">Add</string>
+	<string name="play">Play</string>
+	<string name="add_transfer">Add transfer</string>
+	<string name="add_transfers">Add transfers</string>
+	<string name="create_folder">Create folder</string>
+	<string name="create">Create</string>
+	<string name="settings">Settings</string>
+	<string name="log_in">Log in</string>
+	<string name="log_out">Log out</string>
+	<string name="about">About</string>
+	<string name="apply">Apply</string>
+	<string name="download">Download</string>
+	<string name="redownload">Re-download</string>
+	<string name="open">Open</string>
+	<string name="ok">OK</string>
+	<string name="delete">Delete</string>
+	<string name="search">Search</string>
+	<string name="retry">Retry</string>
+	<string name="remove">Remove</string>
+	<string name="undo">Undo</string>
+	<string name="move">Move</string>
+	<string name="more">More</string>
+	<string name="maximize">Maximize</string>
 
-    <!-- Dialog text -->
-    <string name="gettingstreamurltitle">Preparing to stream</string>
-    <string name="gettingstreamurlbody">Just a second…</string>
-    <string name="renametitle">Rename this file?</string>
-    <plurals name="deletetitle">
-        <item quantity="one">Delete this file?</item>
-        <item quantity="other">Delete these files?</item>
-    </plurals>
-    <plurals name="deletebody">
-        <item quantity="one">You can only get it back by adding it all over again.</item>
-        <item quantity="other">You can only get them back by adding them all over again.</item>
-    </plurals>
-    <string name="removetransfertitle">Remove this transfer?</string>
-    <string name="removetransferbody">The download will be cancelled.</string>
-    <string name="downloadwillopen">Your file will open as soon as it is finished downloading.</string>
-    <string name="downloadfinishedopentitle">Open file?</string>
-    <string name="downloadfinishedbody">%1$s is done downloading.</string>
-    <string name="downloadpreparing">Preparing to download</string>
-    <string name="downloadstarted">Download started.</string>
-    <string name="redownloadtitle">Re-download file?</string>
-    <string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
-    <string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
+	<!-- Dialog text -->
+	<string name="gettingstreamurltitle">Preparing to stream</string>
+	<string name="gettingstreamurlbody">Just a second…</string>
+	<string name="renametitle">Rename this file?</string>
+	<plurals name="deletetitle">
+		<item quantity="one">Delete this file?</item>
+		<item quantity="other">Delete these files?</item>
+	</plurals>
+	<plurals name="deletebody">
+		<item quantity="one">You can only get it back by adding it all over again.</item>
+		<item quantity="other">You can only get them back by adding them all over again.</item>
+	</plurals>
+	<string name="removetransfertitle">Remove this transfer?</string>
+	<string name="removetransferbody">The download will be cancelled.</string>
+	<string name="downloadwillopen">Your file will open as soon as it is finished downloading.</string>
+	<string name="downloadfinishedopentitle">Open file?</string>
+	<string name="downloadfinishedbody">%1$s is done downloading.</string>
+	<string name="downloadpreparing">Preparing to download</string>
+	<string name="downloadstarted">Download started.</string>
+	<string name="redownloadtitle">Re-download file?</string>
+	<string name="redownloadfordlbody">It looks like this has already been downloaded. Download it anyway?</string>
+	<string name="redownloadforopenbody">It looks like this has already been downloaded. Do you want to open this copy or download it again?</string>
 
-    <!-- Errors (for users) -->
-    <string name="cantopenbecausetype">None of your apps can open this type of file.</string>
-    <string name="transferfailed">This transfer failed to download.</string>
-    <string name="nothingenteredtofetch">Enter something to fetch first!</string>
-    <string name="filetoobig">This file is too big! Are you sure it\'s a torrent?</string>
-    <string name="streamerror">Sorry, there was an error streaming your video.</string>
-    <string name="couldntconnect">Couldn\'t connect to Put.io. Are you online?</string>
-    <string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
-    <string name="couldntgetdownloadlink">There was a problem getting the download link.</string>
-    <string name="noactivityfound">No installed apps can open this.</string>
-    <string name="network_error">Network error!</string>
+	<!-- Errors (for users) -->
+	<string name="cantopenbecausetype">None of your apps can open this type of file.</string>
+	<string name="transferfailed">This transfer failed to download.</string>
+	<string name="nothingenteredtofetch">Enter something to fetch first!</string>
+	<string name="filetoobig">This file is too big! Are you sure it\'s a torrent?</string>
+	<string name="streamerror">Sorry, there was an error streaming your video.</string>
+	<string name="couldntconnect">Couldn\'t connect to Put.io. Are you online?</string>
+	<string name="notatorrent">This doesn\'t seem to be a torrent file!</string>
+	<string name="couldntgetdownloadlink">There was a problem getting the download link.</string>
+	<string name="noactivityfound">No installed apps can open this.</string>
+	<string name="network_error">Network error!</string>
 
-    <!-- Other stuff -->
-    <string name="account">Account</string>
-    <string name="files">Files</string>
-    <string name="transfers">Transfers</string>
-    <string name="loginsuccess">Successfully logged in!</string>
-    <string name="folder_name">Folder name</string>
-    <string name="x_selected">%d selected</string>
-    <string name="total_is">Total: %s</string>
-    <string name="size_is">%s</string>
-    <string name="loading">Loading…</string>
-    <string name="created_on_x_at_x">Created on %1$s at %2$s</string>
-    <string name="accessed_on_x_at_x">Accessed on %1$s at %2$s</string>
-    <string name="never_accessed">Never accessed</string>
-    <string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
-    <string name="pasteurls">Paste URLs here</string>
-    <string name="extractwhenfinished">Extract when finished</string>
-    <string name="searchyourfiles">Search your files</string>
-    <string name="nofilesfound">No files were found.</string>
-    <string name="filedeleted">File deleted!</string>
-    <string name="filemoved">File moved!</string>
-    <string name="transferremoved">Transfer removed!</string>
-    <string name="ratio_is">Ratio: %s</string>
-    <string name="hey">Hey!</string>
-    <string name="readytopaste">The download link is ready to be pasted.</string>
-    <string name="addtransfer_type_url">Magnet link</string>
-    <string name="addtransfer_type_file">Torrent file</string>
-    <string name="download_files">Download files</string>
-    <string name="individual_or_zip">Do you want to download these files as individual downloads or as a ZIP archive?</string>
-    <string name="individually">Individually</string>
-    <string name="zip">ZIP</string>
-    <string name="copy_dl_link">Copy download link</string>
-    <string name="copyingdownloadlink">Copying download link</string>
-    <string name="filenotfound">The file could not be found. Was it deleted?</string>
-    <string name="go_to_previous_folder">Go back to the previous folder</string>
-    <string name="clear_finished_transfers">Clear finished transfers</string>
-    <string name="convert_mp4">Convert to MP4</string>
-    <string name="checking_for_mp4">Checking for MP4…</string>
-    <string name="converting_mp4">Converting to MP4…</string>
-    <string name="mp4_available">MP4 available</string>
-    <string name="use_mp4">Use MP4</string>
-    <string name="dont_use_mp4">Don\'t use MP4</string>
-    <string name="destination_is">Destination:</string>
-    <string name="choose_folder">Choose folder</string>
-    <string name="x_per_sec">%s/sec</string>
-    <string name="in_x">in %s</string>
+	<!-- Other stuff -->
+	<string name="account">Account</string>
+	<string name="files">Files</string>
+	<string name="transfers">Transfers</string>
+	<string name="loginsuccess">Successfully logged in!</string>
+	<string name="folder_name">Folder name</string>
+	<string name="x_selected">%d selected</string>
+	<string name="total_is">Total: %s</string>
+	<string name="loading">Loading…</string>
+	<string name="created_on_x_at_x">Created on %1$s at %2$s</string>
+	<string name="accessed_on_x_at_x">Accessed on %1$s at %2$s</string>
+	<string name="never_accessed">Never accessed</string>
+	<string name="applychanges">You have unsaved changes to %1$s.\nApply them?</string>
+	<string name="pasteurls">Paste URLs here</string>
+	<string name="extractwhenfinished">Extract when finished</string>
+	<string name="searchyourfiles">Search your files</string>
+	<string name="nofilesfound">No files were found.</string>
+	<string name="filedeleted">File deleted!</string>
+	<string name="filemoved">File moved!</string>
+	<string name="transferremoved">Transfer removed!</string>
+	<string name="ratio_is">Ratio: %s</string>
+	<string name="hey">Hey!</string>
+	<string name="readytopaste">The download link is ready to be pasted.</string>
+	<string name="addtransfer_type_url">Magnet link</string>
+	<string name="addtransfer_type_file">Torrent file</string>
+	<string name="download_files">Download files</string>
+	<string name="individual_or_zip">Do you want to download these files as individual downloads or as a ZIP archive?</string>
+	<string name="individually">Individually</string>
+	<string name="zip">ZIP</string>
+	<string name="copy_dl_link">Copy download link</string>
+	<string name="copyingdownloadlink">Copying download link</string>
+	<string name="filenotfound">The file could not be found. Was it deleted?</string>
+	<string name="go_to_previous_folder">Go back to the previous folder</string>
+	<string name="clear_finished_transfers">Clear finished transfers</string>
+	<string name="convert_mp4">Convert to MP4</string>
+	<string name="checking_for_mp4">Checking for MP4…</string>
+	<string name="converting_mp4">Converting to MP4…</string>
+	<string name="mp4_available">MP4 available</string>
+	<string name="use_mp4">Use MP4</string>
+	<string name="dont_use_mp4">Don\'t use MP4</string>
+	<string name="destination_is">Destination:</string>
+	<string name="choose_folder">Choose folder</string>
+	<string name="x_per_sec">%s/sec</string>
+	<string name="in_x">in %s</string>
 
-    <!-- Notification stuff -->
-    <string name="notification_title_uploading_torrent">Uploading torrent</string>
-    <string name="notification_ticker_uploading_torrent">Uploading torrent…</string>
-    <string name="notification_title_uploaded_torrent">Uploaded torrent</string>
-    <string name="notification_body_uploaded_torrent">Fetching it now! Tap for info.</string>
-    <string name="notification_ticker_uploaded_torrent">Uploaded torrent</string>
-    <string name="notification_title_error">Couldn\'t upload torrent</string>
-    <string name="notification_body_error">Try again?</string>
-    <string name="notification_ticker_error">Couldn\'t upload torrent</string>
-    <string name="notification_button_retry">Retry</string>
+	<!-- Notification stuff -->
+	<string name="notification_title_uploading_torrent">Uploading torrent</string>
+	<string name="notification_ticker_uploading_torrent">Uploading torrent…</string>
+	<string name="notification_title_uploaded_torrent">Uploaded torrent</string>
+	<string name="notification_body_uploaded_torrent">Fetching it now! Tap for info.</string>
+	<string name="notification_ticker_uploaded_torrent">Uploaded torrent</string>
+	<string name="notification_title_error">Couldn\'t upload torrent</string>
+	<string name="notification_body_error">Try again?</string>
+	<string name="notification_ticker_error">Couldn\'t upload torrent</string>
+	<string name="notification_button_retry">Retry</string>
 
-    <!-- Account screen -->
-    <string name="logged_in_as">Logged in as</string>
-    <string name="available_storage">Available Storage</string>
+	<!-- Account screen -->
+	<string name="logged_in_as">Logged in as</string>
+	<string name="available_storage">Available Storage</string>
 
-    <!-- About screen -->
-    <string name="version_x">Version %s</string>
-    <string name="appbysteven">Android app by Steven Schoen.</string>
-    <string name="codedwithlove">Coded with love, care, and caffeine.</string>
-    <string name="notaffiliated">Not affiliated with Put.io.</string>
+	<!-- About screen -->
+	<string name="version_x">Version %s</string>
+	<string name="appbysteven">Android app by Steven Schoen.</string>
+	<string name="codedwithlove">Coded with love, care, and caffeine.</string>
+	<string name="notaffiliated">Not affiliated with Put.io.</string>
 
 </resources>
