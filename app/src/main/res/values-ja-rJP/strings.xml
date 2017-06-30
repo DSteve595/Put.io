@@ -11,6 +11,7 @@
   <string name="rename">名前の変更</string>
   <string name="add">追加</string>
   <string name="play">再生</string>
+  <string name="add_transfer">転送を追加</string>
   <string name="add_transfers">転送を追加</string>
   <string name="create_folder">フォルダーを作成</string>
   <string name="create">作成</string>
@@ -22,6 +23,7 @@
   <string name="download">ダウンロード</string>
   <string name="redownload">再ダウンロード</string>
   <string name="open">開く</string>
+  <string name="ok">OK</string>
   <string name="delete">削除</string>
   <string name="search">検索</string>
   <string name="retry">再試行</string>
@@ -60,6 +62,7 @@
   <string name="notatorrent">これはトレント ファイルではないようです!</string>
   <string name="couldntgetdownloadlink">ダウンロード リンクの取得中に問題があました。</string>
   <string name="noactivityfound">これを開くアプリがインストールされていません。</string>
+  <string name="network_error">ネットワーク エラー!</string>
   <!-- Other stuff -->
   <string name="account">アカウント</string>
   <string name="files">ファイル</string>
@@ -83,22 +86,27 @@
   <string name="ratio_is">割合: %s</string>
   <string name="hey">やあ!</string>
   <string name="readytopaste">ダウンロードのリンクを貼り付ける準備ができました。</string>
+  <string name="addtransfer_type_url">マグネットリンク</string>
   <string name="addtransfer_type_file">トレント ファイル</string>
   <string name="download_files">ファイルをダウンロード</string>
   <string name="individual_or_zip">これらのファイルを 個別にダウンロードしますか、それとも ZIP アーカイブとしてダウンロードしますか?</string>
   <string name="individually">個別</string>
+  <string name="zip">ZIP</string>
   <string name="copy_dl_link">ダウンロード リンクをコピー</string>
   <string name="copyingdownloadlink">ダウンロード リンクのコピー中</string>
   <string name="filenotfound">ファイルが見つかりませんでした。削除されていますか?</string>
   <string name="go_to_previous_folder">前のフォルダーに戻る</string>
   <string name="clear_finished_transfers">完了した転送をクリア</string>
   <string name="convert_mp4">MP4 に変換</string>
+  <string name="checking_for_mp4">MP4 の確認中…</string>
   <string name="converting_mp4">MP4 に変換しています&#8230;</string>
   <string name="mp4_available">MP4 が利用可能</string>
   <string name="use_mp4">MP4 を使用する</string>
   <string name="dont_use_mp4">MP4 を使用しない</string>
   <string name="destination_is">宛先：</string>
   <string name="choose_folder">フォルダーを選択</string>
+  <string name="x_per_sec">%s/秒</string>
+  <string name="in_x">%s で</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">トレントをアップロード中</string>
   <string name="notification_ticker_uploading_torrent">トレントをアップロードしています&#8230;</string>
