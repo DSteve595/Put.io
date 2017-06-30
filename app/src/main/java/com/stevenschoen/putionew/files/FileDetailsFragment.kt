@@ -69,31 +69,9 @@ class FileDetailsFragment : RxFragment() {
 
         screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
         screenshotLoader!!.load(true)
-        screenshotLoader!!.screenshot()
-                .bindToLifecycle(this@FileDetailsFragment)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    it?.let { updateImagePreview(it, true) }
-                }, { error ->
-                    error.printStackTrace()
-                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                })
 
         if (file.isVideo && !file.isMp4) {
             mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
-            mp4StatusLoader!!.mp4Status()
-                    .bindToLifecycle(this@FileDetailsFragment)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ status ->
-                        if (isVisible) {
-                            updateMp4View(status)
-                        }
-                    }, { error ->
-                        if (isAdded) {
-                            error.printStackTrace()
-                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                        }
-                    })
             mp4StatusLoader!!.refreshOnce()
         }
     }
@@ -241,6 +219,30 @@ class FileDetailsFragment : RxFragment() {
                 .into(imagePreviewPlaceholder)
 
         imagePreview = view.findViewById(R.id.filepreview_image) as ImageView
+
+        screenshotLoader?.screenshot()
+                ?.bindToLifecycle(this@FileDetailsFragment)
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe({
+                    it?.let { updateImagePreview(it, true) }
+                }, { error ->
+                    error.printStackTrace()
+                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                })
+
+        mp4StatusLoader?.mp4Status()
+                ?.bindToLifecycle(this@FileDetailsFragment)
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe({ status ->
+                    if (isVisible) {
+                        updateMp4View(status)
+                    }
+                }, { error ->
+                    if (isAdded) {
+                        error.printStackTrace()
+                        Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                    }
+                })
 
         return view
     }

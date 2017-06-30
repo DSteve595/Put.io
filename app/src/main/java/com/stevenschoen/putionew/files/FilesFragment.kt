@@ -235,6 +235,21 @@ open class FilesFragment : RxFragment() {
         }
     }
 
+    fun goBackToRoot(): Boolean {
+        if (pages.size == 1) {
+            return false
+        } else if (pageChangeListener.isGoingBack) {
+            pagerView!!.setCurrentItem(0, true)
+            pageChangeListener.removeCount = (pages.size - 1)
+            return true
+        } else {
+            while (pageChangeListener.removeCount < (pages.size - 1)) {
+                goBack(true)
+            }
+            return true
+        }
+    }
+
     override fun onAttachFragment(childFragment: Fragment) {
         super.onAttachFragment(childFragment)
 

@@ -301,6 +301,9 @@ class PutioActivity : BaseCastActivity() {
             when (position) {
                 TAB_ACCOUNT, TAB_FILES, TAB_TRANSFERS -> {
                     showFragment(position, true)
+                    if (position == TAB_FILES && wasSelected) {
+                        filesFragment?.goBackToRoot()
+                    }
                     return@OnTabSelectedListener true
                 }
             }
