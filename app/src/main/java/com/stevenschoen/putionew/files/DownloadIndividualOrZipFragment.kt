@@ -15,19 +15,19 @@ class DownloadIndividualOrZipFragment : AutoExpandingBottomSheetDialogFragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.download_individualorzip, container, false).apply {
-            val individualView = findViewById(R.id.download_individualorzip_individual)
+            val individualView = findViewById<View>(R.id.download_individualorzip_individual)
             individualView.setOnClickListener {
                 callbacks?.onIndividualSelected()
                 dismiss()
             }
 
-            val zipView = findViewById(R.id.download_individualorzip_zip)
+            val zipView = findViewById<View>(R.id.download_individualorzip_zip)
             zipView.setOnClickListener {
                 callbacks?.onZipSelected()
                 dismiss()
             }
 
-            val toolbarView = findViewById(R.id.download_individualorzip_toolbar) as Toolbar
+            val toolbarView = findViewById<Toolbar>(R.id.download_individualorzip_toolbar)
             toolbarView.setNavigationOnClickListener {
                 dialog.cancel()
             }

@@ -49,24 +49,24 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.addtransfer_file, container, false)
 
-        val fileView = view.findViewById(R.id.addtransfer_file_file) as TextView
+        val fileView = view.findViewById<TextView>(R.id.addtransfer_file_file)
         fileView.setOnClickListener {
             requestChooseFile()
         }
 
-        val clearFileView = view.findViewById(R.id.addtransfer_file_clear)
+        val clearFileView = view.findViewById<View>(R.id.addtransfer_file_clear)
         clearFileView.setOnClickListener {
             torrentUri.onNext(null)
         }
 
-        val notATorrentView = view.findViewById(R.id.addtransfer_file_notatorrent)
+        val notATorrentView = view.findViewById<View>(R.id.addtransfer_file_notatorrent)
 
-        val addView = view.findViewById(R.id.addtransfer_file_add)
+        val addView = view.findViewById<View>(R.id.addtransfer_file_add)
         addView.setOnClickListener {
             callbacks?.onFileSelected(torrentUri.value!!)
         }
 
-        val cancelView = view.findViewById(R.id.addtransfer_file_cancel)
+        val cancelView = view.findViewById<View>(R.id.addtransfer_file_cancel)
         cancelView.setOnClickListener {
             dismiss()
         }
@@ -84,7 +84,7 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
                             addView.isEnabled = false
                         }
                     } else {
-                        fileView.text = "Choose a file"
+                        fileView.text = getString(R.string.choose_a_file)
                         clearFileView.visibility = View.GONE
                         notATorrentView.visibility = View.GONE
                         addView.isEnabled = false

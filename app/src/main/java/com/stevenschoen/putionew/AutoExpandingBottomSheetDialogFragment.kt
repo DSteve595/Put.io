@@ -12,10 +12,8 @@ abstract class AutoExpandingBottomSheetDialogFragment : BottomSheetDialogFragmen
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
 
-        dialog.setOnShowListener { dialog ->
-            val d = dialog as BottomSheetDialog
-
-            val bottomSheet = d.findViewById(android.support.design.R.id.design_bottom_sheet) as FrameLayout
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<FrameLayout>(android.support.design.R.id.design_bottom_sheet)
             BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
         }
 

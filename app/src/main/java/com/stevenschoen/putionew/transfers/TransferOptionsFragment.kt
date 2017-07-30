@@ -31,10 +31,10 @@ class TransferOptionsFragment : AutoExpandingBottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.transfer_options, container, false)
 
-        val nameView = view.findViewById(R.id.transfer_options_name) as TextView
+        val nameView = view.findViewById<TextView>(R.id.transfer_options_name)
         nameView.text = transfer.name
 
-        val retryView = view.findViewById(R.id.transfer_options_retry)
+        val retryView = view.findViewById<View>(R.id.transfer_options_retry)
         retryView.setOnClickListener {
             callbacks?.onRetrySelected()
         }
@@ -47,7 +47,7 @@ class TransferOptionsFragment : AutoExpandingBottomSheetDialogFragment() {
             retryView.isEnabled = false
         }
 
-        val removeView = view.findViewById(R.id.transfer_options_remove)
+        val removeView = view.findViewById<View>(R.id.transfer_options_remove)
         removeView.setOnClickListener {
             callbacks?.onRemoveSelected()
         }

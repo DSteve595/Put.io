@@ -40,7 +40,7 @@ class DestinationPickerFragment : Fragment() {
             startActivityForResult(Intent(context, DestinationFolderActivity::class.java), REQUEST_PICK_NEW_DESTINATION)
         }
 
-        val folderNameView = view.findViewById(R.id.addtransfer_pick_destination_name) as TextView
+        val folderNameView = view.findViewById<TextView>(R.id.addtransfer_pick_destination_name)
 
         fun updateFolderNameView(newDestination: PutioFile) {
             folderNameView.text = newDestination.name

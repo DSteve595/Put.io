@@ -6,18 +6,19 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.*
 import com.stevenschoen.putionew.PutioApplication.CastCallbacks
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
-import com.stevenschoen.putionew.model.responses.Mp4StatusResponse
 import com.trello.rxlifecycle.components.support.RxFragment
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
 import rx.android.schedulers.AndroidSchedulers
@@ -79,7 +80,7 @@ class FileDetailsFragment : RxFragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.filedetails, container, false)
 
-        toolbarView = view.findViewById(R.id.filedetails_toolbar) as Toolbar
+        toolbarView = view.findViewById<Toolbar>(R.id.filedetails_toolbar)
         toolbarView.setNavigationOnClickListener {
             callbacks!!.onFileDetailsClosed(false)
         }
@@ -108,41 +109,41 @@ class FileDetailsFragment : RxFragment() {
         }
 
         val scrimColor = Color.parseColor("#48000000")
-        val toolbarScrimView = view.findViewById(R.id.filepreview_toolbar_scrim)
+        val toolbarScrimView = view.findViewById<View>(R.id.filepreview_toolbar_scrim)
         toolbarScrimView.background = ScrimUtil.makeCubicGradientScrimDrawable(scrimColor, 8, Gravity.TOP)
-        val titleScrimView = view.findViewById(R.id.filepreview_title_scrim)
+        val titleScrimView = view.findViewById<View>(R.id.filepreview_title_scrim)
         titleScrimView.background = ScrimUtil.makeCubicGradientScrimDrawable(scrimColor, 10, Gravity.BOTTOM)
 
         if (UIUtils.hasLollipop()) {
-            val preview = view.findViewById(R.id.filepreview)
+            val preview = view.findViewById<View>(R.id.filepreview)
             preview.elevation = PutioUtils.pxFromDp(activity, 2f)
             toolbarView.elevation = resources.getDimension(R.dimen.appBarElevation)
         }
 
-        titleView = view.findViewById(R.id.filepreview_title) as TextView
+        titleView = view.findViewById<TextView>(R.id.filepreview_title)
         titleView.text = file.name
         titleView.setOnClickListener {
             val renameFragment = RenameFragment.newInstance(context, file)
             renameFragment.show(childFragmentManager, FRAGTAG_RENAME)
         }
 
-        val holderInfo = view.findViewById(R.id.holder_fileinfo) as ViewGroup
+        val holderInfo = view.findViewById<ViewGroup>(R.id.holder_fileinfo)
 
         infoMp4Checking = holderInfo.findViewById(R.id.holder_fileinfo_mp4_checking)
         infoMp4Already = holderInfo.findViewById(R.id.holder_fileinfo_mp4_already)
         infoMp4Available = holderInfo.findViewById(R.id.holder_fileinfo_mp4_available)
         infoMp4NotAvailable = holderInfo.findViewById(R.id.holder_fileinfo_mp4_notavailable)
         infoMp4Converting = holderInfo.findViewById(R.id.holder_fileinfo_mp4_converting)
-        infoMp4ConvertingText = infoMp4Converting.findViewById(R.id.fileinfo_mp4_converting_text) as TextView
+        infoMp4ConvertingText = infoMp4Converting.findViewById<TextView>(R.id.fileinfo_mp4_converting_text)
         if (file.isVideo) {
             if (file.isMp4) {
                 updateMp4View(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
             } else {
-                checkBoxMp4Available = infoMp4Available.findViewById(R.id.checkbox_fileinfo_mp4) as CheckBox
+                checkBoxMp4Available = infoMp4Available.findViewById<CheckBox>(R.id.checkbox_fileinfo_mp4)
                 checkBoxMp4Available.setOnCheckedChangeListener { buttonView, isChecked ->
                     updateMp4View(mp4StatusLoader!!.lastMp4Status())
                 }
-                textMp4Available = infoMp4Available.findViewById(R.id.text_fileinfo_mp4) as TextView
+                textMp4Available = infoMp4Available.findViewById<TextView>(R.id.text_fileinfo_mp4)
                 infoMp4NotAvailable.setOnClickListener { view ->
                     PutioApplication.get(context).putioUtils.restInterface
                             .convertToMp4(file.id)
@@ -167,8 +168,8 @@ class FileDetailsFragment : RxFragment() {
             infoMp4Converting.visibility = View.GONE
         }
 
-        val infoAccessed = holderInfo.findViewById(R.id.holder_fileinfo_accessedat)
-        val textAccessed = infoAccessed.findViewById(R.id.text_fileinfo_accessedat) as TextView
+        val infoAccessed = holderInfo.findViewById<View>(R.id.holder_fileinfo_accessedat)
+        val textAccessed = infoAccessed.findViewById<TextView>(R.id.text_fileinfo_accessedat)
         if (file.isAccessed) {
             val accessed = PutioUtils.parseIsoTime(activity, file.firstAccessedAt)
             textAccessed.text = getString(R.string.accessed_on_x_at_x, accessed[0], accessed[1])
@@ -176,20 +177,20 @@ class FileDetailsFragment : RxFragment() {
             textAccessed.text = getString(R.string.never_accessed)
         }
 
-        val infoCreated = holderInfo.findViewById(R.id.holder_fileinfo_createdat)
-        val textCreated = infoCreated.findViewById(R.id.text_fileinfo_createdat) as TextView
+        val infoCreated = holderInfo.findViewById<View>(R.id.holder_fileinfo_createdat)
+        val textCreated = infoCreated.findViewById<TextView>(R.id.text_fileinfo_createdat)
         val created = PutioUtils.parseIsoTime(activity, file.createdAt)
         textCreated.text = getString(R.string.created_on_x_at_x, created[0], created[1])
 
-        val infoSize = holderInfo.findViewById(R.id.holder_fileinfo_size)
-        val textSize = infoSize.findViewById(R.id.text_fileinfo_size) as TextView
+        val infoSize = holderInfo.findViewById<View>(R.id.holder_fileinfo_size)
+        val textSize = infoSize.findViewById<TextView>(R.id.text_fileinfo_size)
         textSize.text = PutioUtils.humanReadableByteCount(file.size!!, false)
 
-        val infoCrc32 = holderInfo.findViewById(R.id.holder_fileinfo_crc32)
-        val textCrc32 = infoCrc32.findViewById(R.id.text_fileinfo_crc32) as TextView
+        val infoCrc32 = holderInfo.findViewById<View>(R.id.holder_fileinfo_crc32)
+        val textCrc32 = infoCrc32.findViewById<TextView>(R.id.text_fileinfo_crc32)
         textCrc32.text = file.crc32
 
-        val buttonPlay = view.findViewById(R.id.button_filedetails_play)
+        val buttonPlay = view.findViewById<View>(R.id.button_filedetails_play)
         if (file.isMedia) {
             buttonPlay.setOnClickListener {
                 var mp4 = false
@@ -212,13 +213,13 @@ class FileDetailsFragment : RxFragment() {
             buttonPlay.visibility = View.GONE
         }
 
-        imagePreviewPlaceholder = view.findViewById(R.id.filepreview_image_placeholder) as ImageView
+        imagePreviewPlaceholder = view.findViewById<ImageView>(R.id.filepreview_image_placeholder)
         Picasso.with(context)
                 .load(file.icon)
                 .transform(PutioUtils.BlurTransformation(activity, 4f))
                 .into(imagePreviewPlaceholder)
 
-        imagePreview = view.findViewById(R.id.filepreview_image) as ImageView
+        imagePreview = view.findViewById<ImageView>(R.id.filepreview_image)
 
         screenshotLoader?.screenshot()
                 ?.bindToLifecycle(this@FileDetailsFragment)
@@ -289,13 +290,13 @@ class FileDetailsFragment : RxFragment() {
         if (PutioUtils.idIsDownloaded(file.id)) {
             val dialog = PutioUtils.showPutioDialog(activity, getString(R.string.redownloadtitle), R.layout.dialog_redownload)
 
-            val textBody = dialog.findViewById(R.id.text_redownloadbody) as TextView
+            val textBody = dialog.findViewById<TextView>(R.id.text_redownloadbody)
             when (mode) {
                 PutioUtils.ACTION_NOTHING -> textBody.text = getString(R.string.redownloadfordlbody)
                 PutioUtils.ACTION_OPEN -> textBody.text = getString(R.string.redownloadforopenbody)
             }
 
-            val buttonOpen = dialog.findViewById(R.id.button_redownload_open) as Button
+            val buttonOpen = dialog.findViewById<View>(R.id.button_redownload_open)
             if (mode == PutioUtils.ACTION_OPEN) {
                 buttonOpen.setOnClickListener {
                     PutioUtils.openDownloadedId(file.id, activity)
@@ -305,14 +306,14 @@ class FileDetailsFragment : RxFragment() {
                 buttonOpen.visibility = View.GONE
             }
 
-            val buttonRedownload = dialog.findViewById(R.id.button_redownload_download) as Button
+            val buttonRedownload = dialog.findViewById<View>(R.id.button_redownload_download)
             buttonRedownload.setOnClickListener {
                 PutioUtils.deleteId(file.id)
                 utils!!.downloadFiles(activity, mode, file)
                 dialog.dismiss()
             }
 
-            val buttonCancel = dialog.findViewById(R.id.button_redownload_cancel) as Button
+            val buttonCancel = dialog.findViewById<View>(R.id.button_redownload_cancel)
             buttonCancel.setOnClickListener { dialog.cancel() }
         } else {
             utils!!.downloadFiles(activity, mode, file)

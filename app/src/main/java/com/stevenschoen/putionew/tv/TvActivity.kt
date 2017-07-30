@@ -37,7 +37,7 @@ class TvActivity : FragmentActivity() {
     fun init() {
         setContentView(R.layout.tv_activity)
 
-        val stackView = findViewById(R.id.tv_stack) as HorizontalStackLayout
+        val stackView = findViewById<HorizontalStackLayout>(R.id.tv_stack)
 
         fun addFolder(folder: PutioFile) {
             supportFragmentManager.beginTransaction()

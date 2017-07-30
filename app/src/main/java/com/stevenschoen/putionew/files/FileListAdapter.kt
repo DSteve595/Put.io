@@ -173,10 +173,10 @@ class FileListAdapter(private val data: List<PutioFile>,
     }
 
     inner class FileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textName = itemView.findViewById(R.id.text_file_name) as TextView
-        val textDescription = itemView.findViewById(R.id.text_file_description) as TextView
-        val iconImg = itemView.findViewById(R.id.icon_file_img) as ImageView
-        val iconAccessed = itemView.findViewById(R.id.icon_file_accessed) as ImageView
+        val textName = itemView.findViewById<TextView>(R.id.text_file_name)!!
+        val textDescription = itemView.findViewById<TextView>(R.id.text_file_description)!!
+        val iconImg = itemView.findViewById<ImageView>(R.id.icon_file_img)!!
+        val iconAccessed = itemView.findViewById<ImageView>(R.id.icon_file_accessed)!!
 
         init {
             itemView.setOnClickListener {

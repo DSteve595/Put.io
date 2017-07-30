@@ -35,7 +35,7 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.addtransfer_link, container, false)
 
-        val linkView = view.findViewById(R.id.addtransfer_link_url) as EditText
+        val linkView = view.findViewById<EditText>(R.id.addtransfer_link_url)
         RxTextView.textChanges(linkView)
                 .subscribe {
                     link.onNext(it.toString())
@@ -44,19 +44,19 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
             linkView.setText(arguments.getString(EXTRA_PRECHOSEN_LINK))
         }
 
-        val clearLinkView = view.findViewById(R.id.addtransfer_link_clear)
+        val clearLinkView = view.findViewById<View>(R.id.addtransfer_link_clear)
         clearLinkView.setOnClickListener {
             linkView.setText(null)
         }
 
-        val extractView = view.findViewById(R.id.addtransfer_link_extract) as CheckBox
+        val extractView = view.findViewById<CheckBox>(R.id.addtransfer_link_extract)
 
-        val addView = view.findViewById(R.id.addtransfer_link_add)
+        val addView = view.findViewById<View>(R.id.addtransfer_link_add)
         addView.setOnClickListener {
             callbacks?.onLinkSelected(link.value!!, extractView.isChecked)
         }
 
-        val cancelView = view.findViewById(R.id.addtransfer_link_cancel)
+        val cancelView = view.findViewById<View>(R.id.addtransfer_link_cancel)
         cancelView.setOnClickListener {
             dismiss()
         }

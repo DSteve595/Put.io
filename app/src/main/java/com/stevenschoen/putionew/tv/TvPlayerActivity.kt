@@ -51,7 +51,7 @@ class TvPlayerActivity : FragmentActivity() {
 
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
 
-        playerView = findViewById(R.id.tv_player_exoplayer) as SimpleExoPlayerView
+        playerView = findViewById<SimpleExoPlayerView>(R.id.tv_player_exoplayer)
         playerView.player = player
 
         val dataSourceFactory = DefaultDataSourceFactory(this,
@@ -64,7 +64,7 @@ class TvPlayerActivity : FragmentActivity() {
         player.prepare(videoSource)
 
         playerView.post {
-            val titleView = findViewById(R.id.tv_player_title) as TextView
+            val titleView = findViewById<TextView>(R.id.tv_player_title)
             titleView.text = FilenameUtils.removeExtension(video.name)
             rewindView = findViewById(R.id.exo_rew)
             ffwdView = findViewById(R.id.exo_ffwd)

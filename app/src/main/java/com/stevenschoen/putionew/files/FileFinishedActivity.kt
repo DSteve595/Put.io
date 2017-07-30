@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Button
+import android.view.View
 import android.widget.TextView
 import com.stevenschoen.putionew.R
 
@@ -22,10 +22,10 @@ class FileFinishedActivity : AppCompatActivity() {
 
         val name = intent.extras.getString(EXTRA_NAME)
 
-        val messageView = findViewById(R.id.text_downloadfinished_body) as TextView
+        val messageView = findViewById<TextView>(R.id.text_downloadfinished_body)
         messageView.text = String.format(getString(R.string.downloadfinishedbody), name)
 
-        val openView = findViewById(R.id.button_filefinished_action) as Button
+        val openView = findViewById<View>(R.id.button_filefinished_action)
         openView.setOnClickListener {
             val uri = intent.extras.getParcelable<Uri>(EXTRA_URI)
             val type = intent.extras.getString(EXTRA_MEDIA_TYPE)
@@ -37,7 +37,7 @@ class FileFinishedActivity : AppCompatActivity() {
             finish()
         }
 
-        val okView = findViewById(R.id.button_filefinished_ok) as Button
+        val okView = findViewById<View>(R.id.button_filefinished_ok)
         okView.setOnClickListener { finish() }
     }
 }

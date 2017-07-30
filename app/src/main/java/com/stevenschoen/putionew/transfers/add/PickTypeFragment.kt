@@ -14,12 +14,12 @@ class PickTypeFragment : AutoExpandingBottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.addtransfer_picktype, container, false)
 
-        val linkView = view.findViewById(R.id.addtransfer_picktype_link)
+        val linkView = view.findViewById<View>(R.id.addtransfer_picktype_link)
         linkView.setOnClickListener {
             callbacks?.onLinkSelected()
         }
 
-        val fileView = view.findViewById(R.id.addtransfer_picktype_file)
+        val fileView = view.findViewById<View>(R.id.addtransfer_picktype_file)
         fileView.setOnClickListener {
             callbacks?.onFileSelected()
         }

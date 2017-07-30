@@ -36,7 +36,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
         if (isCastSdkAvailable) {
             castMiniControllerContainerId?.let { containerId ->
                 if (!inflatedCastMiniController) {
-                    val holder = findViewById(containerId) as ViewGroup
+                    val holder = findViewById<ViewGroup>(containerId)
                     layoutInflater.inflate(R.layout.cast_mini_controller_putio, holder)
                     inflatedCastMiniController = true
                 }

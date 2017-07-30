@@ -22,7 +22,7 @@ abstract class BaseFragment(val destinationPickerContainerId: Int) : AppCompatDi
                         .commitNow()
             }
         } else {
-            val holderView = view.findViewById(destinationPickerContainerId)
+            val holderView = view.findViewById<View>(destinationPickerContainerId)
             holderView.visibility = View.GONE
         }
     }

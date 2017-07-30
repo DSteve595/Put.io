@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.View
 import com.stevenschoen.putionew.R
 
 class DestinationFolderActivity : AppCompatActivity() {
@@ -22,17 +23,17 @@ class DestinationFolderActivity : AppCompatActivity() {
                     .commitNow()
         }
 
-        val toolbarView = findViewById(R.id.destination_toolbar) as Toolbar
+        val toolbarView = findViewById<Toolbar>(R.id.destination_toolbar)
         setSupportActionBar(toolbarView)
         toolbarView.setNavigationIcon(R.drawable.ic_toolbar_nav_close_black)
         toolbarView.setNavigationOnClickListener { finish() }
 
-        findViewById(R.id.destination_cancel).setOnClickListener {
+        findViewById<View>(R.id.destination_cancel).setOnClickListener {
             setResult(RESULT_CANCELED)
             finish()
         }
 
-        findViewById(R.id.destination_choose).setOnClickListener {
+        findViewById<View>(R.id.destination_choose).setOnClickListener {
             setResult(RESULT_OK, Intent().apply {
                 putExtra(RESULT_EXTRA_FOLDER, fragment!!.currentPage!!.file)
             })

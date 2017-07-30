@@ -63,7 +63,7 @@ class TransfersFragment : RxFragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.transfers, container, false)
 
-        transfersListView = view.findViewById(R.id.transferslist) as RecyclerView
+        transfersListView = view.findViewById<RecyclerView>(R.id.transferslist)
         transfersListView!!.layoutManager = LinearLayoutManager(
                 context, LinearLayoutManager.VERTICAL, false)
         val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)

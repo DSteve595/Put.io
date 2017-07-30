@@ -39,7 +39,7 @@ class CreateFolderFragment : DialogFragment() {
                 .setNegativeButton(R.string.cancel, null)
                 .show()
 
-        val nameInputLayoutView = dialog.findViewById(R.id.new_folder_name_input) as TextInputLayout
+        val nameInputLayoutView = dialog.findViewById<TextInputLayout>(R.id.new_folder_name_input)!!
         nameView = nameInputLayoutView.editText!!
 
         return dialog

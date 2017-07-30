@@ -47,7 +47,7 @@ class PutioActivity : BaseCastActivity() {
 
     val sharedPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
-    var bottomNavView: AHBottomNavigation? = null
+    lateinit var bottomNavView: AHBottomNavigation
 
     lateinit var addTransferView: View
     var showingAddTransferFab = true
@@ -107,7 +107,7 @@ class PutioActivity : BaseCastActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putInt(STATE_CURRENT_TAB, bottomNavView!!.currentItem)
+        outState.putInt(STATE_CURRENT_TAB, bottomNavView.currentItem)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -169,7 +169,7 @@ class PutioActivity : BaseCastActivity() {
         addTransferView = findViewById(R.id.main_addtransfer)
         addTransferView.setOnClickListener {
             var destinationFolder: PutioFile? = null
-            if (bottomNavView!!.currentItem == TAB_FILES) {
+            if (bottomNavView.currentItem == TAB_FILES) {
                 destinationFolder = filesFragment!!.currentPage!!.file
             }
             val addTransferIntent = Intent(this@PutioActivity, AddTransferActivity::class.java)
@@ -249,7 +249,7 @@ class PutioActivity : BaseCastActivity() {
     }
 
     private fun shouldShowAddTransferFab(): Boolean {
-        when (bottomNavView!!.currentItem) {
+        when (bottomNavView.currentItem) {
             TAB_ACCOUNT -> return false
             TAB_FILES -> {
                 run {
@@ -286,18 +286,18 @@ class PutioActivity : BaseCastActivity() {
     }
 
     private fun setupLayout() {
-        val toolbar = findViewById(R.id.main_toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
         setSupportActionBar(toolbar)
 
-        bottomNavView = findViewById(R.id.main_bottom_nav) as AHBottomNavigation
-        bottomNavView!!.defaultBackgroundColor = Color.parseColor("#F8F8F8")
-        bottomNavView!!.accentColor = Color.BLACK
-        bottomNavView!!.inactiveColor = Color.parseColor("#80000000")
-        bottomNavView!!.addItem(AHBottomNavigationItem(getString(R.string.account), R.drawable.ic_nav_account))
-        bottomNavView!!.addItem(AHBottomNavigationItem(getString(R.string.files), R.drawable.ic_nav_files))
-        bottomNavView!!.addItem(AHBottomNavigationItem(getString(R.string.transfers), R.drawable.ic_nav_transfers))
-        bottomNavView!!.setOnTabSelectedListener(AHBottomNavigation.OnTabSelectedListener { position, wasSelected ->
-            bottomNavView!!.post { updateAddTransferFab(true) }
+        bottomNavView = findViewById<AHBottomNavigation>(R.id.main_bottom_nav)
+        bottomNavView.defaultBackgroundColor = Color.parseColor("#F8F8F8")
+        bottomNavView.accentColor = Color.BLACK
+        bottomNavView.inactiveColor = Color.parseColor("#80000000")
+        bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.account), R.drawable.ic_nav_account))
+        bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.files), R.drawable.ic_nav_files))
+        bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.transfers), R.drawable.ic_nav_transfers))
+        bottomNavView.setOnTabSelectedListener(AHBottomNavigation.OnTabSelectedListener { position, wasSelected ->
+            bottomNavView.post { updateAddTransferFab(true) }
             when (position) {
                 TAB_ACCOUNT, TAB_FILES, TAB_TRANSFERS -> {
                     showFragment(position, true)
@@ -332,7 +332,7 @@ class PutioActivity : BaseCastActivity() {
     }
 
     override fun onBackPressed() {
-        if (bottomNavView!!.currentItem == TAB_FILES) {
+        if (bottomNavView.currentItem == TAB_FILES) {
             if (!filesFragment!!.goBack(true)) {
                 super.onBackPressed()
             }
@@ -367,8 +367,8 @@ class PutioActivity : BaseCastActivity() {
     }
 
     private fun selectTab(position: Int, animate: Boolean) {
-        if (bottomNavView!!.currentItem != position) {
-            bottomNavView!!.setCurrentItem(position, false)
+        if (bottomNavView.currentItem != position) {
+            bottomNavView.setCurrentItem(position, false)
             showFragment(position, animate)
         }
     }

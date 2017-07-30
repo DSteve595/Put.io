@@ -25,26 +25,26 @@ class FileSelectionFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.file_selection, container, false)
 
-        val cancelView = view.findViewById(R.id.file_selection_cancel)
+        val cancelView = view.findViewById<View>(R.id.file_selection_cancel)
         cancelView.setOnClickListener {
             callbacks?.onCancel()
         }
 
-        val downloadView = view.findViewById(R.id.file_selection_download)
+        val downloadView = view.findViewById<View>(R.id.file_selection_download)
         downloadView.setOnClickListener { callbacks?.onDownloadSelected() }
         downloadView.setOnLongClickListener {
             Toast.makeText(context, R.string.download, Toast.LENGTH_SHORT).show()
             true
         }
 
-        val copyLinkView = view.findViewById(R.id.file_selection_copylink)
+        val copyLinkView = view.findViewById<View>(R.id.file_selection_copylink)
         copyLinkView.setOnClickListener { callbacks?.onCopyLinkSelected() }
         copyLinkView.setOnLongClickListener {
             Toast.makeText(context, R.string.copy_dl_link, Toast.LENGTH_SHORT).show()
             true
         }
 
-        val deleteView = view.findViewById(R.id.file_selection_delete)
+        val deleteView = view.findViewById<View>(R.id.file_selection_delete)
         deleteView.setOnClickListener { callbacks?.onDeleteSelected() }
         deleteView.setOnLongClickListener {
             Toast.makeText(context, R.string.delete, Toast.LENGTH_SHORT).show()
@@ -54,7 +54,7 @@ class FileSelectionFragment : Fragment() {
         val idRename = 1
         val idMove = 2
 
-        val moreView = view.findViewById(R.id.file_selection_more)
+        val moreView = view.findViewById<View>(R.id.file_selection_more)
         moreView.setOnClickListener {
             val popup = PopupMenu(context, moreView)
             if (amountSelected.value == 1) popup.menu.add(0, idRename, 0, R.string.rename)
@@ -75,7 +75,7 @@ class FileSelectionFragment : Fragment() {
             popup.show()
         }
 
-        val titleView = view.findViewById(R.id.file_selection_title) as TextView
+        val titleView = view.findViewById<TextView>(R.id.file_selection_title)
 
         fun updateAmount(amount: Int) {
             titleView.text = getString(R.string.x_selected, amount)

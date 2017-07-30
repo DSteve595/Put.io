@@ -105,18 +105,18 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             currentViewBackView.setOnClickListener {
                 callbacks?.onBackSelected()
             }
-            currentFolderNameView = currentViewHolderView.findViewById(R.id.files_currentfolder_name) as TextView
+            currentFolderNameView = currentViewHolderView.findViewById<TextView>(R.id.files_currentfolder_name)
             currentSearchHolderView = currentViewHolderView.findViewById(R.id.folder_currentsearch_holder)
-            currentSearchQueryView = currentSearchHolderView.findViewById(R.id.folder_currentsearch_query) as TextView
-            currentSearchFolderView = currentSearchHolderView.findViewById(R.id.folder_currentsearch_parent) as TextView
+            currentSearchQueryView = currentSearchHolderView.findViewById<TextView>(R.id.folder_currentsearch_query)
+            currentSearchFolderView = currentSearchHolderView.findViewById<TextView>(R.id.folder_currentsearch_parent)
 
             loadingView = findViewById(R.id.files_loading)
             emptySubfolderView = findViewById(R.id.files_empty_subfolder)
 
-            filesView = findViewById(R.id.folder_list) as RecyclerView
+            filesView = findViewById<RecyclerView>(R.id.folder_list)
             filesView.adapter = filesAdapter
             filesView.layoutManager = LinearLayoutManager(context)
-            swipeRefreshView = findViewById(R.id.folder_swiperefresh) as SwipeRefreshLayout
+            swipeRefreshView = findViewById<SwipeRefreshLayout>(R.id.folder_swiperefresh)
             swipeRefreshView.setColorSchemeResources(R.color.putio_accent)
             swipeRefreshView.setOnRefreshListener {
                 refresh()

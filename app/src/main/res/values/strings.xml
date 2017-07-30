@@ -110,6 +110,7 @@
 	<string name="use_mp4">Use MP4</string>
 	<string name="dont_use_mp4">Don\'t use MP4</string>
 	<string name="destination_is">Destination:</string>
+	<string name="choose_a_file">Choose a file</string>
 	<string name="choose_folder">Choose folder</string>
 	<string name="x_per_sec">%s/sec</string>
 	<string name="in_x">in %s</string>

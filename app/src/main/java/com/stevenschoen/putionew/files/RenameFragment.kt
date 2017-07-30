@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.view.View
 import android.widget.EditText
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
@@ -38,12 +39,12 @@ class RenameFragment : RxAppCompatDialogFragment() {
                 .setNegativeButton(R.string.cancel, null)
                 .show()
 
-        nameView = dialog.findViewById(R.id.rename_name) as EditText
+        nameView = dialog.findViewById<EditText>(R.id.rename_name)!!
         if (savedInstanceState == null) {
             nameView.setText(file.name)
         }
 
-        val undoView = dialog.findViewById(R.id.rename_undo)!!
+        val undoView = dialog.findViewById<View>(R.id.rename_undo)!!
         undoView.setOnClickListener {
             nameView.setText(file.name)
         }
