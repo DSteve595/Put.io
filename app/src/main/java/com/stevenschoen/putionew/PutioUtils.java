@@ -354,8 +354,13 @@ public class PutioUtils {
 						// No subtitles, not a problem
 					} else {
 						e.printStackTrace();
-						if (context != null) {
-							Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+						if (context != null && context instanceof Activity) {
+							((Activity) context).runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+								}
+							});
 						}
 					}
 				}
