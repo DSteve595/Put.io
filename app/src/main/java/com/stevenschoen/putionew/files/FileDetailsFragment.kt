@@ -41,7 +41,7 @@ class FileDetailsFragment : RxFragment() {
         }
     }
 
-    val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE) }
+    val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE)!! }
 
     var screenshotLoader: FileScreenshotLoader? = null
     var mp4StatusLoader: Mp4StatusLoader? = null
@@ -393,25 +393,6 @@ class FileDetailsFragment : RxFragment() {
         } else {
             imagePreview!!.setImageBitmap(bitmap)
             imagePreview!!.postInvalidate()
-//            if (UIUtils.hasLollipop()) {
-//                Palette.from(bitmap).generate { palette ->
-//                    if (isAdded) {
-//                        val darkMuted = palette.darkMutedSwatch
-//                        if (darkMuted != null) {
-//                            val statusBarAnim = ValueAnimator.ofObject(ArgbEvaluator(),
-//                                    activity.window.statusBarColor, darkMuted.rgb)
-//                            statusBarAnim.addUpdateListener { animation ->
-//                                if (isAdded && activity.window != null) {
-//                                    activity.window.statusBarColor = animation.animatedValue as Int
-//                                } else {
-//                                    animation.cancel()
-//                                }
-//                            }
-//                            statusBarAnim.start()
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 

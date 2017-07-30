@@ -1,6 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
 	<ProgressBar
 		android:id="@+id/loading_setup"
@@ -35,7 +36,7 @@
 			android:layout_marginTop="32dp"
 			android:alpha="0.8"
 			android:src="@drawable/x"
-			android:tint="?android:textColorPrimary"/>
+			android:tint="#FFFFFF"/>
 
 		<RelativeLayout
 			android:layout_width="match_parent"

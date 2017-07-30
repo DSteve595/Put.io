@@ -102,14 +102,14 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.file_list, container, false).apply {
             currentViewHolderView = findViewById(R.id.files_currentview_holder)
-            currentViewBackView = currentViewHolderView.findViewById(R.id.files_currentview_back)
+            currentViewBackView = currentViewHolderView.findViewById(R.id.file_title_bar_back)
             currentViewBackView.setOnClickListener {
                 callbacks?.onBackSelected()
             }
-            currentFolderNameView = currentViewHolderView.findViewById(R.id.files_currentfolder_name)
-            currentSearchHolderView = currentViewHolderView.findViewById(R.id.folder_currentsearch_holder)
-            currentSearchQueryView = currentSearchHolderView.findViewById(R.id.folder_currentsearch_query)
-            currentSearchFolderView = currentSearchHolderView.findViewById(R.id.folder_currentsearch_parent)
+            currentFolderNameView = currentViewHolderView.findViewById(R.id.file_title_bar_name)
+            currentSearchHolderView = currentViewHolderView.findViewById(R.id.file_title_bar_search_holder)
+            currentSearchQueryView = currentSearchHolderView.findViewById(R.id.file_title_bar_search_query)
+            currentSearchFolderView = currentSearchHolderView.findViewById(R.id.file_title_bar_search_parent)
 
             loadingView = findViewById(R.id.files_loading)
             emptySubfolderView = findViewById(R.id.files_empty_subfolder)

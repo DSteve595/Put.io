@@ -15,6 +15,7 @@
 		android:layout_marginStart="24dp"
 		android:layout_marginTop="8dp"
 		android:hint="@string/pasteurls"
+		android:importantForAutofill="no"
 		android:inputType="textMultiLine|textUri"
 		android:lines="2"/>
 

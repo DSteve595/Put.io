@@ -288,6 +288,11 @@ open class FilesFragment : RxFragment() {
                     }
                 }
             }
+            is NewFileDetailsFragment -> {
+                childFragment.onBackPressed = {
+                    goBack(false)
+                }
+            }
         }
     }
 
@@ -306,10 +311,10 @@ open class FilesFragment : RxFragment() {
             when (page.type) {
                 Page.Type.File -> {
                     val file = page.file!!
-                    if (file.isFolder) {
-                        return FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
-                    } else {
-                        return FileDetailsFragment.newInstance(context, file)
+                    return when {
+                        file.isFolder -> FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
+                        file.isMedia -> FileDetailsFragment.newInstance(context, file)
+                        else -> NewFileDetailsFragment.newInstance(context, file)
                     }
                 }
                 Page.Type.Search -> {
