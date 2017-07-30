@@ -194,7 +194,7 @@ class FileDetailsFragment : RxFragment() {
         if (file.isMedia) {
             buttonPlay.setOnClickListener {
                 var mp4 = false
-                if (file.isVideo) {
+                if (file.isVideo && !!file.isMp4) {
                     val mp4Status = mp4StatusLoader?.lastMp4Status()
                     if (mp4Status != null) {
                         if (mp4Status == PutioMp4Status.Status.Completed) {
