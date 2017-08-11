@@ -104,6 +104,7 @@
   <string name="use_mp4">MP4 を使用する</string>
   <string name="dont_use_mp4">MP4 を使用しない</string>
   <string name="destination_is">宛先：</string>
+  <string name="choose_a_file">ファイルを選択</string>
   <string name="choose_folder">フォルダーを選択</string>
   <string name="x_per_sec">%s/秒</string>
   <string name="in_x">%s で</string>
