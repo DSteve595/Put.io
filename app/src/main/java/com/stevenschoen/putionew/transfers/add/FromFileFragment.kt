@@ -13,14 +13,14 @@ import android.webkit.MimeTypeMap
 import android.widget.TextView
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
-import rx.android.schedulers.AndroidSchedulers
-import rx.subjects.BehaviorSubject
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 
 class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) {
 
     var callbacks: Callbacks? = null
 
-    val torrentUri = BehaviorSubject.create(null as Uri?)
+    val torrentUri = BehaviorSubject.createDefault(Uri.EMPTY)
     var didFirstRequest = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
 
         val clearFileView = view.findViewById<View>(R.id.addtransfer_file_clear)
         clearFileView.setOnClickListener {
-            torrentUri.onNext(null)
+            torrentUri.onNext(Uri.EMPTY)
         }
 
         val notATorrentView = view.findViewById<View>(R.id.addtransfer_file_notatorrent)
@@ -73,7 +73,7 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
 
         torrentUri.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { newTorrentUri ->
-                    if (newTorrentUri != null) {
+                    if (newTorrentUri != Uri.EMPTY) {
                         fileView.text = PutioUtils.getNameFromUri(context, newTorrentUri)
                         clearFileView.visibility = View.VISIBLE
                         if (isTorrent(newTorrentUri)) {

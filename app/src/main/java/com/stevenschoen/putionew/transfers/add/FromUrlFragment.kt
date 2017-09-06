@@ -9,16 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
-import com.jakewharton.rxbinding.widget.RxTextView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.stevenschoen.putionew.R
-import rx.android.schedulers.AndroidSchedulers
-import rx.subjects.BehaviorSubject
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 
 class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
 
     var callbacks: Callbacks? = null
 
-    val link = BehaviorSubject.create(null as String?)
+    val link = BehaviorSubject.createDefault("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
 
         val clearLinkView = view.findViewById<View>(R.id.addtransfer_link_clear)
         clearLinkView.setOnClickListener {
-            linkView.setText(null)
+            linkView.text = null
         }
 
         val extractView = view.findViewById<CheckBox>(R.id.addtransfer_link_extract)
@@ -63,7 +63,7 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
 
         link.observeOn(AndroidSchedulers.mainThread())
                 .subscribe { newLink ->
-                    if (!newLink.isNullOrBlank()) {
+                    if (!newLink.isBlank()) {
                         clearLinkView.visibility = View.VISIBLE
                         addView.isEnabled = true
                     } else {

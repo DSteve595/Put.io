@@ -27,7 +27,8 @@
 			android:layout_marginBottom="16dp"
 			android:layout_marginEnd="16dp"
 			android:src="@drawable/ic_fab_add"
-			app:fabSize="normal"/>
+			app:fabSize="normal"
+			app:tooltipText="@string/add_transfer"/>
 	</RelativeLayout>
 
 	<FrameLayout

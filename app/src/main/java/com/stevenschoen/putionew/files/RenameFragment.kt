@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.EditText
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment
+import com.trello.rxlifecycle2.components.support.RxAppCompatDialogFragment
 
 class RenameFragment : RxAppCompatDialogFragment() {
 

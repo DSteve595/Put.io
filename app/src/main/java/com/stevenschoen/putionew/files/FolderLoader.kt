@@ -10,12 +10,12 @@ import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.responses.FilesListResponse
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import org.apache.commons.io.FileUtils
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -30,25 +30,28 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     fun publishCachedFileIfNeeded() {
         fun isNeeded() = (!folderSubject.hasValue() || !folderSubject.value.fresh)
         if (isNeeded()) {
-            Observable.fromCallable { return@fromCallable if (diskCache.isCached(folder.id)) diskCache.getCached(folder.id) else null }
-                    .subscribeOn(Schedulers.io())
-                    .filter { it != null }
-                    .subscribe({ cachedResponse ->
-                        cachedResponse!!
+            Completable.fromCallable {
+                if (diskCache.isCached(folder.id)) {
+                    diskCache.getCached(folder.id)?.let {
                         if (isNeeded()) {
-                            folderSubject.onNext(FolderResponse(false, cachedResponse.parent, cachedResponse.files))
+                            folderSubject.onNext(FolderResponse(false, it.parent, it.files))
                         }
-                    }, { error ->
-                        error.printStackTrace()
-                        diskCache.deleteCached(folder.id)
-                    })
+                    }
+                }
+            }
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ },
+                            { error ->
+                                error.printStackTrace()
+                                diskCache.deleteCached(folder.id)
+                            })
         }
     }
 
-    var refreshSubscription: Subscription? = null
+    var refreshSubscription: Disposable? = null
     fun refreshFolder(onlyIfStaleOrEmpty: Boolean = false, cache: Boolean = true) {
         if (onlyIfStaleOrEmpty && (hasFresh() || isRefreshing())) return
-        refreshSubscription?.unsubscribe()
+        refreshSubscription?.dispose()
         refreshSubscription = api.files(folder.id).subscribe({ response ->
             refreshSubscription = null
             if (cache) diskCache.cache(response)
@@ -60,21 +63,18 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         })
     }
 
-    fun isRefreshing(): Boolean {
-        return refreshSubscription != null && !refreshSubscription!!.isUnsubscribed
-    }
+    fun isRefreshing() = refreshSubscription != null && !refreshSubscription!!.isDisposed
 
     fun hasFresh(): Boolean = (folderSubject.hasValue() && folderSubject.value.fresh)
 
     data class FolderResponse(val fresh: Boolean, val parent: PutioFile, val files: List<PutioFile>)
 
     inner class DiskCache {
-        private val filesCacheDir: File
+        private val filesCacheDir = File("${context.cacheDir}${File.separator}filesCache")
 
         internal var gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
         init {
-            filesCacheDir = File("${context.cacheDir}${File.separator}filesCache")
             filesCacheDir.mkdirs()
         }
 
@@ -94,7 +94,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
             try {
                 return gson.fromJson(FileUtils.readFileToString(file), FilesListResponse::class.java)
             } catch (e: FileNotFoundException) {
-                //			Not cached yet, no problem
+                // Not cached yet, no problem
             } catch (e: IOException) {
                 e.printStackTrace()
             }

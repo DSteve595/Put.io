@@ -14,10 +14,13 @@ import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import rx.android.schedulers.AndroidSchedulers
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
+
+    override val isRefreshing
+        get() = folderLoader!!.isRefreshing()
 
     val folder by lazy { arguments.getParcelable<PutioFile>(EXTRA_FOLDER) }
     val padForFab by lazy { arguments.getBoolean(EXTRA_PAD_FOR_FAB) }
@@ -150,10 +153,6 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     override fun refresh() {
         folderLoader!!.refreshFolder(false)
-    }
-
-    override fun isRefreshing(): Boolean {
-        return folderLoader!!.isRefreshing()
     }
 
     companion object {

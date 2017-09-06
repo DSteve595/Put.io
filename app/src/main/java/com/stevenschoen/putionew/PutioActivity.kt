@@ -160,9 +160,10 @@ class PutioActivity : BaseCastActivity() {
 
         setupLayout()
 
-        var navItem = TAB_FILES
-        if (savedInstanceState != null) {
-            navItem = savedInstanceState.getInt(STATE_CURRENT_TAB, -1)
+        val navItem = if (savedInstanceState != null) {
+            savedInstanceState.getInt(STATE_CURRENT_TAB, TAB_FILES)
+        } else {
+            TAB_FILES
         }
         selectTab(navItem, false)
 

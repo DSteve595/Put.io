@@ -8,7 +8,7 @@ import com.stevenschoen.putionew.LoginActivity
 import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import rx.subjects.BehaviorSubject
+import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
 class TvActivity : FragmentActivity() {
@@ -18,7 +18,7 @@ class TvActivity : FragmentActivity() {
     }
 
     val displayedFolders = ArrayList<PutioFile>()
-    val folders by lazy { BehaviorSubject.create<List<PutioFile>>(listOf(PutioFile.makeRootFolder(resources))) }
+    val folders by lazy { BehaviorSubject.createDefault<List<PutioFile>>(listOf(PutioFile.makeRootFolder(resources))) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

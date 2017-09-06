@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 
 class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
 
@@ -29,6 +29,9 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
                     canSelect)
         }
     }
+
+    override val isRefreshing
+        get() = searchLoader!!.isRefreshing()
 
     val query by lazy { arguments.getString(EXTRA_QUERY) }
     val parentFolder by lazy { arguments.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER) }
@@ -64,9 +67,5 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     override fun refresh() {
         searchLoader!!.refreshSearch(false)
-    }
-
-    override fun isRefreshing(): Boolean {
-        return searchLoader!!.isRefreshing()
     }
 }

@@ -19,9 +19,9 @@ import com.stevenschoen.putionew.*
 import com.stevenschoen.putionew.PutioApplication.CastCallbacks
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
-import com.trello.rxlifecycle.components.support.RxFragment
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import rx.android.schedulers.AndroidSchedulers
+import com.trello.rxlifecycle2.components.support.RxFragment
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class FileDetailsFragment : RxFragment() {
 
@@ -41,7 +41,7 @@ class FileDetailsFragment : RxFragment() {
         }
     }
 
-    val file by lazy {arguments.getParcelable<PutioFile>(EXTRA_FILE)}
+    val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE) }
 
     var screenshotLoader: FileScreenshotLoader? = null
     var mp4StatusLoader: Mp4StatusLoader? = null
@@ -225,7 +225,7 @@ class FileDetailsFragment : RxFragment() {
                 ?.bindToLifecycle(this@FileDetailsFragment)
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe({
-                    it?.let { updateImagePreview(it, true) }
+                    it.let { updateImagePreview(it, true) }
                 }, { error ->
                     error.printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()

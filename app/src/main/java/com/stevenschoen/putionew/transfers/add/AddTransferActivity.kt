@@ -12,10 +12,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.stevenschoen.putionew.PutioActivity
-import com.stevenschoen.putionew.PutioApplication
-import com.stevenschoen.putionew.PutioUtils
-import com.stevenschoen.putionew.R
+import com.stevenschoen.putionew.*
 import com.stevenschoen.putionew.model.PutioUploadInterface
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.transfers.TransfersActivity
@@ -169,7 +166,7 @@ class AddTransferActivity : AppCompatActivity() {
         private val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         fun start() {
-            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity)
+            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity, NOTIFICATION_CHANNEL_ID_TRANSFERS)
             notifBuilder
                     .setOngoing(true)
                     .setCategory(NotificationCompat.CATEGORY_PROGRESS)
@@ -195,7 +192,7 @@ class AddTransferActivity : AppCompatActivity() {
         }
 
         fun succeeded() {
-            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity)
+            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity, NOTIFICATION_CHANNEL_ID_TRANSFERS)
             notifBuilder
                     .setOngoing(false)
                     .setAutoCancel(true)
@@ -220,7 +217,7 @@ class AddTransferActivity : AppCompatActivity() {
         }
 
         fun failed() {
-            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity)
+            val notifBuilder = NotificationCompat.Builder(this@AddTransferActivity, NOTIFICATION_CHANNEL_ID_TRANSFERS)
             notifBuilder
                     .setOngoing(false)
                     .setAutoCancel(true)

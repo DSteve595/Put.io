@@ -9,39 +9,39 @@ import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 
 class FileScreenshotLoader(context: Context, val file: PutioFile) : PutioBaseLoader(context) {
 
     private val screenshotSubject = BehaviorSubject.create<Bitmap>()
     fun screenshot() = screenshotSubject.observeOn(AndroidSchedulers.mainThread())
 
-    var subscription: Subscription? = null
+    var disposable: Disposable? = null
     fun load(onlyIfEmpty: Boolean = false) {
         if (onlyIfEmpty && (screenshotSubject.hasValue() || isLoading())) return
-        subscription?.unsubscribe()
-        val observable = Observable.fromCallable {
+        disposable?.dispose()
+        val single = Single.fromCallable {
             Picasso.with(context)
                     .load(file.screenshot)
                     .get()
         }.subscribeOn(Schedulers.io())
 
-        subscription = observable.subscribe({ response ->
-            subscription = null
+        disposable = single.subscribe({ response ->
+            disposable = null
             screenshotSubject.onNext(response)
         }, { error ->
-            subscription = null
+            disposable = null
             screenshotSubject.onError(error)
             error.printStackTrace()
         })
     }
 
     fun isLoading(): Boolean {
-        return subscription != null && !subscription!!.isUnsubscribed
+        return disposable != null && !disposable!!.isDisposed
     }
 
     companion object {

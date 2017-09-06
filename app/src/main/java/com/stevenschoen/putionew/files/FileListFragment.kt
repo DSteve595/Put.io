@@ -17,9 +17,9 @@ import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.trello.rxlifecycle.components.support.RxFragment
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import rx.android.schedulers.AndroidSchedulers
+import com.trello.rxlifecycle2.components.support.RxFragment
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 
 abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : RxFragment() {
@@ -78,7 +78,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 })
         filesAdapter!!.setItemsCheckedChangedListener(object : FileListAdapter.OnItemsCheckedChangedListener {
             override fun onItemsCheckedChanged() {
-                if (!selectionHelper.isShowing()) {
+                if (!selectionHelper.isShowing) {
                     if (filesAdapter!!.isInCheckMode()) {
                         selectionHelper.show()
                     }
@@ -126,7 +126,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
 
     fun updateViewState() {
         if (files.isEmpty()) {
-            if (isRefreshing()) {
+            if (isRefreshing) {
                 loadingView.visibility = View.VISIBLE
                 emptySubfolderView.visibility = View.GONE
             } else {
@@ -301,12 +301,11 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     }
 
     abstract fun refresh()
-    abstract fun isRefreshing(): Boolean
+    abstract val isRefreshing: Boolean
 
     inner class SelectionHelper() {
-        fun isShowing(): Boolean {
-            return getSelectionFragment() != null
-        }
+        val isShowing
+            get() = getSelectionFragment() != null
 
         fun invalidate() {
             val count = filesAdapter!!.checkedCount()

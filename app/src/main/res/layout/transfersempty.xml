@@ -1,26 +1,28 @@
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:visibility="gone"
+	tools:visibility="visible">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="44dp"
-        android:fontFamily="sans-serif-light"
-        android:paddingBottom="64dp"
-        android:text="You don't have any transfers"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:layout_marginBottom="44dp"
+		android:fontFamily="sans-serif-light"
+		android:paddingBottom="64dp"
+		android:text="@string/you_dont_have_any_transfers"
+		android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="14dp"
-        android:fontFamily="sans-serif-light"
-        android:text="Add some stuff by clicking the 'add' button above!"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:layout_marginBottom="14dp"
+		android:fontFamily="sans-serif-regular"
+		android:text="@string/add_stuff_by_clicking_add"
+		android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 </RelativeLayout>

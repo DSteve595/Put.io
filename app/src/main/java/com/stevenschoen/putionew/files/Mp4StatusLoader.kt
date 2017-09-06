@@ -4,15 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
-import android.util.Log
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.subjects.BehaviorSubject
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
 class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(context) {
@@ -23,8 +22,8 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
     fun mp4Status() = mp4StatusSubject.observeOn(AndroidSchedulers.mainThread())
     fun lastMp4Status() = mp4StatusSubject.value
 
-    private val observable = Observable.defer { Log.d("asdf", "refreshing"); api.mp4Status(file.id) }
-    private var subscription: Subscription? = null
+    private val observable = Single.defer { api.mp4Status(file.id) }
+    private var disposable: Disposable? = null
     private fun makeSubscription() = observable.repeatWhen {
         it.delay(4, TimeUnit.SECONDS)
     }
@@ -56,8 +55,8 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
                 status = PutioMp4Status.Status.AlreadyMp4
             })
         } else {
-            subscription?.unsubscribe()
-            subscription = makeSubscription()
+            disposable?.dispose()
+            disposable = makeSubscription()
         }
     }
 
@@ -69,8 +68,8 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
     }
 
     fun stopRefreshing() {
-        subscription?.unsubscribe()
-        subscription = null
+        disposable?.dispose()
+        disposable = null
         refreshing = false
     }
 

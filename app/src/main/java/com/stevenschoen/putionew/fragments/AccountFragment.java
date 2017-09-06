@@ -11,10 +11,11 @@ import com.stevenschoen.putionew.PutioUtils;
 import com.stevenschoen.putionew.R;
 import com.stevenschoen.putionew.model.account.PutioAccountInfo;
 import com.stevenschoen.putionew.model.responses.AccountInfoResponse;
-import com.trello.rxlifecycle.components.support.RxFragment;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class AccountFragment extends RxFragment {
 
@@ -37,10 +38,10 @@ public class AccountFragment extends RxFragment {
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.account, container, false);
 		
-		textName = (TextView) view.findViewById(R.id.text_behind_accountname);
-		textEmail = (TextView) view.findViewById(R.id.text_behind_accountemail);
-		textDiskFree = (TextView) view.findViewById(R.id.text_storage_amountfree);
-		textDiskTotal = (TextView) view.findViewById(R.id.text_storage_amounttotal);
+		textName = view.findViewById(R.id.text_behind_accountname);
+		textEmail = view.findViewById(R.id.text_behind_accountemail);
+		textDiskFree = view.findViewById(R.id.text_storage_amountfree);
+		textDiskTotal = view.findViewById(R.id.text_storage_amounttotal);
 		
 		invalidateAccountInfo();
 		
@@ -51,9 +52,9 @@ public class AccountFragment extends RxFragment {
 		utils.getRestInterface().account()
 				.compose(this.<AccountInfoResponse>bindToLifecycle())
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Action1<AccountInfoResponse>() {
+				.subscribe(new Consumer<AccountInfoResponse>() {
 					@Override
-					public void call(AccountInfoResponse accountInfoResponse) {
+					public void accept(@NonNull AccountInfoResponse accountInfoResponse) throws Exception {
 						PutioAccountInfo account = accountInfoResponse.getInfo();
 						PutioAccountInfo.DiskInfo disk = account.getDisk();
 
@@ -64,9 +65,9 @@ public class AccountFragment extends RxFragment {
 						textDiskTotal.setText(getString(R.string.total_is,
 								PutioUtils.humanReadableByteCount(disk.getSize(), false)));
 					}
-				}, new Action1<Throwable>() {
+				}, new Consumer<Throwable>() {
 					@Override
-					public void call(Throwable throwable) {
+					public void accept(@NonNull Throwable throwable) throws Exception {
 						throwable.printStackTrace();
 					}
 				});

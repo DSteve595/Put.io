@@ -2,6 +2,7 @@ package com.stevenschoen.putionew;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
@@ -22,6 +23,10 @@ public class PutioApplication extends MultiDexApplication {
 		Fabric.with(this, new Crashlytics());
 
         JodaTimeAndroid.init(this);
+
+		if (Build.VERSION.SDK_INT >= 26) {
+			NotificationsKt.createNotificationChannels(this);
+		}
 
         try {
             buildUtils();

@@ -19,11 +19,11 @@ import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.responses.BasePutioResponse
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
-import com.trello.rxlifecycle.components.support.RxFragment
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import java.util.*
+import com.trello.rxlifecycle2.components.support.RxFragment
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 
 class TransfersFragment : RxFragment() {
 
@@ -175,7 +175,7 @@ class TransfersFragment : RxFragment() {
                         .cleanTransfers("")
                         .bindToLifecycle(this@TransfersFragment)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(makeUpdateNowSubscriber())
+                        .subscribe(makeUpdateNowObserver())
                 return true
             }
         }
@@ -188,7 +188,7 @@ class TransfersFragment : RxFragment() {
                 .retryTransfer(transfer.id)
                 .bindToLifecycle(this@TransfersFragment)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(makeUpdateNowSubscriber())
+                .subscribe(makeUpdateNowObserver())
         hideOptionsIfShowing()
     }
 
@@ -198,25 +198,25 @@ class TransfersFragment : RxFragment() {
                     .cancelTransfer(PutioUtils.longsToString(transfer.id))
                     .bindToLifecycle(this@TransfersFragment)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(makeUpdateNowSubscriber())
+                    .subscribe(makeUpdateNowObserver())
         } else {
-            utils!!.removeTransferDialog(activity, makeUpdateNowSubscriber(), transfer.id).show()
+            utils!!.removeTransferDialog(activity, makeUpdateNowObserver(), transfer.id).show()
         }
         hideOptionsIfShowing()
     }
 
-    private fun makeUpdateNowSubscriber(): Subscriber<BasePutioResponse> {
-        return object : Subscriber<BasePutioResponse>() {
-            override fun onCompleted() { }
+    private fun makeUpdateNowObserver(): SingleObserver<BasePutioResponse> {
+        return object : SingleObserver<BasePutioResponse> {
+            override fun onSubscribe(d: Disposable) { }
 
             override fun onError(error: Throwable) {
                 error.printStackTrace()
                 Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
             }
 
-            override fun onNext(response: BasePutioResponse) {
+            override fun onSuccess(response: BasePutioResponse) {
                 if (transfersService != null) {
-                    transfersService!!.updateNow()
+                    transfersService!!.refreshNow()
                 }
             }
         }
@@ -264,7 +264,7 @@ class TransfersFragment : RxFragment() {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as TransfersServiceBinder
             transfersService = binder.service
-            transfersService!!.transfersObservable.bindToLifecycle(this@TransfersFragment)
+            transfersService!!.transfers.bindToLifecycle(this@TransfersFragment)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result ->
                         updateTransfers(result)

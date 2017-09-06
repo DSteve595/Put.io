@@ -43,7 +43,7 @@ import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.files.PutioSubtitle;
 import com.stevenschoen.putionew.model.responses.BasePutioResponse;
-import com.tbruyelle.rxpermissions.RxPermissions;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -56,20 +56,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.FuncN;
-import rx.schedulers.Schedulers;
 
 public class PutioUtils {
 	public static final int TYPE_AUDIO = 1;
@@ -125,7 +130,7 @@ public class PutioUtils {
 		return new Retrofit.Builder()
 				.baseUrl(baseUrl)
 				.client(clientBuilder.build())
-				.addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+				.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
 				.addConverterFactory(GsonConverterFactory.create(gson))
 				.build();
 	}
@@ -182,18 +187,18 @@ public class PutioUtils {
 			}
 		}
 
-		Observable.zip(downloadIds, new FuncN<long[]>() {
+		Observable.zip(downloadIds, new Function<Object[], long[]>() {
 			@Override
-			public long[] call(Object... args) {
+			public long[] apply(@NonNull Object[] args) throws Exception {
 				long[] downloadIds = new long[args.length];
 				for (int i = 0; i < args.length; i++) {
 					downloadIds[i] = (long) args[i];
 				}
 				return downloadIds;
 			}
-		}).subscribe(new Action1<long[]>() {
+		}).subscribe(new Consumer<long[]>() {
 			@Override
-			public void call(long[] downloadIds) {
+			public void accept(@NonNull long[] downloadIds) throws Exception {
 				switch (actionWhenDone) {
 					case ACTION_OPEN:
 						if (files.length > 1) {
@@ -209,9 +214,9 @@ public class PutioUtils {
 						break;
 				}
 			}
-		}, new Action1<Throwable>() {
+		}, new Consumer<Throwable>() {
 			@Override
-			public void call(Throwable throwable) {
+			public void accept(@NonNull Throwable throwable) throws Exception {
 				throwable.printStackTrace();
 			}
 		});
@@ -243,37 +248,30 @@ public class PutioUtils {
 	}
 
 	public static Observable<Long> download(final Activity activity, final Uri uri, final String path) {
-		return Observable.create(new Observable.OnSubscribe<Long>() {
-			@Override
-			public void call(final Subscriber<? super Long> subscriber) {
-				new RxPermissions(activity)
-						.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-						.subscribe(new Action1<Boolean>() {
-							@Override
-							public void call(Boolean granted) {
-								String subPath = "put.io" + File.separator + path;
-								File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + subPath);
-								file.getParentFile().mkdirs();
+		return new RxPermissions(activity)
+				.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				.map(new Function<Boolean, Long>() {
+					@Override
+					public Long apply(@NonNull Boolean granted) throws Exception {
+						if (!granted) {
+							throw new RuntimeException("Permission not granted");
+						}
 
-								final DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-								DownloadManager.Request request = new DownloadManager.Request(uri);
+						String subPath = "put.io" + File.separator + path;
+						File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + subPath);
+						file.getParentFile().mkdirs();
 
-								request.setDescription("put.io");
-								request.allowScanningByMediaScanner();
-								request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-								request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
+						final DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+						DownloadManager.Request request = new DownloadManager.Request(uri);
 
-								subscriber.onNext(manager.enqueue(request));
-								subscriber.onCompleted();
-							}
-						}, new Action1<Throwable>() {
-							@Override
-							public void call(Throwable throwable) {
-								subscriber.onError(throwable);
-							}
-						});
-			}
-		});
+						request.setDescription("put.io");
+						request.allowScanningByMediaScanner();
+						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
+
+						return manager.enqueue(request);
+					}
+				});
 	}
 
 	public void stream(Context context, PutioFile file, String url, List<PutioSubtitle> subtitles, int type) {
@@ -347,7 +345,7 @@ public class PutioUtils {
 				result.url = finalUrl;
 
 				try {
-					result.subtitles = getRestInterface().subtitles(file.getId()).toBlocking().first().getSubtitles();
+					result.subtitles = getRestInterface().subtitles(file.getId()).blockingGet().getSubtitles();
 				} catch (RuntimeException e) {
 					Throwable cause = e.getCause();
 					if (cause instanceof UnknownHostException) {
@@ -495,18 +493,18 @@ public class PutioUtils {
 		}
 	}
 
-	public Dialog removeTransferDialog(final Context context, final Subscriber<BasePutioResponse> subscriber, final long... idsToDelete) {
+	public Dialog removeTransferDialog(final Context context, final SingleObserver<BasePutioResponse> observer, final long... idsToDelete) {
 		final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
 		Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
 		removeRemove.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Observable<BasePutioResponse> cancelObservable = getRestInterface()
+				Single<BasePutioResponse> cancelObservable = getRestInterface()
 						.cancelTransfer(PutioUtils.longsToString(idsToDelete))
 						.observeOn(AndroidSchedulers.mainThread());
-				if (subscriber != null) {
-					cancelObservable.subscribe(subscriber);
+				if (observer != null) {
+					cancelObservable.subscribe(observer);
 				} else {
 					cancelObservable.subscribe();
 				}

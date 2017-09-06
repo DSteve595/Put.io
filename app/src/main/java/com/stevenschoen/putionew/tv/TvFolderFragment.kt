@@ -19,7 +19,7 @@ import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.UIUtils
 import com.stevenschoen.putionew.files.FolderLoader
 import com.stevenschoen.putionew.model.files.PutioFile
-import rx.android.schedulers.AndroidSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class TvFolderFragment : VerticalGridSupportFragment() {
 
@@ -68,6 +68,7 @@ class TvFolderFragment : VerticalGridSupportFragment() {
                 .subscribe({
                     populateGrid(it.files)
                 }, { error ->
+                    error.printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
 

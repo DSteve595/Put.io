@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.stevenschoen.putionew.R
-import rx.android.schedulers.AndroidSchedulers
-import rx.subjects.BehaviorSubject
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 
 class FileSelectionFragment : Fragment() {
 

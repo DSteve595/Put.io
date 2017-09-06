@@ -3,7 +3,6 @@ package com.stevenschoen.putionew.transfers.add
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,12 @@ import android.widget.TextView
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.files.DestinationFolderActivity
 import com.stevenschoen.putionew.model.files.PutioFile
-import rx.android.schedulers.AndroidSchedulers
-import rx.subjects.BehaviorSubject
+import com.trello.rxlifecycle2.components.support.RxFragment
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.BehaviorSubject
 
-class DestinationPickerFragment : Fragment() {
+class DestinationPickerFragment : RxFragment() {
 
     private lateinit var destinationSubject: BehaviorSubject<PutioFile>
 
@@ -30,7 +31,7 @@ class DestinationPickerFragment : Fragment() {
                 } else {
                     PutioFile.makeRootFolder(resources)
                 }
-        destinationSubject = BehaviorSubject.create(defaultDestination)
+        destinationSubject = BehaviorSubject.createDefault(defaultDestination)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -47,6 +48,7 @@ class DestinationPickerFragment : Fragment() {
         }
 
         destinationSubject
+                .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(::updateFolderNameView)
 

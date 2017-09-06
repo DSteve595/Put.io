@@ -16,10 +16,10 @@ import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.UIUtils
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.trello.rxlifecycle.components.support.RxFragment
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import retrofit2.adapter.rxjava.HttpException
-import rx.android.schedulers.AndroidSchedulers
+import com.trello.rxlifecycle2.components.support.RxFragment
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.android.schedulers.AndroidSchedulers
+import retrofit2.HttpException
 import java.util.*
 
 open class FilesFragment : RxFragment() {
@@ -198,7 +198,7 @@ open class FilesFragment : RxFragment() {
         if (!found) {
             removePagesAfterIndex(parentIndex, false)
             PutioApplication.get(context).putioUtils.restInterface.file(id)
-                    .bindToLifecycle(this@FilesFragment)
+                    .bindToLifecycle(this)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result ->
                         addFile(result.file)
