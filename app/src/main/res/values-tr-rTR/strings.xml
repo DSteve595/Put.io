@@ -11,6 +11,7 @@
   <string name="rename">Yeniden Adlandır</string>
   <string name="add">Ekle</string>
   <string name="play">Oynat</string>
+  <string name="add_transfer">Transfer Ekle</string>
   <string name="add_transfers">Transferleri ekle</string>
   <string name="create_folder">Klasör oluştur</string>
   <string name="create">Oluştur</string>
@@ -63,6 +64,7 @@
   <string name="notatorrent">Bu bir torrent dosyasına benzemiyor!</string>
   <string name="couldntgetdownloadlink">İndirme bağlantısını alırken hata oluştu.</string>
   <string name="noactivityfound">Kurulu uygulamaların hiçbiri bu dosyayı açamıyor.</string>
+  <string name="network_error">Ağ hatası!</string>
   <!-- Other stuff -->
   <string name="account">Hesap</string>
   <string name="files">Dosyalar</string>
@@ -84,23 +86,29 @@
   <string name="filemoved">Dosya taşındı!</string>
   <string name="transferremoved">Transfer kaldırıldı!</string>
   <string name="ratio_is">Oran: %s</string>
+  <string name="hey">Hey!</string>
   <string name="readytopaste">İndirme bağlantısı yapıştırılmaya hazır.</string>
   <string name="addtransfer_type_file">Torrent dosyası</string>
   <string name="download_files">Dosyaları indir</string>
   <string name="individual_or_zip">Tek tek dosyalar halinde mi indirmek istersiniz, yoksa bir ZIP arşivi halinde mi?</string>
   <string name="individually">Tek tek</string>
+  <string name="zip">ZIP</string>
   <string name="copy_dl_link">İndirme bağlantısını kopyala</string>
   <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
   <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
   <string name="go_to_previous_folder">Önceki klasöre dön</string>
   <string name="clear_finished_transfers">Tamamlananları temizle</string>
   <string name="convert_mp4">MP4\'e çevir</string>
+  <string name="checking_for_mp4">MP4 için denetleniyor…</string>
   <string name="converting_mp4">MP4\'e çevriliyor&#8230;</string>
   <string name="mp4_available">MP4 hazır</string>
   <string name="use_mp4">MP4 kullan</string>
   <string name="dont_use_mp4">MP4 kullanma</string>
   <string name="destination_is">Hedef klasör:</string>
+  <string name="choose_a_file">Dosya seçin</string>
   <string name="choose_folder">Bu klasörü seç</string>
+  <string name="x_per_sec">%s/sn</string>
+  <string name="in_x">%s içinde</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Torrent yükleniyor.</string>
   <string name="notification_ticker_uploading_torrent">Torrent yükleniyor&#8230;</string>
@@ -113,7 +121,7 @@
   <string name="notification_button_retry">Tekrar dene</string>
   <!-- Account screen -->
   <string name="logged_in_as">Açılan oturum</string>
-  <string name="available_storage">Müsait alan</string>
+  <string name="available_storage">Kullanılabilir Alan</string>
   <!-- About screen -->
   <string name="version_x">Sürüm %s</string>
   <string name="appbysteven">Steven Schoen tarafından geliştirilen Android uygulaması.</string>
