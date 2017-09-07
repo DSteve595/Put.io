@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  xmlns:tools="http://schemas.android.com/tools"
-		  package="com.stevenschoen.putionew">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.stevenschoen.putionew">
 
 	<uses-sdk tools:overrideLibrary="android.support.v17.leanback"/>
 
@@ -60,7 +60,9 @@
 				android:name="android.app.default_searchable"
 				android:value=".activities.Putio"/>
 		</activity>
-		<activity android:name=".LoginActivity"/>
+		<activity
+			android:name=".LoginActivity"
+			android:theme="@style/Theme.Putio.Login"/>
 		<activity
 			android:name=".files.FileFinishedActivity"
 			android:label="@string/downloadfinishedopentitle"

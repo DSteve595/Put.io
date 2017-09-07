@@ -30,8 +30,6 @@
 		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
 		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
-		<item name="android:windowLightStatusBar">true</item>
-
 		<item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
 		<item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
 	</style>
@@ -51,6 +49,10 @@
 		<item name="android:windowBackground">@android:color/transparent</item>
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="android:backgroundDimEnabled">true</item>
+	</style>
+
+	<style name="Theme.Putio.Login" parent="Theme.Putio.Dark">
+		<item name="android:statusBarColor">#323232</item>
 	</style>
 
 	<style name="Theme.Putio.FileDetails" parent="Theme.Putio">
