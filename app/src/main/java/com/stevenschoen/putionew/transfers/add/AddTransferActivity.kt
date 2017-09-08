@@ -153,12 +153,12 @@ class AddTransferActivity : AppCompatActivity() {
         val filePart = MultipartBody.Part.createFormData("file", file.name, requestBody)
         uploadInterface.uploadFile(filePart, parentId).subscribe({
             notif.succeeded()
-        }, { throwable ->
+        }, { error ->
             notif.failed()
-            throwable.printStackTrace()
+            PutioUtils.getRxJavaThrowable(error).printStackTrace()
             if (!isDestroyed) {
                 runOnUiThread {
-                    Toast.makeText(this, "Error: " + throwable.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Error: " + error.message, Toast.LENGTH_LONG).show()
                 }
             }
         })

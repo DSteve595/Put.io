@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
@@ -58,7 +59,7 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
                     swipeRefreshView.isRefreshing = false
                     updateViewState()
                 }, { error ->
-                    error.printStackTrace()
+                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
         searchLoader!!.refreshSearch(onlyIfEmpty = true)

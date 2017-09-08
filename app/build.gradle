@@ -76,6 +76,7 @@ dependencies {
     compile 'commons-io:commons-io:2.5'
     compile 'net.danlew:android.joda:2.9.9'
     compile 'io.reactivex.rxjava2:rxjava:2.1.3'
+    compile 'com.akaita.java:rxjava2-debug:1.2.0'
     compile 'com.trello.rxlifecycle2:rxlifecycle:2.2.0'
     compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.0'
     compile 'com.trello.rxlifecycle2:rxlifecycle-kotlin:2.2.0'

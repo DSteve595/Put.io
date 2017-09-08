@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.PutioBaseLoader
+import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import io.reactivex.Single
@@ -36,7 +37,7 @@ class FileScreenshotLoader(context: Context, val file: PutioFile) : PutioBaseLoa
         }, { error ->
             disposable = null
             screenshotSubject.onError(error)
-            error.printStackTrace()
+            PutioUtils.getRxJavaThrowable(error).printStackTrace()
         })
     }
 

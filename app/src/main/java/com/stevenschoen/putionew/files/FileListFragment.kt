@@ -231,7 +231,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                                     filesAdapter!!.clearChecked()
                                     refresh()
                                 }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
@@ -252,7 +252,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                                 .subscribe({
                                     Toast.makeText(context, getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show()
                                 }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                         filesAdapter!!.clearChecked()
@@ -272,7 +272,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                                     filesAdapter!!.clearChecked()
                                     refresh()
                                 }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }

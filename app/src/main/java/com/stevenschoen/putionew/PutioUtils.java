@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,9 +58,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -586,6 +584,10 @@ public class PutioUtils {
 				viewToPad.getPaddingTop(),
 				viewToPad.getPaddingRight(),
 				(int) (res.getDimension(R.dimen.fabSize) + (res.getDimension(R.dimen.fabMargin)) * 1.5f));
+	}
+
+	public static Throwable getRxJavaThrowable(Throwable throwable) {
+		return RxJava2Debug.getEnhancedStackTrace(throwable);
 	}
 
 	public static class BlurTransformation implements Transformation {

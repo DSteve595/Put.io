@@ -7,6 +7,7 @@ import android.support.v4.content.Loader
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.stevenschoen.putionew.PutioBaseLoader
+import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.responses.FilesListResponse
@@ -42,7 +43,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
                     .subscribeOn(Schedulers.io())
                     .subscribe({ },
                             { error ->
-                                error.printStackTrace()
+                                PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                 diskCache.deleteCached(folder.id)
                             })
         }
@@ -59,7 +60,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         }, { error ->
             refreshSubscription = null
             folderSubject?.onError(error)
-            error.printStackTrace()
+            PutioUtils.getRxJavaThrowable(error).printStackTrace()
         })
     }
 

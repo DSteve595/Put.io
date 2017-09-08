@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -88,7 +89,7 @@ class FileSelectionFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(::updateAmount,
                         { error ->
-                            error.printStackTrace()
+                            PutioUtils.getRxJavaThrowable(error).printStackTrace()
                             Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                         })
 

@@ -68,7 +68,7 @@ public class AccountFragment extends RxFragment {
 				}, new Consumer<Throwable>() {
 					@Override
 					public void accept(@NonNull Throwable throwable) throws Exception {
-						throwable.printStackTrace();
+						PutioUtils.getRxJavaThrowable(throwable).printStackTrace();
 					}
 				});
 	}

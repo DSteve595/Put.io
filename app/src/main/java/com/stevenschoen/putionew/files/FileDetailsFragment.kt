@@ -68,8 +68,10 @@ class FileDetailsFragment : RxFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
-        screenshotLoader!!.load(true)
+        if (!file.screenshot.isNullOrEmpty()) {
+            screenshotLoader = FileScreenshotLoader.get(loaderManager, context, file)
+            screenshotLoader!!.load(true)
+        }
 
         if (file.isVideo && !file.isMp4) {
             mp4StatusLoader = Mp4StatusLoader.get(loaderManager, context, file)
@@ -152,7 +154,7 @@ class FileDetailsFragment : RxFragment() {
                             .subscribe({
                                 mp4StatusLoader!!.startRefreshing()
                             }, { error ->
-                                error.printStackTrace()
+                                PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                 Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                             })
                     updateMp4View(null)
@@ -227,7 +229,7 @@ class FileDetailsFragment : RxFragment() {
                 ?.subscribe({
                     it.let { updateImagePreview(it, true) }
                 }, { error ->
-                    error.printStackTrace()
+                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
 
@@ -240,7 +242,7 @@ class FileDetailsFragment : RxFragment() {
                     }
                 }, { error ->
                     if (isAdded) {
-                        error.printStackTrace()
+                        PutioUtils.getRxJavaThrowable(error).printStackTrace()
                         Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -260,7 +262,7 @@ class FileDetailsFragment : RxFragment() {
                                 .renameFile(file.id, newName)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
@@ -277,7 +279,7 @@ class FileDetailsFragment : RxFragment() {
                                 .subscribe({
                                     callbacks!!.onFileDetailsClosed(true)
                                 }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }

@@ -210,7 +210,7 @@ class TransfersFragment : RxFragment() {
             override fun onSubscribe(d: Disposable) { }
 
             override fun onError(error: Throwable) {
-                error.printStackTrace()
+                PutioUtils.getRxJavaThrowable(error).printStackTrace()
                 Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
             }
 
@@ -269,7 +269,7 @@ class TransfersFragment : RxFragment() {
                     .subscribe({ result ->
                         updateTransfers(result)
                     }, { error ->
-                        error.printStackTrace()
+                        PutioUtils.getRxJavaThrowable(error).printStackTrace()
                     })
         }
 

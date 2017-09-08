@@ -95,7 +95,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                                         folderLoader!!.refreshFolder(false)
                                     }
                                 }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                     }
@@ -118,7 +118,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                     }
                     updateViewState()
                 }, { error ->
-                    error.printStackTrace()
+                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                 })
         folderLoader!!.publishCachedFileIfNeeded()
@@ -140,7 +140,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                                 .subscribe({ fileChangingResponse ->
                                     folderLoader!!.refreshFolder()
                                 }, { error ->
-                                    error.printStackTrace()
+                                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
 

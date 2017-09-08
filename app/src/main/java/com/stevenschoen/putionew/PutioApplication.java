@@ -6,6 +6,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.crashlytics.android.Crashlytics;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
@@ -32,6 +33,10 @@ public class PutioApplication extends MultiDexApplication {
             buildUtils();
         } catch (PutioUtils.NoTokenException e) {
             // User is not logged in
+        }
+
+        if (BuildConfig.DEBUG) {
+	        RxJava2Debug.enableRxJava2AssemblyTracking();
         }
 	}
 
