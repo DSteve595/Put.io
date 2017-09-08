@@ -78,7 +78,7 @@ open class FilesFragment : RxFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.newfiles, container, false).apply {
+        return inflater.inflate(R.layout.files, container, false).apply {
             pagerView = findViewById<ViewPager>(R.id.newfiles_pager)
             pagerView!!.adapter = fileListFragmentsAdapter
             pagerView!!.addOnPageChangeListener(pageChangeListener)

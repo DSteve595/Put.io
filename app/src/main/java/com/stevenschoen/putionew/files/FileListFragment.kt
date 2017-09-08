@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.stevenschoen.putionew.PutioApplication
@@ -105,22 +106,24 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             currentViewBackView.setOnClickListener {
                 callbacks?.onBackSelected()
             }
-            currentFolderNameView = currentViewHolderView.findViewById<TextView>(R.id.files_currentfolder_name)
+            currentFolderNameView = currentViewHolderView.findViewById(R.id.files_currentfolder_name)
             currentSearchHolderView = currentViewHolderView.findViewById(R.id.folder_currentsearch_holder)
-            currentSearchQueryView = currentSearchHolderView.findViewById<TextView>(R.id.folder_currentsearch_query)
-            currentSearchFolderView = currentSearchHolderView.findViewById<TextView>(R.id.folder_currentsearch_parent)
+            currentSearchQueryView = currentSearchHolderView.findViewById(R.id.folder_currentsearch_query)
+            currentSearchFolderView = currentSearchHolderView.findViewById(R.id.folder_currentsearch_parent)
 
             loadingView = findViewById(R.id.files_loading)
             emptySubfolderView = findViewById(R.id.files_empty_subfolder)
 
-            filesView = findViewById<RecyclerView>(R.id.folder_list)
+            filesView = findViewById(R.id.folder_list)
             filesView.adapter = filesAdapter
             filesView.layoutManager = LinearLayoutManager(context)
-            swipeRefreshView = findViewById<SwipeRefreshLayout>(R.id.folder_swiperefresh)
+            swipeRefreshView = findViewById(R.id.folder_swiperefresh)
             swipeRefreshView.setColorSchemeResources(R.color.putio_accent)
             swipeRefreshView.setOnRefreshListener {
                 refresh()
             }
+
+            getSelectionFragment()?.let { selectionHelper.setViewProperties() }
         }
     }
 
@@ -170,7 +173,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             } else {
                 utils.copyDownloadLink(activity, file)
             }
-        } else if (checkedFiles.size > 0) {
+        } else if (checkedFiles.isNotEmpty()) {
             utils.copyZipDownloadLink(activity, *getCheckedFiles().toTypedArray())
         }
     }
@@ -311,6 +314,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             val count = filesAdapter!!.checkedCount()
             if (count == 0) {
                 childFragmentManager.beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                         .remove(getSelectionFragment())
                         .commitNow()
                 callbacks?.onSelectionEnded()
@@ -324,8 +328,22 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             val selectionFragment = Fragment.instantiate(context, FileSelectionFragment::class.java.name) as FileSelectionFragment
             childFragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .add(R.id.folder_selection_holder, selectionFragment, FolderFragment.FRAGTAG_SELECTION)
+                    .add(R.id.file_list_root, selectionFragment, FolderFragment.FRAGTAG_SELECTION)
                     .commitNow()
+            setViewProperties()
+        }
+
+        fun setViewProperties() {
+            val selectionFragment = getSelectionFragment()!!
+            selectionFragment.onSetupLayout = {
+                selectionFragment.view!!.apply {
+                    (layoutParams as RelativeLayout.LayoutParams).apply {
+                        addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                        addRule(RelativeLayout.CENTER_HORIZONTAL)
+                        bottomMargin = resources.getDimensionPixelSize(R.dimen.file_list_selection_bottom_margin)
+                    }
+                }
+            }
         }
     }
 

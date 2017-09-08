@@ -3,9 +3,13 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/file_selection_root"
-	android:layout_width="match_parent"
+	android:layout_width="wrap_content"
 	android:layout_height="56dp"
 	android:animateLayoutChanges="true"
+	android:background="@android:color/white"
+	android:clickable="true"
+	android:elevation="6dp"
+	android:focusableInTouchMode="true"
 	android:orientation="horizontal"
 	android:paddingEnd="4dp">
 

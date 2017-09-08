@@ -3,6 +3,7 @@ package com.stevenschoen.putionew.files
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.PopupMenu
+import android.support.v7.widget.TooltipCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,15 @@ class FileSelectionFragment : Fragment() {
     }
 
     var callbacks: Callbacks? = null
+    var onSetupLayout: (() -> Unit)? = null
+        set(value) {
+            if (view?.isAttachedToWindow == true) {
+                value?.invoke()
+                field = null
+            } else {
+                field = value
+            }
+        }
 
     val amountSelected = BehaviorSubject.create<Int>()
 
@@ -30,27 +40,19 @@ class FileSelectionFragment : Fragment() {
         cancelView.setOnClickListener {
             callbacks?.onCancel()
         }
+        TooltipCompat.setTooltipText(cancelView, getString(R.string.cancel))
 
         val downloadView = view.findViewById<View>(R.id.file_selection_download)
         downloadView.setOnClickListener { callbacks?.onDownloadSelected() }
-        downloadView.setOnLongClickListener {
-            Toast.makeText(context, R.string.download, Toast.LENGTH_SHORT).show()
-            true
-        }
+        TooltipCompat.setTooltipText(downloadView, getString(R.string.download))
 
         val copyLinkView = view.findViewById<View>(R.id.file_selection_copylink)
         copyLinkView.setOnClickListener { callbacks?.onCopyLinkSelected() }
-        copyLinkView.setOnLongClickListener {
-            Toast.makeText(context, R.string.copy_dl_link, Toast.LENGTH_SHORT).show()
-            true
-        }
+        TooltipCompat.setTooltipText(copyLinkView, getString(R.string.copy_dl_link))
 
         val deleteView = view.findViewById<View>(R.id.file_selection_delete)
         deleteView.setOnClickListener { callbacks?.onDeleteSelected() }
-        deleteView.setOnLongClickListener {
-            Toast.makeText(context, R.string.delete, Toast.LENGTH_SHORT).show()
-            true
-        }
+        TooltipCompat.setTooltipText(deleteView, getString(R.string.delete))
 
         val idRename = 1
         val idMove = 2
@@ -92,6 +94,16 @@ class FileSelectionFragment : Fragment() {
                             PutioUtils.getRxJavaThrowable(error).printStackTrace()
                             Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                         })
+
+        view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View?) {
+                onSetupLayout?.let {
+                    it.invoke()
+                    onSetupLayout = null
+                }
+            }
+            override fun onViewDetachedFromWindow(v: View?) { }
+        })
 
         return view
     }
