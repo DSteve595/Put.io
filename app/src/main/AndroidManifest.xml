@@ -59,6 +59,9 @@
 			<meta-data
 				android:name="android.app.default_searchable"
 				android:value=".activities.Putio"/>
+			<meta-data
+				android:name="android.app.shortcuts"
+				android:resource="@xml/shortcuts_addtransfer"/>
 		</activity>
 		<activity
 			android:name=".LoginActivity"

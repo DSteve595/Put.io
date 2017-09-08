@@ -25,6 +25,17 @@ import java.io.IOException
 
 class AddTransferActivity : AppCompatActivity() {
 
+    companion object {
+        const val ACTION_ADDTRANSFER_LINK = "com.stevenschoen.putionew.ADDTRANSFER_LINK"
+        const val ACTION_ADDTRANSFER_FILE = "com.stevenschoen.putionew.ADDTRANSFER_FILE"
+
+        const val EXTRA_PRECHOSEN_DESTINATION_FOLDER = "init_dest_folder"
+
+        private const val FRAGTAG_ADDTRANSFER_PICKTYPE = "add_type"
+        private const val FRAGTAG_ADDTRANSFER_FILE = "file"
+        private const val FRAGTAG_ADDTRANSFER_LINK = "link"
+    }
+
     var prechosenDestinationFolder: PutioFile? = null
 
     val hasPrechosenDestinationFolder: Boolean
@@ -39,27 +50,23 @@ class AddTransferActivity : AppCompatActivity() {
             return
         }
 
-
         if (intent.hasExtra(EXTRA_PRECHOSEN_DESTINATION_FOLDER)) {
             prechosenDestinationFolder = intent.extras.getParcelable(EXTRA_PRECHOSEN_DESTINATION_FOLDER)
         }
 
         if (intent != null) {
-            if (intent.action != null) {
-                if (intent.action == Intent.ACTION_VIEW) {
-                    when (intent.scheme) {
-                        "http", "https", "magnet" -> {
-                            showLinkFragmentIfNotShowing(intent.dataString)
-                        }
-                        "file", "content" -> {
-                            showFileFragmentIfNotShowing(intent.data)
-                        }
+            when (intent.action) {
+                Intent.ACTION_VIEW -> when (intent.scheme) {
+                    "http", "https", "magnet" -> {
+                        showLinkFragmentIfNotShowing(intent.dataString)
                     }
-                } else {
-                    showPickTypeFragmentIfNotShowing()
+                    "file", "content" -> {
+                        showFileFragmentIfNotShowing(intent.data)
+                    }
                 }
-            } else {
-                showPickTypeFragmentIfNotShowing()
+                ACTION_ADDTRANSFER_LINK -> showLinkFragmentIfNotShowing()
+                ACTION_ADDTRANSFER_FILE -> showFileFragmentIfNotShowing()
+                else -> showPickTypeFragmentIfNotShowing()
             }
         } else {
             showPickTypeFragmentIfNotShowing()
@@ -275,13 +282,5 @@ class AddTransferActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    companion object {
-        const val EXTRA_PRECHOSEN_DESTINATION_FOLDER = "init_dest_folder"
-
-        const val FRAGTAG_ADDTRANSFER_PICKTYPE = "add_type"
-        const val FRAGTAG_ADDTRANSFER_FILE = "file"
-        const val FRAGTAG_ADDTRANSFER_LINK = "link"
     }
 }

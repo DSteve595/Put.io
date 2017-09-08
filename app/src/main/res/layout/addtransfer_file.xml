@@ -15,7 +15,7 @@
 		android:layout_toStartOf="@+id/addtransfer_file_clear"
 		android:background="?selectableItemBackground"
 		android:drawablePadding="16dp"
-		android:drawableStart="@drawable/addtransfer_file_24"
+		android:drawableStart="@drawable/ic_addtransfer_file_24"
 		android:ellipsize="middle"
 		android:fontFamily="sans-serif-condensed"
 		android:gravity="center_vertical"
