@@ -1,20 +1,19 @@
 package com.stevenschoen.putionew.files
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.TooltipCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
+import com.trello.rxlifecycle2.components.support.RxFragment
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 
-class FileSelectionFragment : Fragment() {
+class FileSelectionFragment : RxFragment() {
 
     companion object {
         val STATE_AMOUNT_SELECTED = "amt_sel"
@@ -58,24 +57,37 @@ class FileSelectionFragment : Fragment() {
         val idMove = 2
 
         val moreView = view.findViewById<View>(R.id.file_selection_more)
-        moreView.setOnClickListener {
-            val popup = PopupMenu(context, moreView)
-            if (amountSelected.value == 1) popup.menu.add(0, idRename, 0, R.string.rename)
-            popup.menu.add(0, idMove, 0, R.string.move)
-            popup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    idRename -> {
-                        callbacks?.onRenameSelected();
-                        return@setOnMenuItemClickListener true
-                    }
-                    idMove -> {
-                        callbacks?.onMoveSelected()
-                        return@setOnMenuItemClickListener true
+        val morePopup = PopupMenu(context, moreView)
+        val rename = morePopup.menu.add(0, idRename, 0, R.string.rename)
+        amountSelected
+                .bindToLifecycle(this)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (it == 1) {
+                        rename.isVisible = true
+                        rename.isEnabled = true
+                    } else {
+                        rename.isVisible = false
+                        rename.isEnabled = false
                     }
                 }
-                false
+        morePopup.menu.add(0, idMove, 0, R.string.move)
+        morePopup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                idRename -> {
+                    callbacks?.onRenameSelected();
+                    return@setOnMenuItemClickListener true
+                }
+                idMove -> {
+                    callbacks?.onMoveSelected()
+                    return@setOnMenuItemClickListener true
+                }
             }
-            popup.show()
+            false
+        }
+        moreView.setOnTouchListener(morePopup.dragToOpenListener)
+        moreView.setOnClickListener {
+            morePopup.show()
         }
 
         val titleView = view.findViewById<TextView>(R.id.file_selection_title)
@@ -88,12 +100,9 @@ class FileSelectionFragment : Fragment() {
             updateAmount(savedInstanceState.getInt(STATE_AMOUNT_SELECTED))
         }
         amountSelected
+                .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(::updateAmount,
-                        { error ->
-                            PutioUtils.getRxJavaThrowable(error).printStackTrace()
-                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                        })
+                .subscribe(::updateAmount)
 
         view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(v: View?) {
