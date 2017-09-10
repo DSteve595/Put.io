@@ -22,7 +22,7 @@ class DownloadFinishedService : IntentService("downloadfinishedreceiver") {
             val downloadStatus = query.getInt(query.getColumnIndex(DownloadManager.COLUMN_STATUS))
             if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
                 val fileDownloads = putioApp.fileDownloadDatabase.fileDownloadsDao()
-                fileDownloads.update(fileDownloads.getByDownloadIdSynchronous(downloadId).apply {
+                fileDownloads.update(fileDownloads.getByDownloadIdSynchronous(downloadId)!!.apply {
                     status = FileDownload.Status.Downloaded
                     uri = downloadManager.getUriForDownloadedFile(downloadId).toString()
                 })

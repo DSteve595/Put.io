@@ -20,6 +20,7 @@
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
 	<application
 		android:name=".PutioApplication"
@@ -185,6 +186,10 @@
 		<service android:name=".PutioOpenFileService"/>
 		<service android:name=".files.DownloadFinishedService"/>
 		<service android:name=".PutioTransfersService"/>
+		<service
+			android:name=".files.FileDownloadsMaintenanceService"
+			android:exported="true"
+			android:permission="android.permission.BIND_JOB_SERVICE"/>
 
 		<activity
 			android:name=".transfers.TransfersActivity"

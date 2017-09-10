@@ -1,9 +1,6 @@
 package com.stevenschoen.putionew
 
-import com.stevenschoen.putionew.files.FileScreenshotLoader
-import com.stevenschoen.putionew.files.FolderLoader
-import com.stevenschoen.putionew.files.Mp4StatusLoader
-import com.stevenschoen.putionew.files.SearchLoader
+import com.stevenschoen.putionew.files.*
 
 fun getUniqueLoaderId(loaderClass: Class<out PutioBaseLoader>): Int {
     return when (loaderClass) {
@@ -11,6 +8,7 @@ fun getUniqueLoaderId(loaderClass: Class<out PutioBaseLoader>): Int {
         SearchLoader::class.java -> 2
         Mp4StatusLoader::class.java -> 3
         FileScreenshotLoader::class.java -> 4
+        NewFileDetailsLoader::class.java -> 5
         else -> throw RuntimeException("Couldn't find loader ID for $loaderClass")
     }
 }

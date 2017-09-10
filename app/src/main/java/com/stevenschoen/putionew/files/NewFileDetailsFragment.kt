@@ -47,6 +47,14 @@ class NewFileDetailsFragment : RxFragment() {
 
     val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE)!! }
 
+    lateinit var loader: NewFileDetailsLoader
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        loader = NewFileDetailsLoader.get(loaderManager, context, file)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.newfiledetails, container, false).apply {
             val titleView: TextView = findViewById(R.id.newfiledetails_title)
@@ -92,7 +100,7 @@ class NewFileDetailsFragment : RxFragment() {
                 actionView.text = getString(R.string.open)
                 actionView.setOnClickListener {
                     Single.fromCallable {
-                        putioApp.fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(file.id).uri
+                        putioApp.fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(file.id)!!.uri
                     }.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .map { Uri.parse(it) }
@@ -113,7 +121,9 @@ class NewFileDetailsFragment : RxFragment() {
                     .startWith(FileDownload.Status.NotDownloaded)
                     .subscribe {
                         when (it!!) {
-                            FileDownload.Status.Downloaded -> showActionOpen()
+                            FileDownload.Status.Downloaded -> {
+                                showActionOpen()
+                            }
                             FileDownload.Status.InProgress -> showActionDownload()
                             FileDownload.Status.NotDownloaded -> showActionDownload()
                         }
@@ -129,13 +139,9 @@ class NewFileDetailsFragment : RxFragment() {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
                                 val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
-                                downloadManager.remove(it.downloadId!!)
+                                downloadManager.remove(it!!.downloadId!!)
                                 AsyncTask.execute {
-                                    fileDownloads.update(it.apply {
-                                        downloadId = null
-                                        status = FileDownload.Status.NotDownloaded
-                                        uri = null
-                                    })
+                                    markFileNotDownloaded(context, it)
                                 }
                             }, { error ->
                                 Toast.makeText(context, "error deleting", Toast.LENGTH_SHORT).show()
@@ -149,5 +155,11 @@ class NewFileDetailsFragment : RxFragment() {
                 morePopup.show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        loader.checkDownload()
     }
 }

@@ -232,10 +232,6 @@ public class PutioUtils {
 	}
 
 	private Single<Long> download(Activity activity, long fileId, boolean isZip, String filename, Uri uri) {
-		if (idIsDownloaded(fileId) && !isZip) {
-			deleteId(fileId);
-		}
-
 		String name;
 		if (isZip) {
 			name = filename;

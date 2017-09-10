@@ -1,11 +1,11 @@
 package com.stevenschoen.putionew
 
 import android.app.SearchManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.*
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -17,6 +17,7 @@ import android.view.View
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.stevenschoen.putionew.cast.BaseCastActivity
+import com.stevenschoen.putionew.files.FileDownloadsMaintenanceService
 import com.stevenschoen.putionew.files.FilesFragment
 import com.stevenschoen.putionew.files.FolderLoader
 import com.stevenschoen.putionew.fragments.AccountFragment
@@ -25,6 +26,7 @@ import com.stevenschoen.putionew.model.transfers.PutioTransfer
 import com.stevenschoen.putionew.transfers.TransfersFragment
 import com.stevenschoen.putionew.transfers.add.AddTransferActivity
 import com.stevenschoen.putionew.tv.TvActivity
+import java.util.concurrent.TimeUnit
 
 class PutioActivity : BaseCastActivity() {
 
@@ -80,6 +82,29 @@ class PutioActivity : BaseCastActivity() {
                 PutioActivity.noNetworkIntent)
 
         registerReceiver(noNetworkReceiver, noNetworkIntentFilter)
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val jobDispatcher = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            if (jobDispatcher.allPendingJobs.none {
+                it.id == FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID
+            }) {
+                jobDispatcher.schedule(JobInfo.Builder(
+                        FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
+                        ComponentName(this, FileDownloadsMaintenanceService::class.java))
+                        .setPeriodic(TimeUnit.DAYS.toMillis(2))
+                        .setPersisted(true)
+                        .setRequiresDeviceIdle(true)
+                        .build())
+            }
+
+            jobDispatcher.schedule(JobInfo.Builder(
+                    FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
+                    ComponentName(this, FileDownloadsMaintenanceService::class.java))
+                    .setOverrideDeadline(5000)
+                    .setPersisted(true)
+                    .setRequiresDeviceIdle(true)
+                    .build())
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

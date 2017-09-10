@@ -4,7 +4,6 @@ import android.arch.persistence.room.*
 import io.reactivex.Flowable
 
 @Entity(tableName = "fileDownloads")
-@TypeConverters(FileDownload.Status.RoomConverters::class)
 data class FileDownload(
         @PrimaryKey
         val fileId: Long,
@@ -34,15 +33,18 @@ interface FileDownloadDao {
     @Query("SELECT * FROM fileDownloads")
     fun getAll(): List<FileDownload>
 
+    @Query("Select * FROM fileDownloads WHERE status = :status")
+    fun getAllByStatus(status: FileDownload.Status): List<FileDownload>
+
     @Query(getByFileIdQuery)
     fun getByFileId(fileId: Long): Flowable<FileDownload>
     @Query(getByFileIdQuery)
-    fun getByFileIdSynchronous(fileId: Long): FileDownload
+    fun getByFileIdSynchronous(fileId: Long): FileDownload?
 
     @Query(getByDownloadIdQuery)
     fun getByDownloadId(downloadId: Long): Flowable<FileDownload>
     @Query(getByDownloadIdQuery)
-    fun getByDownloadIdSynchronous(downloadId: Long): FileDownload
+    fun getByDownloadIdSynchronous(downloadId: Long): FileDownload?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg download: FileDownload)
@@ -55,6 +57,7 @@ interface FileDownloadDao {
 }
 
 @Database(entities = arrayOf(FileDownload::class), version = 4)
+@TypeConverters(FileDownload.Status.RoomConverters::class)
 abstract class FileDownloadDatabase: RoomDatabase() {
     abstract fun fileDownloadsDao(): FileDownloadDao
 }
