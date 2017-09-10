@@ -44,7 +44,7 @@ class AddTransferActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (!PutioApplication.get(this).isLoggedIn) {
+        if (!putioApp.isLoggedIn) {
             startActivity(Intent(this, PutioActivity::class.java))
             finish()
             return
@@ -110,7 +110,7 @@ class AddTransferActivity : AppCompatActivity() {
         val notif = UploadNotif()
         notif.start();
 
-        val restInterface = PutioApplication.get(this).putioUtils.restInterface
+        val restInterface = putioApp.putioUtils!!.restInterface
         restInterface.addTransferUrl(link, extract, parentId).subscribe(
                 { response ->
                     notif.succeeded()
@@ -130,7 +130,7 @@ class AddTransferActivity : AppCompatActivity() {
         val notif = UploadNotif()
         notif.start()
 
-        val uploadInterface = PutioApplication.get(this).putioUtils
+        val uploadInterface = putioApp.putioUtils!!
                 .makePutioRestInterface(PutioUtils.uploadBaseUrl)
                 .create(PutioUploadInterface::class.java)
 

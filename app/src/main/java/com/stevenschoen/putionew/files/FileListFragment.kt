@@ -14,10 +14,10 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -157,7 +157,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             val downloadFragment = Fragment.instantiate(context, DownloadIndividualOrZipFragment::class.java.name) as DownloadIndividualOrZipFragment
             downloadFragment.show(childFragmentManager, FolderFragment.FRAGTAG_DOWNLOAD_INDIVIDUALORZIP)
         } else if (checkedFiles.size == 1) {
-            PutioApplication.get(context).putioUtils.downloadFiles(activity, PutioUtils.ACTION_NOTHING, checkedFiles.first())
+            putioApp.putioUtils!!.downloadFiles(activity, PutioUtils.ACTION_NOTHING, checkedFiles.first())
         } else {
             throw IllegalStateException("Download started with no file IDs!")
         }
@@ -165,7 +165,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
 
     private fun selectionCopyLinks() {
         val checkedFiles = getCheckedFiles()
-        val utils = PutioApplication.get(context).putioUtils
+        val utils = putioApp.putioUtils!!
         if (checkedFiles.size == 1) {
             val file = checkedFiles[0]
             if (file.isFolder) {
@@ -226,7 +226,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 childFragment as RenameFragment
                 childFragment.callbacks = object : RenameFragment.Callbacks {
                     override fun onRenamed(newName: String) {
-                        PutioApplication.get(context).putioUtils.restInterface
+                        putioApp.putioUtils!!.restInterface
                                 .renameFile(getCheckedFiles().first().id, newName)
                                 .bindToLifecycle(this@FileListFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -244,7 +244,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 childFragment as DownloadIndividualOrZipFragment
                 childFragment.callbacks = object : DownloadIndividualOrZipFragment.Callbacks {
                     override fun onIndividualSelected() {
-                        PutioApplication.get(context).putioUtils.downloadFiles(activity, PutioUtils.ACTION_NOTHING, *getCheckedFiles().toTypedArray())
+                        putioApp.putioUtils!!.downloadFiles(activity, PutioUtils.ACTION_NOTHING, *getCheckedFiles().toTypedArray())
                         filesAdapter!!.clearChecked()
                     }
                     override fun onZipSelected() {
@@ -252,7 +252,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         val filename = checkedFiles.take(5).joinToString(separator = ", ", transform = { it.name }) + ".zip"
 
                         Toast.makeText(context, R.string.downloading_zip, Toast.LENGTH_LONG).show()
-                        PutioApplication.get(context).putioUtils
+                        putioApp.putioUtils!!
                                 .getZipUrl(*checkedFiles.map { it.id }.toLongArray())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .flatMap { zipUrl ->
@@ -275,7 +275,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 childFragment as ConfirmDeleteFragment
                 childFragment.callbacks = object : ConfirmDeleteFragment.Callbacks {
                     override fun onDeleteSelected() {
-                        PutioApplication.get(context).putioUtils.restInterface
+                        putioApp.putioUtils!!.restInterface
                                 .deleteFile(PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()))
                                 .bindToLifecycle(this@FileListFragment)
                                 .observeOn(AndroidSchedulers.mainThread())

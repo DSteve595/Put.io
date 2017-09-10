@@ -60,7 +60,7 @@ class FileDetailsFragment : RxFragment() {
     var callbacks: Callbacks? = null
     var castCallbacks: CastCallbacks? = null
 
-    val utils by lazy { PutioApplication.get(context).putioUtils }
+    val utils by lazy { putioApp.putioUtils!! }
 
     private var imagePreview: ImageView? = null
     private var imagePreviewPlaceholder: ImageView? = null
@@ -147,7 +147,7 @@ class FileDetailsFragment : RxFragment() {
                 }
                 textMp4Available = infoMp4Available.findViewById<TextView>(R.id.text_fileinfo_mp4)
                 infoMp4NotAvailable.setOnClickListener { view ->
-                    PutioApplication.get(context).putioUtils.restInterface
+                    utils.restInterface
                             .convertToMp4(file.id)
                             .bindToLifecycle(this@FileDetailsFragment)
                             .observeOn(AndroidSchedulers.mainThread())
@@ -258,7 +258,7 @@ class FileDetailsFragment : RxFragment() {
                 childFragment.callbacks = object : RenameFragment.Callbacks {
                     override fun onRenamed(newName: String) {
                         titleView.text = newName
-                        PutioApplication.get(context).putioUtils.restInterface
+                        utils.restInterface
                                 .renameFile(file.id, newName)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({ }, { error ->
@@ -272,7 +272,7 @@ class FileDetailsFragment : RxFragment() {
                 childFragment as ConfirmDeleteFragment
                 childFragment.callbacks = object : ConfirmDeleteFragment.Callbacks {
                     override fun onDeleteSelected() {
-                        PutioApplication.get(context).putioUtils.restInterface
+                        utils.restInterface
                                 .deleteFile(file.id.toString())
                                 .bindToLifecycle(this@FileDetailsFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -311,14 +311,14 @@ class FileDetailsFragment : RxFragment() {
             val buttonRedownload = dialog.findViewById<View>(R.id.button_redownload_download)
             buttonRedownload.setOnClickListener {
                 PutioUtils.deleteId(file.id)
-                utils!!.downloadFiles(activity, mode, file)
+                utils.downloadFiles(activity, mode, file)
                 dialog.dismiss()
             }
 
             val buttonCancel = dialog.findViewById<View>(R.id.button_redownload_cancel)
             buttonCancel.setOnClickListener { dialog.cancel() }
         } else {
-            utils!!.downloadFiles(activity, mode, file)
+            utils.downloadFiles(activity, mode, file)
         }
     }
 

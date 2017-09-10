@@ -12,10 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.UIUtils
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -197,7 +197,7 @@ open class FilesFragment : RxFragment() {
         }
         if (!found) {
             removePagesAfterIndex(parentIndex, false)
-            PutioApplication.get(context).putioUtils.restInterface.file(id)
+            putioApp.putioUtils!!.restInterface.file(id)
                     .bindToLifecycle(this)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ result ->

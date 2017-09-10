@@ -153,12 +153,6 @@ class PutioActivity : BaseCastActivity() {
                     .commitNow()
         }
 
-        try {
-            (application as PutioApplication).buildUtils()
-        } catch (e: PutioUtils.NoTokenException) {
-            e.printStackTrace()
-        }
-
         setupLayout()
 
         val navItem = if (savedInstanceState != null) {

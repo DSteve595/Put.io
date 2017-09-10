@@ -8,7 +8,7 @@ import com.stevenschoen.putionew.model.PutioRestInterface
 abstract class PutioBaseLoader(context: Context) : Loader<Any>(context) {
 
     protected val api: PutioRestInterface
-        get() = (context.applicationContext as PutioApplication).putioUtils.restInterface
+        get() = (context.applicationContext as PutioApplication).putioUtils!!.restInterface
 
     abstract class Callbacks(protected val context: Context) : LoaderManager.LoaderCallbacks<Any> {
 

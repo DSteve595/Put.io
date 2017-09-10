@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akaita.java.rxjava2debug.RxJava2Debug;
@@ -40,6 +39,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Transformation;
+import com.stevenschoen.putionew.files.FileDownload;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.ResponseOrError;
 import com.stevenschoen.putionew.model.files.PutioFile;
@@ -146,18 +146,6 @@ public class PutioUtils {
 
 	public class NoTokenException extends Exception { }
 
-	public Dialog confirmChangesDialog(Context context, String filename) {
-		Dialog dialog = new Dialog(context, R.style.Putio_Dialog);
-		dialog.setCanceledOnTouchOutside(false);
-		dialog.setContentView(R.layout.dialog_confirmchanges);
-		dialog.setTitle(context.getString(R.string.applychanges));
-
-		TextView text = (TextView) dialog.findViewById(R.id.text_confirmText);
-		text.setText(String.format(context.getString(R.string.applychanges), filename));
-
-		return dialog;
-	}
-
 	public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
 		return new AlertDialog.Builder(context)
 				.setTitle(title)
@@ -255,10 +243,14 @@ public class PutioUtils {
 			name = fileId + File.separator + filename;
 		}
 
-		return download(activity, uri, name);
+		return download(activity, uri, name, fileId);
 	}
 
 	public static Single<Long> download(final Activity activity, final Uri uri, final String path) {
+		return download(activity, uri, path, -1);
+	}
+
+	public static Single<Long> download(final Activity activity, final Uri uri, final String path, final long fileId) {
 		return new RxPermissions(activity)
 				.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 				.firstOrError()
@@ -281,7 +273,21 @@ public class PutioUtils {
 						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
 
-						return manager.enqueue(request);
+						final long downloadId = manager.enqueue(request);
+
+						if (fileId != -1) {
+							AsyncTask.execute(new Runnable() {
+								@Override
+								public void run() {
+									PutioApplicationKt.putioApp(activity).getFileDownloadDatabase()
+											.fileDownloadsDao()
+											.insert(new FileDownload(fileId, downloadId,
+													FileDownload.Status.InProgress, null));
+								}
+							});
+						}
+
+						return downloadId;
 					}
 				});
 	}

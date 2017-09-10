@@ -65,16 +65,16 @@
 			android:layout_height="72dp"
 			android:layout_marginTop="8dp"
 			android:drawablePadding="32dp"
-			android:drawableStart="@drawable/filedetails_download"
 			android:gravity="center_vertical"
 			android:paddingEnd="32dp"
 			android:paddingStart="20dp"
-			android:text="Download"
 			android:textAppearance="@style/TextAppearance.AppCompat.Button"
 			app:layout_constraintEnd_toStartOf="@+id/newfiledetails_more"
 			app:layout_constraintHorizontal_bias="0"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/newfiledetails_title"/>
+			app:layout_constraintTop_toBottomOf="@+id/newfiledetails_title"
+			tools:drawableStart="@drawable/ic_filedetails_download"
+			tools:text="Download"/>
 
 		<ImageButton
 			android:id="@+id/newfiledetails_more"

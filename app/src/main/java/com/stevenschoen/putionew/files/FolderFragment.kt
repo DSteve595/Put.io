@@ -10,11 +10,11 @@ import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
-import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -87,7 +87,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                 childFragment as CreateFolderFragment
                 childFragment.callbacks = object : CreateFolderFragment.Callbacks {
                     override fun onNameEntered(folderName: String) {
-                        PutioApplication.get(context).putioUtils.restInterface
+                        putioApp.putioUtils!!.restInterface
                                 .createFolder(folderName, folder.id)
                                 .bindToLifecycle(this@FolderFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -139,7 +139,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                 if (resultCode == Activity.RESULT_OK) {
                     view?.post {
                         val destinationFolder = data!!.getParcelableExtra<PutioFile>(DestinationFolderActivity.RESULT_EXTRA_FOLDER)
-                        PutioApplication.get(context).putioUtils.restInterface
+                        putioApp.putioUtils!!.restInterface
                                 .moveFile(PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()), destinationFolder.id)
                                 .bindToLifecycle(this@FolderFragment)
                                 .observeOn(AndroidSchedulers.mainThread())

@@ -17,9 +17,9 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.putioApp
 import org.apache.commons.io.FilenameUtils
 
 class TvPlayerActivity : FragmentActivity() {
@@ -57,7 +57,7 @@ class TvPlayerActivity : FragmentActivity() {
         val dataSourceFactory = DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "Put.io-for-Android"), bandwidthMeter)
         val extractorsFactory = DefaultExtractorsFactory()
-        val url = video.getStreamUrl(PutioApplication.get(this).putioUtils, useMp4)
+        val url = video.getStreamUrl(putioApp.putioUtils!!, useMp4)
         val videoSource = ExtractorMediaSource(Uri.parse(url), dataSourceFactory, extractorsFactory, null, null)
 
         player.playWhenReady = true

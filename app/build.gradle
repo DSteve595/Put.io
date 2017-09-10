@@ -103,4 +103,8 @@ dependencies {
     compile 'nz.bradcampbell:paperparcel-kotlin:2.0.4'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.4'
     compile 'com.google.android.exoplayer:exoplayer:r2.5.1'
+    compile 'android.arch.persistence.room:runtime:1.0.0-alpha9'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-alpha9'
+    kapt "android.arch.persistence.room:compiler:1.0.0-alpha9"
+    compile 'android.arch.persistence.room:rxjava2:1.0.0-alpha9'
 }
