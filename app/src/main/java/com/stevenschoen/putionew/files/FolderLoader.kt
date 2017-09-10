@@ -23,7 +23,7 @@ import java.io.IOException
 
 class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseLoader(context) {
 
-    val diskCache by lazy { DiskCache() }
+    val diskCache by lazy { DiskCache(context) }
 
     private val folderSubject = BehaviorSubject.create<FolderResponse>()
     fun folder() = folderSubject.observeOn(AndroidSchedulers.mainThread())
@@ -70,7 +70,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
 
     data class FolderResponse(val fresh: Boolean, val parent: PutioFile, val files: List<PutioFile>)
 
-    inner class DiskCache {
+    class DiskCache(val context: Context) {
         private val filesCacheDir = File("${context.cacheDir}${File.separator}filesCache")
 
         internal var gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
@@ -103,14 +103,11 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
             return null
         }
 
-        fun deleteCached(parentId: Long) {
-            val file = getFile(parentId)
-            file.delete()
-        }
+        fun deleteCached(parentId: Long) = getFile(parentId).delete()
 
-        private fun getFile(parentId: Long): File {
-            return File("$filesCacheDir${File.separator}$parentId.json")
-        }
+        private fun getFile(parentId: Long) = File("$filesCacheDir${File.separator}$parentId.json")
+
+        fun deleteCache() = File("$filesCacheDir${File.pathSeparator}").deleteRecursively()
     }
 
     companion object {

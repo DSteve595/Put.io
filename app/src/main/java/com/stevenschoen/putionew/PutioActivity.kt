@@ -18,6 +18,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.stevenschoen.putionew.cast.BaseCastActivity
 import com.stevenschoen.putionew.files.FilesFragment
+import com.stevenschoen.putionew.files.FolderLoader
 import com.stevenschoen.putionew.fragments.AccountFragment
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
@@ -253,24 +254,18 @@ class PutioActivity : BaseCastActivity() {
         when (bottomNavView.currentItem) {
             TAB_ACCOUNT -> return false
             TAB_FILES -> {
-                run {
-                    val filesFragment = filesFragment
-                    if (filesFragment!!.isSelecting) {
-                        return false
+                val filesFragment = filesFragment
+                if (filesFragment!!.isSelecting) {
+                    return false
+                } else {
+                    val currentPage = filesFragment.currentPage
+                    if (currentPage == null) {
+                        return true
                     } else {
-                        val currentPage = filesFragment.currentPage
-                        if (currentPage == null) {
-                            return true
+                        if (currentPage.type === FilesFragment.Page.Type.Search) {
+                            return false
                         } else {
-                            if (currentPage.type === FilesFragment.Page.Type.Search) {
-                                return false
-                            } else {
-                                if (currentPage.file!!.isFolder) {
-                                    return true
-                                } else {
-                                    return false
-                                }
-                            }
+                            return currentPage.file!!.isFolder
                         }
                     }
                 }
@@ -281,7 +276,8 @@ class PutioActivity : BaseCastActivity() {
     }
 
     fun logOut() {
-        sharedPrefs!!.edit().remove("token").commit()
+        sharedPrefs!!.edit().remove("token").apply()
+        FolderLoader.DiskCache(this).deleteCache()
         finish()
         startActivity(intent)
     }
