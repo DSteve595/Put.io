@@ -88,6 +88,8 @@
   <string name="readytopaste">ダウンロードのリンクを貼り付ける準備ができました。</string>
   <string name="addtransfer_type_url">マグネットリンク</string>
   <string name="addtransfer_type_file">トレント ファイル</string>
+  <string name="add_transfer_add_type_url">マグネットリンクを追加</string>
+  <string name="add_transfer_add_type_file">Torrent ファイルを追加</string>
   <string name="download_files">ファイルをダウンロード</string>
   <string name="individual_or_zip">これらのファイルを 個別にダウンロードしますか、それとも ZIP アーカイブとしてダウンロードしますか?</string>
   <string name="individually">個別</string>
@@ -108,6 +110,8 @@
   <string name="choose_folder">フォルダーを選択</string>
   <string name="x_per_sec">%s/秒</string>
   <string name="in_x">%s で</string>
+  <string name="you_dont_have_any_transfers">転送はありません</string>
+  <string name="add_stuff_by_clicking_add">下の「追加」ボタンをクリックして、何か追加してください!</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">トレントをアップロード中</string>
   <string name="notification_ticker_uploading_torrent">トレントをアップロードしています&#8230;</string>
