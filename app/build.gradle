@@ -26,8 +26,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 119
-        versionName '4.2-beta1'
+        versionCode 120
+        versionName '4.2 beta 2'
         multiDexEnabled true
     }
     buildTypes {
@@ -51,6 +51,7 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
 }
 
@@ -58,6 +59,9 @@ dependencies {
     compile 'com.android.support:multidex:1.0.2'
     androidTestCompile 'com.android.support:multidex:1.0.2'
     androidTestCompile 'com.android.support:multidex-instrumentation:1.0.2'
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     def supportLibVersion = "26.0.2"

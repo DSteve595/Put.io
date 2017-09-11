@@ -41,13 +41,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
+import com.stevenschoen.putionew.model.ResponseOrError;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.files.PutioSubtitle;
-import com.stevenschoen.putionew.model.responses.BasePutioResponse;
+import com.stevenschoen.putionew.model.responses.CreateZipResponse;
+import com.stevenschoen.putionew.model.responses.ZipResponse;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
+import org.reactivestreams.Publisher;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,14 +59,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -175,17 +182,16 @@ public class PutioUtils {
 	}
 
 	public void downloadFiles(final Activity activity, final int actionWhenDone, final PutioFile... files) {
-		List<Observable<Long>> downloadIds = new ArrayList<>(files.length);
+		List<Single<Long>> downloadIds = new ArrayList<>(files.length);
 		for (PutioFile file : files) {
 			if (file.isFolder()) {
-				long[] folder = new long[]{file.getId()};
-				downloadIds.add(downloadZipWithoutUrl(activity, folder, file.getName()));
+				downloadIds.add(downloadZipWithoutUrl(activity, file.getName() + ".zip", file.getId()));
 			} else {
 				downloadIds.add(downloadFileWithoutUrl(activity, file.getId(), file.getName()));
 			}
 		}
 
-		Observable.zip(downloadIds, new Function<Object[], long[]>() {
+		Single.zip(downloadIds, new Function<Object[], long[]>() {
 			@Override
 			public long[] apply(@NonNull Object[] args) throws Exception {
 				long[] downloadIds = new long[args.length];
@@ -220,17 +226,24 @@ public class PutioUtils {
 		});
 	}
 
-	private Observable<Long> downloadFileWithoutUrl(final Activity activity, final long fileId, String filename) {
+	private Single<Long> downloadFileWithoutUrl(final Activity activity, final long fileId, String filename) {
 		Uri uri = Uri.parse(getFileDownloadUrl(fileId));
 		return download(activity, fileId, false, filename, uri);
 	}
 
-	private Observable<Long> downloadZipWithoutUrl(final Activity activity, final long[] fileId, String filename) {
-		Uri uri = Uri.parse(getZipDownloadUrl(fileId));
-		return download(activity, 0, true, filename + ".zip", uri);
+	private Single<Long> downloadZipWithoutUrl(final Activity activity, final String filename, final long... fileIds) {
+		return getZipUrl(fileIds)
+				.observeOn(AndroidSchedulers.mainThread())
+				.flatMap(new Function<String, SingleSource<? extends Long>>() {
+					@Override
+					public SingleSource<? extends Long> apply(@NonNull String zipUrl) throws Exception {
+						Toast.makeText(activity, R.string.downloading_zip, Toast.LENGTH_LONG).show();
+						return download(activity, Uri.parse(zipUrl), filename);
+					}
+				});
 	}
 
-	private Observable<Long> download(Activity activity, long fileId, boolean isZip, String filename, Uri uri) {
+	private Single<Long> download(Activity activity, long fileId, boolean isZip, String filename, Uri uri) {
 		if (idIsDownloaded(fileId) && !isZip) {
 			deleteId(fileId);
 		}
@@ -245,9 +258,10 @@ public class PutioUtils {
 		return download(activity, uri, name);
 	}
 
-	public static Observable<Long> download(final Activity activity, final Uri uri, final String path) {
+	public static Single<Long> download(final Activity activity, final Uri uri, final String path) {
 		return new RxPermissions(activity)
 				.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				.firstOrError()
 				.map(new Function<Boolean, Long>() {
 					@Override
 					public Long apply(@NonNull Boolean granted) throws Exception {
@@ -270,6 +284,41 @@ public class PutioUtils {
 						return manager.enqueue(request);
 					}
 				});
+	}
+
+	public Single<String> getZipUrl(long... fileIds) {
+		return getRestInterface().createZip(longsToString(fileIds))
+				.map(new Function<CreateZipResponse, Long>() {
+					@Override
+					public Long apply(@NonNull CreateZipResponse response) throws Exception {
+						return response.getZipId();
+					}
+				}).flatMapPublisher(new Function<Long, Publisher<ZipResponse>>() {
+					@Override
+					public Publisher<ZipResponse> apply(@NonNull final Long zipId) throws Exception {
+						return Single.defer(new Callable<SingleSource<ZipResponse>>() {
+							@Override
+							public SingleSource<ZipResponse> call() throws Exception {
+								return getRestInterface().getZip(zipId);
+							}
+						}).repeatWhen(new Function<Flowable<Object>, Publisher<?>>() {
+							@Override
+							public Publisher<?> apply(@NonNull Flowable<Object> flowable) throws Exception {
+								return flowable.delay(1, TimeUnit.SECONDS);
+							}
+						});
+					}
+				}).filter(new Predicate<ZipResponse>() {
+					@Override
+					public boolean test(@NonNull ZipResponse zipResponse) throws Exception {
+						return zipResponse.getUrl() != null;
+					}
+				}).map(new Function<ZipResponse, String>() {
+					@Override
+					public String apply(@NonNull ZipResponse zipResponse) throws Exception {
+						return zipResponse.getUrl();
+					}
+				}).firstOrError();
 	}
 
 	public void stream(Context context, PutioFile file, String url, List<PutioSubtitle> subtitles, int type) {
@@ -401,15 +450,22 @@ public class PutioUtils {
 				Toast.LENGTH_SHORT).show();
 	}
 
-	public void copyZipDownloadLink(Context context, PutioFile... files) {
+	public void copyZipDownloadLink(final Context context, PutioFile... files) {
 		long[] fileIds = new long[files.length];
-		for (int i = 0; i < files.length; i++) {
+		for (int i = 0; i < fileIds.length; i++) {
 			fileIds[i] = files[i].getId();
 		}
-		String url = getZipDownloadUrl(fileIds);
-		copy(context, "Download link", url);
-		Toast.makeText(context, context.getString(R.string.readytopaste),
-				Toast.LENGTH_SHORT).show();
+		getZipUrl(fileIds)
+				.subscribe(new Consumer<String>() {
+					@Override
+					public void accept(String zipUrl) throws Exception {
+						if (context != null) {
+							copy(context, "Download link", zipUrl);
+							Toast.makeText(context, context.getString(R.string.readytopaste),
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
 	}
 
 	public void copy(Context context, String label, String text) {
@@ -435,11 +491,6 @@ public class PutioUtils {
 
 	public String getFileDownloadUrl(long id) {
 		return baseUrl + "files/" + id + "/download" + tokenWithStuff;
-	}
-
-	public String getZipDownloadUrl(long... ids) {
-		String idsString = longsToString(ids);
-		return baseUrl + "files/zip?file_ids=" + idsString + tokenWithStuff.replace("?", "&"); // TODO hacky
 	}
 
 	public static boolean idIsDownloaded(long id) {
@@ -491,14 +542,16 @@ public class PutioUtils {
 		}
 	}
 
-	public Dialog removeTransferDialog(final Context context, final SingleObserver<BasePutioResponse> observer, final long... idsToDelete) {
+	public Dialog removeTransferDialog(
+			final Context context, final SingleObserver<ResponseOrError.BasePutioResponse> observer,
+			final long... idsToDelete) {
 		final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
 		Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
 		removeRemove.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Single<BasePutioResponse> cancelObservable = getRestInterface()
+				Single<ResponseOrError.BasePutioResponse> cancelObservable = getRestInterface()
 						.cancelTransfer(PutioUtils.longsToString(idsToDelete))
 						.observeOn(AndroidSchedulers.mainThread());
 				if (observer != null) {
@@ -587,7 +640,12 @@ public class PutioUtils {
 	}
 
 	public static Throwable getRxJavaThrowable(Throwable throwable) {
-		return RxJava2Debug.getEnhancedStackTrace(throwable);
+		try {
+			return RxJava2Debug.getEnhancedStackTrace(throwable);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return throwable;
+		}
 	}
 
 	public static class BlurTransformation implements Transformation {

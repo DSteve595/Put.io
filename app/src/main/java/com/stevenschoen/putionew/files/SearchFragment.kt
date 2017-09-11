@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
+import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.model.responses.FilesSearchResponse
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 
 class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
@@ -52,16 +54,21 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
         searchLoader = SearchLoader.get(loaderManager, context, parentFolder, query)
         searchLoader!!.search()
                 .bindToLifecycle(this)
-                .subscribe({ response ->
-                    files.clear()
-                    files.addAll(response)
-                    filesAdapter!!.notifyDataSetChanged()
-                    swipeRefreshView.isRefreshing = false
-                    updateViewState()
-                }, { error ->
-                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
-                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                })
+                .subscribe { response ->
+                    when (response) {
+                        is FilesSearchResponse -> {
+                            files.clear()
+                            files.addAll(response.files)
+                            filesAdapter!!.notifyDataSetChanged()
+                            swipeRefreshView.isRefreshing = false
+                            updateViewState()
+                        }
+                        is ResponseOrError.NetworkError -> {
+                            PutioUtils.getRxJavaThrowable(response.error).printStackTrace()
+                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
         searchLoader!!.refreshSearch(onlyIfEmpty = true)
         updateViewState()
     }

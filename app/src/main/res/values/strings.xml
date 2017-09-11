@@ -102,6 +102,7 @@
 	<string name="zip">ZIP</string>
 	<string name="copy_dl_link">Copy download link</string>
 	<string name="copyingdownloadlink">Copying download link</string>
+	<string name="downloading_zip">Downloading zip</string>
 	<string name="filenotfound">The file could not be found. Was it deleted?</string>
 	<string name="go_to_previous_folder">Go back to the previous folder</string>
 	<string name="clear_finished_transfers">Clear finished transfers</string>

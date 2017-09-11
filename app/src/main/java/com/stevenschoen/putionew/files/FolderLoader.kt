@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.getUniqueLoaderId
+import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.responses.FilesListResponse
 import io.reactivex.Completable
@@ -25,17 +26,20 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
 
     val diskCache by lazy { DiskCache(context) }
 
-    private val folderSubject = BehaviorSubject.create<FolderResponse>()
+    private val folderSubject = BehaviorSubject.create<ResponseOrError>()
     fun folder() = folderSubject.observeOn(AndroidSchedulers.mainThread())
 
     fun publishCachedFileIfNeeded() {
-        fun isNeeded() = (!folderSubject.hasValue() || !folderSubject.value.fresh)
+        fun isNeeded() = !hasFresh()
         if (isNeeded()) {
             Completable.fromCallable {
                 if (diskCache.isCached(folder.id)) {
                     diskCache.getCached(folder.id)?.let {
                         if (isNeeded()) {
-                            folderSubject.onNext(FolderResponse(false, it.parent, it.files))
+                            folderSubject.onNext(FolderResponse(false).apply {
+                                parent = it.parent
+                                files = it.files
+                            })
                         }
                     }
                 }
@@ -56,19 +60,21 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         refreshSubscription = api.files(folder.id).subscribe({ response ->
             refreshSubscription = null
             if (cache) diskCache.cache(response)
-            folderSubject.onNext(FolderResponse(true, response.parent, response.files))
+            folderSubject.onNext(FolderResponse(true).apply {
+                parent = response.parent
+                files = response.files
+            })
         }, { error ->
             refreshSubscription = null
-            folderSubject?.onError(error)
-            PutioUtils.getRxJavaThrowable(error).printStackTrace()
+            folderSubject.onNext(ResponseOrError.NetworkError(error))
         })
     }
 
     fun isRefreshing() = refreshSubscription != null && !refreshSubscription!!.isDisposed
 
-    fun hasFresh(): Boolean = (folderSubject.hasValue() && folderSubject.value.fresh)
+    fun hasFresh() = folderSubject.value.let { (it is FolderResponse && it.fresh) }
 
-    data class FolderResponse(val fresh: Boolean, val parent: PutioFile, val files: List<PutioFile>)
+    class FolderResponse(val fresh: Boolean) : FilesListResponse()
 
     class DiskCache(val context: Context) {
         private val filesCacheDir = File("${context.cacheDir}${File.separator}filesCache")

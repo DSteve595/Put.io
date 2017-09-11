@@ -250,17 +250,25 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                     override fun onZipSelected() {
                         val checkedFiles = getCheckedFiles()
                         val filename = checkedFiles.take(5).joinToString(separator = ", ", transform = { it.name }) + ".zip"
-                        PutioUtils.download(activity,
-                                Uri.parse(PutioApplication.get(context).putioUtils.getZipDownloadUrl(*filesAdapter!!.checkedIds.toLongArray())), filename)
-                                .subscribe({
+
+                        Toast.makeText(context, R.string.downloading_zip, Toast.LENGTH_LONG).show()
+                        PutioApplication.get(context).putioUtils
+                                .getZipUrl(*checkedFiles.map { it.id }.toLongArray())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .flatMap { zipUrl ->
+                                    PutioUtils.download(activity, Uri.parse(zipUrl), filename)
+                                }
+                                .subscribe({ _ ->
                                     Toast.makeText(context, getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show()
                                 }, { error ->
+                                    error.printStackTrace()
                                     PutioUtils.getRxJavaThrowable(error).printStackTrace()
                                     Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
                                 })
                         filesAdapter!!.clearChecked()
                     }
-                    override fun onCanceled() { }
+
+                    override fun onCanceled() {}
                 }
             }
             FolderFragment.FRAGTAG_DELETE -> {

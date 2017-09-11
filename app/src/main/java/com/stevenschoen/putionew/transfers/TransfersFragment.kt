@@ -17,7 +17,7 @@ import com.stevenschoen.putionew.PutioTransfersService
 import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
-import com.stevenschoen.putionew.model.responses.BasePutioResponse
+import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
@@ -205,8 +205,8 @@ class TransfersFragment : RxFragment() {
         hideOptionsIfShowing()
     }
 
-    private fun makeUpdateNowObserver(): SingleObserver<BasePutioResponse> {
-        return object : SingleObserver<BasePutioResponse> {
+    private fun makeUpdateNowObserver(): SingleObserver<ResponseOrError.BasePutioResponse> {
+        return object : SingleObserver<ResponseOrError.BasePutioResponse> {
             override fun onSubscribe(d: Disposable) { }
 
             override fun onError(error: Throwable) {
@@ -214,7 +214,7 @@ class TransfersFragment : RxFragment() {
                 Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
             }
 
-            override fun onSuccess(response: BasePutioResponse) {
+            override fun onSuccess(response: ResponseOrError.BasePutioResponse) {
                 if (transfersService != null) {
                     transfersService!!.refreshNow()
                 }

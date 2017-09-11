@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
+import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -109,18 +110,23 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
         folderLoader = FolderLoader.get(loaderManager, context, folder)
         folderLoader!!.folder()
                 .bindToLifecycle(this)
-                .subscribe({ response ->
-                    files.clear()
-                    files.addAll(response.files)
-                    filesAdapter!!.notifyDataSetChanged()
-                    if (response.fresh) {
-                        swipeRefreshView.isRefreshing = false
+                .subscribe { response ->
+                    when (response) {
+                        is FolderLoader.FolderResponse -> {
+                            files.clear()
+                            files.addAll(response.files)
+                            filesAdapter!!.notifyDataSetChanged()
+                            if (response.fresh) {
+                                swipeRefreshView.isRefreshing = false
+                            }
+                        }
+                        is ResponseOrError.NetworkError -> {
+                            PutioUtils.getRxJavaThrowable(response.error).printStackTrace()
+                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+                        }
                     }
                     updateViewState()
-                }, { error ->
-                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
-                    Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-                })
+                }
         folderLoader!!.publishCachedFileIfNeeded()
         folderLoader!!.refreshFolder(onlyIfStaleOrEmpty = true)
         updateViewState()
