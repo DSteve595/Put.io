@@ -96,6 +96,7 @@
   <string name="zip">ZIP</string>
   <string name="copy_dl_link">ダウンロード リンクをコピー</string>
   <string name="copyingdownloadlink">ダウンロード リンクのコピー中</string>
+  <string name="downloading_zip">ZIP をダウンロード中</string>
   <string name="filenotfound">ファイルが見つかりませんでした。削除されていますか?</string>
   <string name="go_to_previous_folder">前のフォルダーに戻る</string>
   <string name="clear_finished_transfers">完了した転送をクリア</string>
