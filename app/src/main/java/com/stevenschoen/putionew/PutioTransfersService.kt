@@ -42,6 +42,7 @@ class PutioTransfersService : Service() {
         }
 
         transfersRefreshObservable = transfersFetchObservable
+                .retryWhen { it.delay(5, TimeUnit.SECONDS) }
                 .repeatWhen { it.delay(8, TimeUnit.SECONDS) }
                 .toObservable()
 
@@ -52,8 +53,7 @@ class PutioTransfersService : Service() {
         stopRefreshing()
         transfersRefreshSubscription = transfersRefreshObservable
                 .subscribe { response ->
-                    val responseTransfers = response.transfers
-                    Collections.reverse(responseTransfers)
+                    val responseTransfers = response.transfers.reversed()
                     val oldTransfers = transfersSubject.value
                     if (oldTransfers == null || oldTransfers != responseTransfers) {
                         transfersSubject.onNext(responseTransfers)
