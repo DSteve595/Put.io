@@ -33,6 +33,8 @@
 	<string name="move">Move</string>
 	<string name="more">More</string>
 	<string name="maximize">Maximize</string>
+	<string name="send">Send</string>
+	<string name="send_x">Send %s</string>
 
 	<!-- Dialog text -->
 	<string name="gettingstreamurltitle">Preparing to stream</string>
@@ -119,6 +121,7 @@
 	<string name="in_x">in %s</string>
 	<string name="you_dont_have_any_transfers">You don\'t have any transfers</string>
 	<string name="add_stuff_by_clicking_add">Add some stuff by clicking the \'add\' button below!</string>
+	<string name="downloading">Downloading</string>
 
 	<!-- Notification stuff -->
 	<string name="notification_title_uploading_torrent">Uploading torrent</string>
