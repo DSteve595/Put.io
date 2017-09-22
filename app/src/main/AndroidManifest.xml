@@ -159,8 +159,7 @@
 		</activity>
 		<activity
 			android:name=".AboutActivity"
-			android:parentActivityName=".PutioActivity"
-			android:theme="@style/Putio.DialogOrActivity">
+			android:parentActivityName=".PutioActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".PutioActivity"/>

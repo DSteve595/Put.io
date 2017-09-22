@@ -137,6 +137,10 @@
 
 	<!-- About screen -->
 	<string name="version_x">Version %s</string>
+	<string name="this_app_is_open_source">This app is open-source!</string>
+	<string name="email_the_developer">Email the developer</string>
+	<string name="help_translate_this_app">Help translate this app</string>
+	<string name="visit_putio_on_the_web">Visit put.io on the web</string>
 	<string name="appbysteven">Android app by Steven Schoen.</string>
 	<string name="codedwithlove">Coded with love, care, and caffeine.</string>
 	<string name="notaffiliated">Not affiliated with Put.io.</string>

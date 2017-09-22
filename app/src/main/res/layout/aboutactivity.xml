@@ -17,8 +17,6 @@
 	<FrameLayout
 		android:id="@+id/about_castbar_holder"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-	</FrameLayout>
+		android:layout_height="wrap_content"/>
 
 </LinearLayout>

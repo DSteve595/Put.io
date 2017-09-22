@@ -138,18 +138,6 @@
 		<item name="colorAccent">@android:color/black</item>
 	</style>
 
-	<style name="Putio.DialogOrActivity" parent="Theme.AppCompat.Light.DialogWhenLarge">
-		<item name="colorPrimary">@color/putio_accent</item>
-		<item name="colorPrimaryDark">@color/putio_accent_dark</item>
-		<item name="colorAccent">@color/putio_accent</item>
-
-		<item name="android:windowLightStatusBar">true</item>
-
-		<item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
-		<item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
-		<item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-	</style>
-
 	<style name="Putio.CastMiniController" parent="CastMiniController">
 		<item name="castProgressBarColor">?colorPrimary</item>
 	</style>

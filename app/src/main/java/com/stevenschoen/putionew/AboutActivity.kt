@@ -9,11 +9,6 @@ class AboutActivity : BaseCastActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.aboutactivity)
-        if (UIUtils.isTablet(this)) {
-            window.setLayout(PutioUtils.pxFromDp(this, 380f).toInt(), PutioUtils.pxFromDp(this, 500f).toInt())
-        } else {
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        }
     }
 
     override val castMiniControllerContainerId: Int?
