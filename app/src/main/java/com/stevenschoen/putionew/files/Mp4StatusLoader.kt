@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
+import android.util.Log
 import com.stevenschoen.putionew.PutioBaseLoader
+import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
@@ -33,31 +35,36 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
 
                 when (response.mp4Status.status!!) {
                     PutioMp4Status.Status.Completed,
-                    PutioMp4Status.Status.AlreadyMp4,
-                    PutioMp4Status.Status.NotAvailable -> {
-                        stopRefreshing()
-                    }
+                    PutioMp4Status.Status.NotAvailable -> stopRefreshing()
                     PutioMp4Status.Status.InQueue,
                     PutioMp4Status.Status.Preparing,
                     PutioMp4Status.Status.Converting,
-                    PutioMp4Status.Status.Finishing -> {
-                        startRefreshing()
-                    }
+                    PutioMp4Status.Status.Finishing -> startRefreshing()
                     PutioMp4Status.Status.Error -> stopRefreshing()
+                    PutioMp4Status.Status.AlreadyMp4 -> {
+                        Log.wtf("Mp4StatusLoader", "got AlreadyMp4")
+                    }
                 }
             }, { error ->
                 mp4StatusSubject.onError(error)
             })
 
+    fun startConversion() {
+        mp4StatusSubject.onNext(PutioMp4Status().apply {
+            status = PutioMp4Status.Status.InQueue
+            percentDone = 0
+        })
+        api.convertToMp4(file.id)
+                .subscribe({
+                    startRefreshing()
+                }, { error ->
+                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
+                })
+    }
+
     fun refreshOnce() {
-        if (file.isMp4) {
-            mp4StatusSubject.onNext(PutioMp4Status().apply {
-                status = PutioMp4Status.Status.AlreadyMp4
-            })
-        } else {
-            disposable?.dispose()
-            disposable = makeSubscription()
-        }
+        disposable?.dispose()
+        disposable = makeSubscription()
     }
 
     fun startRefreshing() {

@@ -1,9 +1,7 @@
 package com.stevenschoen.putionew;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
@@ -18,7 +16,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.renderscript.Allocation;
@@ -38,38 +35,22 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Transformation;
-import com.stevenschoen.putionew.files.FileDownload;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.ResponseOrError;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.files.PutioSubtitle;
-import com.stevenschoen.putionew.model.responses.CreateZipResponse;
-import com.stevenschoen.putionew.model.responses.ZipResponse;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
-import org.reactivestreams.Publisher;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -84,9 +65,6 @@ public class PutioUtils {
 	public static final int TYPE_AUDIO = 1;
 	public static final int TYPE_VIDEO = 2;
 	public static final String[] streamingMediaTypes = new String[]{"audio", "video"};
-
-	public static final int ACTION_NOTHING = 1;
-	public static final int ACTION_OPEN = 2;
 
 	private PutioRestInterface putioRestInterface;
 
@@ -166,160 +144,6 @@ public class PutioUtils {
 		}
 
 		return null;
-	}
-
-	public void downloadFiles(final Activity activity, final int actionWhenDone, final PutioFile... files) {
-		List<Single<Long>> downloadIds = new ArrayList<>(files.length);
-		for (PutioFile file : files) {
-			if (file.isFolder()) {
-				downloadIds.add(downloadZipWithoutUrl(activity, file.getName() + ".zip", file.getId()));
-			} else {
-				downloadIds.add(downloadFileWithoutUrl(activity, file.getId(), file.getName()));
-			}
-		}
-
-		Single.zip(downloadIds, new Function<Object[], long[]>() {
-			@Override
-			public long[] apply(@NonNull Object[] args) throws Exception {
-				long[] downloadIds = new long[args.length];
-				for (int i = 0; i < args.length; i++) {
-					downloadIds[i] = (long) args[i];
-				}
-				return downloadIds;
-			}
-		}).subscribe(new Consumer<long[]>() {
-			@Override
-			public void accept(@NonNull long[] downloadIds) throws Exception {
-				switch (actionWhenDone) {
-					case ACTION_OPEN:
-						if (files.length > 1) {
-							throw new IllegalArgumentException("Download started with ACTION_OPEN but more than one file: " + Arrays.toString(files));
-						}
-						Intent serviceOpenIntent = new Intent(activity, PutioOpenFileService.class);
-						serviceOpenIntent.putExtra(PutioOpenFileService.EXTRA_DOWNLOAD_ID, downloadIds[0]);
-						activity.startService(serviceOpenIntent);
-						Toast.makeText(activity, activity.getString(R.string.downloadwillopen), Toast.LENGTH_LONG).show();
-						break;
-					case ACTION_NOTHING:
-						Toast.makeText(activity, activity.getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show();
-						break;
-				}
-			}
-		}, new Consumer<Throwable>() {
-			@Override
-			public void accept(@NonNull Throwable throwable) throws Exception {
-				throwable.printStackTrace();
-			}
-		});
-	}
-
-	private Single<Long> downloadFileWithoutUrl(final Activity activity, final long fileId, String filename) {
-		Uri uri = Uri.parse(getFileDownloadUrl(fileId));
-		return download(activity, fileId, false, filename, uri);
-	}
-
-	private Single<Long> downloadZipWithoutUrl(final Activity activity, final String filename, final long... fileIds) {
-		return getZipUrl(fileIds)
-				.observeOn(AndroidSchedulers.mainThread())
-				.flatMap(new Function<String, SingleSource<? extends Long>>() {
-					@Override
-					public SingleSource<? extends Long> apply(@NonNull String zipUrl) throws Exception {
-						Toast.makeText(activity, R.string.downloading_zip, Toast.LENGTH_LONG).show();
-						return download(activity, Uri.parse(zipUrl), filename);
-					}
-				});
-	}
-
-	private Single<Long> download(Activity activity, long fileId, boolean isZip, String filename, Uri uri) {
-		String name;
-		if (isZip) {
-			name = filename;
-		} else {
-			name = fileId + File.separator + filename;
-		}
-
-		return download(activity, uri, name, fileId);
-	}
-
-	public static Single<Long> download(final Activity activity, final Uri uri, final String path) {
-		return download(activity, uri, path, -1);
-	}
-
-	public static Single<Long> download(final Activity activity, final Uri uri, final String path, final long fileId) {
-		return new RxPermissions(activity)
-				.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-				.firstOrError()
-				.map(new Function<Boolean, Long>() {
-					@Override
-					public Long apply(@NonNull Boolean granted) throws Exception {
-						if (!granted) {
-							throw new RuntimeException("Permission not granted");
-						}
-
-						String subPath = "put.io" + File.separator + path;
-						File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + subPath);
-						file.getParentFile().mkdirs();
-
-						final DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-						DownloadManager.Request request = new DownloadManager.Request(uri);
-
-						request.setDescription("put.io");
-						request.allowScanningByMediaScanner();
-						request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath);
-
-						final long downloadId = manager.enqueue(request);
-
-						if (fileId != -1) {
-							AsyncTask.execute(new Runnable() {
-								@Override
-								public void run() {
-									PutioApplicationKt.putioApp(activity).getFileDownloadDatabase()
-											.fileDownloadsDao()
-											.insert(new FileDownload(fileId, downloadId,
-													FileDownload.Status.InProgress, null));
-								}
-							});
-						}
-
-						return downloadId;
-					}
-				});
-	}
-
-	public Single<String> getZipUrl(long... fileIds) {
-		return getRestInterface().createZip(longsToString(fileIds))
-				.map(new Function<CreateZipResponse, Long>() {
-					@Override
-					public Long apply(@NonNull CreateZipResponse response) throws Exception {
-						return response.getZipId();
-					}
-				}).flatMapPublisher(new Function<Long, Publisher<ZipResponse>>() {
-					@Override
-					public Publisher<ZipResponse> apply(@NonNull final Long zipId) throws Exception {
-						return Single.defer(new Callable<SingleSource<ZipResponse>>() {
-							@Override
-							public SingleSource<ZipResponse> call() throws Exception {
-								return getRestInterface().getZip(zipId);
-							}
-						}).repeatWhen(new Function<Flowable<Object>, Publisher<?>>() {
-							@Override
-							public Publisher<?> apply(@NonNull Flowable<Object> flowable) throws Exception {
-								return flowable.delay(1, TimeUnit.SECONDS);
-							}
-						});
-					}
-				}).filter(new Predicate<ZipResponse>() {
-					@Override
-					public boolean test(@NonNull ZipResponse zipResponse) throws Exception {
-						return zipResponse.getUrl() != null;
-					}
-				}).map(new Function<ZipResponse, String>() {
-					@Override
-					public String apply(@NonNull ZipResponse zipResponse) throws Exception {
-						return zipResponse.getUrl();
-					}
-				}).firstOrError();
 	}
 
 	public void stream(Context context, PutioFile file, String url, List<PutioSubtitle> subtitles, int type) {
@@ -444,32 +268,7 @@ public class PutioUtils {
 		List<PutioSubtitle> subtitles;
 	}
 
-	public void copyDownloadLink(final Context context, PutioFile file) {
-		String url = baseUrl + "files/" + file.getId() + "/download" + tokenWithStuff;
-		copy(context, "Download link", url);
-		Toast.makeText(context, context.getString(R.string.readytopaste),
-				Toast.LENGTH_SHORT).show();
-	}
-
-	public void copyZipDownloadLink(final Context context, PutioFile... files) {
-		long[] fileIds = new long[files.length];
-		for (int i = 0; i < fileIds.length; i++) {
-			fileIds[i] = files[i].getId();
-		}
-		getZipUrl(fileIds)
-				.subscribe(new Consumer<String>() {
-					@Override
-					public void accept(String zipUrl) throws Exception {
-						if (context != null) {
-							copy(context, "Download link", zipUrl);
-							Toast.makeText(context, context.getString(R.string.readytopaste),
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-	}
-
-	public void copy(Context context, String label, String text) {
+	public static void copy(Context context, String label, String text) {
 		android.content.ClipboardManager clip =
 				(android.content.ClipboardManager) context.getSystemService(
 						Context.CLIPBOARD_SERVICE);
@@ -490,34 +289,6 @@ public class PutioUtils {
 		return url;
 	}
 
-	public String getFileDownloadUrl(long id) {
-		return baseUrl + "files/" + id + "/download" + tokenWithStuff;
-	}
-
-	public static boolean idIsDownloaded(long id) {
-		String path = Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
-				+ File.separator + "put.io" + File.separator + id;
-		File file = new File(path);
-		if (file.exists()) {
-			return file.list().length > 0;
-		} else {
-			return false;
-		}
-	}
-
-	public static void deleteId(long id) {
-		String path = Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
-				+ File.separator + "put.io" + File.separator + id;
-		File file = new File(path);
-		try {
-			FileUtils.deleteDirectory(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private static void open(Uri uri, Context context) {
 		String typename = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
 		String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typename);
@@ -527,19 +298,6 @@ public class PutioUtils {
 			context.startActivity(intent);
 		} catch (ActivityNotFoundException e) {
 			Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
-		}
-	}
-
-	public static void openDownloadedId(long id, Context context) {
-		if (idIsDownloaded(id)) {
-			String path = Environment.getExternalStoragePublicDirectory(
-					Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
-					+ File.separator + "put.io" + File.separator + id;
-			File file = new File(path).listFiles()[0];
-			Uri uri = Uri.fromFile(file);
-			open(uri, context);
-		} else {
-			Toast.makeText(context, context.getString(R.string.filenotfound), Toast.LENGTH_LONG).show();
 		}
 	}
 

@@ -9,7 +9,8 @@ data class FileDownload(
         val fileId: Long,
         var downloadId: Long?,
         var status: Status,
-        var uri: String?
+        var uri: String?,
+        var downloadedMp4: Boolean?
 ) {
     enum class Status {
         Downloaded, InProgress, NotDownloaded;
@@ -56,7 +57,7 @@ interface FileDownloadDao {
     fun delete(download: FileDownload)
 }
 
-@Database(entities = arrayOf(FileDownload::class), version = 4)
+@Database(entities = arrayOf(FileDownload::class), version = 5)
 @TypeConverters(FileDownload.Status.RoomConverters::class)
 abstract class FileDownloadDatabase: RoomDatabase() {
     abstract fun fileDownloadsDao(): FileDownloadDao

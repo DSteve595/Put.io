@@ -1,13 +1,15 @@
 package com.stevenschoen.putionew.files
 
+import android.Manifest
 import android.content.Intent
-import android.net.Uri
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.TooltipCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : RxFragment() {
@@ -30,6 +33,8 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
         const val STATE_CHECKED_IDS = "checked_ids"
 
         const val EXTRA_CAN_SELECT = "can_select"
+
+        const val REQUEST_DOWNLOAD_SELECTED = 1
 
         fun <T> addArguments(fragment: T, canSelect: Boolean): T where T : FileListFragment<*> {
             fragment.arguments = fragment.arguments.apply {
@@ -60,6 +65,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     var filesAdapter: FileListAdapter? = null
 
     val selectionHelper by lazy { SelectionHelper() }
+    val fileDownloadHelper by lazy { FileDownloadHelper(context) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +112,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             currentViewBackView.setOnClickListener {
                 callbacks?.onBackSelected()
             }
+            TooltipCompat.setTooltipText(currentViewBackView, getString(R.string.go_back))
             currentFolderNameView = currentViewHolderView.findViewById(R.id.file_title_bar_name)
             currentSearchHolderView = currentViewHolderView.findViewById(R.id.file_title_bar_search_holder)
             currentSearchQueryView = currentSearchHolderView.findViewById(R.id.file_title_bar_search_query)
@@ -152,14 +159,21 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     }
 
     private fun selectionDownloadFiles() {
-        val checkedFiles = getCheckedFiles()
-        if (checkedFiles.size > 1) {
-            val downloadFragment = Fragment.instantiate(context, DownloadIndividualOrZipFragment::class.java.name) as DownloadIndividualOrZipFragment
-            downloadFragment.show(childFragmentManager, FolderFragment.FRAGTAG_DOWNLOAD_INDIVIDUALORZIP)
-        } else if (checkedFiles.size == 1) {
-            putioApp.putioUtils!!.downloadFiles(activity, PutioUtils.ACTION_NOTHING, checkedFiles.first())
+        if (fileDownloadHelper.hasPermission()) {
+            val checkedFiles = getCheckedFiles()
+            if (checkedFiles.size > 1) {
+                val downloadFragment = Fragment.instantiate(context, DownloadIndividualOrZipFragment::class.java.name) as DownloadIndividualOrZipFragment
+                downloadFragment.show(childFragmentManager, FolderFragment.FRAGTAG_DOWNLOAD_INDIVIDUALORZIP)
+            } else if (checkedFiles.size == 1) {
+                fileDownloadHelper.downloadFile(checkedFiles.first()).subscribe()
+                filesAdapter!!.clearChecked()
+                Toast.makeText(context, context.getString(R.string.downloadstarted),
+                        Toast.LENGTH_SHORT).show()
+            } else {
+                throw IllegalStateException("Download started with no file IDs!")
+            }
         } else {
-            throw IllegalStateException("Download started with no file IDs!")
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_DOWNLOAD_SELECTED)
         }
     }
 
@@ -169,12 +183,30 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
         if (checkedFiles.size == 1) {
             val file = checkedFiles[0]
             if (file.isFolder) {
-                utils.copyZipDownloadLink(activity, file)
+                fileDownloadHelper.copyZipLink(file.id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            if (isVisible) {
+                                Toast.makeText(context, context.getString(R.string.readytopaste),
+                                        Toast.LENGTH_SHORT).show()
+                            }
+                        }
             } else {
-                utils.copyDownloadLink(activity, file)
+                PutioUtils.copy(context, "Download link", file.getDownloadUrl(utils))
+                Toast.makeText(context, context.getString(R.string.readytopaste),
+                        Toast.LENGTH_SHORT).show()
             }
         } else if (checkedFiles.isNotEmpty()) {
-            utils.copyZipDownloadLink(activity, *getCheckedFiles().toTypedArray())
+            fileDownloadHelper.copyZipLink(*checkedFiles.map { it.id }.toLongArray())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        if (isVisible) {
+                            Toast.makeText(context, context.getString(R.string.readytopaste),
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
         }
     }
 
@@ -196,22 +228,14 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                     childFragment.amountSelected.onNext(it.checkedCount())
                 }
                 childFragment.callbacks = object : FileSelectionFragment.Callbacks {
-                    override fun onRenameSelected() {
-                        selectionRename()
-                    }
-                    override fun onDownloadSelected() {
-                        selectionDownloadFiles()
-                    }
+                    override fun onRenameSelected() = selectionRename()
+                    override fun onDownloadSelected() = selectionDownloadFiles()
                     override fun onCopyLinkSelected() {
                         selectionCopyLinks()
                         filesAdapter!!.clearChecked()
                     }
-                    override fun onMoveSelected() {
-                        selectionMove()
-                    }
-                    override fun onDeleteSelected() {
-                        selectionDelete()
-                    }
+                    override fun onMoveSelected() = selectionMove()
+                    override fun onDeleteSelected() = selectionDelete()
                     override fun onCancel() {
                         childFragmentManager.beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
@@ -244,7 +268,11 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                 childFragment as DownloadIndividualOrZipFragment
                 childFragment.callbacks = object : DownloadIndividualOrZipFragment.Callbacks {
                     override fun onIndividualSelected() {
-                        putioApp.putioUtils!!.downloadFiles(activity, PutioUtils.ACTION_NOTHING, *getCheckedFiles().toTypedArray())
+                        getCheckedFiles().forEach {
+                            fileDownloadHelper.downloadFile(it).subscribe()
+                        }
+                        Toast.makeText(context, context.getString(R.string.downloadstarted),
+                                Toast.LENGTH_SHORT).show()
                         filesAdapter!!.clearChecked()
                     }
                     override fun onZipSelected() {
@@ -252,12 +280,11 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         val filename = checkedFiles.take(5).joinToString(separator = ", ", transform = { it.name }) + ".zip"
 
                         Toast.makeText(context, R.string.downloading_zip, Toast.LENGTH_LONG).show()
-                        putioApp.putioUtils!!
+                        fileDownloadHelper
                                 .getZipUrl(*checkedFiles.map { it.id }.toLongArray())
+                                .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .flatMap { zipUrl ->
-                                    PutioUtils.download(activity, Uri.parse(zipUrl), filename)
-                                }
+                                .map { fileDownloadHelper.download(it, filename) }
                                 .subscribe({ _ ->
                                     Toast.makeText(context, getString(R.string.downloadstarted), Toast.LENGTH_SHORT).show()
                                 }, { error ->
@@ -309,6 +336,17 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(STATE_FILES, files)
         outState.putLongArray(STATE_CHECKED_IDS, filesAdapter!!.checkedIds.toLongArray())
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_DOWNLOAD_SELECTED -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectionDownloadFiles()
+                }
+            }
+        }
     }
 
     abstract fun refresh()

@@ -12,13 +12,12 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-
 		<ImageView
 			android:id="@+id/newfiledetails_screenshot_blurry"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:elevation="2dp"
 			android:background="#383838"
+			android:elevation="2dp"
 			android:scaleType="centerCrop"
 			app:layout_constraintDimensionRatio="16:9"
 			app:layout_constraintEnd_toEndOf="@+id/newfiledetails_title"
@@ -110,43 +109,82 @@
 			app:layout_constraintTop_toTopOf="parent"/>
 
 		<Button
-			android:id="@+id/newfiledetails_action"
+			android:id="@+id/newfiledetails_play"
 			style="@style/Widget.AppCompat.Button.Borderless"
 			android:layout_width="wrap_content"
-			android:layout_height="72dp"
+			android:layout_height="64dp"
 			android:layout_marginTop="8dp"
 			android:drawablePadding="32dp"
 			android:gravity="center_vertical"
 			android:paddingEnd="32dp"
 			android:paddingStart="20dp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Button"
-			app:layout_constraintEnd_toStartOf="@+id/newfiledetails_more"
+			app:layout_constraintEnd_toStartOf="@+id/newfiledetails_download_more"
 			app:layout_constraintHorizontal_bias="0"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/newfiledetails_title"
-			tools:drawableStart="@drawable/ic_filedetails_download"
-			tools:text="Download"/>
+			tools:drawableStart="@drawable/ic_filedetails_play"
+			tools:text="@string/stream"/>
 
 		<ProgressBar
-			android:id="@+id/newfiledetails_progressbar"
+			android:id="@+id/newfiledetails_play_progressbar"
 			android:layout_width="24dp"
 			android:layout_height="24dp"
 			android:layout_marginStart="20dp"
 			android:indeterminate="true"
-			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_action"
-			app:layout_constraintStart_toStartOf="@+id/newfiledetails_action"
-			app:layout_constraintTop_toTopOf="@+id/newfiledetails_action"/>
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_play"
+			app:layout_constraintStart_toStartOf="@+id/newfiledetails_play"
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_play"/>
 
 		<ImageButton
-			android:id="@+id/newfiledetails_more"
+			android:id="@+id/newfiledetails_play_more"
 			android:layout_width="36dp"
 			android:layout_height="0dp"
 			android:layout_marginEnd="4dp"
 			android:background="?selectableItemBackgroundBorderless"
 			android:src="@drawable/ic_filedetails_more"
-			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_action"
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_play"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="@+id/newfiledetails_action"/>
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_play"/>
+
+		<Button
+			android:id="@+id/newfiledetails_download"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="64dp"
+			android:drawablePadding="32dp"
+			android:gravity="center_vertical"
+			android:paddingEnd="32dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Button"
+			app:layout_constraintEnd_toStartOf="@+id/newfiledetails_download_more"
+			app:layout_constraintHorizontal_bias="0"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/newfiledetails_play"
+			app:layout_goneMarginTop="8dp"
+			tools:drawableStart="@drawable/ic_filedetails_download"
+			tools:text="@string/download"/>
+
+		<ProgressBar
+			android:id="@+id/newfiledetails_download_progressbar"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginStart="20dp"
+			android:indeterminate="true"
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_download"
+			app:layout_constraintStart_toStartOf="@+id/newfiledetails_download"
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_download"/>
+
+		<ImageButton
+			android:id="@+id/newfiledetails_download_more"
+			android:layout_width="36dp"
+			android:layout_height="0dp"
+			android:layout_marginEnd="4dp"
+			android:background="?selectableItemBackgroundBorderless"
+			android:src="@drawable/ic_filedetails_more"
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_download"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_download"/>
 
 		<TextView
 			android:id="@+id/newfiledetails_crc32"
@@ -193,7 +231,7 @@
 			android:textAppearance="@style/TextAppearance.AppCompat"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/newfiledetails_action"
+			app:layout_constraintTop_toBottomOf="@+id/newfiledetails_download"
 			tools:text="@string/accessed_on_x_at_x"/>
 
 		<TextView

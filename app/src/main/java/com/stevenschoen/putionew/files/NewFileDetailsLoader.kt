@@ -16,7 +16,8 @@ class NewFileDetailsLoader(context: Context, private val file: PutioFile) : Puti
     fun checkDownload() {
         AsyncTask.execute {
             putioApp(context).fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(file.id)?.let {
-                if (it.status == FileDownload.Status.Downloaded && !isFileDownloaded(context, it)) {
+                if ((it.status == FileDownload.Status.Downloaded || it.status == FileDownload.Status.InProgress)
+                        && !isFileDownloadedOrDownloading(context, it)) {
                     log("${file.name} appears to not be downloaded, marking NotDownloaded")
                     markFileNotDownloaded(context, it)
                 }

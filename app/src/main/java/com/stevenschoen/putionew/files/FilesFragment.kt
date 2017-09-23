@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.UIUtils
 import com.stevenschoen.putionew.model.files.PutioFile
@@ -292,6 +293,7 @@ open class FilesFragment : RxFragment() {
                 childFragment.onBackPressed = {
                     goBack(false)
                 }
+                childFragment.castCallbacks = activity as PutioApplication.CastCallbacks
             }
         }
     }

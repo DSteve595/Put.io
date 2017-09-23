@@ -28,7 +28,8 @@ public class PutioMp4Status implements Parcelable {
 		Completed,
 		@SerializedName("ERROR")
 		Error,
-		AlreadyMp4 // Not from the server, just used to clarify
+		AlreadyMp4, // Not from the server, just used to clarify
+		NotVideo // Not from the server, just used to clarify
 	}
 
 	@Override

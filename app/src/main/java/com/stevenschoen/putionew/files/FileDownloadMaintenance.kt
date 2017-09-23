@@ -44,23 +44,33 @@ fun isFileDownloaded(context: Context, fileId: Long): Boolean {
 
 @WorkerThread
 fun isFileDownloaded(context: Context, fileDownload: FileDownload): Boolean {
-    if (fileDownload.downloadId == null || fileDownload.uri == null) {
-        return false
+    if (fileDownload.downloadId == null || fileDownload.uri == null) return false
+    val status = queryDownloadStatus(context, fileDownload)
+    return status == DownloadManager.STATUS_SUCCESSFUL
+}
+
+@WorkerThread
+fun isFileDownloadedOrDownloading(context: Context, fileDownload: FileDownload): Boolean {
+    if (fileDownload.downloadId == null) return false
+    val status = queryDownloadStatus(context, fileDownload)
+    return when (status) {
+        DownloadManager.STATUS_PENDING,
+        DownloadManager.STATUS_RUNNING,
+        DownloadManager.STATUS_SUCCESSFUL -> true
+        else -> false
     }
+}
+
+private fun queryDownloadStatus(context: Context, fileDownload: FileDownload): Int {
     val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
     downloadManager.query(DownloadManager.Query()
             .setFilterById(fileDownload.downloadId!!)).use { query ->
         if (query.moveToFirst()) {
-            val status = query.getInt(query.getColumnIndex(DownloadManager.COLUMN_STATUS))
-            if (status != DownloadManager.STATUS_SUCCESSFUL) {
-                return false
-            }
+            return query.getInt(query.getColumnIndex(DownloadManager.COLUMN_STATUS))
         } else {
-            return false
+            return DownloadManager.STATUS_FAILED
         }
     }
-
-    return true
 }
 
 @WorkerThread

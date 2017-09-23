@@ -95,11 +95,11 @@ class FileDetailsFragment : RxFragment() {
         toolbarView.setOnMenuItemClickListener { item ->
             when (item!!.itemId) {
                 R.id.menu_open -> {
-                    initActionFile(PutioUtils.ACTION_OPEN)
+//                    initActionFile(PutioUtils.ACTION_OPEN)
                     return@setOnMenuItemClickListener true
                 }
                 R.id.menu_download -> {
-                    initActionFile(PutioUtils.ACTION_NOTHING)
+//                    initActionFile(PutioUtils.ACTION_NOTHING)
                     return@setOnMenuItemClickListener true
                 }
                 R.id.menu_delete -> {
@@ -139,7 +139,7 @@ class FileDetailsFragment : RxFragment() {
         infoMp4ConvertingText = infoMp4Converting.findViewById<TextView>(R.id.fileinfo_mp4_converting_text)
         if (file.isVideo) {
             if (file.isMp4) {
-                updateMp4View(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
+//                updateMp4View(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
             } else {
                 checkBoxMp4Available = infoMp4Available.findViewById<CheckBox>(R.id.checkbox_fileinfo_mp4)
                 checkBoxMp4Available.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -288,39 +288,39 @@ class FileDetailsFragment : RxFragment() {
         }
     }
 
-    private fun initActionFile(mode: Int) {
-        if (PutioUtils.idIsDownloaded(file.id)) {
-            val dialog = PutioUtils.showPutioDialog(activity, getString(R.string.redownloadtitle), R.layout.dialog_redownload)
-
-            val textBody = dialog.findViewById<TextView>(R.id.text_redownloadbody)
-            when (mode) {
-                PutioUtils.ACTION_NOTHING -> textBody.text = getString(R.string.redownloadfordlbody)
-                PutioUtils.ACTION_OPEN -> textBody.text = getString(R.string.redownloadforopenbody)
-            }
-
-            val buttonOpen = dialog.findViewById<View>(R.id.button_redownload_open)
-            if (mode == PutioUtils.ACTION_OPEN) {
-                buttonOpen.setOnClickListener {
-                    PutioUtils.openDownloadedId(file.id, activity)
-                    dialog.dismiss()
-                }
-            } else {
-                buttonOpen.visibility = View.GONE
-            }
-
-            val buttonRedownload = dialog.findViewById<View>(R.id.button_redownload_download)
-            buttonRedownload.setOnClickListener {
-                PutioUtils.deleteId(file.id)
-                utils.downloadFiles(activity, mode, file)
-                dialog.dismiss()
-            }
-
-            val buttonCancel = dialog.findViewById<View>(R.id.button_redownload_cancel)
-            buttonCancel.setOnClickListener { dialog.cancel() }
-        } else {
-            utils.downloadFiles(activity, mode, file)
-        }
-    }
+//    private fun initActionFile(mode: Int) {
+//        if (PutioUtils.idIsDownloaded(file.id)) {
+//            val dialog = PutioUtils.showPutioDialog(activity, getString(R.string.redownloadtitle), R.layout.dialog_redownload)
+//
+//            val textBody = dialog.findViewById<TextView>(R.id.text_redownloadbody)
+//            when (mode) {
+////                PutioUtils.ACTION_NOTHING -> textBody.text = getString(R.string.redownloadfordlbody)
+////                PutioUtils.ACTION_OPEN -> textBody.text = getString(R.string.redownloadforopenbody)
+//            }
+//
+//            val buttonOpen = dialog.findViewById<View>(R.id.button_redownload_open)
+////            if (mode == PutioUtils.ACTION_OPEN) {
+////                buttonOpen.setOnClickListener {
+////                    PutioUtils.openDownloadedId(file.id, activity)
+////                    dialog.dismiss()
+////                }
+////            } else {
+////                buttonOpen.visibility = View.GONE
+////            }
+//
+//            val buttonRedownload = dialog.findViewById<View>(R.id.button_redownload_download)
+//            buttonRedownload.setOnClickListener {
+//                PutioUtils.deleteId(file.id)
+////                utils.downloadFiles(activity, mode, file)
+//                dialog.dismiss()
+//            }
+//
+//            val buttonCancel = dialog.findViewById<View>(R.id.button_redownload_cancel)
+//            buttonCancel.setOnClickListener { dialog.cancel() }
+//        } else {
+////            utils.downloadFiles(activity, mode, file)
+//        }
+//    }
 
     private fun initDeleteFile() {
         val confirmDeleteFragment = ConfirmDeleteFragment.newInstance(context, 1)
@@ -361,13 +361,13 @@ class FileDetailsFragment : RxFragment() {
                         textMp4Available.text = getString(R.string.dont_use_mp4)
                     }
                 }
-                PutioMp4Status.Status.AlreadyMp4 -> {
-                    infoMp4Checking.visibility = View.GONE
-                    infoMp4Already.visibility = View.VISIBLE
-                    infoMp4Available.visibility = View.GONE
-                    infoMp4Converting.visibility = View.GONE
-                    infoMp4NotAvailable.visibility = View.GONE
-                }
+//                PutioMp4Status.Status.AlreadyMp4 -> {
+//                    infoMp4Checking.visibility = View.GONE
+//                    infoMp4Already.visibility = View.VISIBLE
+//                    infoMp4Available.visibility = View.GONE
+//                    infoMp4Converting.visibility = View.GONE
+//                    infoMp4NotAvailable.visibility = View.GONE
+//                }
                 PutioMp4Status.Status.Error -> {
                     infoMp4Checking.visibility = View.GONE
                     infoMp4Already.visibility = View.GONE

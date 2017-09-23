@@ -59,6 +59,18 @@ data class PutioFile(
         return base + streamOrStreamMp4 + utils.tokenWithStuff
     }
 
+    fun getDownloadUrl(utils: PutioUtils, mp4: Boolean = false): String {
+        val base = PutioUtils.baseUrl + "files/" + id
+        val downloadOrDownloadMp4: String
+        if (mp4 && !isMp4) {
+            downloadOrDownloadMp4 = "/mp4/download"
+        } else {
+            downloadOrDownloadMp4 = "/download"
+        }
+
+        return base + downloadOrDownloadMp4 + utils.tokenWithStuff
+    }
+
     override fun writeToParcel(dest: Parcel, flags: Int) {
         PaperParcelPutioFile.writeToParcel(this, dest, flags)
     }
