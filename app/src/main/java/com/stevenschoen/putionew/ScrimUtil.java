@@ -73,8 +73,8 @@ public class ScrimUtil {
 
         final float x0, x1, y0, y1;
         switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-            case Gravity.START:  x0 = 1; x1 = 0; break;
-            case Gravity.END: x0 = 0; x1 = 1; break;
+            case Gravity.LEFT:  x0 = 1; x1 = 0; break;
+            case Gravity.RIGHT: x0 = 0; x1 = 1; break;
             default:            x0 = 0; x1 = 0; break;
         }
         switch (gravity & Gravity.VERTICAL_GRAVITY_MASK) {
@@ -86,14 +86,13 @@ public class ScrimUtil {
         paintDrawable.setShaderFactory(new ShapeDrawable.ShaderFactory() {
             @Override
             public Shader resize(int width, int height) {
-                LinearGradient linearGradient = new LinearGradient(
+                return new LinearGradient(
                         width * x0,
                         height * y0,
                         width * x1,
                         height * y1,
                         stopColors, null,
                         Shader.TileMode.CLAMP);
-                return linearGradient;
             }
         });
 
@@ -101,7 +100,7 @@ public class ScrimUtil {
         return paintDrawable;
     }
 
-    public static float constrain(float min, float max, float v) {
+    static float constrain(float min, float max, float v) {
         return Math.max(min, Math.min(max, v));
     }
 }

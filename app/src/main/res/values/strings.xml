@@ -35,6 +35,7 @@
 	<string name="maximize">Maximize</string>
 	<string name="send">Send</string>
 	<string name="send_x">Send %s</string>
+	<string name="go_back">Go back</string>
 
 	<!-- Dialog text -->
 	<string name="gettingstreamurltitle">Preparing to stream</string>
@@ -106,7 +107,6 @@
 	<string name="copyingdownloadlink">Copying download link</string>
 	<string name="downloading_zip">Downloading zip</string>
 	<string name="filenotfound">The file could not be found. Was it deleted?</string>
-	<string name="go_to_previous_folder">Go back to the previous folder</string>
 	<string name="clear_finished_transfers">Clear finished transfers</string>
 	<string name="convert_mp4">Convert to MP4</string>
 	<string name="checking_for_mp4">Checking for MP4…</string>

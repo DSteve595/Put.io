@@ -313,7 +313,7 @@ open class FilesFragment : RxFragment() {
                     val file = page.file!!
                     return when {
                         file.isFolder -> FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
-                        file.isMedia -> FileDetailsFragment.newInstance(context, file)
+//                        file.isMedia -> FileDetailsFragment.newInstance(context, file)
                         else -> NewFileDetailsFragment.newInstance(context, file)
                     }
                 }

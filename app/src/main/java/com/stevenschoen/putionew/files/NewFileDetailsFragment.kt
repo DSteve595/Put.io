@@ -4,8 +4,12 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
@@ -14,18 +18,21 @@ import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v4.widget.TextViewCompat
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
+import com.stevenschoen.putionew.ScrimUtil
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
+import com.trello.rxlifecycle2.android.FragmentEvent
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Single
@@ -38,7 +45,7 @@ class NewFileDetailsFragment : RxFragment() {
         val EXTRA_FILE = "file"
 
         fun newInstance(context: Context, file: PutioFile): NewFileDetailsFragment {
-            if (file.isFolder || file.isMedia) {
+            if (file.isFolder) {
                 throw IllegalStateException("FileDetailsFragment created for the wrong kind of file:" +
                         "${file.name} (ID ${file.id}), type ${file.contentType}")
             }
@@ -53,6 +60,7 @@ class NewFileDetailsFragment : RxFragment() {
     var onBackPressed: (() -> Any)? = null
 
     val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE)!! }
+    val showMp4Options by lazy { file.isVideo && !file.isMp4 }
 
     lateinit var loader: NewFileDetailsLoader
 
@@ -64,6 +72,8 @@ class NewFileDetailsFragment : RxFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.newfiledetails, container, false).apply {
+            val useVideoTitleBackground = file.isVideo && !file.screenshot.isNullOrBlank()
+
             val titleView: TextView = findViewById(R.id.newfiledetails_title)
             titleView.text = file.name
             var titleBackgroundColorAnimator: Animator? = null
@@ -84,9 +94,74 @@ class NewFileDetailsFragment : RxFragment() {
                 lastTitleBackgroundColor = color
             }
 
-            val backView: View = findViewById(R.id.newfiledetails_back)
+            val screenshotView: ImageView = findViewById(R.id.newfiledetails_screenshot)
+            val screenshotBlurryView: ImageView = findViewById(R.id.newfiledetails_screenshot_blurry)
+            val screenshotTopScrimView: View = findViewById(R.id.newfiledetails_screenshot_scrim_top)
+            val screenshotTitleScrimView: View = findViewById(R.id.newfiledetails_screenshot_scrim_title)
+
+            val fileGraphicView: View = findViewById(R.id.newfiledetails_graphic_file)
+
+            val backView: ImageButton = findViewById(R.id.newfiledetails_back)
             backView.setOnClickListener {
                 onBackPressed?.invoke()
+            }
+
+            titleView.setPadding(titleView.paddingLeft,
+                    resources.getDimensionPixelSize(if (useVideoTitleBackground)
+                        R.dimen.filedetails_title_top_padding_video
+                    else
+                        R.dimen.filedetails_title_top_padding_notvideo),
+                    titleView.paddingRight, titleView.paddingBottom)
+            if (useVideoTitleBackground) {
+                ImageViewCompat.setImageTintList(backView,
+                        ColorStateList.valueOf(Color.WHITE))
+                titleView.setTextColor(Color.WHITE)
+                titleView.background = null
+                titleView.setShadowLayer(4f, 0f, 2f, Color.BLACK)
+                Picasso.with(context)
+                        .load(file.icon)
+                        .transform(PutioUtils.BlurTransformation(context, 4f))
+                        .into(screenshotBlurryView)
+                val screenshotTarget = object : Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                        val scrimColor = Color.parseColor("#80000000")
+                        screenshotTopScrimView.background = ScrimUtil.makeCubicGradientScrimDrawable(
+                                scrimColor, 6, Gravity.TOP)
+                        screenshotTitleScrimView.background = ScrimUtil.makeCubicGradientScrimDrawable(
+                                scrimColor, 8, Gravity.BOTTOM)
+
+                        screenshotView.setImageBitmap(bitmap)
+                        if (from == Picasso.LoadedFrom.NETWORK) {
+                            screenshotView.alpha = 0f
+                            screenshotView.animate().alpha(1f).withEndAction {
+                                screenshotBlurryView.visibility = View.INVISIBLE
+                            }
+                            screenshotTopScrimView.alpha = 0f
+                            screenshotTopScrimView.animate().alpha(1f)
+                            screenshotTitleScrimView.alpha = 0f
+                            screenshotTitleScrimView.animate().alpha(1f)
+                        }
+                    }
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) { }
+                    override fun onBitmapFailed(errorDrawable: Drawable?) { }
+                }
+                Picasso.with(context)
+                        .load(file.screenshot)
+                        .into(screenshotTarget)
+                lifecycle()
+                        .filter { it == FragmentEvent.DESTROY_VIEW }
+                        .first(FragmentEvent.DESTROY_VIEW)
+                        .toCompletable()
+                        .subscribe {
+                            Picasso.with(context).cancelRequest(screenshotTarget)
+                        }
+                fileGraphicView.visibility = View.GONE
+            } else {
+                titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.putio_filedetails_notdownloaded))
+                screenshotView.visibility = View.GONE
+                screenshotBlurryView.visibility = View.GONE
+                screenshotTopScrimView.visibility = View.GONE
+                screenshotTitleScrimView.visibility = View.GONE
             }
 
             val accessedView: TextView = findViewById(R.id.newfiledetails_accessed)
@@ -143,11 +218,15 @@ class NewFileDetailsFragment : RxFragment() {
                             .observeOn(AndroidSchedulers.mainThread())
                             .map { Uri.parse(it) }
                             .subscribe({ fileUri ->
-                                startActivity(Intent(Intent.ACTION_VIEW)
-                                        .setDataAndType(fileUri, file.contentType)
-                                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+                                try {
+                                    startActivity(Intent(Intent.ACTION_VIEW)
+                                            .setDataAndType(fileUri, file.contentType)
+                                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+                                } catch (e: ActivityNotFoundException) {
+                                    Toast.makeText(context, R.string.noactivityfound, Toast.LENGTH_SHORT).show()
+                                }
                             }, { error ->
-                                Toast.makeText(context, "error opening", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Error opening", Toast.LENGTH_SHORT).show()
                                 PutioUtils.getRxJavaThrowable(error).printStackTrace()
                             })
                 }
@@ -223,15 +302,17 @@ class NewFileDetailsFragment : RxFragment() {
                         lastStatus = it
                     }
 
-            status.subscribe {
-                val animate = (lastStatus != null)
-                val backgroundColorRes = when (it!!) {
-                    FileDownload.Status.Downloaded -> R.color.putio_filedetails_downloaded
-                    FileDownload.Status.InProgress -> R.color.putio_filedetails_inprogress
-                    FileDownload.Status.NotDownloaded -> R.color.putio_filedetails_notdownloaded
+            if (!useVideoTitleBackground) {
+                status.subscribe {
+                    val animate = (lastStatus != null)
+                    val backgroundColorRes = when (it!!) {
+                        FileDownload.Status.Downloaded -> R.color.putio_filedetails_downloaded
+                        FileDownload.Status.InProgress -> R.color.putio_filedetails_inprogress
+                        FileDownload.Status.NotDownloaded -> R.color.putio_filedetails_notdownloaded
+                    }
+                    setTitleBackgroundColor(ContextCompat.getColor(
+                            context, backgroundColorRes), animate)
                 }
-                setTitleBackgroundColor(ContextCompat.getColor(
-                        context, backgroundColorRes), animate)
             }
         }
     }

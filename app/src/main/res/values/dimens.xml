@@ -19,6 +19,9 @@
 
 	<dimen name="file_list_selection_bottom_margin">32dp</dimen>
 
+	<dimen name="filedetails_title_top_padding_video">0dp</dimen>
+	<dimen name="filedetails_title_top_padding_notvideo">88dp</dimen>
+
 	<dimen name="tv_layer_offset">40dp</dimen>
 	<dimen name="tv_layer_elevation">6dp</dimen>
 </resources>

@@ -12,11 +12,60 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
+
+		<ImageView
+			android:id="@+id/newfiledetails_screenshot_blurry"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			android:background="#383838"
+			android:scaleType="centerCrop"
+			app:layout_constraintDimensionRatio="16:9"
+			app:layout_constraintEnd_toEndOf="@+id/newfiledetails_title"
+			app:layout_constraintStart_toStartOf="@+id/newfiledetails_title"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
+		<ImageView
+			android:id="@+id/newfiledetails_screenshot"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			android:scaleType="centerCrop"
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_screenshot_blurry"
+			app:layout_constraintEnd_toEndOf="@+id/newfiledetails_screenshot_blurry"
+			app:layout_constraintStart_toStartOf="@+id/newfiledetails_screenshot_blurry"
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_screenshot_blurry"
+			/>
+
+		<View
+			android:id="@+id/newfiledetails_screenshot_scrim_top"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintEnd_toEndOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintHeight_max="96dp"
+			app:layout_constraintStart_toStartOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintVertical_bias="0"/>
+
+		<View
+			android:id="@+id/newfiledetails_screenshot_scrim_title"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			app:layout_constraintBottom_toBottomOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintEnd_toEndOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintHeight_max="120dp"
+			app:layout_constraintStart_toStartOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintTop_toTopOf="@+id/newfiledetails_screenshot"
+			app:layout_constraintVertical_bias="1"/>
+
 		<android.support.v7.widget.AppCompatTextView
 			android:id="@+id/newfiledetails_title"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:background="@color/putio_filedetails_notdownloaded"
 			android:elevation="2dp"
 			android:ellipsize="end"
 			android:gravity="bottom"
@@ -24,17 +73,19 @@
 			android:paddingBottom="8dp"
 			android:paddingEnd="16dp"
 			android:paddingStart="16dp"
-			android:paddingTop="88dp"
 			android:textColor="?android:textColorPrimary"
-			android:textSize="30sp"
-			app:autoSizeMinTextSize="24sp"
-			app:autoSizeTextType="uniform"
+			android:textSize="28sp"
+			app:layout_constraintBottom_toBottomOf="@id/newfiledetails_screenshot"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="1"
+			tools:background="@color/putio_filedetails_notdownloaded"
+			tools:paddingTop="@dimen/filedetails_title_top_padding_video"
 			tools:text="File name.rar"/>
 
 		<ImageView
+			android:id="@+id/newfiledetails_graphic_file"
 			android:layout_width="160dp"
 			android:layout_height="160dp"
 			android:scaleType="fitCenter"

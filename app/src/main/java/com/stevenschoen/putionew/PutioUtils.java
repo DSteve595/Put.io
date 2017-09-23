@@ -18,7 +18,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
@@ -661,10 +660,6 @@ public class PutioUtils {
 
 		@Override
 		public Bitmap transform(Bitmap source) {
-			if (Build.VERSION.SDK_INT < 17) {
-				return source;
-			}
-
 			RenderScript rs = RenderScript.create(context);
 			Allocation input = Allocation.createFromBitmap(rs, source, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
 			Allocation output = Allocation.createTyped(rs, input.getType());
