@@ -91,7 +91,6 @@
   <string name="copy_dl_link">Kopieer downloadlink</string>
   <string name="copyingdownloadlink">Downloadlink kopiëren</string>
   <string name="filenotfound">Het bestand kon niet worden gevonden. Was het verwijderd?</string>
-  <string name="go_to_previous_folder">Ga terug naar de vorige map</string>
   <string name="clear_finished_transfers">Afgeronde overdrachten opruimen</string>
   <string name="convert_mp4">Converteren naar MP4</string>
   <string name="converting_mp4">Converteren naar MP4&#8230;</string>
@@ -117,5 +116,4 @@
   <string name="version_x">Versie %s</string>
   <string name="appbysteven">Android app door Steven Schoen.</string>
   <string name="codedwithlove">Gecodeerd met liefde, zorg en cafeïne.</string>
-  <string name="notaffiliated">Niet verbonden met Put.io.</string>
 </resources>
