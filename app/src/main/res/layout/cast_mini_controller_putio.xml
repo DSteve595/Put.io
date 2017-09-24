@@ -3,4 +3,5 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"/>
+	android:layout_height="wrap_content"
+	android:tag="mini_controller"/>
