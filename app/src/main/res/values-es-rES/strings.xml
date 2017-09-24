@@ -62,5 +62,4 @@
   <!-- About screen -->
   <string name="version_x">Versión %s</string>
   <string name="appbysteven">App para Android por Steven Schoen.</string>
-  <string name="notaffiliated">Sin afiliación a Put.io.</string>
 </resources>
