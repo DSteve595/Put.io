@@ -91,7 +91,6 @@
   <string name="copy_dl_link">Copia il link per il download</string>
   <string name="copyingdownloadlink">Copia il link per il download in corso</string>
   <string name="filenotfound">Il file non è stato trovato. È stato per caso eliminato?</string>
-  <string name="go_to_previous_folder">Torna alla cartella precedente</string>
   <string name="clear_finished_transfers">Elimina trasferimenti completati</string>
   <string name="convert_mp4">Converti in MP4</string>
   <string name="converting_mp4">Conversione in MP4 in corso&#8230;</string>
@@ -117,5 +116,4 @@
   <string name="version_x">Versione %s</string>
   <string name="appbysteven">App Android di Steven Schoen.</string>
   <string name="codedwithlove">Programmato con amore, cura e caffeina.</string>
-  <string name="notaffiliated">Non affiliato con Put.io.</string>
 </resources>
