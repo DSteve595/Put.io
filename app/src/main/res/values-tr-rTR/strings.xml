@@ -96,7 +96,6 @@
   <string name="copy_dl_link">İndirme bağlantısını kopyala</string>
   <string name="copyingdownloadlink">İndirme bağlantısı kopyalanıyor.</string>
   <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
-  <string name="go_to_previous_folder">Önceki klasöre dön</string>
   <string name="clear_finished_transfers">Tamamlananları temizle</string>
   <string name="convert_mp4">MP4\'e çevir</string>
   <string name="checking_for_mp4">MP4 için denetleniyor…</string>
@@ -126,5 +125,4 @@
   <string name="version_x">Sürüm %s</string>
   <string name="appbysteven">Steven Schoen tarafından geliştirilen Android uygulaması.</string>
   <string name="codedwithlove">Sevgi, dikkat ve kafein ile kodlanmıştır.</string>
-  <string name="notaffiliated">Put.io ile bağlantısı yoktur.</string>
 </resources>
