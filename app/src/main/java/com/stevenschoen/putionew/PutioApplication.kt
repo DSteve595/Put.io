@@ -8,6 +8,7 @@ import android.support.multidex.MultiDexApplication
 import android.support.v4.app.Fragment
 import com.akaita.java.rxjava2debug.RxJava2Debug
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import com.stevenschoen.putionew.files.FileDownloadDatabase
 import com.stevenschoen.putionew.model.files.PutioFile
 import io.fabric.sdk.android.Fabric
@@ -27,13 +28,19 @@ class PutioApplication : MultiDexApplication() {
             return field
         }
     val fileDownloadDatabase by lazy {
-        Room.databaseBuilder(this, FileDownloadDatabase::class.java, "fileDownloads").fallbackToDestructiveMigration().build()
+        Room.databaseBuilder(this, FileDownloadDatabase::class.java, "fileDownloads")
+                .fallbackToDestructiveMigration()
+                .build()!!
     }
 
     override fun onCreate() {
         super.onCreate()
 
-        Fabric.with(this, Crashlytics())
+        Fabric.with(this, Crashlytics.Builder()
+                .core(CrashlyticsCore.Builder()
+                        .disabled(BuildConfig.DEBUG)
+                        .build())
+                .build())
 
         JodaTimeAndroid.init(this)
 
