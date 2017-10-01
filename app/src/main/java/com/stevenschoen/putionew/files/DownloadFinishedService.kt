@@ -2,20 +2,28 @@ package com.stevenschoen.putionew.files
 
 import android.app.Activity
 import android.app.DownloadManager
-import android.app.IntentService
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.JobIntentService
 import com.stevenschoen.putionew.putioApp
 
-class DownloadFinishedService : IntentService("downloadfinishedreceiver") {
+class DownloadFinishedService : JobIntentService() {
 
     companion object {
-        const val EXTRA_DOWNLOAD_ID = "dlid"
+        private const val EXTRA_DOWNLOAD_ID = "dlid"
+
+        private const val DOWNLOAD_FINISHED_JOB_ID = 1
+
+        fun receiveDownloadFinished(context: Context, downloadId: Long) {
+            enqueueWork(context, DownloadFinishedService::class.java, DOWNLOAD_FINISHED_JOB_ID,
+                    Intent(context, DownloadFinishedService::class.java)
+                            .putExtra(EXTRA_DOWNLOAD_ID, downloadId))
+        }
     }
 
-    override fun onHandleIntent(intent: Intent?) {
-        val downloadId = intent?.getLongExtra(EXTRA_DOWNLOAD_ID, -1).takeIf { it != -1L } ?: return
+    override fun onHandleWork(intent: Intent) {
+        val downloadId = intent.getLongExtra(EXTRA_DOWNLOAD_ID, -1).takeIf { it != -1L } ?: return
         val downloadManager = getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
         val query = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
         if (query.moveToFirst()) {
@@ -35,8 +43,7 @@ class DownloadFinishedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val downloadId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1).takeIf { it != -1L }
         downloadId?.let {
-            context.startService(Intent(context, DownloadFinishedService::class.java)
-                    .putExtra(DownloadFinishedService.EXTRA_DOWNLOAD_ID, it))
+            DownloadFinishedService.receiveDownloadFinished(context, it)
         }
     }
 }

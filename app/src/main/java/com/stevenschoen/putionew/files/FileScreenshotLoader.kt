@@ -19,7 +19,7 @@ import io.reactivex.subjects.BehaviorSubject
 class FileScreenshotLoader(context: Context, val file: PutioFile) : PutioBaseLoader(context) {
 
     private val screenshotSubject = BehaviorSubject.create<Bitmap>()
-    fun screenshot() = screenshotSubject.observeOn(AndroidSchedulers.mainThread())
+    fun screenshot() = screenshotSubject.observeOn(AndroidSchedulers.mainThread())!!
 
     var disposable: Disposable? = null
     fun load(onlyIfEmpty: Boolean = false) {

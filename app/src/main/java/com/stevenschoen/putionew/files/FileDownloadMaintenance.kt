@@ -88,3 +88,17 @@ fun markFileNotDownloaded(context: Context, fileDownload: FileDownload) {
         downloadId = null
     })
 }
+
+@WorkerThread
+fun markFileDownloaded(context: Context, fileId: Long) {
+    putioApp(context).fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(fileId)?.let {
+        markFileDownloaded(context, it)
+    }
+}
+
+@WorkerThread
+fun markFileDownloaded(context: Context, fileDownload: FileDownload) {
+    putioApp(context).fileDownloadDatabase.fileDownloadsDao().update(fileDownload.apply {
+        status = FileDownload.Status.Downloaded
+    })
+}

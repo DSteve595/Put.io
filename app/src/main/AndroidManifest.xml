@@ -182,7 +182,9 @@
 			</intent-filter>
 		</receiver>
 
-		<service android:name=".files.DownloadFinishedService"/>
+		<service
+			android:name=".files.DownloadFinishedService"
+			android:permission="android.permission.BIND_JOB_SERVICE"/>
 		<service android:name=".PutioTransfersService"/>
 		<service
 			android:name=".files.FileDownloadsMaintenanceService"

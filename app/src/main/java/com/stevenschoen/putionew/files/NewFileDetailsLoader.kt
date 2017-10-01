@@ -16,11 +16,22 @@ class NewFileDetailsLoader(context: Context, private val file: PutioFile) : Puti
     fun checkDownload() {
         AsyncTask.execute {
             putioApp(context).fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(file.id)?.let {
-                if ((it.status == FileDownload.Status.Downloaded || it.status == FileDownload.Status.InProgress)
-                        && !isFileDownloadedOrDownloading(context, it)) {
+                val isDownloaded = it.status == FileDownload.Status.Downloaded
+                val isDownloading = it.status == FileDownload.Status.InProgress
+                if ((isDownloaded || isDownloading) && !isFileDownloadedOrDownloading(context, it)) {
                     log("${file.name} appears to not be downloaded, marking NotDownloaded")
                     markFileNotDownloaded(context, it)
+                } else if (isDownloading && isFileDownloaded(context, it)) {
+                    log("${file.name} appears to be downloaded, marking Downloaded")
+                    markFileDownloaded(context, it)
                 }
+                /*
+                If, for some reason, a download finished but DownloadFinishedService didn't
+                receive the event, downloads can get into a state where they're completed as far
+                as the DownloadManager's concerned, but the FileDownload has no Uri. That hasn't
+                come up, but if it ever does, the Uri should be fetched from the DownloadManager
+                and updated (as well as its status) in the FileDownload.
+                 */
             }
         }
     }
