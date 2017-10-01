@@ -232,9 +232,8 @@ class FileDetailsFragment : RxFragment() {
             val sendItem = downloadMorePopup.menu.add(R.string.send).setOnMenuItemClickListener {
                 Single.fromCallable {
                     fileDownloads.getByFileIdSynchronous(file.id)!!
-                }
+                }.subscribeOn(Schedulers.io())
                         .bindToLifecycle(this@FileDetailsFragment)
-                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             val uri = Uri.parse(it.uri)
@@ -259,7 +258,8 @@ class FileDetailsFragment : RxFragment() {
             }
 
             val fileDownload = fileDownloads.getByFileId(file.id)
-                    .bindToLifecycle(this)
+                    .bindToLifecycle(this@FileDetailsFragment)
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .toObservable()
             val fileDownloadWithDefault = fileDownload.startWith(FileDownload(file.id,
@@ -276,7 +276,7 @@ class FileDetailsFragment : RxFragment() {
                             // Assume it's completed, most common case
                             status = PutioMp4Status.Status.Completed
                         })
-                        .bindToLifecycle(this)
+                        .bindToLifecycle(this@FileDetailsFragment)
             } else if (useVideoTitleBackground) {
                 Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
             } else {
@@ -289,7 +289,7 @@ class FileDetailsFragment : RxFragment() {
                     fileDownloadWithDefault, mp4Status, BiFunction { newDownload, newMp4Status ->
                 DownloadAndMp4Status(newDownload, newMp4Status)
             })
-            downloadAndMp4Status.subscribe { (newDownload, newMp4Status) ->
+            downloadAndMp4Status.subscribe({ (newDownload, newMp4Status) ->
                 val downloadDone = newDownload.status == FileDownload.Status.Downloaded
                 val downloadedMp4 = newDownload.downloadedMp4 ?: false
                 val playMp4String = if (downloadDone && downloadedMp4) R.string.play else R.string.stream
@@ -397,10 +397,12 @@ class FileDetailsFragment : RxFragment() {
                     }
                 }
                 lastDownloadStatus = newDownload.status
-            }
+            }, { error ->
+                PutioUtils.getRxJavaThrowable(error).printStackTrace()
+            })
 
             if (!useVideoTitleBackground) {
-                downloadStatus.subscribe {
+                downloadStatus.subscribe({
                     val animate = (lastDownloadStatus != null)
                     val backgroundColorRes = when (it!!) {
                         FileDownload.Status.Downloaded -> R.color.putio_filedetails_downloaded
@@ -409,7 +411,9 @@ class FileDetailsFragment : RxFragment() {
                     }
                     setTitleBackgroundColor(ContextCompat.getColor(
                             context, backgroundColorRes), animate)
-                }
+                }, { error ->
+                    PutioUtils.getRxJavaThrowable(error).printStackTrace()
+                })
             }
         }
     }

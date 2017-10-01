@@ -1,5 +1,6 @@
 package com.stevenschoen.putionew.files
 
+import android.support.v4.util.ArraySet
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,12 @@ import java.util.*
 
 class FileListAdapter(private val data: List<PutioFile>,
                       val onFileClicked: (file: PutioFile, holder: FileHolder) -> Unit,
-                      val onFileLongClicked: (file: PutioFile, holder: FileHolder) -> Unit) : RecyclerView.Adapter<FileListAdapter.FileHolder>() {
+                      val onFileLongClicked: (file: PutioFile, holder: FileHolder) -> Unit)
+    : RecyclerView.Adapter<FileListAdapter.FileHolder>() {
 
     private var itemsCheckedChangedListener: OnItemsCheckedChangedListener? = null
 
-    val checkedIds = ArrayList<Long>()
+    val checkedIds = ArraySet<Long>()
 
     init {
         setHasStableIds(true)
@@ -27,16 +29,10 @@ class FileListAdapter(private val data: List<PutioFile>,
             override fun onChanged() {
                 super.onChanged()
                 if (isInCheckMode()) {
-                    val idsToRemove = ArrayList<Long>()
+                    val idsToRemove = ArraySet<Long>()
 
                     for (checkedId in checkedIds) {
-                        var stillHas = false
-                        for (file in data) {
-                            if (file.id == checkedId) {
-                                stillHas = true
-                                break
-                            }
-                        }
+                        val stillHas = data.any { it.id == checkedId }
                         if (!stillHas) {
                             idsToRemove.add(checkedId)
                         }
@@ -102,7 +98,7 @@ class FileListAdapter(private val data: List<PutioFile>,
         return -1
     }
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount() = data.size
 
     fun isInCheckMode() = checkedIds.isNotEmpty()
 
@@ -113,21 +109,13 @@ class FileListAdapter(private val data: List<PutioFile>,
         return (itemId != -1L) && (checkedIds.contains(itemId))
     }
 
-    fun getCheckedPositions(): IntArray {
-        val checkedPositions = IntArray(checkedIds.size)
-        for (i in checkedIds.indices) {
-            val id = checkedIds[i]
-            checkedPositions[i] = getItemPosition(id)
-        }
-
-        return checkedPositions
-    }
+    fun getCheckedPositions() = checkedIds.map { getItemPosition(it) }
 
     fun setPositionChecked(position: Int, checked: Boolean) {
         val itemId = getItemId(position)
-        if (checked && !checkedIds.contains(itemId)) {
+        if (checked) {
             checkedIds.add(itemId)
-        } else if (!checked) {
+        } else {
             checkedIds.remove(itemId)
         }
         notifyItemChanged(position)
@@ -141,12 +129,9 @@ class FileListAdapter(private val data: List<PutioFile>,
     }
 
     fun addCheckedIds(vararg ids: Long) {
-        for (id in ids) {
-            if (!checkedIds.contains(id)) {
-                checkedIds.add(id)
-                notifyItemChanged(getItemPosition(id))
-            }
-        }
+        ids
+                .filter { checkedIds.add(it) }
+                .forEach { notifyItemChanged(getItemPosition(it)) }
         if (itemsCheckedChangedListener != null) {
             itemsCheckedChangedListener!!.onItemsCheckedChanged()
         }
@@ -154,7 +139,7 @@ class FileListAdapter(private val data: List<PutioFile>,
 
     fun clearChecked() {
         if (checkedIds.isNotEmpty()) {
-            val previouslyCheckedIds = ArrayList<Long>(checkedIds)
+            val previouslyCheckedIds = ArraySet<Long>(checkedIds)
             checkedIds.clear()
             for (id in previouslyCheckedIds) {
                 notifyItemChanged(getItemPosition(id))
@@ -174,10 +159,10 @@ class FileListAdapter(private val data: List<PutioFile>,
     }
 
     inner class FileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textName = itemView.findViewById<TextView>(R.id.text_file_name)!!
-        val textDescription = itemView.findViewById<TextView>(R.id.text_file_description)!!
-        val iconImg = itemView.findViewById<ImageView>(R.id.icon_file_img)!!
-        val iconAccessed = itemView.findViewById<ImageView>(R.id.icon_file_accessed)!!
+        val textName: TextView = itemView.findViewById(R.id.text_file_name)
+        val textDescription: TextView = itemView.findViewById(R.id.text_file_description)
+        val iconImg: ImageView = itemView.findViewById(R.id.icon_file_img)
+        val iconAccessed: ImageView = itemView.findViewById(R.id.icon_file_accessed)
 
         init {
             itemView.setOnClickListener {
