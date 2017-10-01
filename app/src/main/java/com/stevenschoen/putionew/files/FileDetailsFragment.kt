@@ -421,18 +421,24 @@ class FileDetailsFragment : RxFragment() {
     private fun play(mp4: Boolean, downloaded: Boolean) {
         if (downloaded && castCallbacks?.isCasting() != true) {
             open()
+            analytics.logOpenedDownloadedVideo(file, mp4)
         } else {
             val url = file.getStreamUrl(putioApp.putioUtils!!, mp4)
             castCallbacks?.load(file, url, putioApp.putioUtils!!)
+            analytics.logStreamedVideo(file, mp4)
         }
     }
 
     private fun download(mp4: Boolean = false) {
         if (fileDownloadHelper.hasPermission()) {
             if (file.isVideo) {
-                fileDownloadHelper.downloadVideo(file, mp4 && !file.isMp4)
+                fileDownloadHelper.downloadVideo(file, mp4 && !file.isMp4).also {
+                    analytics.logStartedVideoDownload(file, mp4)
+                }
             } else {
-                fileDownloadHelper.downloadFile(file)
+                fileDownloadHelper.downloadFile(file).also {
+                    analytics.logStartedFileDownload(file)
+                }
             }.subscribe()
         } else {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -458,6 +464,7 @@ class FileDetailsFragment : RxFragment() {
                     Toast.makeText(context, "Error opening", Toast.LENGTH_SHORT).show()
                     PutioUtils.getRxJavaThrowable(error).printStackTrace()
                 })
+        if (!file.isVideo) analytics.logOpenedDownloadedFile(file)
     }
 
     private fun deleteDownload() {

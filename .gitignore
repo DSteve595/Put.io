@@ -13,3 +13,5 @@
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+/app/google-services.json

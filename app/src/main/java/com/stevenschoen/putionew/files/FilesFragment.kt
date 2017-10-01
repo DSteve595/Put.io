@@ -12,11 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.stevenschoen.putionew.PutioApplication
-import com.stevenschoen.putionew.R
-import com.stevenschoen.putionew.UIUtils
+import com.stevenschoen.putionew.*
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -160,6 +157,12 @@ open class FilesFragment : RxFragment() {
 
         fileListFragmentsAdapter.notifyDataSetChanged()
         pagerView!!.setCurrentItem(pages.lastIndex, true)
+
+        if (file.isFolder) {
+            analytics.logBrowsedToFolder(file)
+        } else {
+            analytics.logViewedFile(file)
+        }
     }
 
     fun addSearch(query: String) {
@@ -168,6 +171,8 @@ open class FilesFragment : RxFragment() {
 
         fileListFragmentsAdapter.notifyDataSetChanged()
         pagerView!!.setCurrentItem(pages.lastIndex, true)
+
+        analytics.logSearched(query)
     }
 
     fun goToFile(parentId: Long, id: Long) {
@@ -301,16 +306,16 @@ open class FilesFragment : RxFragment() {
 
         override fun getItem(position: Int): Fragment {
             val page = pages[position]
-            when (page.type) {
+            return when (page.type) {
                 Page.Type.File -> {
                     val file = page.file!!
-                    return when {
+                    when {
                         file.isFolder -> FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
                         else -> FileDetailsFragment.newInstance(context, file)
                     }
                 }
                 Page.Type.Search -> {
-                    return SearchFragment.newInstance(context, page.searchQuery!!, page.parentFolder!!, canSelect)
+                    SearchFragment.newInstance(context, page.searchQuery!!, page.parentFolder!!, canSelect)
                 }
             }
         }
@@ -405,11 +410,9 @@ open class FilesFragment : RxFragment() {
             this.parentFolder = parentFolder
         }
 
-        fun getUniqueId(): Long {
-            when (type) {
-                Type.File -> return makeUniqueId(file!!)
-                Type.Search -> return makeUniqueId(searchQuery!!, parentFolder!!)
-            }
+        fun getUniqueId() = when (type) {
+            Type.File -> makeUniqueId(file!!)
+            Type.Search -> makeUniqueId(searchQuery!!, parentFolder!!)
         }
 
         constructor(source: Parcel) {
@@ -434,21 +437,16 @@ open class FilesFragment : RxFragment() {
             }
         }
 
-        override fun describeContents(): Int {
-            return 0
-        }
+        override fun describeContents() = 0
 
         enum class Type {
             File, Search
         }
 
         companion object {
-            fun makeUniqueId(file: PutioFile): Long {
-                return file.id
-            }
-            fun makeUniqueId(searchQuery: String, parentFolder: PutioFile): Long {
-                return searchQuery.hashCode() + parentFolder.id
-            }
+            fun makeUniqueId(file: PutioFile) = file.id
+            fun makeUniqueId(searchQuery: String, parentFolder: PutioFile) =
+                    searchQuery.hashCode() + parentFolder.id
 
             @JvmField val CREATOR: Parcelable.Creator<Page> = object : Parcelable.Creator<Page> {
                 override fun createFromParcel(source: Parcel): Page {
