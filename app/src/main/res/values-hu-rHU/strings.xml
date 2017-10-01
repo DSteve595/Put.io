@@ -81,7 +81,6 @@
   <string name="individually">Külön-külön</string>
   <string name="copy_dl_link">Letöltési link másolása</string>
   <string name="copyingdownloadlink">Letöltés link másolása</string>
-  <string name="go_to_previous_folder">Vissza az előző mappához</string>
   <string name="convert_mp4">Konvertálás MP4-be</string>
   <string name="converting_mp4">Konvertálás MP4-be&#8230;</string>
   <string name="mp4_available">MP4 elérhető</string>
@@ -105,5 +104,4 @@
   <string name="version_x">%s verzió</string>
   <string name="appbysteven">Android-alkalmazás Steven Schoen által.</string>
   <string name="codedwithlove">Szeretettel, gondoskodással és koffeinnel kódolva.</string>
-  <string name="notaffiliated">Nem kapcsolódik a Put.io-hoz.</string>
 </resources>

@@ -80,7 +80,6 @@
   <string name="copy_dl_link">Kopiera länken</string>
   <string name="copyingdownloadlink">Länken kopierad</string>
   <string name="filenotfound">Filen kunde inte hittas. Har den tagits bort?</string>
-  <string name="go_to_previous_folder">Gå tillbaka till föregående mapp</string>
   <string name="clear_finished_transfers">Rensa färdiga överföringar</string>
   <string name="convert_mp4">Konvertera till MP4</string>
   <string name="converting_mp4">MP4 konvertering pågår&#8230;</string>
@@ -102,5 +101,4 @@
   <!-- About screen -->
   <string name="appbysteven">Androidapp av Steven Schoen.</string>
   <string name="codedwithlove">Programmerad med kärlek, omsorg och koffein.</string>
-  <string name="notaffiliated">Inte associerad med Put.io.</string>
 </resources>
