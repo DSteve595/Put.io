@@ -35,15 +35,15 @@ class DownloadFinishedService : JobIntentService() {
                     status = FileDownload.Status.Downloaded
                     uri = downloadManager.getUriForDownloadedFile(downloadId).toString()
                 })
+
+                putioApp.fileDownloadDatabase.fileDownloadsDao()
+                        .getByDownloadId(downloadId)
+                        .map { it.fileId }
+                        .flatMapSingle(putioApp.putioUtils!!.restInterface::file)
+                        .map { it.file }
+                        .subscribe(analytics::logDownloadFinished)
             }
         }
-
-        putioApp.fileDownloadDatabase.fileDownloadsDao()
-                .getByDownloadId(downloadId)
-                .map { it.fileId }
-                .flatMapSingle(putioApp.putioUtils!!.restInterface::file)
-                .map { it.file }
-                .subscribe(analytics::logDownloadFinished)
     }
 }
 

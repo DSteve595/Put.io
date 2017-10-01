@@ -27,50 +27,51 @@ class Analytics(context: Context) {
 
     fun logViewedFile(file: PutioFile) {
         makeFileBundle(file)
-                .log(FirebaseAnalytics.Event.VIEW_ITEM)
+                .logEvent(FirebaseAnalytics.Event.VIEW_ITEM)
     }
 
     fun logBrowsedToFolder(folder: PutioFile) {
         makeFolderBundle(folder)
-                .log(Event.VIEW_FOLDER)
+                .logEvent(Event.VIEW_FOLDER)
     }
 
     fun logSearched(query: String) {
-        Bundle().putString(FirebaseAnalytics.Param.SEARCH_TERM, query)
-                .log(FirebaseAnalytics.Event.SEARCH)
+        Bundle().apply {
+            putString(FirebaseAnalytics.Param.SEARCH_TERM, query)
+        }.logEvent(FirebaseAnalytics.Event.SEARCH)
     }
 
     fun logStartedFileDownload(file: PutioFile) {
         makeFileBundle(file)
-                .log(Event.DOWNLOAD_ITEM)
+                .logEvent(Event.DOWNLOAD_ITEM)
     }
 
     fun logStartedVideoDownload(video: PutioFile, mp4: Boolean) {
-        makeFileBundle(video)
-                .putBoolean(Param.MP4_SELECTED, mp4)
-                .log(Event.DOWNLOAD_ITEM)
+        makeFileBundle(video).apply {
+            putBoolean(Param.MP4_SELECTED, mp4)
+        }.logEvent(Event.DOWNLOAD_ITEM)
     }
 
     fun logDownloadFinished(file: PutioFile) {
         makeFileBundle(file)
-                .log(Event.FINISH_DOWNLOAD)
+                .logEvent(Event.FINISH_DOWNLOAD)
     }
 
     fun logOpenedDownloadedFile(file: PutioFile) {
         makeFileBundle(file)
-                .log(Event.OPEN_DOWNLOADED_FILE)
+                .logEvent(Event.OPEN_DOWNLOADED_FILE)
     }
 
     fun logOpenedDownloadedVideo(video: PutioFile, mp4: Boolean) {
-        makeFileBundle(video)
-                .putBoolean(Param.MP4_SELECTED, mp4)
-                .log(Event.OPEN_DOWNLOADED_VIDEO)
+        makeFileBundle(video).apply {
+            putBoolean(Param.MP4_SELECTED, mp4)
+        }.logEvent(Event.OPEN_DOWNLOADED_VIDEO)
     }
 
     fun logStreamedVideo(video: PutioFile, mp4: Boolean) {
-        makeFileBundle(video)
-                .putBoolean(Param.MP4_SELECTED, mp4)
-                .log(Event.STREAM_VIDEO)
+        makeFileBundle(video).apply {
+            putBoolean(Param.MP4_SELECTED, mp4)
+        }.logEvent(Event.STREAM_VIDEO)
     }
 
     private fun makeFileBundle(file: PutioFile) = Bundle().apply { addBasicFileInfo(file) }
@@ -88,7 +89,7 @@ class Analytics(context: Context) {
         putString(FirebaseAnalytics.Param.ITEM_NAME, file.name)
     }
 
-    private fun Bundle.log(event: String) = putioApp.firebaseAnalytics.logEvent(event, this)
+    private fun Bundle.logEvent(event: String) = putioApp.firebaseAnalytics.logEvent(event, this)
 }
 
 val Context.analytics

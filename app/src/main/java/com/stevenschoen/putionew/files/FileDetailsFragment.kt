@@ -174,8 +174,6 @@ class FileDetailsFragment : RxFragment() {
                 screenshotTitleScrimView.visibility = View.GONE
             }
 
-            var lastDownloadStatus: FileDownload.Status? = null
-
             val accessedView: TextView = findViewById(R.id.filedetails_accessed)
             if (file.isAccessed) {
                 val accessed = PutioUtils.parseIsoTime(activity, file.firstAccessedAt)
@@ -213,7 +211,17 @@ class FileDetailsFragment : RxFragment() {
                 playMorePopup.show()
             }
             val playOriginalItem = playMorePopup.menu.add(R.string.stream_original).setOnMenuItemClickListener {
-                play(false, lastDownloadStatus == FileDownload.Status.Downloaded)
+                Single.fromCallable {
+                    fileDownloads.getByFileIdSynchronous(file.id)!!
+                }.subscribeOn(Schedulers.io())
+                        .bindToLifecycle(this@FileDetailsFragment)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ fileDownload ->
+                            play(false, fileDownload.status == FileDownload.Status.Downloaded
+                                    && fileDownload.downloadedMp4 != true)
+                        }, { error ->
+                            PutioUtils.getRxJavaThrowable(error).printStackTrace()
+                        })
                 true
             }
 
@@ -266,6 +274,7 @@ class FileDetailsFragment : RxFragment() {
                     null, FileDownload.Status.NotDownloaded, null, null))
             val downloadStatus = fileDownload
                     .map { it.status }
+            var lastDownloadStatus: FileDownload.Status? = null
             var lastMp4PercentDone = 0
 
             data class DownloadAndMp4Status(
