@@ -64,6 +64,7 @@ class PutioApplication : MultiDexApplication() {
 
     interface CastCallbacks {
         fun load(file: PutioFile, url: String, utils: PutioUtils)
+        fun isCasting(): Boolean
     }
 }
 

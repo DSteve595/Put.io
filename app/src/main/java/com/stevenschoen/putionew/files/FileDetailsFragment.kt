@@ -174,6 +174,8 @@ class FileDetailsFragment : RxFragment() {
                 screenshotTitleScrimView.visibility = View.GONE
             }
 
+            var lastDownloadStatus: FileDownload.Status? = null
+
             val accessedView: TextView = findViewById(R.id.filedetails_accessed)
             if (file.isAccessed) {
                 val accessed = PutioUtils.parseIsoTime(activity, file.firstAccessedAt)
@@ -211,7 +213,7 @@ class FileDetailsFragment : RxFragment() {
                 playMorePopup.show()
             }
             val playOriginalItem = playMorePopup.menu.add(R.string.stream_original).setOnMenuItemClickListener {
-                play(false)
+                play(false, lastDownloadStatus == FileDownload.Status.Downloaded)
                 true
             }
 
@@ -256,7 +258,6 @@ class FileDetailsFragment : RxFragment() {
                 true
             }
 
-            var lastDownloadStatus: FileDownload.Status? = null
             val fileDownload = fileDownloads.getByFileId(file.id)
                     .bindToLifecycle(this)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -296,7 +297,7 @@ class FileDetailsFragment : RxFragment() {
                 when (newMp4Status.status!!) {
                     PutioMp4Status.Status.AlreadyMp4 -> {
                         playActionView.text = getString(playMp4String)
-                        playActionView.setOnClickListener { play(false) }
+                        playActionView.setOnClickListener { play(false, downloadDone) }
                         setActionDrawable(playActionView, R.drawable.ic_filedetails_play)
                         playProgressBarView.visibility = View.INVISIBLE
                         playMoreView.visibility = View.GONE
@@ -331,7 +332,7 @@ class FileDetailsFragment : RxFragment() {
                     }
                     PutioMp4Status.Status.Completed -> {
                         playActionView.text = getString(playMp4String)
-                        playActionView.setOnClickListener { play(true) }
+                        playActionView.setOnClickListener { play(true, downloadDone && downloadedMp4) }
                         setActionDrawable(playActionView, R.drawable.ic_filedetails_play)
                         playProgressBarView.visibility = View.INVISIBLE
                         playMoreView.visibility = View.VISIBLE
@@ -413,9 +414,13 @@ class FileDetailsFragment : RxFragment() {
         }
     }
 
-    private fun play(mp4: Boolean) {
-        val url = file.getStreamUrl(putioApp.putioUtils!!, mp4)
-        castCallbacks?.load(file, url, putioApp.putioUtils!!)
+    private fun play(mp4: Boolean, downloaded: Boolean) {
+        if (downloaded && castCallbacks?.isCasting() != true) {
+            open()
+        } else {
+            val url = file.getStreamUrl(putioApp.putioUtils!!, mp4)
+            castCallbacks?.load(file, url, putioApp.putioUtils!!)
+        }
     }
 
     private fun download(mp4: Boolean = false) {

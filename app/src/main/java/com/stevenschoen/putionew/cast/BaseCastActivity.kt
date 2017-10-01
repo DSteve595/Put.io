@@ -54,8 +54,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
     }
 
     override fun load(file: PutioFile, url: String, utils: PutioUtils) {
-        if (CastOptionsProvider.isCastSdkAvailable(this) &&
-                castContext != null && castSession != null && castSession!!.remoteMediaClient != null && castSession!!.isConnected) {
+        if (isCasting()) {
             fun play(subtitles: List<PutioSubtitle>? = null) {
                 val metaData = MediaMetadata(
                         if (file.isVideo)
@@ -105,6 +104,12 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
         } else {
             utils.getStreamUrlAndPlay(this, file, url)
         }
+    }
+
+    override fun isCasting(): Boolean {
+        return CastOptionsProvider.isCastSdkAvailable(this) && castContext != null
+                && castSession != null && castSession!!.remoteMediaClient != null
+                && castSession!!.isConnected
     }
 }
 
