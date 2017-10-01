@@ -11,7 +11,7 @@ import com.stevenschoen.putionew.log
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
 
-class NewFileDetailsLoader(context: Context, private val file: PutioFile) : PutioBaseLoader(context) {
+class FileDetailsLoader(context: Context, private val file: PutioFile) : PutioBaseLoader(context) {
 
     fun checkDownload() {
         AsyncTask.execute {
@@ -37,13 +37,13 @@ class NewFileDetailsLoader(context: Context, private val file: PutioFile) : Puti
     }
 
     companion object {
-        fun get(loaderManager: LoaderManager, context: Context, file: PutioFile): NewFileDetailsLoader {
+        fun get(loaderManager: LoaderManager, context: Context, file: PutioFile): FileDetailsLoader {
             return loaderManager.initLoader(
-                    getUniqueLoaderId(NewFileDetailsLoader::class.java), null, object : Callbacks(context) {
+                    getUniqueLoaderId(FileDetailsLoader::class.java), null, object : Callbacks(context) {
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
-                    return NewFileDetailsLoader(context, file)
+                    return FileDetailsLoader(context, file)
                 }
-            }) as NewFileDetailsLoader
+            }) as FileDetailsLoader
         }
     }
 }

@@ -1,57 +1,255 @@
-<RelativeLayout
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@android:color/white"
-	android:clipChildren="false">
+	android:fillViewport="true">
 
-	<RelativeLayout
+	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentStart="true"
-		android:layout_marginEnd="@dimen/fabSizeHalfNegative"
-		android:layout_marginRight="@dimen/fabSizeHalfNegative"
-		android:layout_toLeftOf="@+id/holder_fileinfo"
-		android:layout_toStartOf="@id/holder_fileinfo">
+		android:layout_height="wrap_content">
 
-		<include
-			android:id="@+id/filepreview"
-			layout="@layout/filepreview"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
-	</RelativeLayout>
+		<ImageView
+			android:id="@+id/filedetails_screenshot_blurry"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:background="#383838"
+			android:elevation="2dp"
+			android:scaleType="centerCrop"
+			app:layout_constraintDimensionRatio="16:9"
+			app:layout_constraintEnd_toEndOf="@+id/filedetails_title"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_title"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
 
-	<RelativeLayout
-		android:id="@id/holder_fileinfo"
-		android:layout_width="340dp"
-		android:layout_height="match_parent"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:clipChildren="false">
+		<ImageView
+			android:id="@+id/filedetails_screenshot"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			android:scaleType="centerCrop"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_screenshot_blurry"
+			app:layout_constraintEnd_toEndOf="@+id/filedetails_screenshot_blurry"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_screenshot_blurry"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_screenshot_blurry"
+			/>
 
-		<ScrollView
-			android:layout_width="match_parent"
+		<View
+			android:id="@+id/filedetails_screenshot_scrim_top"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_screenshot"
+			app:layout_constraintEnd_toEndOf="@+id/filedetails_screenshot"
+			app:layout_constraintHeight_max="96dp"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_screenshot"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_screenshot"
+			app:layout_constraintVertical_bias="0"/>
+
+		<View
+			android:id="@+id/filedetails_screenshot_scrim_title"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:elevation="2dp"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_screenshot"
+			app:layout_constraintEnd_toEndOf="@+id/filedetails_screenshot"
+			app:layout_constraintHeight_max="120dp"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_screenshot"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_screenshot"
+			app:layout_constraintVertical_bias="1"/>
+
+		<android.support.v7.widget.AppCompatTextView
+			android:id="@+id/filedetails_title"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="@dimen/fabSizeHalf"
-			android:layout_marginStart="@dimen/fabSizeHalf">
+			android:elevation="2dp"
+			android:ellipsize="end"
+			android:gravity="bottom"
+			android:maxLines="2"
+			android:paddingBottom="8dp"
+			android:paddingEnd="16dp"
+			android:paddingStart="16dp"
+			android:textColor="?android:textColorPrimary"
+			android:textSize="28sp"
+			app:layout_constraintBottom_toBottomOf="@id/filedetails_screenshot"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="1"
+			tools:background="@color/putio_filedetails_notdownloaded"
+			tools:paddingTop="@dimen/filedetails_title_top_padding_video"
+			tools:text="File name.rar"/>
 
-			<include
-				layout="@layout/fileinfo"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:elevation="2dp"/>
-		</ScrollView>
+		<ImageView
+			android:id="@+id/filedetails_graphic_file"
+			android:layout_width="160dp"
+			android:layout_height="160dp"
+			android:scaleType="fitCenter"
+			android:src="@drawable/filedetails_file"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="@+id/filedetails_title"
+			app:layout_constraintHorizontal_bias="0.85"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_title"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.9"/>
 
-		<android.support.design.widget.FloatingActionButton
-			android:id="@+id/button_filedetails_play"
+		<ImageButton
+			android:id="@+id/filedetails_back"
+			android:layout_width="48dp"
+			android:layout_height="64dp"
+			android:layout_marginStart="4dp"
+			android:background="?selectableItemBackgroundBorderless"
+			android:elevation="2dp"
+			android:scaleType="centerInside"
+			android:src="@drawable/ic_back"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
+
+		<Button
+			android:id="@+id/filedetails_play"
+			style="@style/Widget.AppCompat.Button.Borderless"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_marginBottom="32dp"
-			android:src="@drawable/ic_media_play_light"
-			app:elevation="2dp"
-			app:fabSize="normal"/>
-	</RelativeLayout>
-</RelativeLayout>
+			android:layout_height="64dp"
+			android:layout_marginTop="16dp"
+			android:drawablePadding="32dp"
+			android:gravity="center_vertical"
+			android:paddingEnd="32dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Button"
+			app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
+			app:layout_constraintHorizontal_bias="0"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/filedetails_title"
+			tools:drawableStart="@drawable/ic_filedetails_play"
+			tools:text="@string/stream"/>
+
+		<ProgressBar
+			android:id="@+id/filedetails_play_progressbar"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginStart="20dp"
+			android:indeterminate="true"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_play"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_play"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_play"/>
+
+		<ImageButton
+			android:id="@+id/filedetails_play_more"
+			android:layout_width="36dp"
+			android:layout_height="0dp"
+			android:layout_marginEnd="4dp"
+			android:background="?selectableItemBackgroundBorderless"
+			android:src="@drawable/ic_filedetails_more"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_play"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_play"/>
+
+		<Button
+			android:id="@+id/filedetails_download"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="64dp"
+			android:drawablePadding="32dp"
+			android:gravity="center_vertical"
+			android:paddingEnd="32dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Button"
+			app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
+			app:layout_constraintHorizontal_bias="0"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/filedetails_play"
+			app:layout_goneMarginTop="16dp"
+			tools:drawableStart="@drawable/ic_filedetails_download"
+			tools:text="@string/download"/>
+
+		<ProgressBar
+			android:id="@+id/filedetails_download_progressbar"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginStart="20dp"
+			android:indeterminate="true"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_download"
+			app:layout_constraintStart_toStartOf="@+id/filedetails_download"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_download"/>
+
+		<ImageButton
+			android:id="@+id/filedetails_download_more"
+			android:layout_width="36dp"
+			android:layout_height="0dp"
+			android:layout_marginEnd="4dp"
+			android:background="?selectableItemBackgroundBorderless"
+			android:src="@drawable/ic_filedetails_more"
+			app:layout_constraintBottom_toBottomOf="@+id/filedetails_download"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="@+id/filedetails_download"/>
+
+		<TextView
+			android:id="@+id/filedetails_crc32"
+			android:layout_width="0dp"
+			android:layout_height="48dp"
+			android:drawablePadding="32dp"
+			android:drawableStart="@drawable/ic_fileinfo_crc32"
+			android:drawableTint="?android:textColorSecondary"
+			android:gravity="start|center_vertical"
+			android:paddingEnd="16dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/filedetails_filesize"
+			tools:text="66a1512f"/>
+
+		<TextView
+			android:id="@+id/filedetails_created"
+			android:layout_width="0dp"
+			android:layout_height="48dp"
+			android:drawablePadding="32dp"
+			android:drawableStart="@drawable/ic_fileinfo_created"
+			android:drawableTint="?android:textColorSecondary"
+			android:gravity="start|center_vertical"
+			android:paddingEnd="16dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/filedetails_accessed"
+			tools:text="@string/created_on_x_at_x"/>
+
+		<TextView
+			android:id="@+id/filedetails_accessed"
+			android:layout_width="0dp"
+			android:layout_height="48dp"
+			android:layout_marginTop="16dp"
+			android:drawablePadding="32dp"
+			android:drawableStart="@drawable/ic_fileinfo_accessed"
+			android:drawableTint="?android:textColorSecondary"
+			android:gravity="start|center_vertical"
+			android:paddingEnd="16dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/filedetails_download"
+			tools:text="@string/accessed_on_x_at_x"/>
+
+		<TextView
+			android:id="@+id/filedetails_filesize"
+			android:layout_width="0dp"
+			android:layout_height="48dp"
+			android:drawablePadding="32dp"
+			android:drawableStart="@drawable/ic_fileinfo_size"
+			android:drawableTint="?android:textColorSecondary"
+			android:gravity="start|center_vertical"
+			android:paddingEnd="16dp"
+			android:paddingStart="20dp"
+			android:textAppearance="@style/TextAppearance.AppCompat"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/filedetails_created"
+			tools:text="100 MB"/>
+
+	</android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -8,7 +8,7 @@ fun getUniqueLoaderId(loaderClass: Class<out PutioBaseLoader>): Int {
         SearchLoader::class.java -> 2
         Mp4StatusLoader::class.java -> 3
         FileScreenshotLoader::class.java -> 4
-        NewFileDetailsLoader::class.java -> 5
+        FileDetailsLoader::class.java -> 5
         else -> throw RuntimeException("Couldn't find loader ID for $loaderClass")
     }
 }

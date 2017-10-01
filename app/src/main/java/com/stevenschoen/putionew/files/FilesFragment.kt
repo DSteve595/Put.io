@@ -80,7 +80,7 @@ open class FilesFragment : RxFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.files, container, false).apply {
-            pagerView = findViewById<ViewPager>(R.id.newfiles_pager)
+            pagerView = findViewById<ViewPager>(R.id.files_pager)
             pagerView!!.adapter = fileListFragmentsAdapter
             pagerView!!.addOnPageChangeListener(pageChangeListener)
 
@@ -280,16 +280,7 @@ open class FilesFragment : RxFragment() {
                     }
                 }
             }
-            is FileDetailsFragment -> childFragment.callbacks = object : FileDetailsFragment.Callbacks {
-                override fun onFileDetailsClosed(refreshParent: Boolean) {
-                    goBack(false)
-                    if (refreshParent) {
-                        val parentListFragment = fileListFragmentsAdapter.getFragmentAt(pagerView!!.currentItem) as FileListFragment<*>
-                        parentListFragment.refresh()
-                    }
-                }
-            }
-            is NewFileDetailsFragment -> {
+            is FileDetailsFragment -> {
                 childFragment.onBackPressed = {
                     goBack(false)
                 }
@@ -315,8 +306,7 @@ open class FilesFragment : RxFragment() {
                     val file = page.file!!
                     return when {
                         file.isFolder -> FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
-//                        file.isMedia -> FileDetailsFragment.newInstance(context, file)
-                        else -> NewFileDetailsFragment.newInstance(context, file)
+                        else -> FileDetailsFragment.newInstance(context, file)
                     }
                 }
                 Page.Type.Search -> {

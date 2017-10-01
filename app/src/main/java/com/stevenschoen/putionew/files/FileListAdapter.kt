@@ -22,6 +22,7 @@ class FileListAdapter(private val data: List<PutioFile>,
     val checkedIds = ArrayList<Long>()
 
     init {
+        setHasStableIds(true)
         registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
                 super.onChanged()
