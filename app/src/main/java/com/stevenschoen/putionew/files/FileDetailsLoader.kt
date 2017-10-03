@@ -7,9 +7,9 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.getUniqueLoaderId
-import com.stevenschoen.putionew.log
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
+import timber.log.Timber
 
 class FileDetailsLoader(context: Context, private val file: PutioFile) : PutioBaseLoader(context) {
 
@@ -19,10 +19,10 @@ class FileDetailsLoader(context: Context, private val file: PutioFile) : PutioBa
                 val isDownloaded = it.status == FileDownload.Status.Downloaded
                 val isDownloading = it.status == FileDownload.Status.InProgress
                 if ((isDownloaded || isDownloading) && !isFileDownloadedOrDownloading(context, it)) {
-                    log("${file.name} appears to not be downloaded, marking NotDownloaded")
+                    Timber.d("${file.name} appears to not be downloaded, marking NotDownloaded")
                     markFileNotDownloaded(context, it)
                 } else if (isDownloading && isFileDownloaded(context, it)) {
-                    log("${file.name} appears to be downloaded, marking Downloaded")
+                    Timber.d("${file.name} appears to be downloaded, marking Downloaded")
                     markFileDownloaded(context, it)
                 }
                 /*

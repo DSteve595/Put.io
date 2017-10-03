@@ -9,6 +9,7 @@ import android.support.v4.app.JobIntentService
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.analytics
 import com.stevenschoen.putionew.putioApp
+import timber.log.Timber
 
 class DownloadFinishedService : JobIntentService() {
 
@@ -32,10 +33,15 @@ class DownloadFinishedService : JobIntentService() {
             val downloadStatus = query.getInt(query.getColumnIndex(DownloadManager.COLUMN_STATUS))
             if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL) {
                 val fileDownloads = putioApp.fileDownloadDatabase.fileDownloadsDao()
-                fileDownloads.update(fileDownloads.getByDownloadIdSynchronous(downloadId)!!.apply {
-                    status = FileDownload.Status.Downloaded
-                    uri = downloadManager.getUriForDownloadedFile(downloadId).toString()
-                })
+                val fileDownload = fileDownloads.getByDownloadIdSynchronous(downloadId)
+                if (fileDownload != null) {
+                    fileDownloads.update(fileDownload.apply {
+                        status = FileDownload.Status.Downloaded
+                        uri = downloadManager.getUriForDownloadedFile(downloadId).toString()
+                    })
+                } else {
+                    Timber.w("Got a finished download (ID $downloadId), but no matching FileDownload")
+                }
 
                 putioApp.fileDownloadDatabase.fileDownloadsDao()
                         .getByDownloadIdOnce(downloadId)

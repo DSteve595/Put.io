@@ -12,6 +12,7 @@ import com.stevenschoen.putionew.files.FileDownloadDatabase
 import com.stevenschoen.putionew.model.files.PutioFile
 import io.fabric.sdk.android.Fabric
 import net.danlew.android.joda.JodaTimeAndroid
+import timber.log.Timber
 
 class PutioApplication : MultiDexApplication() {
 
@@ -40,6 +41,12 @@ class PutioApplication : MultiDexApplication() {
                         .disabled(BuildConfig.DEBUG)
                         .build())
                 .build())
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(CrashlyticsTree())
+        }
 
         JodaTimeAndroid.init(this)
 

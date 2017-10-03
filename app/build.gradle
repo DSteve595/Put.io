@@ -26,8 +26,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 126
-        versionName '4.2'
+        versionCode 128
+        versionName '4.2.1'
         multiDexEnabled true
     }
     buildTypes {
@@ -82,6 +82,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    compile 'com.jakewharton.timber:timber:4.5.1'
     compile 'commons-io:commons-io:2.5'
     compile 'net.danlew:android.joda:2.9.9'
     compile 'io.reactivex.rxjava2:rxjava:2.1.4'

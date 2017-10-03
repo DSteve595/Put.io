@@ -86,7 +86,7 @@ class Analytics(context: Context) {
 
     private fun Bundle.addIdAndName(file: PutioFile) {
         putLong(FirebaseAnalytics.Param.ITEM_ID, file.id)
-        putString(FirebaseAnalytics.Param.ITEM_NAME, file.name)
+        putString(FirebaseAnalytics.Param.ITEM_NAME, file.name.take(100))
     }
 
     private fun Bundle.logEvent(event: String) = putioApp.firebaseAnalytics.logEvent(event, this)
