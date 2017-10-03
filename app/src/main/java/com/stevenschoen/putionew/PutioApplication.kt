@@ -6,7 +6,6 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.support.multidex.MultiDexApplication
 import android.support.v4.app.Fragment
-import com.akaita.java.rxjava2debug.RxJava2Debug
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
 import com.stevenschoen.putionew.files.FileDownloadDatabase
@@ -46,10 +45,6 @@ class PutioApplication : MultiDexApplication() {
 
         if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannels(this)
-        }
-
-        if (BuildConfig.DEBUG) {
-            RxJava2Debug.enableRxJava2AssemblyTracking()
         }
     }
 

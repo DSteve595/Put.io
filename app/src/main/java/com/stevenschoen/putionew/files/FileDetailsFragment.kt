@@ -36,7 +36,6 @@ import com.trello.rxlifecycle2.android.FragmentEvent
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
@@ -211,9 +210,8 @@ class FileDetailsFragment : RxFragment() {
                 playMorePopup.show()
             }
             val playOriginalItem = playMorePopup.menu.add(R.string.stream_original).setOnMenuItemClickListener {
-                Single.fromCallable {
-                    fileDownloads.getByFileIdSynchronous(file.id)!!
-                }.subscribeOn(Schedulers.io())
+                fileDownloads.getByFileIdOnce(file.id)
+                        .subscribeOn(Schedulers.io())
                         .bindToLifecycle(this@FileDetailsFragment)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ fileDownload ->
@@ -221,6 +219,8 @@ class FileDetailsFragment : RxFragment() {
                                     && fileDownload.downloadedMp4 != true)
                         }, { error ->
                             PutioUtils.getRxJavaThrowable(error).printStackTrace()
+                        }, {
+                            play(false, false)
                         })
                 true
             }
@@ -238,9 +238,8 @@ class FileDetailsFragment : RxFragment() {
                 true
             }
             val sendItem = downloadMorePopup.menu.add(R.string.send).setOnMenuItemClickListener {
-                Single.fromCallable {
-                    fileDownloads.getByFileIdSynchronous(file.id)!!
-                }.subscribeOn(Schedulers.io())
+                fileDownloads.getByFileIdOnce(file.id)
+                        .subscribeOn(Schedulers.io())
                         .bindToLifecycle(this@FileDetailsFragment)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
@@ -265,7 +264,7 @@ class FileDetailsFragment : RxFragment() {
                 true
             }
 
-            val fileDownload = fileDownloads.getByFileId(file.id)
+            val fileDownload = fileDownloads.getByFileIdUpdating(file.id)
                     .bindToLifecycle(this@FileDetailsFragment)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -456,11 +455,10 @@ class FileDetailsFragment : RxFragment() {
     }
 
     private fun open() {
-        Single.fromCallable {
-            fileDownloads.getByFileIdSynchronous(file.id)!!.uri
-        }.subscribeOn(Schedulers.io())
+        fileDownloads.getByFileIdOnce(file.id)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { Uri.parse(it) }
+                .map { Uri.parse(it.uri) }
                 .subscribe({ fileUri ->
                     try {
                         startActivity(Intent(Intent.ACTION_VIEW)
@@ -477,9 +475,8 @@ class FileDetailsFragment : RxFragment() {
     }
 
     private fun deleteDownload() {
-        Single.fromCallable {
-            fileDownloads.getByFileIdSynchronous(file.id)
-        }.subscribeOn(Schedulers.io())
+        fileDownloads.getByFileIdOnce(file.id)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager

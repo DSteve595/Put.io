@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.JobIntentService
+import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.analytics
 import com.stevenschoen.putionew.putioApp
 
@@ -37,11 +38,13 @@ class DownloadFinishedService : JobIntentService() {
                 })
 
                 putioApp.fileDownloadDatabase.fileDownloadsDao()
-                        .getByDownloadId(downloadId)
+                        .getByDownloadIdOnce(downloadId)
                         .map { it.fileId }
                         .flatMapSingle(putioApp.putioUtils!!.restInterface::file)
                         .map { it.file }
-                        .subscribe(analytics::logDownloadFinished)
+                        .subscribe(analytics::logDownloadFinished, { error ->
+                            PutioUtils.getRxJavaThrowable(error).printStackTrace()
+                        })
             }
         }
     }

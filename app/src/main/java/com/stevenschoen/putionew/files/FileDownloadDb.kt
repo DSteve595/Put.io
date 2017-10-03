@@ -2,6 +2,7 @@ package com.stevenschoen.putionew.files
 
 import android.arch.persistence.room.*
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Entity(tableName = "fileDownloads")
 data class FileDownload(
@@ -38,12 +39,16 @@ interface FileDownloadDao {
     fun getAllByStatus(status: FileDownload.Status): List<FileDownload>
 
     @Query(getByFileIdQuery)
-    fun getByFileId(fileId: Long): Flowable<FileDownload>
+    fun getByFileIdOnce(fileId: Long): Maybe<FileDownload>
+    @Query(getByFileIdQuery)
+    fun getByFileIdUpdating(fileId: Long): Flowable<FileDownload>
     @Query(getByFileIdQuery)
     fun getByFileIdSynchronous(fileId: Long): FileDownload?
 
     @Query(getByDownloadIdQuery)
-    fun getByDownloadId(downloadId: Long): Flowable<FileDownload>
+    fun getByDownloadIdOnce(downloadId: Long): Maybe<FileDownload>
+    @Query(getByDownloadIdQuery)
+    fun getByDownloadIdUpdating(downloadId: Long): Flowable<FileDownload>
     @Query(getByDownloadIdQuery)
     fun getByDownloadIdSynchronous(downloadId: Long): FileDownload?
 

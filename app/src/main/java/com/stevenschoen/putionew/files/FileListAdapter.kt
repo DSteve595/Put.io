@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import java.util.*
 
 class FileListAdapter(private val data: List<PutioFile>,
                       val onFileClicked: (file: PutioFile, holder: FileHolder) -> Unit,

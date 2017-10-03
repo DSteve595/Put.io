@@ -30,7 +30,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -399,12 +398,7 @@ public class PutioUtils {
 	}
 
 	public static Throwable getRxJavaThrowable(Throwable throwable) {
-		try {
-			return RxJava2Debug.getEnhancedStackTrace(throwable);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			return throwable;
-		}
+		return throwable;
 	}
 
 	public static class BlurTransformation implements Transformation {
