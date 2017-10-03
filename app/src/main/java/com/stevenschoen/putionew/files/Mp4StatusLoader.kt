@@ -26,9 +26,9 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
 
     private val observable = Single.defer { api.mp4Status(file.id) }
     private var disposable: Disposable? = null
-    private fun makeSubscription() = observable.repeatWhen {
-        it.delay(4, TimeUnit.SECONDS)
-    }
+    private fun makeSubscription() = observable
+            .retryWhen { it.delay(2, TimeUnit.SECONDS) }
+            .repeatWhen { it.delay(4, TimeUnit.SECONDS) }
             .takeUntil { !refreshing && isStarted }
             .subscribe({ response ->
                 mp4StatusSubject.onNext(response.mp4Status)
@@ -41,9 +41,8 @@ class Mp4StatusLoader(context: Context, val file: PutioFile) : PutioBaseLoader(c
                     PutioMp4Status.Status.Converting,
                     PutioMp4Status.Status.Finishing -> startRefreshing()
                     PutioMp4Status.Status.Error -> stopRefreshing()
-                    PutioMp4Status.Status.AlreadyMp4 -> {
-                        Log.wtf("Mp4StatusLoader", "got AlreadyMp4")
-                    }
+                    PutioMp4Status.Status.AlreadyMp4 -> Log.wtf("Mp4StatusLoader", "got AlreadyMp4")
+                    PutioMp4Status.Status.NotVideo -> Log.wtf("Mp4StatusLoader", "got NotVideo")
                 }
             }, { error ->
                 mp4StatusSubject.onError(error)
