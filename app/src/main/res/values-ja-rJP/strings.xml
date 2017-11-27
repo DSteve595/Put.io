@@ -11,6 +11,9 @@
   <string name="rename">名前の変更</string>
   <string name="add">追加</string>
   <string name="play">再生</string>
+  <string name="play_original">オリジナルを再生</string>
+  <string name="stream">ストリーム</string>
+  <string name="stream_original">オリジナルのストリーム</string>
   <string name="add_transfer">転送を追加</string>
   <string name="add_transfers">転送を追加</string>
   <string name="create_folder">フォルダーを作成</string>
@@ -22,6 +25,7 @@
   <string name="apply">適用</string>
   <string name="download">ダウンロード</string>
   <string name="redownload">再ダウンロード</string>
+  <string name="download_original">オリジナルをダウンロード</string>
   <string name="open">開く</string>
   <string name="ok">OK</string>
   <string name="delete">削除</string>
@@ -32,6 +36,9 @@
   <string name="move">移動</string>
   <string name="more">つづき</string>
   <string name="maximize">最大化</string>
+  <string name="send">送信</string>
+  <string name="send_x">%s を送信</string>
+  <string name="go_back">戻る</string>
   <!-- Dialog text -->
   <string name="gettingstreamurltitle">ストリームの準備中</string>
   <string name="gettingstreamurlbody">お待ちください&#8230;</string>
@@ -91,16 +98,19 @@
   <string name="add_transfer_add_type_url">マグネットリンクを追加</string>
   <string name="add_transfer_add_type_file">Torrent ファイルを追加</string>
   <string name="download_files">ファイルをダウンロード</string>
+  <string name="downloaded">ダウンロード済</string>
   <string name="individual_or_zip">これらのファイルを 個別にダウンロードしますか、それとも ZIP アーカイブとしてダウンロードしますか?</string>
   <string name="individually">個別</string>
   <string name="zip">ZIP</string>
   <string name="copy_dl_link">ダウンロード リンクをコピー</string>
   <string name="copyingdownloadlink">ダウンロード リンクのコピー中</string>
+  <string name="downloading_zip">ZIP をダウンロード中…</string>
   <string name="filenotfound">ファイルが見つかりませんでした。削除されていますか?</string>
   <string name="clear_finished_transfers">完了した転送をクリア</string>
   <string name="convert_mp4">MP4 に変換</string>
   <string name="checking_for_mp4">MP4 の確認中…</string>
   <string name="converting_mp4">MP4 に変換しています&#8230;</string>
+  <string name="converting_mp4_x">MP4 に変換しています (%d%%)</string>
   <string name="mp4_available">MP4 が利用可能</string>
   <string name="use_mp4">MP4 を使用する</string>
   <string name="dont_use_mp4">MP4 を使用しない</string>
@@ -111,6 +121,7 @@
   <string name="in_x">%s で</string>
   <string name="you_dont_have_any_transfers">転送はありません</string>
   <string name="add_stuff_by_clicking_add">下の「追加」ボタンをクリックして、何か追加してください!</string>
+  <string name="downloading">ダウンロード中</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">トレントをアップロード中</string>
   <string name="notification_ticker_uploading_torrent">トレントをアップロードしています&#8230;</string>
@@ -126,6 +137,11 @@
   <string name="available_storage">利用可能なストレージ</string>
   <!-- About screen -->
   <string name="version_x">バージョン %s</string>
+  <string name="this_app_is_open_source">このアプリはオープンソースです!</string>
+  <string name="email_the_developer">開発者にメール</string>
+  <string name="help_translate_this_app">このアプリの翻訳を手伝ってください</string>
+  <string name="visit_putio_on_the_web">ウェブ上の put.io を表示</string>
   <string name="appbysteven">Android アプリ by Steven Schoen.</string>
   <string name="codedwithlove">愛、気配り、カフェインと共にコーディングしました。</string>
+  <string name="notaffiliated">Put.io と提携していません。</string>
 </resources>
