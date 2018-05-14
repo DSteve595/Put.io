@@ -15,4 +15,8 @@
   <color name="putio_filedetails_downloaded">#E5FFE5</color>
   <color name="putio_filedetails_inprogress">#fbfbdf</color>
   <color name="putio_filedetails_notdownloaded">#F8F8F8</color>
+
+  <color name="putio_light_canvas">#F8F8F8</color>
+  <color name="putio_divider">#1e000000</color>
+
 </resources>

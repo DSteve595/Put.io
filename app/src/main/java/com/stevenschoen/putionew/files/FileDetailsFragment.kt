@@ -42,34 +42,17 @@ import io.reactivex.schedulers.Schedulers
 
 class FileDetailsFragment : RxFragment() {
 
-  companion object {
-    const val EXTRA_FILE = "file"
-
-    const val REQUEST_DOWNLOAD = 1
-    const val REQUEST_DOWNLOAD_MP4 = 2
-
-    fun newInstance(context: Context, file: PutioFile): FileDetailsFragment {
-      if (file.isFolder) {
-        throw IllegalStateException("FileDetailsFragment created for the wrong kind of file: " +
-            "${file.name} (ID ${file.id}), type ${file.contentType}")
-      }
-      val args = Bundle()
-      args.putParcelable(EXTRA_FILE, file)
-      return Fragment.instantiate(context, FileDetailsFragment::class.java.name, args) as FileDetailsFragment
-    }
-  }
-
-  val fileDownloads by lazy { putioApp.fileDownloadDatabase.fileDownloadsDao() }
-  val fileDownloadHelper by lazy { FileDownloadHelper(context!!) }
+  private val fileDownloads by lazy { putioApp.fileDownloadDatabase.fileDownloadsDao() }
+  private val fileDownloadHelper by lazy { FileDownloadHelper(context!!) }
 
   var onBackPressed: (() -> Any)? = null
   var castCallbacks: PutioApplication.CastCallbacks? = null
 
-  val file by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FILE)!! }
-  val showMp4Options by lazy { file.isVideo && !file.isMp4 }
+  private val file by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FILE)!! }
+  private val showMp4Options by lazy { file.isVideo && !file.isMp4 }
 
-  lateinit var loader: FileDetailsLoader
-  var mp4Loader: Mp4StatusLoader? = null
+  private lateinit var loader: FileDetailsLoader
+  private var mp4Loader: Mp4StatusLoader? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -282,20 +265,24 @@ class FileDetailsFragment : RxFragment() {
       data class DownloadAndMp4Status(
           val download: FileDownload, val mp4Status: PutioMp4Status)
 
-      val mp4Status = if (showMp4Options) {
-        mp4Loader!!.mp4Status()
-            .startWith(PutioMp4Status().apply {
-              // Assume it's completed, most common case
-              status = PutioMp4Status.Status.Completed
-            })
-            .bindToLifecycle(this@FileDetailsFragment)
-      } else if (useVideoTitleBackground) {
-        Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
-      } else {
-        playActionView.visibility = View.GONE
-        playProgressBarView.visibility = View.GONE
-        playMoreView.visibility = View.GONE
-        Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.NotVideo })
+      val mp4Status = when {
+          showMp4Options -> {
+            mp4Loader!!.mp4Status()
+                .startWith(PutioMp4Status().apply {
+                          // Assume it's completed, most common case
+                          status = PutioMp4Status.Status.Completed
+                })
+                .bindToLifecycle(this@FileDetailsFragment)
+          }
+          useVideoTitleBackground -> {
+            Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
+          }
+          else -> {
+            playActionView.visibility = View.GONE
+            playProgressBarView.visibility = View.GONE
+            playMoreView.visibility = View.GONE
+            Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.NotVideo })
+          }
       }
       val downloadAndMp4Status: Observable<DownloadAndMp4Status> = Observable.combineLatest(
           fileDownloadWithDefault, mp4Status, BiFunction { newDownload, newMp4Status ->
@@ -516,4 +503,22 @@ class FileDetailsFragment : RxFragment() {
       }
     }
   }
+
+  companion object {
+    const val EXTRA_FILE = "file"
+
+    const val REQUEST_DOWNLOAD = 1
+    const val REQUEST_DOWNLOAD_MP4 = 2
+
+    fun newInstance(context: Context, file: PutioFile): FileDetailsFragment {
+      if (file.isFolder) {
+        throw IllegalStateException("FileDetailsFragment created for the wrong kind of file: " +
+            "${file.name} (ID ${file.id}), type ${file.contentType}")
+      }
+      val args = Bundle()
+      args.putParcelable(EXTRA_FILE, file)
+      return Fragment.instantiate(context, FileDetailsFragment::class.java.name, args) as FileDetailsFragment
+    }
+  }
+
 }

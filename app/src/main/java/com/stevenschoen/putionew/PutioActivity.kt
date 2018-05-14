@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -298,7 +299,7 @@ class PutioActivity : BaseCastActivity() {
     setSupportActionBar(toolbar)
 
     bottomNavView = findViewById(R.id.main_bottom_nav)
-    bottomNavView.defaultBackgroundColor = Color.parseColor("#F8F8F8")
+    bottomNavView.defaultBackgroundColor = ContextCompat.getColor(this, R.color.putio_light_canvas)
     bottomNavView.accentColor = Color.BLACK
     bottomNavView.inactiveColor = Color.parseColor("#80000000")
     bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.account), R.drawable.ic_nav_account))

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="Base.V27.Theme.Putio" parent="Base.V21.Theme.Putio">
+    <item name="android:navigationBarColor">@color/putio_light_canvas</item>
+    <item name="android:navigationBarDividerColor">@color/putio_divider</item>
+    <item name="android:windowLightNavigationBar">true</item>
+  </style>
+
+  <style name="Theme.Putio" parent="Base.V27.Theme.Putio" />
+
+</resources>

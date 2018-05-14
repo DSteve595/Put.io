@@ -41,7 +41,7 @@
       android:layout_alignParentBottom="true"
       android:background="#F8F8F8"
       android:elevation="@dimen/appBarElevation"
-      ></FrameLayout>
+      />
 
   <android.support.design.widget.AppBarLayout
       android:id="@+id/main_appbarlayout"
