@@ -16,7 +16,6 @@
   <string name="log_in">Logga in</string>
   <string name="log_out">Logga ut</string>
   <string name="about">Om</string>
-  <string name="apply">Tillämpa</string>
   <string name="download">Ladda ned</string>
   <string name="redownload">Hämta igen</string>
   <string name="open">Öppna</string>
@@ -41,23 +40,13 @@
   </plurals>
   <string name="removetransfertitle">Ta bort denna överföring?</string>
   <string name="removetransferbody">Nedladdningen avbryts.</string>
-  <string name="downloadwillopen">Filen öppnas så fort den laddats ned.</string>
-  <string name="downloadfinishedopentitle">Öppna filen?</string>
-  <string name="downloadfinishedbody">%1$s har laddats ned.</string>
-  <string name="downloadpreparing">Förbereder nedladdning</string>
   <string name="downloadstarted">Nedladdning påbörjad.</string>
-  <string name="redownloadtitle">Ladda ned filen igen?</string>
-  <string name="redownloadfordlbody">Det verkar som detta har redan laddats ner. Ladda ner den ändå?</string>
-  <string name="redownloadforopenbody">Det verkar som detta redan har laddats ner. Vill du öppna denna fil eller ladda ner den igen?</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">Ingen av dina appar kan öppna denna typ av fil.</string>
   <string name="transferfailed">Denna överföring misslyckades.</string>
-  <string name="nothingenteredtofetch">Ange något att hämta först!</string>
-  <string name="filetoobig">Denna fil är för stor! Är du säker på att det är en torrent?</string>
   <string name="streamerror">Tyvärr, ett fel inträffade vid strömningen.</string>
   <string name="couldntconnect">Kunde inte ansluta till Put.io. Är du online?</string>
   <string name="notatorrent">Detta verkar inte vara en torrent-fil!</string>
-  <string name="couldntgetdownloadlink">Det fanns ett problem med nedladdningslänken.</string>
   <string name="noactivityfound">Inga installerade appar kan öppna detta.</string>
   <!-- Other stuff -->
   <string name="account">Konto</string>
@@ -66,19 +55,15 @@
   <string name="loginsuccess">Inloggning lyckades!</string>
   <string name="total_is">Totalt: %s</string>
   <string name="loading">Laddar&#8230;</string>
-  <string name="applychanges">Du har osparade ändringar för %1$s.\nSpara dem?</string>
   <string name="pasteurls">Klistra in webbadresser här</string>
   <string name="extractwhenfinished">Extrahera när den är färdig</string>
   <string name="searchyourfiles">Sök bland dina filer</string>
   <string name="nofilesfound">Inga filer hittades.</string>
-  <string name="filedeleted">Filen har raderats!</string>
   <string name="filemoved">Filen har flyttats!</string>
   <string name="transferremoved">Överföringen har borttagits!</string>
-  <string name="hey">Hallå!</string>
   <string name="readytopaste">Nedladdningslänken är redo att klistras in.</string>
   <string name="addtransfer_type_file">Torrent-fil</string>
   <string name="copy_dl_link">Kopiera länken</string>
-  <string name="copyingdownloadlink">Länken kopierad</string>
   <string name="filenotfound">Filen kunde inte hittas. Har den tagits bort?</string>
   <string name="clear_finished_transfers">Rensa färdiga överföringar</string>
   <string name="convert_mp4">Konvertera till MP4</string>
