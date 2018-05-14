@@ -1,9 +1,7 @@
 <resources>
 
-	<dimen name="fabSize">64dp</dimen>
-	<dimen name="fabSizeHalf">32dp</dimen>
-	<dimen name="fabSizeHalfNegative">-32dp</dimen>
-	<dimen name="fabMargin">16dp</dimen>
+	<dimen name="fabSize">56dp</dimen>
+    <dimen name="fabMargin">16dp</dimen>
 
 	<dimen name="appBarElevation">4dp</dimen>
 
@@ -11,9 +9,8 @@
 	<dimen name="padding_large">16dp</dimen>
 
 	<dimen name="files_row_padding">12dp</dimen>
-	<dimen name="files_divider_inset">56dp</dimen>
 
-	<dimen name="transfers_card_padding">8dp</dimen>
+    <dimen name="transfers_card_padding">8dp</dimen>
 
 	<dimen name="folder_front_elevation">8dp</dimen>
 

@@ -10,7 +10,6 @@ import android.support.annotation.RequiresApi
 import android.support.annotation.WorkerThread
 import com.stevenschoen.putionew.putioApp
 
-@RequiresApi(21)
 class FileDownloadsMaintenanceService : JobService() {
 
     companion object {

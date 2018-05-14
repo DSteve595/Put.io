@@ -23,10 +23,10 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
     override val isRefreshing
         get() = folderLoader!!.isRefreshing()
 
-    val folder by lazy { arguments.getParcelable<PutioFile>(EXTRA_FOLDER) }
-    val padForFab by lazy { arguments.getBoolean(EXTRA_PAD_FOR_FAB) }
-    val showSearch by lazy { arguments.getBoolean(EXTRA_SHOW_SEARCH) }
-    val showCreateFolder by lazy { arguments.getBoolean(EXTRA_SHOW_CREATEFOLDER) }
+    val folder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FOLDER) }
+    val padForFab by lazy { arguments!!.getBoolean(EXTRA_PAD_FOR_FAB) }
+    val showSearch by lazy { arguments!!.getBoolean(EXTRA_SHOW_SEARCH) }
+    val showCreateFolder by lazy { arguments!!.getBoolean(EXTRA_SHOW_CREATEFOLDER) }
 
     var folderLoader: FolderLoader? = null
 
@@ -55,10 +55,10 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
         inflater.inflate(R.menu.menu_folder, menu)
 
         val itemSearch = menu.findItem(R.id.menu_search)
-        val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = MenuItemCompat.getActionView(itemSearch) as SearchView
+        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = itemSearch.actionView as SearchView
         searchView.setIconifiedByDefault(true)
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
 
         if (!showSearch) itemSearch.apply {
             isVisible = false
@@ -73,7 +73,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_createfolder -> {
-                CreateFolderFragment.newInstance(context, folder).show(childFragmentManager, FRAGTAG_CREATE_FOLDER)
+                CreateFolderFragment.newInstance(context!!, folder).show(childFragmentManager, FRAGTAG_CREATE_FOLDER)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -107,7 +107,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        folderLoader = FolderLoader.get(loaderManager, context, folder)
+        folderLoader = FolderLoader.get(loaderManager, context!!, folder)
         folderLoader!!.folder()
                 .bindToLifecycle(this)
                 .subscribe { response ->
@@ -143,7 +143,7 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
                                 .moveFile(PutioUtils.longsToString(*filesAdapter!!.checkedIds.toLongArray()), destinationFolder.id)
                                 .bindToLifecycle(this@FolderFragment)
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe({ fileChangingResponse ->
+                                .subscribe({ _ ->
                                     folderLoader!!.refreshFolder()
                                 }, { error ->
                                     PutioUtils.getRxJavaThrowable(error).printStackTrace()

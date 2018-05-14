@@ -29,15 +29,15 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_TORRENT_URI)) {
                 didFirstRequest = true
-                torrentUri.onNext(savedInstanceState.getParcelable<Uri>(STATE_TORRENT_URI))
+                torrentUri.onNext(savedInstanceState.getParcelable(STATE_TORRENT_URI))
             }
             if (savedInstanceState.containsKey(STATE_DID_FIRST_REQUEST)) {
                 didFirstRequest = savedInstanceState.getBoolean(STATE_DID_FIRST_REQUEST)
             }
         } else {
-            if (arguments != null && arguments.containsKey(EXTRA_PRECHOSEN_TORRENT_URI)) {
+            if (arguments != null && arguments!!.containsKey(EXTRA_PRECHOSEN_TORRENT_URI)) {
                 didFirstRequest = true
-                torrentUri.onNext(arguments.getParcelable<Uri>(EXTRA_PRECHOSEN_TORRENT_URI) as Uri)
+                torrentUri.onNext(arguments!!.getParcelable(EXTRA_PRECHOSEN_TORRENT_URI))
             }
         }
 
@@ -103,7 +103,7 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
     }
 
     fun isTorrent(uri: Uri): Boolean {
-        var mimetype = context.contentResolver.getType(uri)
+        var mimetype = context!!.contentResolver.getType(uri)
         if (mimetype == null) {
             mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
                     MimeTypeMap.getFileExtensionFromUrl(uri.path))
@@ -143,12 +143,12 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
     }
 
     companion object {
-        val STATE_TORRENT_URI = "uri"
-        val STATE_DID_FIRST_REQUEST = "did_first"
+        const val STATE_TORRENT_URI = "uri"
+        const val STATE_DID_FIRST_REQUEST = "did_first"
 
-        val EXTRA_PRECHOSEN_TORRENT_URI = "uri"
+        const val EXTRA_PRECHOSEN_TORRENT_URI = "uri"
 
-        val REQUEST_CHOOSE_FILE = 1
+        const val REQUEST_CHOOSE_FILE = 1
 
         fun newInstance(context: Context, preChosenTorrentUri: Uri?): FromFileFragment {
             val args = Bundle()

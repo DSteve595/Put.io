@@ -15,11 +15,12 @@ class DestinationFolderActivity : AppCompatActivity() {
 
         setContentView(R.layout.destination_activity)
 
-        var fragment = getFragment()
-        if (fragment == null) {
-            fragment = Fragment.instantiate(this, DestinationFolderFragment::class.java.name, Bundle()) as DestinationFolderFragment
+        val fragment = getFragment() ?: (Fragment.instantiate(
+                this,
+                DestinationFolderFragment::class.java.name
+        ) as DestinationFolderFragment).also {
             supportFragmentManager.beginTransaction()
-                    .add(R.id.destination_activity_root, fragment)
+                    .add(R.id.destination_activity_root, it)
                     .commitNow()
         }
 
@@ -35,13 +36,13 @@ class DestinationFolderActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.destination_choose).setOnClickListener {
             setResult(RESULT_OK, Intent().apply {
-                putExtra(RESULT_EXTRA_FOLDER, fragment!!.currentPage!!.file)
+                putExtra(RESULT_EXTRA_FOLDER, (fragment.currentPage as FilesFragment.Page.File).file)
             })
             finish()
         }
     }
 
-    fun getFragment() = supportFragmentManager.findFragmentById(R.id.destination_activity_root) as DestinationFolderFragment?
+    private fun getFragment() = supportFragmentManager.findFragmentById(R.id.destination_activity_root) as DestinationFolderFragment?
 
     override fun onBackPressed() {
         if (!getFragment()!!.goBack(true)) {
@@ -50,6 +51,6 @@ class DestinationFolderActivity : AppCompatActivity() {
     }
 
     companion object {
-        val RESULT_EXTRA_FOLDER = "folder"
+        const val RESULT_EXTRA_FOLDER = "folder"
     }
 }

@@ -26,7 +26,7 @@ class FileScreenshotLoader(context: Context, val file: PutioFile) : PutioBaseLoa
         if (onlyIfEmpty && (screenshotSubject.hasValue() || isLoading())) return
         disposable?.dispose()
         val single = Single.fromCallable {
-            Picasso.with(context)
+            Picasso.get()
                     .load(file.screenshot)
                     .get()
         }.subscribeOn(Schedulers.io())

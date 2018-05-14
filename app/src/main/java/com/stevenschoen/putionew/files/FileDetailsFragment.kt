@@ -43,7 +43,7 @@ import io.reactivex.schedulers.Schedulers
 class FileDetailsFragment : RxFragment() {
 
     companion object {
-        val EXTRA_FILE = "file"
+        const val EXTRA_FILE = "file"
 
         const val REQUEST_DOWNLOAD = 1
         const val REQUEST_DOWNLOAD_MP4 = 2
@@ -60,12 +60,12 @@ class FileDetailsFragment : RxFragment() {
     }
 
     val fileDownloads by lazy { putioApp.fileDownloadDatabase.fileDownloadsDao() }
-    val fileDownloadHelper by lazy { FileDownloadHelper(context) }
+    val fileDownloadHelper by lazy { FileDownloadHelper(context!!) }
 
     var onBackPressed: (() -> Any)? = null
     var castCallbacks: PutioApplication.CastCallbacks? = null
 
-    val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE)!! }
+    val file by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FILE)!! }
     val showMp4Options by lazy { file.isVideo && !file.isMp4 }
 
     lateinit var loader: FileDetailsLoader
@@ -74,8 +74,8 @@ class FileDetailsFragment : RxFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loader = FileDetailsLoader.get(loaderManager, context, file)
-        if (showMp4Options) mp4Loader = Mp4StatusLoader.get(loaderManager, context, file)
+        loader = FileDetailsLoader.get(loaderManager, context!!, file)
+        if (showMp4Options) mp4Loader = Mp4StatusLoader.get(loaderManager, context!!, file)
                 .apply { refreshOnce() }
     }
 
@@ -127,7 +127,7 @@ class FileDetailsFragment : RxFragment() {
                 titleView.setTextColor(Color.WHITE)
                 titleView.background = null
                 titleView.setShadowLayer(6f, 0f, 2f, Color.BLACK)
-                Picasso.with(context)
+                Picasso.get()
                         .load(file.icon)
                         .transform(PutioUtils.BlurTransformation(context, 4f))
                         .into(screenshotBlurryView)
@@ -152,9 +152,9 @@ class FileDetailsFragment : RxFragment() {
                         }
                     }
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) { }
-                    override fun onBitmapFailed(errorDrawable: Drawable?) { }
+                    override fun onBitmapFailed(e: Exception, errorDrawable: Drawable?) { }
                 }
-                Picasso.with(context)
+                Picasso.get()
                         .load(file.screenshot)
                         .into(screenshotTarget)
                 lifecycle()
@@ -162,7 +162,7 @@ class FileDetailsFragment : RxFragment() {
                         .first(FragmentEvent.DESTROY_VIEW)
                         .toCompletable()
                         .subscribe {
-                            Picasso.with(context).cancelRequest(screenshotTarget)
+                            Picasso.get().cancelRequest(screenshotTarget)
                         }
                 fileGraphicView.visibility = View.GONE
             } else {
@@ -479,10 +479,10 @@ class FileDetailsFragment : RxFragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
+                    val downloadManager = context!!.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
                     downloadManager.remove(it!!.downloadId!!)
                     AsyncTask.execute {
-                        markFileNotDownloaded(context, it)
+                        markFileNotDownloaded(context!!, it)
                     }
                 }, { error ->
                     Toast.makeText(context, "error deleting", Toast.LENGTH_SHORT).show()

@@ -180,18 +180,14 @@ class PutioActivity : BaseCastActivity() {
 
         setupLayout()
 
-        val navItem = if (savedInstanceState != null) {
-            savedInstanceState.getInt(STATE_CURRENT_TAB, TAB_FILES)
-        } else {
-            TAB_FILES
-        }
+        val navItem = savedInstanceState?.getInt(STATE_CURRENT_TAB, TAB_FILES) ?: TAB_FILES
         selectTab(navItem, false)
 
         addTransferView = findViewById(R.id.main_addtransfer)
         addTransferView.setOnClickListener {
             var destinationFolder: PutioFile? = null
             if (bottomNavView.currentItem == TAB_FILES) {
-                destinationFolder = filesFragment!!.currentPage!!.file
+                destinationFolder = (filesFragment!!.currentPage as FilesFragment.Page.File).file
             }
             val addTransferIntent = Intent(this@PutioActivity, AddTransferActivity::class.java)
             if (destinationFolder != null) {
@@ -270,27 +266,23 @@ class PutioActivity : BaseCastActivity() {
     }
 
     private fun shouldShowAddTransferFab(): Boolean {
-        when (bottomNavView.currentItem) {
-            TAB_ACCOUNT -> return false
+        return when (bottomNavView.currentItem) {
+            TAB_ACCOUNT -> false
             TAB_FILES -> {
                 val filesFragment = filesFragment
                 if (filesFragment!!.isSelecting) {
-                    return false
+                    false
                 } else {
                     val currentPage = filesFragment.currentPage
-                    if (currentPage == null) {
-                        return true
-                    } else {
-                        if (currentPage.type === FilesFragment.Page.Type.Search) {
-                            return false
-                        } else {
-                            return currentPage.file!!.isFolder
-                        }
+                    when (currentPage) {
+                        null -> true
+                        is FilesFragment.Page.Search -> false
+                        is FilesFragment.Page.File -> currentPage.file.isFolder
                     }
                 }
             }
-            TAB_TRANSFERS -> return true
-            else -> return true
+            TAB_TRANSFERS -> true
+            else -> true
         }
     }
 
@@ -305,7 +297,7 @@ class PutioActivity : BaseCastActivity() {
         val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
         setSupportActionBar(toolbar)
 
-        bottomNavView = findViewById<AHBottomNavigation>(R.id.main_bottom_nav)
+        bottomNavView = findViewById(R.id.main_bottom_nav)
         bottomNavView.defaultBackgroundColor = Color.parseColor("#F8F8F8")
         bottomNavView.accentColor = Color.BLACK
         bottomNavView.inactiveColor = Color.parseColor("#80000000")

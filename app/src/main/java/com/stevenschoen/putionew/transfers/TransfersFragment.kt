@@ -28,11 +28,11 @@ import io.reactivex.disposables.Disposable
 class TransfersFragment : RxFragment() {
 
     companion object {
-        private val VIEWMODE_LIST = 1
-        private val VIEWMODE_LISTOREMPTY = 2
-        private val VIEWMODE_LOADING = -1
-        private val VIEWMODE_EMPTY = -2
-        private val VIEWMODE_NONETWORK = 3
+        private const val VIEWMODE_LIST = 1
+        private const val VIEWMODE_LISTOREMPTY = 2
+        private const val VIEWMODE_LOADING = -1
+        private const val VIEWMODE_EMPTY = -2
+        private const val VIEWMODE_NONETWORK = 3
 
         const val FRAGTAG_OPTIONS = "options"
     }
@@ -56,14 +56,14 @@ class TransfersFragment : RxFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        utils = (activity.application as PutioApplication).putioUtils
+        utils = (activity!!.application as PutioApplication).putioUtils
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.transfers, container, false)
+        val view = inflater.inflate(R.layout.transfers, container, false)
 
-        transfersListView = view.findViewById<RecyclerView>(R.id.transferslist)
+        transfersListView = view.findViewById(R.id.transferslist)
         transfersListView!!.layoutManager = LinearLayoutManager(
                 context, LinearLayoutManager.VERTICAL, false)
         val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)
@@ -79,13 +79,13 @@ class TransfersFragment : RxFragment() {
 
         adapter = TransfersAdapter(transfers)
         transfersListView!!.adapter = adapter
-        adapter!!.setOnItemClickListener { view, position ->
+        adapter!!.setOnItemClickListener { _, position ->
             val transfer = transfers[position]
             if (transfer.status == "COMPLETED" || transfer.status == "SEEDING") {
                 callbacks?.onTransferSelected(transfers[position])
             }
         }
-        adapter!!.setOnItemLongClickListener { view, position ->
+        adapter!!.setOnItemLongClickListener { _, position ->
             val transfer = transfers[position]
             showOptions(transfer)
         }
@@ -136,7 +136,7 @@ class TransfersFragment : RxFragment() {
     }
 
     private fun showOptions(transfer: PutioTransfer) {
-        TransferOptionsFragment.newInstance(context, transfer).show(childFragmentManager, FRAGTAG_OPTIONS)
+        TransferOptionsFragment.newInstance(context!!, transfer).show(childFragmentManager, FRAGTAG_OPTIONS)
     }
 
     private fun hideOptionsIfShowing() {
@@ -248,15 +248,15 @@ class TransfersFragment : RxFragment() {
         super.onResume()
 
         val transfersServiceIntent = Intent(activity, PutioTransfersService::class.java)
-        activity.startService(transfersServiceIntent)
-        activity.bindService(transfersServiceIntent, mConnection, Context.BIND_AUTO_CREATE)
+        activity!!.startService(transfersServiceIntent)
+        activity!!.bindService(transfersServiceIntent, mConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onPause() {
         super.onPause()
 
         if (transfersService != null) {
-            activity.unbindService(mConnection)
+            activity!!.unbindService(mConnection)
         }
     }
 

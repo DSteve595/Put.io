@@ -62,7 +62,7 @@ interface FileDownloadDao {
     fun delete(download: FileDownload)
 }
 
-@Database(entities = arrayOf(FileDownload::class), version = 5)
+@Database(entities = [(FileDownload::class)], version = 5)
 @TypeConverters(FileDownload.Status.RoomConverters::class)
 abstract class FileDownloadDatabase: RoomDatabase() {
     abstract fun fileDownloadsDao(): FileDownloadDao

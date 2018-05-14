@@ -17,8 +17,8 @@ import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     companion object {
-        val EXTRA_QUERY = "query"
-        val EXTRA_PARENT_FOLDER = "parent_folder"
+        const val EXTRA_QUERY = "query"
+        const val EXTRA_PARENT_FOLDER = "parent_folder"
 
         fun newInstance(context: Context, query: String, parentFolder: PutioFile,
                         canSelect: Boolean): SearchFragment {
@@ -36,8 +36,8 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
     override val isRefreshing
         get() = searchLoader!!.isRefreshing()
 
-    val query by lazy { arguments.getString(EXTRA_QUERY) }
-    val parentFolder by lazy { arguments.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER) }
+    val query by lazy { arguments!!.getString(EXTRA_QUERY) }
+    val parentFolder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER) }
 
     var searchLoader: SearchLoader? = null
 
@@ -51,7 +51,7 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        searchLoader = SearchLoader.get(loaderManager, context, parentFolder, query)
+        searchLoader = SearchLoader.get(loaderManager, context!!, parentFolder, query)
         searchLoader!!.search()
                 .bindToLifecycle(this)
                 .subscribe { response ->

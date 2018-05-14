@@ -26,8 +26,8 @@ import com.stevenschoen.putionew.model.files.PutioFile
 class TvPutioFileCardPresenter : Presenter() {
 
     companion object {
-        private val CARD_WIDTH = 500
-        private val CARD_HEIGHT = 176
+        private const val CARD_WIDTH = 500
+        private const val CARD_HEIGHT = 176
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
@@ -47,11 +47,11 @@ class TvPutioFileCardPresenter : Presenter() {
         val mainImageView = cardView.mainImageView
         if (file.isFolder) {
             cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
-            Picasso.with(mainImageView.context).cancelRequest(mainImageView)
+            Picasso.get().cancelRequest(mainImageView)
             mainImageView.setImageResource(R.drawable.ic_putio_folder_accent)
         } else {
             cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_CROP)
-            Picasso.with(mainImageView.context).load(file.screenshot).into(mainImageView)
+            Picasso.get().load(file.screenshot).into(mainImageView)
         }
 
         if (file.isAccessed) {

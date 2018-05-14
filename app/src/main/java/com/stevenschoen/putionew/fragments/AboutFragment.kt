@@ -19,12 +19,12 @@ class AboutFragment : Fragment() {
 
         val backView: View = view.findViewById(R.id.about_back)
         backView.setOnClickListener {
-            NavUtils.navigateUpFromSameTask(activity)
+            NavUtils.navigateUpFromSameTask(activity!!)
         }
 
         val versionView: TextView = view.findViewById(R.id.about_version)
         try {
-            val version = activity.packageManager.getPackageInfo(activity.packageName, 0).versionName
+            val version = activity!!.packageManager.getPackageInfo(activity!!.packageName, 0).versionName
             versionView.text = getString(R.string.version_x, version)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()

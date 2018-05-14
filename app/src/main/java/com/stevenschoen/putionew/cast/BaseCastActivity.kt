@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.ViewGroup
 import com.google.android.gms.cast.MediaInfo
+import com.google.android.gms.cast.MediaLoadOptions
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.MediaTrack
 import com.google.android.gms.cast.framework.CastButtonFactory
@@ -61,13 +62,7 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
                             MediaMetadata.MEDIA_TYPE_MOVIE
                         else
                             MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
-                val title = FilenameUtils.removeExtension(file.name).let {
-                    if (it.length <= 18) {
-                        it
-                    } else {
-                        it.substring(0, 19)
-                    }
-                }
+                val title = FilenameUtils.removeExtension(file.name).take(18)
                 metaData.putString(MediaMetadata.KEY_TITLE, title)
                 file.screenshot?.let { metaData.addImage(WebImage(Uri.parse(it))) }
 
@@ -87,7 +82,12 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
                             })
                         }
                         .build()
-                castSession!!.remoteMediaClient.load(mediaInfo, true);
+                castSession!!.remoteMediaClient.load(
+                        mediaInfo,
+                        MediaLoadOptions.Builder()
+                                .setAutoplay(true)
+                                .build()
+                );
             }
 
             if (file.isVideo) {

@@ -14,7 +14,7 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatDialogFragment
 class RenameFragment : RxAppCompatDialogFragment() {
 
     companion object {
-        val EXTRA_FILE = "file"
+        const val EXTRA_FILE = "file"
 
         fun newInstance(context: Context, file: PutioFile): RenameFragment {
             val args = Bundle()
@@ -23,23 +23,23 @@ class RenameFragment : RxAppCompatDialogFragment() {
         }
     }
 
-    val file by lazy { arguments.getParcelable<PutioFile>(EXTRA_FILE) }
+    val file by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FILE)!! }
 
     var callbacks: Callbacks? = null
 
     lateinit var nameView: EditText
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context!!)
                 .setTitle(R.string.renametitle)
                 .setView(R.layout.rename_dialog)
-                .setPositiveButton(R.string.rename) { dialogInterface, which ->
+                .setPositiveButton(R.string.rename) { _, _ ->
                     callbacks?.onRenamed(nameView.text.toString())
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
 
-        nameView = dialog.findViewById<EditText>(R.id.rename_name)!!
+        nameView = dialog.findViewById(R.id.rename_name)!!
         if (savedInstanceState == null) {
             nameView.setText(file.name)
         }
@@ -50,10 +50,6 @@ class RenameFragment : RxAppCompatDialogFragment() {
         }
 
         return dialog
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
     }
 
     interface Callbacks {

@@ -10,8 +10,6 @@
     <color name="putio_green">#00A000</color>
     <color name="putio_lightred">#FF4040</color>
 
-    <color name="putio_divider">#1f000000</color>
-
     <color name="putio_tv_background">#202020</color>
 
 	<color name="putio_filedetails_downloaded">#E5FFE5</color>

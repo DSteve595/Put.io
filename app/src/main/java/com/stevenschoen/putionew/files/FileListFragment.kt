@@ -37,14 +37,14 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
         const val REQUEST_DOWNLOAD_SELECTED = 1
 
         fun <T> addArguments(fragment: T, canSelect: Boolean): T where T : FileListFragment<*> {
-            fragment.arguments = fragment.arguments.apply {
+            fragment.arguments = fragment.arguments!!.apply {
                 putBoolean(EXTRA_CAN_SELECT, canSelect)
             }
             return fragment
         }
     }
 
-    val canSelect by lazy { arguments.getBoolean(EXTRA_CAN_SELECT) }
+    val canSelect by lazy { arguments!!.getBoolean(EXTRA_CAN_SELECT) }
 
     var callbacks: CallbacksClass? = null
 
@@ -65,7 +65,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     var filesAdapter: FileListAdapter? = null
 
     val selectionHelper by lazy { SelectionHelper() }
-    val fileDownloadHelper by lazy { FileDownloadHelper(context) }
+    val fileDownloadHelper by lazy { FileDownloadHelper(context!!) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,7 +154,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     }
 
     private fun selectionRename() {
-        val renameFragment = RenameFragment.newInstance(context, getCheckedFiles().first())
+        val renameFragment = RenameFragment.newInstance(context!!, getCheckedFiles().first())
         renameFragment.show(childFragmentManager, FolderFragment.FRAGTAG_RENAME)
     }
 
@@ -167,7 +167,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
             } else if (checkedFiles.size == 1) {
                 fileDownloadHelper.downloadFile(checkedFiles.first()).subscribe()
                 filesAdapter!!.clearChecked()
-                Toast.makeText(context, context.getString(R.string.downloadstarted),
+                Toast.makeText(context, getString(R.string.downloadstarted),
                         Toast.LENGTH_SHORT).show()
             } else {
                 throw IllegalStateException("Download started with no file IDs!")
@@ -188,13 +188,13 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             if (isVisible) {
-                                Toast.makeText(context, context.getString(R.string.readytopaste),
+                                Toast.makeText(context, getString(R.string.readytopaste),
                                         Toast.LENGTH_SHORT).show()
                             }
                         }
             } else {
                 PutioUtils.copy(context, "Download link", file.getDownloadUrl(utils))
-                Toast.makeText(context, context.getString(R.string.readytopaste),
+                Toast.makeText(context, getString(R.string.readytopaste),
                         Toast.LENGTH_SHORT).show()
             }
         } else if (checkedFiles.isNotEmpty()) {
@@ -203,7 +203,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         if (isVisible) {
-                            Toast.makeText(context, context.getString(R.string.readytopaste),
+                            Toast.makeText(context, getString(R.string.readytopaste),
                                     Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -215,7 +215,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
     }
 
     private fun selectionDelete() {
-        val deleteFragment = ConfirmDeleteFragment.newInstance(context, filesAdapter!!.checkedCount())
+        val deleteFragment = ConfirmDeleteFragment.newInstance(context!!, filesAdapter!!.checkedCount())
         deleteFragment.show(childFragmentManager, FolderFragment.FRAGTAG_DELETE)
     }
 
@@ -271,7 +271,7 @@ abstract class FileListFragment<CallbacksClass: FileListFragment.Callbacks> : Rx
                         getCheckedFiles().forEach {
                             fileDownloadHelper.downloadFile(it).subscribe()
                         }
-                        Toast.makeText(context, context.getString(R.string.downloadstarted),
+                        Toast.makeText(context, getString(R.string.downloadstarted),
                                 Toast.LENGTH_SHORT).show()
                         filesAdapter!!.clearChecked()
                     }

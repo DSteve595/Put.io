@@ -52,7 +52,7 @@ class TvFolderFragment : VerticalGridSupportFragment() {
         }
 
     private var arrayAdapter: ArrayObjectAdapter? = null
-    private val folder by lazy { arguments.getParcelable<PutioFile>(EXTRA_FOLDER)!! }
+    private val folder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FOLDER)!! }
     lateinit private var loader: FolderLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +63,7 @@ class TvFolderFragment : VerticalGridSupportFragment() {
             exitTransition = Slide(Gravity.END)
         }
 
-        loader = FolderLoader.get(loaderManager, context, folder)
+        loader = FolderLoader.get(loaderManager, context!!, folder)
         loader.refreshFolder(onlyIfStaleOrEmpty = true, cache = false)
         loader.folder()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -84,7 +84,7 @@ class TvFolderFragment : VerticalGridSupportFragment() {
         arrayAdapter = ArrayObjectAdapter(TvPutioFileCardPresenter())
         adapter = arrayAdapter
 
-        onItemViewClickedListener = OnItemViewClickedListener { itemViewHolder, item, rowViewHolder, row ->
+        onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is PutioFile) {
                 if (item.isFolder) {
                     onFolderSelected?.invoke(item)
@@ -95,7 +95,7 @@ class TvFolderFragment : VerticalGridSupportFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return super.onCreateView(inflater, container, savedInstanceState)!!.apply {
             setBackgroundColor(ContextCompat.getColor(context, R.color.putio_tv_background))
 

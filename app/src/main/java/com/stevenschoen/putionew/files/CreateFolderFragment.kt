@@ -14,7 +14,7 @@ import com.stevenschoen.putionew.model.files.PutioFile
 class CreateFolderFragment : DialogFragment() {
 
     companion object {
-        val EXTRA_PARENT_FOLDER = "parent_folder"
+        const val EXTRA_PARENT_FOLDER = "parent_folder"
 
         fun newInstance(context: Context, parentFolder: PutioFile): CreateFolderFragment {
             val args = Bundle()
@@ -23,17 +23,17 @@ class CreateFolderFragment : DialogFragment() {
         }
     }
 
-    val parentFolder by lazy { arguments.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER) }
+    val parentFolder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER) }
 
     var callbacks: Callbacks? = null
 
     lateinit var nameView: EditText
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context!!)
                 .setTitle(R.string.create_folder)
                 .setView(R.layout.create_folder_dialog)
-                .setPositiveButton(R.string.create) { dialogInterface, which ->
+                .setPositiveButton(R.string.create) { _, _ ->
                     callbacks?.onNameEntered(nameView.text.toString())
                 }
                 .setNegativeButton(R.string.cancel, null)

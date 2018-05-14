@@ -16,7 +16,7 @@ import io.reactivex.subjects.BehaviorSubject
 class FileSelectionFragment : RxFragment() {
 
     companion object {
-        val STATE_AMOUNT_SELECTED = "amt_sel"
+        const val STATE_AMOUNT_SELECTED = "amt_sel"
     }
 
     var callbacks: Callbacks? = null
@@ -57,7 +57,7 @@ class FileSelectionFragment : RxFragment() {
         val idMove = 2
 
         val moreView = view.findViewById<View>(R.id.file_selection_more)
-        val morePopup = PopupMenu(context, moreView)
+        val morePopup = PopupMenu(context!!, moreView)
         val rename = morePopup.menu.add(0, idRename, 0, R.string.rename)
         amountSelected
                 .bindToLifecycle(this)

@@ -11,7 +11,7 @@ import com.stevenschoen.putionew.R
 class ConfirmDeleteFragment : AppCompatDialogFragment() {
 
     companion object {
-        val EXTRA_AMOUNT = "amount"
+        const val EXTRA_AMOUNT = "amount"
 
         fun newInstance(context: Context, amount: Int): ConfirmDeleteFragment {
             val args = Bundle()
@@ -20,15 +20,15 @@ class ConfirmDeleteFragment : AppCompatDialogFragment() {
         }
     }
 
-    val amount by lazy { arguments.getInt(EXTRA_AMOUNT) }
+    val amount by lazy { arguments!!.getInt(EXTRA_AMOUNT) }
 
     var callbacks: Callbacks? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(context)
+        return AlertDialog.Builder(context!!)
                 .setTitle(resources.getQuantityString(R.plurals.deletetitle, amount, amount))
                 .setMessage(resources.getQuantityString(R.plurals.deletebody, amount, amount))
-                .setPositiveButton(R.string.delete) { dialogInterface, which -> callbacks?.onDeleteSelected() }
+                .setPositiveButton(R.string.delete) { _, _ -> callbacks?.onDeleteSelected() }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
     }

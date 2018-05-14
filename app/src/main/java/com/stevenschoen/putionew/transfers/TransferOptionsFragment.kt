@@ -24,7 +24,7 @@ class TransferOptionsFragment : AutoExpandingBottomSheetDialogFragment() {
         }
     }
 
-    val transfer by lazy { arguments.getParcelable<PutioTransfer>(EXTRA_TRANSFER) }
+    val transfer by lazy { arguments!!.getParcelable<PutioTransfer>(EXTRA_TRANSFER) }
 
     var callbacks: Callbacks? = null
 

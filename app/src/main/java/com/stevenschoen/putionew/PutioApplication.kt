@@ -1,20 +1,17 @@
 package com.stevenschoen.putionew
 
+import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Build
 import android.preference.PreferenceManager
-import android.support.multidex.MultiDexApplication
 import android.support.v4.app.Fragment
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import com.stevenschoen.putionew.files.FileDownloadDatabase
 import com.stevenschoen.putionew.model.files.PutioFile
-import io.fabric.sdk.android.Fabric
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
 
-class PutioApplication : MultiDexApplication() {
+class PutioApplication : Application() {
 
     var putioUtils: PutioUtils? = null
         get() {
@@ -30,17 +27,11 @@ class PutioApplication : MultiDexApplication() {
     val fileDownloadDatabase by lazy {
         Room.databaseBuilder(this, FileDownloadDatabase::class.java, "fileDownloads")
                 .fallbackToDestructiveMigration()
-                .build()!!
+                .build()
     }
 
     override fun onCreate() {
         super.onCreate()
-
-        Fabric.with(this, Crashlytics.Builder()
-                .core(CrashlyticsCore.Builder()
-                        .disabled(BuildConfig.DEBUG)
-                        .build())
-                .build())
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -74,4 +65,4 @@ fun putioApp(context: Context) = context.applicationContext as PutioApplication
 val Context.putioApp
     get() = putioApp(this)
 val Fragment.putioApp
-    get() = putioApp(context)
+    get() = putioApp(context!!)

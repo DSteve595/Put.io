@@ -10,7 +10,8 @@
 
 	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:paddingBottom="8dp">
 
 		<ImageView
 			android:id="@+id/filedetails_screenshot_blurry"
@@ -64,7 +65,7 @@
 		<android.support.v7.widget.AppCompatTextView
 			android:id="@+id/filedetails_title"
 			android:layout_width="0dp"
-			android:layout_height="wrap_content"
+			android:layout_height="0dp"
 			android:elevation="2dp"
 			android:ellipsize="end"
 			android:gravity="bottom"
@@ -74,6 +75,8 @@
 			android:paddingStart="16dp"
 			android:textColor="?android:textColorPrimary"
 			android:textSize="28sp"
+			app:layout_constraintHeight_default="wrap"
+			app:layout_constraintHeight_min="wrap"
 			app:layout_constraintBottom_toBottomOf="@id/filedetails_screenshot"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -188,68 +191,60 @@
 
 		<TextView
 			android:id="@+id/filedetails_crc32"
+			style="@style/Widget.Putio.TextView.FileInfo"
 			android:layout_width="0dp"
-			android:layout_height="48dp"
-			android:drawablePadding="32dp"
+			android:layout_height="wrap_content"
 			android:drawableStart="@drawable/ic_fileinfo_crc32"
-			android:drawableTint="?android:textColorSecondary"
-			android:gravity="start|center_vertical"
 			android:paddingEnd="16dp"
 			android:paddingStart="20dp"
-			android:textAppearance="@style/TextAppearance.AppCompat"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/filedetails_filesize"
-			tools:text="66a1512f"/>
+			tools:text="66a1512f"
+			/>
 
 		<TextView
 			android:id="@+id/filedetails_created"
+			style="@style/Widget.Putio.TextView.FileInfo"
 			android:layout_width="0dp"
-			android:layout_height="48dp"
-			android:drawablePadding="32dp"
+			android:layout_height="wrap_content"
 			android:drawableStart="@drawable/ic_fileinfo_created"
-			android:drawableTint="?android:textColorSecondary"
-			android:gravity="start|center_vertical"
 			android:paddingEnd="16dp"
 			android:paddingStart="20dp"
-			android:textAppearance="@style/TextAppearance.AppCompat"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/filedetails_accessed"
-			tools:text="@string/created_on_x_at_x"/>
+			tools:text="@string/created_on_x_at_x"
+			/>
 
 		<TextView
 			android:id="@+id/filedetails_accessed"
+			style="@style/Widget.Putio.TextView.FileInfo"
 			android:layout_width="0dp"
-			android:layout_height="48dp"
+			android:layout_height="wrap_content"
 			android:layout_marginTop="16dp"
-			android:drawablePadding="32dp"
 			android:drawableStart="@drawable/ic_fileinfo_accessed"
-			android:drawableTint="?android:textColorSecondary"
-			android:gravity="start|center_vertical"
 			android:paddingEnd="16dp"
 			android:paddingStart="20dp"
-			android:textAppearance="@style/TextAppearance.AppCompat"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/filedetails_download"
-			tools:text="@string/accessed_on_x_at_x"/>
+			tools:text="@string/accessed_on_x_at_x"
+			/>
 
 		<TextView
 			android:id="@+id/filedetails_filesize"
+			style="@style/Widget.Putio.TextView.FileInfo"
 			android:layout_width="0dp"
-			android:layout_height="48dp"
-			android:drawablePadding="32dp"
+			android:layout_height="wrap_content"
 			android:drawableStart="@drawable/ic_fileinfo_size"
-			android:drawableTint="?android:textColorSecondary"
-			android:gravity="start|center_vertical"
 			android:paddingEnd="16dp"
 			android:paddingStart="20dp"
-			android:textAppearance="@style/TextAppearance.AppCompat"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/filedetails_created"
-			tools:text="100 MB"/>
+			tools:text="100 MB"
+			/>
 
 	</android.support.constraint.ConstraintLayout>
 </ScrollView>

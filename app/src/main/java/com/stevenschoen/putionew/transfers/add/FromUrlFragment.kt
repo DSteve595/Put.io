@@ -26,8 +26,8 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
         if (savedInstanceState != null) {
 
         } else {
-            if (arguments != null && arguments.containsKey(EXTRA_PRECHOSEN_LINK)) {
-                link.onNext(arguments.getString(EXTRA_PRECHOSEN_LINK))
+            if (arguments != null && arguments!!.containsKey(EXTRA_PRECHOSEN_LINK)) {
+                link.onNext(arguments!!.getString(EXTRA_PRECHOSEN_LINK))
             }
         }
     }
@@ -40,8 +40,8 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
                 .subscribe {
                     link.onNext(it.toString())
                 }
-        if (savedInstanceState == null && arguments.containsKey(EXTRA_PRECHOSEN_LINK)) {
-            linkView.setText(arguments.getString(EXTRA_PRECHOSEN_LINK))
+        if (savedInstanceState == null && arguments!!.containsKey(EXTRA_PRECHOSEN_LINK)) {
+            linkView.setText(arguments!!.getString(EXTRA_PRECHOSEN_LINK))
         }
 
         val clearLinkView = view.findViewById<View>(R.id.addtransfer_link_clear)
@@ -86,7 +86,7 @@ class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
     }
 
     companion object {
-        val EXTRA_PRECHOSEN_LINK = "link"
+        const val EXTRA_PRECHOSEN_LINK = "link"
 
         fun newInstance(context: Context, preChosenLink: String?): FromUrlFragment {
             val args = Bundle()

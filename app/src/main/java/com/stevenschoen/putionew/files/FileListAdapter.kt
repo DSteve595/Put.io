@@ -65,11 +65,11 @@ class FileListAdapter(private val data: List<PutioFile>,
         holder.textName.text = file.name
         holder.textDescription.text = PutioUtils.humanReadableByteCount(file.size!!, false)
         if (file.isFolder) {
-            Picasso.with(holder.iconImg.context).cancelRequest(holder.iconImg)
+            Picasso.get().cancelRequest(holder.iconImg)
             holder.iconImg.setImageResource(R.drawable.ic_putio_folder_accent)
         } else {
             if (!file.icon.isNullOrEmpty()) {
-                Picasso.with(holder.iconImg.context).load(file.icon).into(holder.iconImg)
+                Picasso.get().load(file.icon).into(holder.iconImg)
             }
         }
         if (file.isAccessed) {

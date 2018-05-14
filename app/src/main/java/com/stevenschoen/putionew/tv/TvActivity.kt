@@ -13,12 +13,8 @@ import java.util.*
 
 class TvActivity : FragmentActivity() {
 
-    companion object {
-        fun makeFolderFragTag(folder: PutioFile) = "folder_${folder.id}"
-    }
-
-    val displayedFolders = ArrayList<PutioFile>()
-    val folders by lazy { BehaviorSubject.createDefault<List<PutioFile>>(listOf(PutioFile.makeRootFolder(resources))) }
+    private val displayedFolders = ArrayList<PutioFile>()
+    private val folders by lazy { BehaviorSubject.createDefault<List<PutioFile>>(listOf(PutioFile.makeRootFolder(resources)))!! }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +30,7 @@ class TvActivity : FragmentActivity() {
         }
     }
 
-    fun init() {
+    private fun init() {
         setContentView(R.layout.tv_activity)
 
         val stackView = findViewById<HorizontalStackLayout>(R.id.tv_stack)
@@ -95,4 +91,9 @@ class TvActivity : FragmentActivity() {
             super.onBackPressed()
         }
     }
+
+    companion object {
+        fun makeFolderFragTag(folder: PutioFile) = "folder_${folder.id}"
+    }
+
 }

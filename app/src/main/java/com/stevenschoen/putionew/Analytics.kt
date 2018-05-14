@@ -95,7 +95,7 @@ class Analytics(context: Context) {
 val Context.analytics
     get() = Analytics(this)
 val Fragment.analytics
-    get() = Analytics(context)
+    get() = Analytics(context!!)
 
 private val Context.firebaseAnalytics
     get() = FirebaseAnalytics.getInstance(this)!!

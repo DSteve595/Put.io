@@ -1,15 +1,6 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.24.2'
-    }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
@@ -20,28 +11,28 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    compileSdkVersion 27
     defaultConfig {
         applicationId 'com.stevenschoen.putionew'
-        minSdkVersion 19
-        targetSdkVersion 26
+        minSdkVersion 21
+        targetSdkVersion 27
         versionCode 128
         versionName '4.2.1'
         multiDexEnabled true
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
     buildTypes {
         debug {
             versionNameSuffix "-debug"
-            ext.enableCrashlytics = false
         }
     }
     lintOptions {
         disable 'ExtraTranslation'
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -53,65 +44,65 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
     }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        test.java.srcDirs += 'src/test/kotlin'
-    }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 dependencies {
-    compile 'com.android.support:multidex:1.0.2'
-    androidTestCompile 'com.android.support:multidex:1.0.2'
-    androidTestCompile 'com.android.support:multidex-instrumentation:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
-    testCompile 'junit:junit:4.12'
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    def supportLibVersion = "26.1.0"
-    compile "com.android.support:appcompat-v7:$supportLibVersion"
-    compile "com.android.support:design:$supportLibVersion"
-    compile "com.android.support:support-v13:$supportLibVersion"
-    compile "com.android.support:leanback-v17:$supportLibVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibVersion"
-    compile "com.android.support:cardview-v7:$supportLibVersion"
-    compile "com.android.support:mediarouter-v7:$supportLibVersion"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.firebase:firebase-core:11.0.4'
-    compile 'com.google.android.gms:play-services-cast-framework:11.0.4'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
-    compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'commons-io:commons-io:2.5'
-    compile 'net.danlew:android.joda:2.9.9'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.4'
-    compile 'com.trello.rxlifecycle2:rxlifecycle:2.2.0'
-    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.0'
-    compile 'com.trello.rxlifecycle2:rxlifecycle-kotlin:2.2.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-leanback-v17:2.0.0'
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
-    compile 'nz.bradcampbell:paperparcel:2.0.4'
-    compile 'nz.bradcampbell:paperparcel-kotlin:2.0.4'
-    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.4'
-    compile 'com.google.android.exoplayer:exoplayer:r2.5.3'
-    compile 'android.arch.persistence.room:runtime:1.0.0-beta1'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-beta1'
-    kapt "android.arch.persistence.room:compiler:1.0.0-beta1"
-    compile 'android.arch.persistence.room:rxjava2:1.0.0-beta1'
+    def supportLibVersion = "27.1.1"
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:design:$supportLibVersion"
+    implementation "com.android.support:support-v13:$supportLibVersion"
+    implementation "com.android.support:leanback-v17:$supportLibVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibVersion"
+    implementation "com.android.support:cardview-v7:$supportLibVersion"
+    implementation "com.android.support:mediarouter-v7:$supportLibVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.android.gms:play-services-cast-framework:11.8.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.2'
+    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'net.danlew:android.joda:2.9.9.4'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
+    def rxLifecycleVersion = "2.2.1"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxLifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycleVersion"
+    def rxBindingVersion = "2.1.1"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-design:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-leanback-v17:$rxBindingVersion"
+    def okHttpVersion = "3.10.0"
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+    def retrofitVersion = "2.4.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.aurelhubert:ahbottomnavigation:2.2.0'
+    def paperParcelVersion = "2.0.6"
+    implementation "nz.bradcampbell:paperparcel:$paperParcelVersion"
+    implementation "nz.bradcampbell:paperparcel-kotlin:$paperParcelVersion"
+    kapt "nz.bradcampbell:paperparcel-compiler:$paperParcelVersion"
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.0'
+    def roomVersion = "1.1.0"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

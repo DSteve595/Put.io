@@ -21,13 +21,14 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.charset.Charset
 
 class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseLoader(context) {
 
-    val diskCache by lazy { DiskCache(context) }
+    private val diskCache by lazy { DiskCache(context) }
 
     private val folderSubject = BehaviorSubject.create<ResponseOrError>()
-    fun folder() = folderSubject.observeOn(AndroidSchedulers.mainThread())
+    fun folder() = folderSubject.observeOn(AndroidSchedulers.mainThread())!!
 
     fun publishCachedFileIfNeeded() {
         fun isNeeded() = !hasFresh()
@@ -53,7 +54,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         }
     }
 
-    var refreshSubscription: Disposable? = null
+    private var refreshSubscription: Disposable? = null
     fun refreshFolder(onlyIfStaleOrEmpty: Boolean = false, cache: Boolean = true) {
         if (onlyIfStaleOrEmpty && (hasFresh() || isRefreshing())) return
         refreshSubscription?.dispose()
@@ -79,7 +80,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     class DiskCache(val context: Context) {
         private val filesCacheDir = File("${context.cacheDir}${File.separator}filesCache")
 
-        internal var gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+        private var gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
         init {
             filesCacheDir.mkdirs()
@@ -88,7 +89,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         fun cache(response: FilesListResponse) {
             val file = getFile(response.parent.id)
             try {
-                FileUtils.writeStringToFile(file, gson.toJson(response))
+                FileUtils.writeStringToFile(file, gson.toJson(response), Charset.defaultCharset())
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -99,7 +100,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         fun getCached(parentId: Long): FilesListResponse? {
             val file = getFile(parentId)
             try {
-                return gson.fromJson(FileUtils.readFileToString(file), FilesListResponse::class.java)
+                return gson.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), FilesListResponse::class.java)
             } catch (e: FileNotFoundException) {
                 // Not cached yet, no problem
             } catch (e: IOException) {

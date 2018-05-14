@@ -2,7 +2,6 @@ package com.stevenschoen.putionew.files
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
@@ -17,16 +16,18 @@ import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 import retrofit2.HttpException
 import java.util.*
 
 open class FilesFragment : RxFragment() {
 
     companion object {
-        val STATE_PAGES = "pages"
-        val STATE_CURRENT_PAGE = "current_page"
+        const val STATE_PAGES = "pages"
+        const val STATE_CURRENT_PAGE = "current_page"
 
-        val EXTRA_FOLDER = "folder"
+        const val EXTRA_FOLDER = "folder"
 
         fun newInstance(context: Context, folder: PutioFile?): FilesFragment {
             val args = Bundle()
@@ -67,17 +68,17 @@ open class FilesFragment : RxFragment() {
             if (savedInstanceState.containsKey(STATE_CURRENT_PAGE)) {
                 currentPage = savedInstanceState.getParcelable(STATE_CURRENT_PAGE)
             }
-        } else if (arguments.containsKey(EXTRA_FOLDER)) {
-            pages.add(Page(arguments.getParcelable<PutioFile>(EXTRA_FOLDER)))
+        } else if (arguments!!.containsKey(EXTRA_FOLDER)) {
+            pages.add(Page.File(arguments!!.getParcelable(EXTRA_FOLDER)))
         } else {
-            pages.add(Page(PutioFile.makeRootFolder(resources)))
+            pages.add(Page.File(PutioFile.makeRootFolder(resources)))
         }
         fileListFragmentsAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.files, container, false).apply {
-            pagerView = findViewById<ViewPager>(R.id.files_pager)
+            pagerView = findViewById(R.id.files_pager)
             pagerView!!.adapter = fileListFragmentsAdapter
             pagerView!!.addOnPageChangeListener(pageChangeListener)
 
@@ -107,16 +108,14 @@ open class FilesFragment : RxFragment() {
     }
 
     fun findPageWithIndexForFragment(fragment: FileListFragment<*>): IndexedValue<Page>? {
-        val idToCompare: Long
-
-        when (fragment) {
-            is FolderFragment -> idToCompare = Page.makeUniqueId(fragment.folder)
-            is SearchFragment -> idToCompare = Page.makeUniqueId(fragment.query, fragment.parentFolder)
+        val idToCompare = when (fragment) {
+            is FolderFragment -> Page.File(fragment.folder).uniqueId
+            is SearchFragment -> Page.Search(fragment.query, fragment.parentFolder).uniqueId
             else -> throw RuntimeException()
         }
 
         pages.forEachIndexed { index, page ->
-            if (page.getUniqueId() == idToCompare) {
+            if (page.uniqueId == idToCompare) {
                 return IndexedValue(index, page)
             }
         }
@@ -141,18 +140,18 @@ open class FilesFragment : RxFragment() {
         val iter = pages.listIterator()
         var foundParentIndex = -1
         for (existingPage in iter) {
-            if (existingPage.type == Page.Type.File) {
-                if (existingPage.file!!.id == file.parentId) {
+            if (existingPage is Page.File) {
+                if (existingPage.file.id == file.parentId) {
                     foundParentIndex = iter.previousIndex()
                     break
                 }
             }
         }
         if (foundParentIndex != -1) {
-            pages.add(foundParentIndex + 1, Page(file))
+            pages.add(foundParentIndex + 1, Page.File(file))
             removePagesAfterIndex(foundParentIndex + 1, false)
         } else {
-            pages.add(Page(file))
+            pages.add(Page.File(file))
         }
 
         fileListFragmentsAdapter.notifyDataSetChanged()
@@ -167,7 +166,7 @@ open class FilesFragment : RxFragment() {
 
     fun addSearch(query: String) {
         removePagesAfterIndex(pagerView!!.currentItem, false)
-        pages.add(Page(query, pages.last().file!!))
+        pages.add(Page.Search(query, (pages.last() as Page.File).file))
 
         fileListFragmentsAdapter.notifyDataSetChanged()
         pagerView!!.setCurrentItem(pages.lastIndex, true)
@@ -179,24 +178,27 @@ open class FilesFragment : RxFragment() {
         var found = false
         var parentIndex = 0
         pages.listIterator().apply {
-            while (hasNext()) {
+            loop@ while (hasNext()) {
                 val nextPage = next()
-                if (nextPage.type == Page.Type.Search) {
-                    removePagesAfterIndex(previousIndex() - 1, false)
-                    break
-                } else {
-                    if (nextPage.file!!.id == parentId) {
-                        parentIndex = previousIndex()
-                        var targetIndex = parentIndex
-                        if (hasNext()) {
-                            val childPage = next()
-                            if (childPage.file!!.id == id) {
-                                found = true
-                                targetIndex = previousIndex()
+                when (nextPage) {
+                    is Page.Search -> {
+                        removePagesAfterIndex(previousIndex() - 1, false)
+                        break@loop
+                    }
+                    is Page.File -> {
+                        if (nextPage.file.id == parentId) {
+                            parentIndex = previousIndex()
+                            var targetIndex = parentIndex
+                            if (hasNext()) {
+                                val childPage = next() as Page.File
+                                if (childPage.file.id == id) {
+                                    found = true
+                                    targetIndex = previousIndex()
+                                }
                             }
+                            removePagesAfterIndex(targetIndex, false)
+                            break@loop
                         }
-                        removePagesAfterIndex(targetIndex, false)
-                        break
                     }
                 }
             }
@@ -220,39 +222,44 @@ open class FilesFragment : RxFragment() {
     }
 
     fun goBack(goToLastPageIfNotSelected: Boolean): Boolean {
-        if (pageChangeListener.isGoingBack) {
-            if (pagerView!!.currentItem == 0) {
-                return false
-            } else {
-                pageChangeListener.removeCount++
-                pagerView!!.setCurrentItem(pagerView!!.currentItem - 1, true)
-                return true
+        return when {
+            pageChangeListener.isGoingBack -> {
+                if (pagerView!!.currentItem == 0) {
+                    false
+                } else {
+                    pageChangeListener.removeCount++
+                    pagerView!!.setCurrentItem(pagerView!!.currentItem - 1, true)
+                    true
+                }
             }
-        } else if (goToLastPageIfNotSelected && pagerView!!.currentItem != pages.lastIndex) {
-            pagerView!!.setCurrentItem(pages.lastIndex, true)
-            return true
-        } else if (pages.size > 1) {
-            pageChangeListener.isGoingBack = true
-            pageChangeListener.removeCount++
-            pagerView!!.setCurrentItem(pages.lastIndex - 1, true)
-            return true
-        } else {
-            return false
+            goToLastPageIfNotSelected && pagerView!!.currentItem != pages.lastIndex -> {
+                pagerView!!.setCurrentItem(pages.lastIndex, true)
+                true
+            }
+            pages.size > 1 -> {
+                pageChangeListener.isGoingBack = true
+                pageChangeListener.removeCount++
+                pagerView!!.setCurrentItem(pages.lastIndex - 1, true)
+                true
+            }
+            else -> false
         }
     }
 
     fun goBackToRoot(): Boolean {
-        if (pages.size == 1) {
-            return false
-        } else if (pageChangeListener.isGoingBack) {
-            pagerView!!.setCurrentItem(0, true)
-            pageChangeListener.removeCount = (pages.size - 1)
-            return true
-        } else {
-            while (pageChangeListener.removeCount < (pages.size - 1)) {
-                goBack(true)
+        return when {
+            pages.size == 1 -> false
+            pageChangeListener.isGoingBack -> {
+                pagerView!!.setCurrentItem(0, true)
+                pageChangeListener.removeCount = (pages.size - 1)
+                true
             }
-            return true
+            else -> {
+                while (pageChangeListener.removeCount < (pages.size - 1)) {
+                    goBack(true)
+                }
+                true
+            }
         }
     }
 
@@ -306,21 +313,21 @@ open class FilesFragment : RxFragment() {
 
         override fun getItem(position: Int): Fragment {
             val page = pages[position]
-            return when (page.type) {
-                Page.Type.File -> {
-                    val file = page.file!!
+            return when (page) {
+                is Page.File -> {
+                    val file = page.file
                     when {
-                        file.isFolder -> FolderFragment.newInstance(context, file, padForFab, canSelect, showSearch, showCreateFolder)
-                        else -> FileDetailsFragment.newInstance(context, file)
+                        file.isFolder -> FolderFragment.newInstance(context!!, file, padForFab, canSelect, showSearch, showCreateFolder)
+                        else -> FileDetailsFragment.newInstance(context!!, file)
                     }
                 }
-                Page.Type.Search -> {
-                    SearchFragment.newInstance(context, page.searchQuery!!, page.parentFolder!!, canSelect)
+                is Page.Search -> {
+                    SearchFragment.newInstance(context!!, page.searchQuery, page.parentFolder, canSelect)
                 }
             }
         }
 
-        override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val fragment = super.instantiateItem(container, position) as Fragment
             fragments.put(position, fragment)
 
@@ -331,7 +338,7 @@ open class FilesFragment : RxFragment() {
             when (obj) {
                 is FolderFragment -> {
                     for ((index, page) in pages.withIndex()) {
-                        if (page.type == Page.Type.File && page.file!! == obj.folder) {
+                        if (page is Page.File && page.file == obj.folder) {
                             return index
                         }
                     }
@@ -339,8 +346,8 @@ open class FilesFragment : RxFragment() {
                 }
                 is SearchFragment -> {
                     for ((index, page) in pages.withIndex()) {
-                        if (page.type == Page.Type.Search &&
-                                page.searchQuery!! == obj.query && page.parentFolder!! == obj.parentFolder) {
+                        if (page is Page.Search &&
+                                page.searchQuery == obj.query && page.parentFolder == obj.parentFolder) {
                             return index
                         }
                     }
@@ -351,10 +358,10 @@ open class FilesFragment : RxFragment() {
         }
 
         override fun getItemId(position: Int): Long {
-            return pages[position].getUniqueId()
+            return pages[position].uniqueId
         }
 
-        override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
             super.destroyItem(container, position, `object`)
             if (position >= count) {
                 childFragmentManager.beginTransaction()
@@ -392,72 +399,22 @@ open class FilesFragment : RxFragment() {
         }
     }
 
-    class Page : Parcelable {
+    sealed class Page : Parcelable {
 
-        val type: Type
-        var file: PutioFile? = null
-        var searchQuery: String? = null
-        var parentFolder: PutioFile? = null
+        abstract val uniqueId: Long
 
-        constructor(file: PutioFile) {
-            this.type = Type.File
-            this.file = file
+        @Parcelize
+        class File(val file: PutioFile) : Page() {
+            @IgnoredOnParcel
+            override val uniqueId = file.id
         }
 
-        constructor(searchQuery: String, parentFolder: PutioFile) {
-            this.type = Type.Search
-            this.searchQuery = searchQuery
-            this.parentFolder = parentFolder
+        @Parcelize
+        class Search(val searchQuery: String, val parentFolder: PutioFile): Page() {
+            @IgnoredOnParcel
+            override val uniqueId = Objects.hash(searchQuery, parentFolder.id).toLong()
         }
 
-        fun getUniqueId() = when (type) {
-            Type.File -> makeUniqueId(file!!)
-            Type.Search -> makeUniqueId(searchQuery!!, parentFolder!!)
-        }
-
-        constructor(source: Parcel) {
-            this.type = Type.values()[source.readInt()]
-            when (type) {
-                Type.File -> this.file = source.readParcelable(PutioFile::class.java.classLoader)
-                Type.Search -> {
-                    this.searchQuery = source.readString()
-                    this.parentFolder = source.readParcelable(PutioFile::class.java.classLoader)
-                }
-            }
-        }
-
-        override fun writeToParcel(dest: Parcel, flags: Int) {
-            dest.writeInt(type.ordinal)
-            when (type) {
-                Type.File -> dest.writeParcelable(file, flags)
-                Type.Search -> {
-                    dest.writeString(searchQuery)
-                    dest.writeParcelable(parentFolder, flags)
-                }
-            }
-        }
-
-        override fun describeContents() = 0
-
-        enum class Type {
-            File, Search
-        }
-
-        companion object {
-            fun makeUniqueId(file: PutioFile) = file.id
-            fun makeUniqueId(searchQuery: String, parentFolder: PutioFile) =
-                    searchQuery.hashCode() + parentFolder.id
-
-            @JvmField val CREATOR: Parcelable.Creator<Page> = object : Parcelable.Creator<Page> {
-                override fun createFromParcel(source: Parcel): Page {
-                    return Page(source)
-                }
-
-                override fun newArray(size: Int): Array<Page?> {
-                    return arrayOfNulls(size)
-                }
-            }
-        }
     }
 
     interface Callbacks {
