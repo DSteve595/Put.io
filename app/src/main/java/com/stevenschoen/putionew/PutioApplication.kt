@@ -13,56 +13,56 @@ import timber.log.Timber
 
 class PutioApplication : Application() {
 
-    var putioUtils: PutioUtils? = null
-        get() {
-            if (field == null) {
-                try {
-                    field = PutioUtils(this)
-                } catch (e: PutioUtils.NoTokenException) {
-                    return null
-                }
-            }
-            return field
+  var putioUtils: PutioUtils? = null
+    get() {
+      if (field == null) {
+        try {
+          field = PutioUtils(this)
+        } catch (e: PutioUtils.NoTokenException) {
+          return null
         }
-    val fileDownloadDatabase by lazy {
-        Room.databaseBuilder(this, FileDownloadDatabase::class.java, "fileDownloads")
-                .fallbackToDestructiveMigration()
-                .build()
+      }
+      return field
+    }
+  val fileDownloadDatabase by lazy {
+    Room.databaseBuilder(this, FileDownloadDatabase::class.java, "fileDownloads")
+        .fallbackToDestructiveMigration()
+        .build()
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+
+    if (BuildConfig.DEBUG) {
+      Timber.plant(Timber.DebugTree())
+    } else {
+      Timber.plant(CrashlyticsTree())
     }
 
-    override fun onCreate() {
-        super.onCreate()
+    JodaTimeAndroid.init(this)
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        } else {
-            Timber.plant(CrashlyticsTree())
-        }
+    if (Build.VERSION.SDK_INT >= 26) {
+      createNotificationChannels(this)
+    }
+  }
 
-        JodaTimeAndroid.init(this)
+  val isLoggedIn: Boolean
+    get() {
+      if (putioUtils == null) return false
 
-        if (Build.VERSION.SDK_INT >= 26) {
-            createNotificationChannels(this)
-        }
+      val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+      val token: String? = sharedPrefs.getString("token", null)
+      return !token.isNullOrEmpty()
     }
 
-    val isLoggedIn: Boolean
-        get() {
-            if (putioUtils == null) return false
-
-            val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-            val token: String? = sharedPrefs.getString("token", null)
-            return !token.isNullOrEmpty()
-        }
-
-    interface CastCallbacks {
-        fun load(file: PutioFile, url: String, utils: PutioUtils)
-        fun isCasting(): Boolean
-    }
+  interface CastCallbacks {
+    fun load(file: PutioFile, url: String, utils: PutioUtils)
+    fun isCasting(): Boolean
+  }
 }
 
 fun putioApp(context: Context) = context.applicationContext as PutioApplication
 val Context.putioApp
-    get() = putioApp(this)
+  get() = putioApp(this)
 val Fragment.putioApp
-    get() = putioApp(context!!)
+  get() = putioApp(context!!)

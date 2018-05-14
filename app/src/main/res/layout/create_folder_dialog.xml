@@ -1,21 +1,23 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/padding_small"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:paddingTop="@dimen/padding_large">
+    android:paddingTop="@dimen/padding_large"
+    >
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/new_folder_name_input"
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/new_folder_name_input"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/folder_name"
+      >
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/new_folder_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/folder_name">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/new_folder_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.design.widget.TextInputLayout>
+        />
+  </android.support.design.widget.TextInputLayout>
 </FrameLayout>

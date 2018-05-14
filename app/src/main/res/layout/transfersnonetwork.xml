@@ -1,26 +1,28 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone">
+    android:visibility="gone"
+    >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="44dp"
-        android:fontFamily="sans-serif-light"
-        android:paddingBottom="64dp"
-        android:text="Where&apos;s the internet?"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:layout_marginBottom="44dp"
+      android:fontFamily="sans-serif-light"
+      android:paddingBottom="64dp"
+      android:text="Where&apos;s the internet?"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="14dp"
-        android:fontFamily="sans-serif-light"
-        android:text="You need to be online to view your transfers."
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:layout_marginBottom="14dp"
+      android:fontFamily="sans-serif-light"
+      android:text="You need to be online to view your transfers."
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      />
 
 </RelativeLayout>

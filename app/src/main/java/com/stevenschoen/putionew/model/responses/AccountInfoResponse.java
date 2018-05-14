@@ -4,9 +4,9 @@ import com.stevenschoen.putionew.model.ResponseOrError;
 import com.stevenschoen.putionew.model.account.PutioAccountInfo;
 
 public class AccountInfoResponse extends ResponseOrError.BasePutioResponse {
-	private PutioAccountInfo info;
+  private PutioAccountInfo info;
 
-	public PutioAccountInfo getInfo() {
-		return info;
-	}
+  public PutioAccountInfo getInfo() {
+    return info;
+  }
 }

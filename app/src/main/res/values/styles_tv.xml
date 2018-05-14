@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Theme.Putio.Tv" parent="Theme.Leanback">
-		<item name="android:colorAccent">@color/putio_accent</item>
-		<item name="defaultBrandColor">@color/putio_tv_background</item>
-		<item name="browseTitleTextStyle">@style/Widget.Putio.Title.Text</item>
 
-		<item name="selectableItemBackground">?android:selectableItemBackground</item>
-		<item name="selectableItemBackgroundBorderless">?android:selectableItemBackgroundBorderless</item>
-	</style>
+  <style name="Theme.Putio.Tv" parent="Theme.Leanback">
+    <item name="android:colorAccent">@color/putio_accent</item>
+    <item name="defaultBrandColor">@color/putio_tv_background</item>
+    <item name="browseTitleTextStyle">@style/Widget.Putio.Title.Text</item>
 
-	<style name="Theme.Putio.Tv.Player" parent="Theme.Putio.Tv">
-		<item name="android:windowBackground">@android:color/black</item>
-	</style>
+    <item name="selectableItemBackground">?android:selectableItemBackground</item>
+    <item name="selectableItemBackgroundBorderless">?android:selectableItemBackgroundBorderless
+    </item>
+  </style>
 
-	<style name="Widget.Putio.Title.Text" parent="Widget.Leanback.Title.Text">
-		<item name="android:textAppearance">@style/TextAppearance.Putio.Title</item>
-	</style>
+  <style name="Theme.Putio.Tv.Player" parent="Theme.Putio.Tv">
+    <item name="android:windowBackground">@android:color/black</item>
+  </style>
 
-	<style name="TextAppearance.Putio.Title" parent="TextAppearance.Leanback.Title">
-		<item name="android:textColor">?android:colorAccent</item>
-	</style>
+  <style name="Widget.Putio.Title.Text" parent="Widget.Leanback.Title.Text">
+    <item name="android:textAppearance">@style/TextAppearance.Putio.Title</item>
+  </style>
+
+  <style name="TextAppearance.Putio.Title" parent="TextAppearance.Leanback.Title">
+    <item name="android:textColor">?android:colorAccent</item>
+  </style>
 </resources>

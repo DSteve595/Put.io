@@ -61,371 +61,368 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PutioUtils {
-	public static final int TYPE_AUDIO = 1;
-	public static final int TYPE_VIDEO = 2;
-	public static final String[] streamingMediaTypes = new String[]{"audio", "video"};
+  public static final int TYPE_AUDIO = 1;
+  public static final int TYPE_VIDEO = 2;
+  public static final String[] streamingMediaTypes = new String[]{"audio", "video"};
+  public static final String baseUrl = "https://api.put.io/v2/";
+  public static final String uploadBaseUrl = "https://upload.put.io/v2/";
+  public String token;
+  public String tokenWithStuff;
+  private PutioRestInterface putioRestInterface;
+  private SharedPreferences sharedPrefs;
 
-	private PutioRestInterface putioRestInterface;
+  public PutioUtils(Context context) throws NoTokenException {
+    this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    this.token = sharedPrefs.getString("token", null);
+    if (this.token == null) {
+      throw new NoTokenException();
+    }
+    this.tokenWithStuff = "?oauth_token=" + token;
 
-	public String token;
-	public String tokenWithStuff;
+    this.putioRestInterface = makePutioRestInterface(baseUrl).create(PutioRestInterface.class);
+  }
 
-	public static final String baseUrl = "https://api.put.io/v2/";
-	public static final String uploadBaseUrl = "https://upload.put.io/v2/";
+  public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
+    return new AlertDialog.Builder(context)
+        .setTitle(title)
+        .setView(contentViewId)
+        .show();
+  }
 
-	private SharedPreferences sharedPrefs;
+  public static String getNameFromUri(Context context, Uri uri) {
+    if (uri.getScheme().equals("file")) {
+      return new File(uri.getPath()).getName();
+    } else if (uri.getScheme().equals("content")) {
+      try (Cursor cursor = context.getContentResolver()
+          .query(uri, null, null, null, null, null)) {
+        if (cursor != null && cursor.moveToFirst()) {
+          return cursor.getString(
+              cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+        }
+      }
+    }
 
-	public PutioUtils(Context context) throws NoTokenException {
-		this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		this.token = sharedPrefs.getString("token", null);
-		if (this.token == null) {
-			throw new NoTokenException();
-		}
-		this.tokenWithStuff = "?oauth_token=" + token;
+    return null;
+  }
 
-		this.putioRestInterface = makePutioRestInterface(baseUrl).create(PutioRestInterface.class);
-	}
+  public static void copy(Context context, String label, String text) {
+    android.content.ClipboardManager clip =
+        (android.content.ClipboardManager) context.getSystemService(
+            Context.CLIPBOARD_SERVICE);
+    clip.setPrimaryClip(ClipData.newPlainText(label, text));
+  }
 
-	public Retrofit makePutioRestInterface(String baseUrl) {
-		Gson gson = new GsonBuilder()
-				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.create();
+  public static String resolveRedirect(String url) throws IOException {
+    OkHttpClient client = new OkHttpClient.Builder()
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .build();
+    Response response = client.newCall(new Request.Builder()
+        .url(url).build()).execute();
+    if (response.code() == 302) {
+      return response.header("Location");
+    }
 
-		OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
-				.addInterceptor(new Interceptor() {
-					@Override
-					public Response intercept(Chain chain) throws IOException {
-						Request request = chain.request();
-						request = request.newBuilder()
-								.url(request.url().newBuilder()
-										.addQueryParameter("oauth_token", token)
-										.build())
-								.build();
-						return chain.proceed(request);
-					}
-				});
-		if (BuildConfig.DEBUG) {
-			clientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
-		}
+    return url;
+  }
 
-		return new Retrofit.Builder()
-				.baseUrl(baseUrl)
-				.client(clientBuilder.build())
-				.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-				.addConverterFactory(GsonConverterFactory.create(gson))
-				.build();
-	}
+  private static void open(Uri uri, Context context) {
+    String typename = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+    String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typename);
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setDataAndType(uri, type);
+    try {
+      context.startActivity(intent);
+    } catch (ActivityNotFoundException e) {
+      Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
+    }
+  }
 
-	public PutioRestInterface getRestInterface() {
-		return putioRestInterface;
-	}
+  public static String humanReadableByteCount(long bytes, boolean si) {
+    int unit = si ? 1000 : 1024;
+    if (bytes < unit)
+      return bytes + " B";
+    int exp = (int) (Math.log(bytes) / Math.log(unit));
+    String pre = ("KMGTPE").charAt(exp - 1)
+        + "";
+    return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+  }
 
-	public class NoTokenException extends Exception { }
+  public static String longsToString(long... longs) {
+    StringBuilder string = new StringBuilder();
+    for (int i = 0; i < longs.length; i++) {
+      long aLong = longs[i];
+      string.append(aLong);
+      if (i + 1 < longs.length) string.append(",");
+    }
 
-	public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
-		return new AlertDialog.Builder(context)
-				.setTitle(title)
-				.setView(contentViewId)
-				.show();
-	}
+    return string.toString();
+  }
 
-	public static String getNameFromUri(Context context, Uri uri) {
-		if (uri.getScheme().equals("file")) {
-			return new File(uri.getPath()).getName();
-		} else if (uri.getScheme().equals("content")) {
-			try (Cursor cursor = context.getContentResolver()
-					.query(uri, null, null, null, null, null)) {
-				if (cursor != null && cursor.moveToFirst()) {
-					return cursor.getString(
-							cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-				}
-			}
-		}
+  public static String intsToString(int... ints) {
+    long[] longs = new long[ints.length];
+    for (int i = 0; i < ints.length; i++) {
+      longs[i] = ints[i];
+    }
 
-		return null;
-	}
+    return longsToString(longs);
+  }
 
-	public void stream(Context context, PutioFile file, String url, List<PutioSubtitle> subtitles, int type) {
-		Intent streamIntent = new Intent();
-		streamIntent.setAction(Intent.ACTION_VIEW);
-		String typeString;
-		if (type == TYPE_AUDIO) {
-			typeString = "audio";
-		} else if (type == TYPE_VIDEO) {
-			typeString = "video";
-		} else {
-			typeString = "video";
-		}
+  public static String[] parseIsoTime(Context context, String isoTime) {
+    String[] result = new String[2];
 
-		if (url == null) {
-			Toast.makeText(context, context.getString(R.string.streamerror), Toast.LENGTH_LONG).show();
-			return;
-		}
-		streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
+    DateTime created = new DateTime(isoTime);
+    result[0] = DateFormat.getDateFormat(context).format(created.toDate());
+    result[1] = DateFormat.getTimeFormat(context).format(created.toDate());
 
-		if (subtitles != null && !subtitles.isEmpty()) {
-			Uri[] subtitleUris = new Uri[subtitles.size()];
-			String[] subtitleNames = new String[subtitles.size()];
+    return result;
+  }
 
-			for (int i = 0; i < subtitles.size(); i++) {
-				PutioSubtitle subtitle = subtitles.get(i);
-				subtitleUris[i] = Uri.parse(subtitle.getUrl(PutioSubtitle.FORMAT_SRT, file.getId(), tokenWithStuff));
-				subtitleNames[i] = subtitle.getLanguage();
-			}
+  public static float dpFromPx(Context context, float px) {
+    return px / context.getResources().getDisplayMetrics().density;
+  }
 
-			streamIntent.putExtra("subs", subtitleUris);
-			streamIntent.putExtra("subs.name", subtitleNames);
-		}
+  public static float pxFromDp(Context context, float dp) {
+    return dp * context.getResources().getDisplayMetrics().density;
+  }
 
-			try {
-			context.startActivity(streamIntent);
-		} catch (ActivityNotFoundException e) {
-			Toast.makeText(context, context.getString(R.string.noactivityfound), Toast.LENGTH_LONG).show();
-		}
-	}
+  public static void padForFab(View viewToPad) {
+    Resources res = viewToPad.getResources();
+    viewToPad.setPadding(
+        viewToPad.getPaddingLeft(),
+        viewToPad.getPaddingTop(),
+        viewToPad.getPaddingRight(),
+        (int) (res.getDimension(R.dimen.fabSize) + (res.getDimension(R.dimen.fabMargin)) * 1.5f));
+  }
 
-	public void getStreamUrlAndPlay(final Context context, final PutioFile file, String url) {
-		class GetStreamUrlAndPlay extends AsyncTask<String, Void, GetStreamUrlAndPlayResult> {
-			Dialog gettingStreamDialog;
+  public static Throwable getRxJavaThrowable(Throwable throwable) {
+    return throwable;
+  }
 
-			@Override
-			public void onPreExecute() {
-				gettingStreamDialog = PutioUtils.showPutioDialog(context,
-						context.getString(R.string.gettingstreamurltitle),
-						R.layout.dialog_loading);
-				gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
+  public Retrofit makePutioRestInterface(String baseUrl) {
+    Gson gson = new GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create();
 
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						GetStreamUrlAndPlay.this.cancel(true);
-					}
-				});
-				gettingStreamDialog.show();
-			}
+    OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+        .addInterceptor(new Interceptor() {
+          @Override
+          public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            request = request.newBuilder()
+                .url(request.url().newBuilder()
+                    .addQueryParameter("oauth_token", token)
+                    .build())
+                .build();
+            return chain.proceed(request);
+          }
+        });
+    if (BuildConfig.DEBUG) {
+      clientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS));
+    }
 
-			@Override
-			protected GetStreamUrlAndPlayResult doInBackground(String... params) {
-				GetStreamUrlAndPlayResult result = new GetStreamUrlAndPlayResult();
+    return new Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(clientBuilder.build())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build();
+  }
 
-				String finalUrl = params[0];
-				try {
-					finalUrl = resolveRedirect(params[0]);
-				} catch (IOException e) {
-					// No redirect, not a problem
-				}
-				result.url = finalUrl;
+  public PutioRestInterface getRestInterface() {
+    return putioRestInterface;
+  }
 
-				try {
-					result.subtitles = getRestInterface().subtitles(file.getId()).blockingGet().getSubtitles();
-				} catch (RuntimeException e) {
-					Throwable cause = e.getCause();
-					if (cause instanceof UnknownHostException) {
-						// No subtitles, not a problem
-					} else {
-						e.printStackTrace();
-						if (context != null && context instanceof Activity) {
-							((Activity) context).runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
-								}
-							});
-						}
-					}
-				}
+  public void stream(Context context, PutioFile file, String url, List<PutioSubtitle> subtitles, int type) {
+    Intent streamIntent = new Intent();
+    streamIntent.setAction(Intent.ACTION_VIEW);
+    String typeString;
+    if (type == TYPE_AUDIO) {
+      typeString = "audio";
+    } else if (type == TYPE_VIDEO) {
+      typeString = "video";
+    } else {
+      typeString = "video";
+    }
 
-				return result;
-			}
+    if (url == null) {
+      Toast.makeText(context, context.getString(R.string.streamerror), Toast.LENGTH_LONG).show();
+      return;
+    }
+    streamIntent.setDataAndType(Uri.parse(url), typeString + "/*");
 
-			@Override
-			public void onPostExecute(GetStreamUrlAndPlayResult result) {
-				try {
-					if (gettingStreamDialog.isShowing()) {
-						gettingStreamDialog.dismiss();
-					}
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				}
-				int type;
-				if (file.getContentType().contains("audio")) {
-					type = PutioUtils.TYPE_AUDIO;
-				} else if (file.getContentType().contains("video")) {
-					type = PutioUtils.TYPE_VIDEO;
-				} else {
-					type = PutioUtils.TYPE_VIDEO;
-				}
+    if (subtitles != null && !subtitles.isEmpty()) {
+      Uri[] subtitleUris = new Uri[subtitles.size()];
+      String[] subtitleNames = new String[subtitles.size()];
 
-				stream(context, file, result.url, result.subtitles, type);
-			}
-		}
+      for (int i = 0; i < subtitles.size(); i++) {
+        PutioSubtitle subtitle = subtitles.get(i);
+        subtitleUris[i] = Uri.parse(subtitle.getUrl(PutioSubtitle.FORMAT_SRT, file.getId(), tokenWithStuff));
+        subtitleNames[i] = subtitle.getLanguage();
+      }
 
-		new GetStreamUrlAndPlay().execute(url);
-	}
+      streamIntent.putExtra("subs", subtitleUris);
+      streamIntent.putExtra("subs.name", subtitleNames);
+    }
 
-	private static class GetStreamUrlAndPlayResult {
-		String url;
-		List<PutioSubtitle> subtitles;
-	}
+    try {
+      context.startActivity(streamIntent);
+    } catch (ActivityNotFoundException e) {
+      Toast.makeText(context, context.getString(R.string.noactivityfound), Toast.LENGTH_LONG).show();
+    }
+  }
 
-	public static void copy(Context context, String label, String text) {
-		android.content.ClipboardManager clip =
-				(android.content.ClipboardManager) context.getSystemService(
-						Context.CLIPBOARD_SERVICE);
-		clip.setPrimaryClip(ClipData.newPlainText(label, text));
-	}
+  public void getStreamUrlAndPlay(final Context context, final PutioFile file, String url) {
+    class GetStreamUrlAndPlay extends AsyncTask<String, Void, GetStreamUrlAndPlayResult> {
+      Dialog gettingStreamDialog;
 
-	public static String resolveRedirect(String url) throws IOException {
-		OkHttpClient client = new OkHttpClient.Builder()
-				.followRedirects(true)
-				.followSslRedirects(true)
-				.build();
-		Response response = client.newCall(new Request.Builder()
-				.url(url).build()).execute();
-		if (response.code() == 302) {
-			return response.header("Location");
-		}
+      @Override
+      public void onPreExecute() {
+        gettingStreamDialog = PutioUtils.showPutioDialog(context,
+            context.getString(R.string.gettingstreamurltitle),
+            R.layout.dialog_loading);
+        gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
 
-		return url;
-	}
+          @Override
+          public void onCancel(DialogInterface dialog) {
+            GetStreamUrlAndPlay.this.cancel(true);
+          }
+        });
+        gettingStreamDialog.show();
+      }
 
-	private static void open(Uri uri, Context context) {
-		String typename = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
-		String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typename);
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(uri, type);
-		try {
-			context.startActivity(intent);
-		} catch (ActivityNotFoundException e) {
-			Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
-		}
-	}
+      @Override
+      protected GetStreamUrlAndPlayResult doInBackground(String... params) {
+        GetStreamUrlAndPlayResult result = new GetStreamUrlAndPlayResult();
 
-	public Dialog removeTransferDialog(
-			final Context context, final SingleObserver<ResponseOrError.BasePutioResponse> observer,
-			final long... idsToDelete) {
-		final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
+        String finalUrl = params[0];
+        try {
+          finalUrl = resolveRedirect(params[0]);
+        } catch (IOException e) {
+          // No redirect, not a problem
+        }
+        result.url = finalUrl;
 
-		Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
-		removeRemove.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Single<ResponseOrError.BasePutioResponse> cancelObservable = getRestInterface()
-						.cancelTransfer(PutioUtils.longsToString(idsToDelete))
-						.observeOn(AndroidSchedulers.mainThread());
-				if (observer != null) {
-					cancelObservable.subscribe(observer);
-				} else {
-					cancelObservable.subscribe();
-				}
-				Toast.makeText(context, context.getString(R.string.transferremoved), Toast.LENGTH_SHORT).show();
-				removeDialog.dismiss();
-			}
-		});
+        try {
+          result.subtitles = getRestInterface().subtitles(file.getId()).blockingGet().getSubtitles();
+        } catch (RuntimeException e) {
+          Throwable cause = e.getCause();
+          if (cause instanceof UnknownHostException) {
+            // No subtitles, not a problem
+          } else {
+            e.printStackTrace();
+            if (context != null && context instanceof Activity) {
+              ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+                }
+              });
+            }
+          }
+        }
 
-		Button cancelRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_cancel);
-		cancelRemove.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				removeDialog.cancel();
-			}
-		});
+        return result;
+      }
 
-		return removeDialog;
-	}
+      @Override
+      public void onPostExecute(GetStreamUrlAndPlayResult result) {
+        try {
+          if (gettingStreamDialog.isShowing()) {
+            gettingStreamDialog.dismiss();
+          }
+        } catch (IllegalArgumentException e) {
+          e.printStackTrace();
+        }
+        int type;
+        if (file.getContentType().contains("audio")) {
+          type = PutioUtils.TYPE_AUDIO;
+        } else if (file.getContentType().contains("video")) {
+          type = PutioUtils.TYPE_VIDEO;
+        } else {
+          type = PutioUtils.TYPE_VIDEO;
+        }
 
-	public boolean isConnected(Context context) {
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        stream(context, file, result.url, result.subtitles, type);
+      }
+    }
 
-		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-		return activeNetwork != null && activeNetwork.isConnected();
-	}
+    new GetStreamUrlAndPlay().execute(url);
+  }
 
-	public static String humanReadableByteCount(long bytes, boolean si) {
-		int unit = si ? 1000 : 1024;
-		if (bytes < unit)
-			return bytes + " B";
-		int exp = (int) (Math.log(bytes) / Math.log(unit));
-		String pre = ("KMGTPE").charAt(exp - 1)
-				+ "";
-		return String.format(Locale.US, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
-	}
+  public Dialog removeTransferDialog(
+      final Context context, final SingleObserver<ResponseOrError.BasePutioResponse> observer,
+      final long... idsToDelete) {
+    final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
-	public static String longsToString(long... longs) {
-		StringBuilder string = new StringBuilder();
-		for (int i = 0; i < longs.length; i++) {
-			long aLong = longs[i];
-			string.append(aLong);
-			if (i + 1 < longs.length) string.append(",");
-		}
+    Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
+    removeRemove.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Single<ResponseOrError.BasePutioResponse> cancelObservable = getRestInterface()
+            .cancelTransfer(PutioUtils.longsToString(idsToDelete))
+            .observeOn(AndroidSchedulers.mainThread());
+        if (observer != null) {
+          cancelObservable.subscribe(observer);
+        } else {
+          cancelObservable.subscribe();
+        }
+        Toast.makeText(context, context.getString(R.string.transferremoved), Toast.LENGTH_SHORT).show();
+        removeDialog.dismiss();
+      }
+    });
 
-		return string.toString();
-	}
+    Button cancelRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_cancel);
+    cancelRemove.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        removeDialog.cancel();
+      }
+    });
 
-	public static String intsToString(int... ints) {
-		long[] longs = new long[ints.length];
-		for (int i = 0; i < ints.length; i++) {
-			longs[i] = ints[i];
-		}
+    return removeDialog;
+  }
 
-		return longsToString(longs);
-	}
+  public boolean isConnected(Context context) {
+    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-	public static String[] parseIsoTime(Context context, String isoTime) {
-		String[] result = new String[2];
+    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+    return activeNetwork != null && activeNetwork.isConnected();
+  }
 
-		DateTime created = new DateTime(isoTime);
-		result[0] = DateFormat.getDateFormat(context).format(created.toDate());
-		result[1] = DateFormat.getTimeFormat(context).format(created.toDate());
+  private static class GetStreamUrlAndPlayResult {
+    String url;
+    List<PutioSubtitle> subtitles;
+  }
 
-		return result;
-	}
+  public static class BlurTransformation implements Transformation {
+    private Context context;
+    private float radius;
 
-	public static float dpFromPx(Context context, float px) {
-		return px / context.getResources().getDisplayMetrics().density;
-	}
+    public BlurTransformation(Context context, float radius) {
+      this.context = context;
+      this.radius = radius;
+    }
 
-	public static float pxFromDp(Context context, float dp) {
-		return dp * context.getResources().getDisplayMetrics().density;
-	}
+    @Override
+    public Bitmap transform(Bitmap source) {
+      RenderScript rs = RenderScript.create(context);
+      Allocation input = Allocation.createFromBitmap(rs, source, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+      Allocation output = Allocation.createTyped(rs, input.getType());
+      ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+      script.setRadius(radius);
+      script.setInput(input);
+      script.forEach(output);
+      output.copyTo(source);
+      return source;
+    }
 
-	public static void padForFab(View viewToPad) {
-		Resources res = viewToPad.getResources();
-		viewToPad.setPadding(
-				viewToPad.getPaddingLeft(),
-				viewToPad.getPaddingTop(),
-				viewToPad.getPaddingRight(),
-				(int) (res.getDimension(R.dimen.fabSize) + (res.getDimension(R.dimen.fabMargin)) * 1.5f));
-	}
+    @Override
+    public String key() {
+      return BlurTransformation.class.getCanonicalName() + "-" + radius;
+    }
+  }
 
-	public static Throwable getRxJavaThrowable(Throwable throwable) {
-		return throwable;
-	}
-
-	public static class BlurTransformation implements Transformation {
-		private Context context;
-		private float radius;
-
-		public BlurTransformation(Context context, float radius) {
-			this.context = context;
-			this.radius = radius;
-		}
-
-		@Override
-		public Bitmap transform(Bitmap source) {
-			RenderScript rs = RenderScript.create(context);
-			Allocation input = Allocation.createFromBitmap(rs, source, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
-			Allocation output = Allocation.createTyped(rs, input.getType());
-			ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-			script.setRadius(radius);
-			script.setInput(input);
-			script.forEach(output);
-			output.copyTo(source);
-			return source;
-		}
-
-		@Override
-		public String key() {
-			return BlurTransformation.class.getCanonicalName() + "-" + radius;
-		}
-	}
+  public class NoTokenException extends Exception {
+  }
 }

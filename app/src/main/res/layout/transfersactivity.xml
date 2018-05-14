@@ -5,33 +5,37 @@
     android:layout_height="wrap_content"
     android:minHeight="120dp"
     android:orientation="vertical"
-    tools:context=".transfers.TransfersActivity">
+    tools:context=".transfers.TransfersActivity"
+    >
 
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_transfersdialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/putio_accent"
+        android:elevation="@dimen/appBarElevation"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Putio.Toolbar"
+        app:navigationContentDescription="@string/maximize"
+        app:navigationIcon="@drawable/ic_action_maximize_black"
+        app:popupTheme="@style/ThemeOverlay.AppCompat"
+        app:title="@string/transfers"
+        />
+  </LinearLayout>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_transfersdialog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/putio_accent"
-            android:elevation="@dimen/appBarElevation"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/Putio.Toolbar"
-            app:navigationContentDescription="@string/maximize"
-            app:navigationIcon="@drawable/ic_action_maximize_black"
-            app:popupTheme="@style/ThemeOverlay.AppCompat"
-            app:title="@string/transfers" />
-    </LinearLayout>
-
-    <fragment
-        android:id="@+id/transfersactivity_transfersfragment"
-        android:name="com.stevenschoen.putionew.transfers.TransfersFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".transfers.TransfersActivity"
-        tools:layout="@layout/transfers" />
+  <fragment
+      android:id="@+id/transfersactivity_transfersfragment"
+      android:name="com.stevenschoen.putionew.transfers.TransfersFragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:context=".transfers.TransfersActivity"
+      tools:layout="@layout/transfers"
+      />
 
 </LinearLayout>

@@ -4,9 +4,9 @@ import com.stevenschoen.putionew.model.ResponseOrError;
 import com.stevenschoen.putionew.model.files.PutioFile;
 
 public class FileResponse extends ResponseOrError.BasePutioResponse {
-	private PutioFile file;
+  private PutioFile file;
 
-	public PutioFile getFile() {
-		return file;
-	}
+  public PutioFile getFile() {
+    return file;
+  }
 }

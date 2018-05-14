@@ -16,83 +16,83 @@ import io.reactivex.subjects.BehaviorSubject
 
 class FromUrlFragment : BaseFragment(R.id.addtransfer_link_destination_holder) {
 
-    var callbacks: Callbacks? = null
+  var callbacks: Callbacks? = null
 
-    val link = BehaviorSubject.createDefault("")
+  val link = BehaviorSubject.createDefault("")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        if (savedInstanceState != null) {
+    if (savedInstanceState != null) {
 
-        } else {
-            if (arguments != null && arguments!!.containsKey(EXTRA_PRECHOSEN_LINK)) {
-                link.onNext(arguments!!.getString(EXTRA_PRECHOSEN_LINK))
-            }
+    } else {
+      if (arguments != null && arguments!!.containsKey(EXTRA_PRECHOSEN_LINK)) {
+        link.onNext(arguments!!.getString(EXTRA_PRECHOSEN_LINK))
+      }
+    }
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    val view = inflater.inflate(R.layout.addtransfer_link, container, false)
+
+    val linkView = view.findViewById<EditText>(R.id.addtransfer_link_url)
+    RxTextView.textChanges(linkView)
+        .subscribe {
+          link.onNext(it.toString())
         }
+    if (savedInstanceState == null && arguments!!.containsKey(EXTRA_PRECHOSEN_LINK)) {
+      linkView.setText(arguments!!.getString(EXTRA_PRECHOSEN_LINK))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.addtransfer_link, container, false)
-
-        val linkView = view.findViewById<EditText>(R.id.addtransfer_link_url)
-        RxTextView.textChanges(linkView)
-                .subscribe {
-                    link.onNext(it.toString())
-                }
-        if (savedInstanceState == null && arguments!!.containsKey(EXTRA_PRECHOSEN_LINK)) {
-            linkView.setText(arguments!!.getString(EXTRA_PRECHOSEN_LINK))
-        }
-
-        val clearLinkView = view.findViewById<View>(R.id.addtransfer_link_clear)
-        clearLinkView.setOnClickListener {
-            linkView.text = null
-        }
-
-        val extractView = view.findViewById<CheckBox>(R.id.addtransfer_link_extract)
-
-        val addView = view.findViewById<View>(R.id.addtransfer_link_add)
-        addView.setOnClickListener {
-            callbacks?.onLinkSelected(link.value!!, extractView.isChecked)
-        }
-
-        val cancelView = view.findViewById<View>(R.id.addtransfer_link_cancel)
-        cancelView.setOnClickListener {
-            dismiss()
-        }
-
-        link.observeOn(AndroidSchedulers.mainThread())
-                .subscribe { newLink ->
-                    if (!newLink.isBlank()) {
-                        clearLinkView.visibility = View.VISIBLE
-                        addView.isEnabled = true
-                    } else {
-                        clearLinkView.visibility = View.GONE
-                        addView.isEnabled = false
-                    }
-                }
-
-        return view
+    val clearLinkView = view.findViewById<View>(R.id.addtransfer_link_clear)
+    clearLinkView.setOnClickListener {
+      linkView.text = null
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState).apply {
-            setTitle(R.string.add_transfer)
+    val extractView = view.findViewById<CheckBox>(R.id.addtransfer_link_extract)
+
+    val addView = view.findViewById<View>(R.id.addtransfer_link_add)
+    addView.setOnClickListener {
+      callbacks?.onLinkSelected(link.value!!, extractView.isChecked)
+    }
+
+    val cancelView = view.findViewById<View>(R.id.addtransfer_link_cancel)
+    cancelView.setOnClickListener {
+      dismiss()
+    }
+
+    link.observeOn(AndroidSchedulers.mainThread())
+        .subscribe { newLink ->
+          if (!newLink.isBlank()) {
+            clearLinkView.visibility = View.VISIBLE
+            addView.isEnabled = true
+          } else {
+            clearLinkView.visibility = View.GONE
+            addView.isEnabled = false
+          }
         }
+
+    return view
+  }
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return super.onCreateDialog(savedInstanceState).apply {
+      setTitle(R.string.add_transfer)
     }
+  }
 
-    interface Callbacks {
-        fun onLinkSelected(link: String, extract: Boolean)
+  interface Callbacks {
+    fun onLinkSelected(link: String, extract: Boolean)
+  }
+
+  companion object {
+    const val EXTRA_PRECHOSEN_LINK = "link"
+
+    fun newInstance(context: Context, preChosenLink: String?): FromUrlFragment {
+      val args = Bundle()
+      preChosenLink?.let { args.putString(EXTRA_PRECHOSEN_LINK, it) }
+
+      return Fragment.instantiate(context, FromUrlFragment::class.java.name, args) as FromUrlFragment
     }
-
-    companion object {
-        const val EXTRA_PRECHOSEN_LINK = "link"
-
-        fun newInstance(context: Context, preChosenLink: String?): FromUrlFragment {
-            val args = Bundle()
-            preChosenLink?.let { args.putString(EXTRA_PRECHOSEN_LINK, it) }
-
-            return Fragment.instantiate(context, FromUrlFragment::class.java.name, args) as FromUrlFragment
-        }
-    }
+  }
 }

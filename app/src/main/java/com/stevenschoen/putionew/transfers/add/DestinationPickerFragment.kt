@@ -17,61 +17,61 @@ import io.reactivex.subjects.BehaviorSubject
 
 class DestinationPickerFragment : RxFragment() {
 
-    private lateinit var destinationSubject: BehaviorSubject<PutioFile>
+  private lateinit var destinationSubject: BehaviorSubject<PutioFile>
 
-    val destination: PutioFile
-        get() = destinationSubject.value
+  val destination: PutioFile
+    get() = destinationSubject.value
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        val defaultDestination: PutioFile =
-                if (savedInstanceState != null && savedInstanceState.containsKey(STATE_DESTINATION)) {
-                    savedInstanceState.getParcelable(STATE_DESTINATION)
-                } else {
-                    PutioFile.makeRootFolder(resources)
-                }
-        destinationSubject = BehaviorSubject.createDefault(defaultDestination)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.addtransfer_pick_destination, container, false)
-
-        view.setOnClickListener {
-            startActivityForResult(Intent(context, DestinationFolderActivity::class.java), REQUEST_PICK_NEW_DESTINATION)
+    val defaultDestination: PutioFile =
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_DESTINATION)) {
+          savedInstanceState.getParcelable(STATE_DESTINATION)
+        } else {
+          PutioFile.makeRootFolder(resources)
         }
+    destinationSubject = BehaviorSubject.createDefault(defaultDestination)
+  }
 
-        val folderNameView = view.findViewById<TextView>(R.id.addtransfer_pick_destination_name)
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    val view = inflater.inflate(R.layout.addtransfer_pick_destination, container, false)
 
-        fun updateFolderNameView(newDestination: PutioFile) {
-            folderNameView.text = newDestination.name
-        }
-
-        destinationSubject
-                .bindToLifecycle(this)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(::updateFolderNameView)
-
-        return view
+    view.setOnClickListener {
+      startActivityForResult(Intent(context, DestinationFolderActivity::class.java), REQUEST_PICK_NEW_DESTINATION)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    val folderNameView = view.findViewById<TextView>(R.id.addtransfer_pick_destination_name)
 
-        if (resultCode == Activity.RESULT_OK) {
-            destinationSubject.onNext(data!!.extras.getParcelable(DestinationFolderActivity.RESULT_EXTRA_FOLDER))
-        }
+    fun updateFolderNameView(newDestination: PutioFile) {
+      folderNameView.text = newDestination.name
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    destinationSubject
+        .bindToLifecycle(this)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(::updateFolderNameView)
 
-        outState.putParcelable(STATE_DESTINATION, destinationSubject.value)
+    return view
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (resultCode == Activity.RESULT_OK) {
+      destinationSubject.onNext(data!!.extras.getParcelable(DestinationFolderActivity.RESULT_EXTRA_FOLDER))
     }
+  }
 
-    companion object {
-        const val REQUEST_PICK_NEW_DESTINATION = 1
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
 
-        const val STATE_DESTINATION = "dest"
-    }
+    outState.putParcelable(STATE_DESTINATION, destinationSubject.value)
+  }
+
+  companion object {
+    const val REQUEST_PICK_NEW_DESTINATION = 1
+
+    const val STATE_DESTINATION = "dest"
+  }
 }

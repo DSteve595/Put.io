@@ -1,60 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/file_selection_root"
-	android:layout_width="wrap_content"
-	android:layout_height="56dp"
-	android:animateLayoutChanges="true"
-	android:background="@android:color/white"
-	android:clickable="true"
-	android:elevation="6dp"
-	android:focusableInTouchMode="true"
-	android:orientation="horizontal"
-	android:paddingEnd="4dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/file_selection_root"
+    android:layout_width="wrap_content"
+    android:layout_height="56dp"
+    android:animateLayoutChanges="true"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:elevation="6dp"
+    android:focusableInTouchMode="true"
+    android:orientation="horizontal"
+    android:paddingEnd="4dp"
+    >
 
-	<ImageButton
-		android:id="@+id/file_selection_cancel"
-		android:layout_width="56dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:src="@drawable/ic_toolbar_nav_close_black"/>
+  <ImageButton
+      android:id="@+id/file_selection_cancel"
+      android:layout_width="56dp"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_toolbar_nav_close_black"
+      />
 
-	<TextView
-		android:id="@+id/file_selection_title"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:layout_marginEnd="16dp"
-		android:gravity="center_vertical"
-		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		tools:text="1 selected"/>
+  <TextView
+      android:id="@+id/file_selection_title"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginEnd="16dp"
+      android:gravity="center_vertical"
+      android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+      tools:text="1 selected"
+      />
 
-	<ImageButton
-		android:id="@+id/file_selection_download"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:src="@drawable/ic_selection_download"/>
+  <ImageButton
+      android:id="@+id/file_selection_download"
+      android:layout_width="48dp"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_selection_download"
+      />
 
-	<ImageButton
-		android:id="@+id/file_selection_copylink"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:src="@drawable/ic_selection_copy"/>
+  <ImageButton
+      android:id="@+id/file_selection_copylink"
+      android:layout_width="48dp"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_selection_copy"
+      />
 
-	<ImageButton
-		android:id="@+id/file_selection_delete"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:src="@drawable/ic_selection_delete"/>
+  <ImageButton
+      android:id="@+id/file_selection_delete"
+      android:layout_width="48dp"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_selection_delete"
+      />
 
-	<ImageButton
-		android:id="@+id/file_selection_more"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:src="@drawable/ic_selection_more"/>
+  <ImageButton
+      android:id="@+id/file_selection_more"
+      android:layout_width="48dp"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackgroundBorderless"
+      android:src="@drawable/ic_selection_more"
+      />
 
 </LinearLayout>

@@ -1,97 +1,108 @@
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/file_list_root"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@android:color/white">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/file_list_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    >
 
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/folder_swiperefresh"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@+id/files_currentview_holder">
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/folder_swiperefresh"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/files_currentview_holder"
+      >
 
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/folder_list"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:clipToPadding="false"
-			android:paddingTop="8dp"/>
-	</android.support.v4.widget.SwipeRefreshLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/folder_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        />
+  </android.support.v4.widget.SwipeRefreshLayout>
 
-	<FrameLayout
-		android:id="@+id/files_currentview_holder"
-		android:layout_width="match_parent"
-		android:layout_height="64dp"
-		android:layout_alignParentTop="true"
-		android:background="#F8F8F8"
-		android:elevation="2dp">
+  <FrameLayout
+      android:id="@+id/files_currentview_holder"
+      android:layout_width="match_parent"
+      android:layout_height="64dp"
+      android:layout_alignParentTop="true"
+      android:background="#F8F8F8"
+      android:elevation="2dp"
+      >
 
-		<ImageButton
-			android:id="@+id/file_title_bar_back"
-			android:layout_width="48dp"
-			android:layout_height="match_parent"
-			android:layout_marginStart="4dp"
-			android:background="?selectableItemBackgroundBorderless"
-			android:scaleType="centerInside"
-			android:src="@drawable/ic_back"/>
+    <ImageButton
+        android:id="@+id/file_title_bar_back"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="4dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_back"
+        />
 
-		<com.stevenschoen.putionew.AutoResizeTextView
-			android:id="@+id/file_title_bar_name"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginStart="52dp"
-			android:ellipsize="end"
-			android:gravity="center_vertical"
-			android:maxLines="2"
-			android:paddingEnd="8dp"
-			android:paddingStart="8dp"
-			android:textAppearance="@style/TextAppearance.AppCompat.Title"
-			tools:text="Folder name"/>
+    <com.stevenschoen.putionew.AutoResizeTextView
+        android:id="@+id/file_title_bar_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="52dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="Folder name"
+        />
 
-		<LinearLayout
-			android:id="@+id/file_title_bar_search_holder"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			tools:visibility="gone">
+    <LinearLayout
+        android:id="@+id/file_title_bar_search_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:visibility="gone"
+        >
 
-			<TextView
-				android:id="@+id/file_title_bar_search_query"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="52dp"
-				android:layout_marginTop="12dp"
-				android:paddingEnd="8dp"
-				android:paddingStart="8dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Title"
-				tools:text="&quot;Search query&quot;"/>
+      <TextView
+          android:id="@+id/file_title_bar_search_query"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="52dp"
+          android:layout_marginTop="12dp"
+          android:paddingEnd="8dp"
+          android:paddingStart="8dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Title"
+          tools:text="&quot;Search query&quot;"
+          />
 
-			<TextView
-				android:id="@+id/file_title_bar_search_parent"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="52dp"
-				android:paddingEnd="8dp"
-				android:paddingStart="8dp"
-				android:textAppearance="@style/TextAppearance.AppCompat"
-				android:textSize="14sp"
-				tools:text="in Folder name"/>
-		</LinearLayout>
+      <TextView
+          android:id="@+id/file_title_bar_search_parent"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="52dp"
+          android:paddingEnd="8dp"
+          android:paddingStart="8dp"
+          android:textAppearance="@style/TextAppearance.AppCompat"
+          android:textSize="14sp"
+          tools:text="in Folder name"
+          />
+    </LinearLayout>
 
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:layout_gravity="bottom"
-			android:background="?android:listDivider"/>
-	</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="?android:listDivider"
+        />
+  </FrameLayout>
 
-	<include
-		android:id="@+id/files_empty_subfolder"
-		layout="@layout/filesempty_subfolder"/>
+  <include
+      android:id="@+id/files_empty_subfolder"
+      layout="@layout/filesempty_subfolder"
+      />
 
-	<include
-		android:id="@+id/files_loading"
-		layout="@layout/filesloading"/>
+  <include
+      android:id="@+id/files_loading"
+      layout="@layout/filesloading"
+      />
 </RelativeLayout>

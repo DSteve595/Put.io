@@ -13,37 +13,37 @@ import timber.log.Timber
 
 class FileDetailsLoader(context: Context, private val file: PutioFile) : PutioBaseLoader(context) {
 
-    fun checkDownload() {
-        AsyncTask.execute {
-            putioApp(context).fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(file.id)?.let {
-                val isDownloaded = it.status == FileDownload.Status.Downloaded
-                val isDownloading = it.status == FileDownload.Status.InProgress
-                if ((isDownloaded || isDownloading) && !isFileDownloadedOrDownloading(context, it)) {
-                    Timber.d("${file.name} appears to not be downloaded, marking NotDownloaded")
-                    markFileNotDownloaded(context, it)
-                } else if (isDownloading && isFileDownloaded(context, it)) {
-                    Timber.d("${file.name} appears to be downloaded, marking Downloaded")
-                    markFileDownloaded(context, it)
-                }
-                /*
-                If, for some reason, a download finished but DownloadFinishedService didn't
-                receive the event, downloads can get into a state where they're completed as far
-                as the DownloadManager's concerned, but the FileDownload has no Uri. That hasn't
-                come up, but if it ever does, the Uri should be fetched from the DownloadManager
-                and updated (as well as its status) in the FileDownload.
-                 */
-            }
+  fun checkDownload() {
+    AsyncTask.execute {
+      putioApp(context).fileDownloadDatabase.fileDownloadsDao().getByFileIdSynchronous(file.id)?.let {
+        val isDownloaded = it.status == FileDownload.Status.Downloaded
+        val isDownloading = it.status == FileDownload.Status.InProgress
+        if ((isDownloaded || isDownloading) && !isFileDownloadedOrDownloading(context, it)) {
+          Timber.d("${file.name} appears to not be downloaded, marking NotDownloaded")
+          markFileNotDownloaded(context, it)
+        } else if (isDownloading && isFileDownloaded(context, it)) {
+          Timber.d("${file.name} appears to be downloaded, marking Downloaded")
+          markFileDownloaded(context, it)
         }
+        /*
+        If, for some reason, a download finished but DownloadFinishedService didn't
+        receive the event, downloads can get into a state where they're completed as far
+        as the DownloadManager's concerned, but the FileDownload has no Uri. That hasn't
+        come up, but if it ever does, the Uri should be fetched from the DownloadManager
+        and updated (as well as its status) in the FileDownload.
+         */
+      }
     }
+  }
 
-    companion object {
-        fun get(loaderManager: LoaderManager, context: Context, file: PutioFile): FileDetailsLoader {
-            return loaderManager.initLoader(
-                    getUniqueLoaderId(FileDetailsLoader::class.java), null, object : Callbacks(context) {
-                override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
-                    return FileDetailsLoader(context, file)
-                }
-            }) as FileDetailsLoader
+  companion object {
+    fun get(loaderManager: LoaderManager, context: Context, file: PutioFile): FileDetailsLoader {
+      return loaderManager.initLoader(
+          getUniqueLoaderId(FileDetailsLoader::class.java), null, object : Callbacks(context) {
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
+          return FileDetailsLoader(context, file)
         }
+      }) as FileDetailsLoader
     }
+  }
 }

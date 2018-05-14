@@ -27,256 +27,257 @@ import io.reactivex.disposables.Disposable
 
 class TransfersFragment : RxFragment() {
 
-    companion object {
-        private const val VIEWMODE_LIST = 1
-        private const val VIEWMODE_LISTOREMPTY = 2
-        private const val VIEWMODE_LOADING = -1
-        private const val VIEWMODE_EMPTY = -2
-        private const val VIEWMODE_NONETWORK = 3
+  companion object {
+    private const val VIEWMODE_LIST = 1
+    private const val VIEWMODE_LISTOREMPTY = 2
+    private const val VIEWMODE_LOADING = -1
+    private const val VIEWMODE_EMPTY = -2
+    private const val VIEWMODE_NONETWORK = 3
 
-        const val FRAGTAG_OPTIONS = "options"
-    }
+    const val FRAGTAG_OPTIONS = "options"
+  }
 
-    var callbacks: Callbacks? = null
+  var callbacks: Callbacks? = null
 
-    private val transfers = ArrayList<PutioTransfer>()
-    private var transfersListView: RecyclerView? = null
-    private var adapter: TransfersAdapter? = null
+  private val transfers = ArrayList<PutioTransfer>()
+  private var transfersListView: RecyclerView? = null
+  private var adapter: TransfersAdapter? = null
 
-    private var utils: PutioUtils? = null
-    private var transfersService: PutioTransfersService? = null
+  private var utils: PutioUtils? = null
+  private var transfersService: PutioTransfersService? = null
 
-    private var viewMode = 1
+  private var viewMode = 1
 
-    private var loadingView: View? = null
-    private var emptyView: View? = null
-    private var noNetworkView: View? = null
+  private var loadingView: View? = null
+  private var emptyView: View? = null
+  private var noNetworkView: View? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setHasOptionsMenu(true)
 
-        utils = (activity!!.application as PutioApplication).putioUtils
-    }
+    utils = (activity!!.application as PutioApplication).putioUtils
+  }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.transfers, container, false)
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                            savedInstanceState: Bundle?): View? {
+    val view = inflater.inflate(R.layout.transfers, container, false)
 
-        transfersListView = view.findViewById(R.id.transferslist)
-        transfersListView!!.layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.VERTICAL, false)
-        val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)
-        transfersListView!!.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
-                super.getItemOffsets(outRect, view, parent, state)
-                if (parent.getChildAdapterPosition(view) != parent.adapter.itemCount - 1) {
-                    outRect.bottom = padding
-                }
-            }
-        })
-        PutioUtils.padForFab(transfersListView)
-
-        adapter = TransfersAdapter(transfers)
-        transfersListView!!.adapter = adapter
-        adapter!!.setOnItemClickListener { _, position ->
-            val transfer = transfers[position]
-            if (transfer.status == "COMPLETED" || transfer.status == "SEEDING") {
-                callbacks?.onTransferSelected(transfers[position])
-            }
+    transfersListView = view.findViewById(R.id.transferslist)
+    transfersListView!!.layoutManager = LinearLayoutManager(
+        context, LinearLayoutManager.VERTICAL, false)
+    val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)
+    transfersListView!!.addItemDecoration(object : RecyclerView.ItemDecoration() {
+      override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+        super.getItemOffsets(outRect, view, parent, state)
+        if (parent.getChildAdapterPosition(view) != parent.adapter.itemCount - 1) {
+          outRect.bottom = padding
         }
-        adapter!!.setOnItemLongClickListener { _, position ->
-            val transfer = transfers[position]
-            showOptions(transfer)
+      }
+    })
+    PutioUtils.padForFab(transfersListView)
+
+    adapter = TransfersAdapter(transfers)
+    transfersListView!!.adapter = adapter
+    adapter!!.setOnItemClickListener { _, position ->
+      val transfer = transfers[position]
+      if (transfer.status == "COMPLETED" || transfer.status == "SEEDING") {
+        callbacks?.onTransferSelected(transfers[position])
+      }
+    }
+    adapter!!.setOnItemLongClickListener { _, position ->
+      val transfer = transfers[position]
+      showOptions(transfer)
+    }
+
+    loadingView = view.findViewById(R.id.transfers_loading)
+    emptyView = view.findViewById(R.id.transfers_empty)
+    noNetworkView = view.findViewById(R.id.transfers_nonetwork)
+
+    setViewMode(VIEWMODE_LOADING)
+    return view
+  }
+
+  private fun setViewMode(mode: Int) {
+    if (mode != viewMode) {
+      when (mode) {
+        VIEWMODE_LIST -> {
+          transfersListView!!.visibility = View.VISIBLE
+          loadingView!!.visibility = View.GONE
+          emptyView!!.visibility = View.GONE
+          noNetworkView!!.visibility = View.GONE
         }
-
-        loadingView = view.findViewById(R.id.transfers_loading)
-        emptyView = view.findViewById(R.id.transfers_empty)
-        noNetworkView = view.findViewById(R.id.transfers_nonetwork)
-
-        setViewMode(VIEWMODE_LOADING)
-        return view
-    }
-
-    private fun setViewMode(mode: Int) {
-        if (mode != viewMode) {
-            when (mode) {
-                VIEWMODE_LIST -> {
-                    transfersListView!!.visibility = View.VISIBLE
-                    loadingView!!.visibility = View.GONE
-                    emptyView!!.visibility = View.GONE
-                    noNetworkView!!.visibility = View.GONE
-                }
-                VIEWMODE_LOADING -> {
-                    transfersListView!!.visibility = View.INVISIBLE
-                    loadingView!!.visibility = View.VISIBLE
-                    emptyView!!.visibility = View.GONE
-                    noNetworkView!!.visibility = View.GONE
-                }
-                VIEWMODE_EMPTY -> {
-                    transfersListView!!.visibility = View.INVISIBLE
-                    loadingView!!.visibility = View.GONE
-                    emptyView!!.visibility = View.VISIBLE
-                    noNetworkView!!.visibility = View.GONE
-                }
-                VIEWMODE_NONETWORK -> {
-                    transfersListView!!.visibility = View.INVISIBLE
-                    loadingView!!.visibility = View.GONE
-                    emptyView!!.visibility = View.GONE
-                    noNetworkView!!.visibility = View.VISIBLE
-                }
-                VIEWMODE_LISTOREMPTY -> if (transfers.isEmpty()) {
-                    setViewMode(VIEWMODE_EMPTY)
-                } else {
-                    setViewMode(VIEWMODE_LIST)
-                }
-            }
-            viewMode = mode
+        VIEWMODE_LOADING -> {
+          transfersListView!!.visibility = View.INVISIBLE
+          loadingView!!.visibility = View.VISIBLE
+          emptyView!!.visibility = View.GONE
+          noNetworkView!!.visibility = View.GONE
         }
-    }
-
-    private fun showOptions(transfer: PutioTransfer) {
-        TransferOptionsFragment.newInstance(context!!, transfer).show(childFragmentManager, FRAGTAG_OPTIONS)
-    }
-
-    private fun hideOptionsIfShowing() {
-        childFragmentManager.findFragmentByTag(FRAGTAG_OPTIONS)?.let { fragment ->
-            fragment as TransferOptionsFragment
-            fragment.dismiss()
+        VIEWMODE_EMPTY -> {
+          transfersListView!!.visibility = View.INVISIBLE
+          loadingView!!.visibility = View.GONE
+          emptyView!!.visibility = View.VISIBLE
+          noNetworkView!!.visibility = View.GONE
         }
-    }
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        when (childFragment.tag) {
-            FRAGTAG_OPTIONS -> {
-                childFragment as TransferOptionsFragment
-                childFragment.callbacks = object : TransferOptionsFragment.Callbacks {
-                    override fun onRetrySelected() {
-                        initRetryTransfer(childFragment.transfer)
-                    }
-                    override fun onRemoveSelected() {
-                        initRemoveTransfer(childFragment.transfer)
-                    }
-                }
-            }
+        VIEWMODE_NONETWORK -> {
+          transfersListView!!.visibility = View.INVISIBLE
+          loadingView!!.visibility = View.GONE
+          emptyView!!.visibility = View.GONE
+          noNetworkView!!.visibility = View.VISIBLE
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.menu_transfers, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.menu_clearfinished -> {
-                utils!!.restInterface
-                        .cleanTransfers("")
-                        .bindToLifecycle(this@TransfersFragment)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(makeUpdateNowObserver())
-                return true
-            }
+        VIEWMODE_LISTOREMPTY -> if (transfers.isEmpty()) {
+          setViewMode(VIEWMODE_EMPTY)
+        } else {
+          setViewMode(VIEWMODE_LIST)
         }
-
-        return false
+      }
+      viewMode = mode
     }
+  }
 
-    private fun initRetryTransfer(transfer: PutioTransfer) {
+  private fun showOptions(transfer: PutioTransfer) {
+    TransferOptionsFragment.newInstance(context!!, transfer).show(childFragmentManager, FRAGTAG_OPTIONS)
+  }
+
+  private fun hideOptionsIfShowing() {
+    childFragmentManager.findFragmentByTag(FRAGTAG_OPTIONS)?.let { fragment ->
+      fragment as TransferOptionsFragment
+      fragment.dismiss()
+    }
+  }
+
+  override fun onAttachFragment(childFragment: Fragment) {
+    super.onAttachFragment(childFragment)
+    when (childFragment.tag) {
+      FRAGTAG_OPTIONS -> {
+        childFragment as TransferOptionsFragment
+        childFragment.callbacks = object : TransferOptionsFragment.Callbacks {
+          override fun onRetrySelected() {
+            initRetryTransfer(childFragment.transfer)
+          }
+
+          override fun onRemoveSelected() {
+            initRemoveTransfer(childFragment.transfer)
+          }
+        }
+      }
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    super.onCreateOptionsMenu(menu, inflater)
+    inflater!!.inflate(R.menu.menu_transfers, menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    when (item!!.itemId) {
+      R.id.menu_clearfinished -> {
         utils!!.restInterface
-                .retryTransfer(transfer.id)
-                .bindToLifecycle(this@TransfersFragment)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(makeUpdateNowObserver())
-        hideOptionsIfShowing()
+            .cleanTransfers("")
+            .bindToLifecycle(this@TransfersFragment)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(makeUpdateNowObserver())
+        return true
+      }
     }
 
-    private fun initRemoveTransfer(transfer: PutioTransfer) {
-        if (transfer.status == "COMPLETED") {
-            utils!!.restInterface
-                    .cancelTransfer(PutioUtils.longsToString(transfer.id))
-                    .bindToLifecycle(this@TransfersFragment)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(makeUpdateNowObserver())
-        } else {
-            utils!!.removeTransferDialog(activity, makeUpdateNowObserver(), transfer.id).show()
-        }
-        hideOptionsIfShowing()
+    return false
+  }
+
+  private fun initRetryTransfer(transfer: PutioTransfer) {
+    utils!!.restInterface
+        .retryTransfer(transfer.id)
+        .bindToLifecycle(this@TransfersFragment)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(makeUpdateNowObserver())
+    hideOptionsIfShowing()
+  }
+
+  private fun initRemoveTransfer(transfer: PutioTransfer) {
+    if (transfer.status == "COMPLETED") {
+      utils!!.restInterface
+          .cancelTransfer(PutioUtils.longsToString(transfer.id))
+          .bindToLifecycle(this@TransfersFragment)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(makeUpdateNowObserver())
+    } else {
+      utils!!.removeTransferDialog(activity, makeUpdateNowObserver(), transfer.id).show()
     }
+    hideOptionsIfShowing()
+  }
 
-    private fun makeUpdateNowObserver(): SingleObserver<ResponseOrError.BasePutioResponse> {
-        return object : SingleObserver<ResponseOrError.BasePutioResponse> {
-            override fun onSubscribe(d: Disposable) { }
+  private fun makeUpdateNowObserver(): SingleObserver<ResponseOrError.BasePutioResponse> {
+    return object : SingleObserver<ResponseOrError.BasePutioResponse> {
+      override fun onSubscribe(d: Disposable) {}
 
-            override fun onError(error: Throwable) {
-                PutioUtils.getRxJavaThrowable(error).printStackTrace()
-                Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
-            }
+      override fun onError(error: Throwable) {
+        PutioUtils.getRxJavaThrowable(error).printStackTrace()
+        Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+      }
 
-            override fun onSuccess(response: ResponseOrError.BasePutioResponse) {
-                if (transfersService != null) {
-                    transfersService!!.refreshNow()
-                }
-            }
-        }
-    }
-
-    fun setHasNetwork(has: Boolean) {
-        if (has) {
-            setViewMode(VIEWMODE_LISTOREMPTY)
-        } else {
-            setViewMode(VIEWMODE_NONETWORK)
-        }
-    }
-
-    fun updateTransfers(transfers: List<PutioTransfer>?) {
-        if (isAdded) {
-            this.transfers.clear()
-            this.transfers.addAll(transfers!!)
-            adapter!!.notifyDataSetChanged()
-        }
-
-        if (transfers == null || transfers.isEmpty()) {
-            setViewMode(VIEWMODE_EMPTY)
-        } else {
-            setViewMode(VIEWMODE_LIST)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val transfersServiceIntent = Intent(activity, PutioTransfersService::class.java)
-        activity!!.startService(transfersServiceIntent)
-        activity!!.bindService(transfersServiceIntent, mConnection, Context.BIND_AUTO_CREATE)
-    }
-
-    override fun onPause() {
-        super.onPause()
-
+      override fun onSuccess(response: ResponseOrError.BasePutioResponse) {
         if (transfersService != null) {
-            activity!!.unbindService(mConnection)
+          transfersService!!.refreshNow()
         }
+      }
+    }
+  }
+
+  fun setHasNetwork(has: Boolean) {
+    if (has) {
+      setViewMode(VIEWMODE_LISTOREMPTY)
+    } else {
+      setViewMode(VIEWMODE_NONETWORK)
+    }
+  }
+
+  fun updateTransfers(transfers: List<PutioTransfer>?) {
+    if (isAdded) {
+      this.transfers.clear()
+      this.transfers.addAll(transfers!!)
+      adapter!!.notifyDataSetChanged()
     }
 
-    private val mConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as TransfersServiceBinder
-            transfersService = binder.service
-            transfersService!!.transfers.bindToLifecycle(this@TransfersFragment)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ result ->
-                        updateTransfers(result)
-                    }, { error ->
-                        PutioUtils.getRxJavaThrowable(error).printStackTrace()
-                    })
-        }
+    if (transfers == null || transfers.isEmpty()) {
+      setViewMode(VIEWMODE_EMPTY)
+    } else {
+      setViewMode(VIEWMODE_LIST)
+    }
+  }
 
-        override fun onServiceDisconnected(name: ComponentName) { }
+  override fun onResume() {
+    super.onResume()
+
+    val transfersServiceIntent = Intent(activity, PutioTransfersService::class.java)
+    activity!!.startService(transfersServiceIntent)
+    activity!!.bindService(transfersServiceIntent, mConnection, Context.BIND_AUTO_CREATE)
+  }
+
+  override fun onPause() {
+    super.onPause()
+
+    if (transfersService != null) {
+      activity!!.unbindService(mConnection)
+    }
+  }
+
+  private val mConnection = object : ServiceConnection {
+    override fun onServiceConnected(className: ComponentName, service: IBinder) {
+      val binder = service as TransfersServiceBinder
+      transfersService = binder.service
+      transfersService!!.transfers.bindToLifecycle(this@TransfersFragment)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe({ result ->
+            updateTransfers(result)
+          }, { error ->
+            PutioUtils.getRxJavaThrowable(error).printStackTrace()
+          })
     }
 
-    interface Callbacks {
-        fun onTransferSelected(transfer: PutioTransfer)
-    }
+    override fun onServiceDisconnected(name: ComponentName) {}
+  }
+
+  interface Callbacks {
+    fun onTransferSelected(transfer: PutioTransfer)
+  }
 }

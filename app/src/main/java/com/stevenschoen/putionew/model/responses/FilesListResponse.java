@@ -6,6 +6,6 @@ import com.stevenschoen.putionew.model.files.PutioFile;
 import java.util.List;
 
 public class FilesListResponse extends ResponseOrError.BasePutioResponse {
-	public List<PutioFile> files;
-	public PutioFile parent;
+  public List<PutioFile> files;
+  public PutioFile parent;
 }

@@ -13,46 +13,46 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatDialogFragment
 
 class RenameFragment : RxAppCompatDialogFragment() {
 
-    companion object {
-        const val EXTRA_FILE = "file"
+  companion object {
+    const val EXTRA_FILE = "file"
 
-        fun newInstance(context: Context, file: PutioFile): RenameFragment {
-            val args = Bundle()
-            args.putParcelable(EXTRA_FILE, file)
-            return Fragment.instantiate(context, RenameFragment::class.java.name, args) as RenameFragment
+    fun newInstance(context: Context, file: PutioFile): RenameFragment {
+      val args = Bundle()
+      args.putParcelable(EXTRA_FILE, file)
+      return Fragment.instantiate(context, RenameFragment::class.java.name, args) as RenameFragment
+    }
+  }
+
+  val file by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FILE)!! }
+
+  var callbacks: Callbacks? = null
+
+  lateinit var nameView: EditText
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val dialog = AlertDialog.Builder(context!!)
+        .setTitle(R.string.renametitle)
+        .setView(R.layout.rename_dialog)
+        .setPositiveButton(R.string.rename) { _, _ ->
+          callbacks?.onRenamed(nameView.text.toString())
         }
+        .setNegativeButton(R.string.cancel, null)
+        .show()
+
+    nameView = dialog.findViewById(R.id.rename_name)!!
+    if (savedInstanceState == null) {
+      nameView.setText(file.name)
     }
 
-    val file by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FILE)!! }
-
-    var callbacks: Callbacks? = null
-
-    lateinit var nameView: EditText
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = AlertDialog.Builder(context!!)
-                .setTitle(R.string.renametitle)
-                .setView(R.layout.rename_dialog)
-                .setPositiveButton(R.string.rename) { _, _ ->
-                    callbacks?.onRenamed(nameView.text.toString())
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
-
-        nameView = dialog.findViewById(R.id.rename_name)!!
-        if (savedInstanceState == null) {
-            nameView.setText(file.name)
-        }
-
-        val undoView = dialog.findViewById<View>(R.id.rename_undo)!!
-        undoView.setOnClickListener {
-            nameView.setText(file.name)
-        }
-
-        return dialog
+    val undoView = dialog.findViewById<View>(R.id.rename_undo)!!
+    undoView.setOnClickListener {
+      nameView.setText(file.name)
     }
 
-    interface Callbacks {
-        fun onRenamed(newName: String)
-    }
+    return dialog
+  }
+
+  interface Callbacks {
+    fun onRenamed(newName: String)
+  }
 }

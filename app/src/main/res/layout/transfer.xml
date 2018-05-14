@@ -4,183 +4,203 @@
     android:layout_width="wrap_content"
     android:layout_height="72dp"
     android:foreground="?attr/selectableItemBackground"
-    app:cardElevation="1dp">
+    app:cardElevation="1dp"
+    >
 
-    <com.stevenschoen.putionew.transfers.TransferProgressBarView
-        android:id="@+id/transfer_progressbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+  <com.stevenschoen.putionew.transfers.TransferProgressBarView
+      android:id="@+id/transfer_progressbar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="2dp"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:id="@+id/img_transfer_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/padding_small"
+        android:adjustViewBounds="true"
+        android:padding="6dp"
+        android:scaleType="centerInside"
+        tools:src="@drawable/ic_launcher"
+        />
+
+    <ProgressBar
+        android:id="@+id/transfer_statusLoading"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/padding_small"
+        android:padding="4dp"
+        />
+
+    <FrameLayout
+        android:id="@+id/transfer_right_item"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:orientation="horizontal">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="2dp"
+        >
 
-        <ImageView
-            android:id="@+id/img_transfer_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:adjustViewBounds="true"
-            android:padding="6dp"
-            android:scaleType="centerInside"
-            tools:src="@drawable/ic_launcher"/>
+      <TextView
+          android:id="@+id/text_transfer_remaining"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          tools:text="4h 3m"
+          />
 
-        <ProgressBar
-            android:id="@+id/transfer_statusLoading"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:padding="4dp"/>
+      <Button
+          android:id="@+id/transfer_view_button"
+          style="@style/Putio.Button.TransferView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="View"
+          />
+    </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/transfer_right_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="12dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginStart="2dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_toLeftOf="@id/transfer_right_item"
+        android:layout_toRightOf="@id/img_transfer_icon"
+        android:orientation="vertical"
+        >
 
-            <TextView
-                android:id="@+id/text_transfer_remaining"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                tools:text="4h 3m"/>
+      <TextView
+          android:id="@+id/text_transfer_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="4dp"
+          android:layout_marginTop="14dp"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:singleLine="true"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textSize="16sp"
+          tools:text="Transfer name"
+          />
 
-            <Button
-                android:id="@+id/transfer_view_button"
-                style="@style/Putio.Button.TransferView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View"/>
-        </FrameLayout>
+      <TextView
+          android:id="@+id/text_transfer_message"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="4dp"
+          android:layout_marginTop="2dp"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          android:visibility="gone"
+          tools:text="Other message"
+          />
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="4dp"
+          android:layout_marginTop="2dp"
+          android:orientation="horizontal"
+          >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/holder_transfer_down"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_toLeftOf="@id/transfer_right_item"
-            android:layout_toRightOf="@id/img_transfer_icon"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            >
 
-            <TextView
-                android:id="@+id/text_transfer_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="14dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="16sp"
-                tools:text="Transfer name"/>
+          <ImageView
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:adjustViewBounds="true"
+              android:alpha="0.9"
+              android:padding="1dp"
+              android:scaleType="fitCenter"
+              android:src="@drawable/ic_transfer_download"
+              />
 
-            <TextView
-                android:id="@+id/text_transfer_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="2dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:visibility="gone"
-                tools:text="Other message"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/holder_transfer_down"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:alpha="0.9"
-                        android:padding="1dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_transfer_download"/>
-
-                    <TextView
-                        android:id="@+id/text_transfer_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="2sp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginStart="2sp"
-                        android:ellipsize="none"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:text="100 KB/sec"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/holder_transfer_up"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:alpha="0.9"
-                        android:padding="1dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_transfer_upload"/>
-
-                    <TextView
-                        android:id="@+id/text_transfer_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="2sp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginStart="2sp"
-                        android:ellipsize="none"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:text="100 KB/sec"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/holder_transfer_ratio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/text_transfer_ratio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@string/ratio_is"/>
-                </LinearLayout>
-            </LinearLayout>
+          <TextView
+              android:id="@+id/text_transfer_down"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="8dp"
+              android:layout_marginLeft="2sp"
+              android:layout_marginRight="8dp"
+              android:layout_marginStart="2sp"
+              android:ellipsize="none"
+              android:maxLines="1"
+              android:singleLine="true"
+              android:textAppearance="?android:attr/textAppearanceSmall"
+              tools:text="100 KB/sec"
+              />
         </LinearLayout>
-    </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/holder_transfer_up"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+          <ImageView
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:adjustViewBounds="true"
+              android:alpha="0.9"
+              android:padding="1dp"
+              android:scaleType="fitCenter"
+              android:src="@drawable/ic_transfer_upload"
+              />
+
+          <TextView
+              android:id="@+id/text_transfer_up"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="8dp"
+              android:layout_marginLeft="2sp"
+              android:layout_marginRight="8dp"
+              android:layout_marginStart="2sp"
+              android:ellipsize="none"
+              android:maxLines="1"
+              android:singleLine="true"
+              android:textAppearance="?android:attr/textAppearanceSmall"
+              tools:text="100 KB/sec"
+              />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/holder_transfer_ratio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+          <TextView
+              android:id="@+id/text_transfer_ratio"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:maxLines="1"
+              android:text="@string/ratio_is"
+              />
+        </LinearLayout>
+      </LinearLayout>
+    </LinearLayout>
+  </RelativeLayout>
 </android.support.v7.widget.CardView>

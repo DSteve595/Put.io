@@ -7,7 +7,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface PutioUploadInterface {
-	@Multipart
-	@POST("files/upload")
-	Single<ResponseOrError.BasePutioResponse.PutioTransferFileUploadResponse> uploadFile(@Part MultipartBody.Part file, @Part("parent_id") long parentId);
+  @Multipart
+  @POST("files/upload")
+  Single<ResponseOrError.BasePutioResponse.PutioTransferFileUploadResponse> uploadFile(@Part MultipartBody.Part file, @Part("parent_id") long parentId);
 }

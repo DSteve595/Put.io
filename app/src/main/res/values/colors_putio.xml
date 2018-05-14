@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="putio_accent">#FDCE45</color>
-    <color name="putio_accent_light">#FEDC77</color>
-    <color name="putio_accent_dark">#DEB53D</color>
-    <color name="putio_accent_threequarters">#C0FDCE45</color>
-    <color name="putio_accent_half">#80FDCE45</color>
-    <color name="putio_accent_quarter">#40FDCE45</color>
-    <color name="putio_green">#00A000</color>
-    <color name="putio_lightred">#FF4040</color>
+  <color name="putio_accent">#FDCE45</color>
+  <color name="putio_accent_light">#FEDC77</color>
+  <color name="putio_accent_dark">#DEB53D</color>
+  <color name="putio_accent_threequarters">#C0FDCE45</color>
+  <color name="putio_accent_half">#80FDCE45</color>
+  <color name="putio_accent_quarter">#40FDCE45</color>
+  <color name="putio_green">#00A000</color>
+  <color name="putio_lightred">#FF4040</color>
 
-    <color name="putio_tv_background">#202020</color>
+  <color name="putio_tv_background">#202020</color>
 
-	<color name="putio_filedetails_downloaded">#E5FFE5</color>
-	<color name="putio_filedetails_inprogress">#fbfbdf</color>
-	<color name="putio_filedetails_notdownloaded">#F8F8F8</color>
+  <color name="putio_filedetails_downloaded">#E5FFE5</color>
+  <color name="putio_filedetails_inprogress">#fbfbdf</color>
+  <color name="putio_filedetails_notdownloaded">#F8F8F8</color>
 </resources>

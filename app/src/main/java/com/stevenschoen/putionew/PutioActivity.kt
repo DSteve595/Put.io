@@ -30,364 +30,364 @@ import java.util.concurrent.TimeUnit
 
 class PutioActivity : BaseCastActivity() {
 
-    companion object {
-        const val EXTRA_GO_TO_TAB = "go_to_tab"
+  companion object {
+    const val EXTRA_GO_TO_TAB = "go_to_tab"
 
-        const val TAB_ACCOUNT = 0
-        const val TAB_FILES = 1
-        const val TAB_TRANSFERS = 2
-        
-        const val FRAGTAG_ACCOUNT = "account"
-        const val FRAGTAG_FILES = "files"
-        const val FRAGTAG_TRANSFERS = "transfers"
+    const val TAB_ACCOUNT = 0
+    const val TAB_FILES = 1
+    const val TAB_TRANSFERS = 2
 
-        const val STATE_CURRENT_TAB = "current_tab"
-        
-        const val noNetworkIntent = "com.stevenschoen.putionew.nonetwork"
+    const val FRAGTAG_ACCOUNT = "account"
+    const val FRAGTAG_FILES = "files"
+    const val FRAGTAG_TRANSFERS = "transfers"
+
+    const val STATE_CURRENT_TAB = "current_tab"
+
+    const val noNetworkIntent = "com.stevenschoen.putionew.nonetwork"
+  }
+
+  var init = false
+
+  val sharedPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
+
+  lateinit var bottomNavView: AHBottomNavigation
+
+  lateinit var addTransferView: View
+  var showingAddTransferFab = true
+
+  public override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    if (UIUtils.isTV(this)) {
+      val tvIntent = Intent(this, TvActivity::class.java)
+      startActivity(tvIntent)
+      finish()
+      return
     }
 
-    var init = false
+    val application = application as PutioApplication
+    if (application.isLoggedIn) {
+      init(savedInstanceState)
+    } else {
+      val setupIntent = Intent(this, LoginActivity::class.java)
+      startActivity(setupIntent)
 
-    val sharedPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
+      finish()
+      return
+    }
 
-    lateinit var bottomNavView: AHBottomNavigation
+    intent?.let { handleIntent(it) }
 
-    lateinit var addTransferView: View
-    var showingAddTransferFab = true
+    val noNetworkIntentFilter = IntentFilter(
+        PutioActivity.noNetworkIntent)
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    registerReceiver(noNetworkReceiver, noNetworkIntentFilter)
 
-        if (UIUtils.isTV(this)) {
-            val tvIntent = Intent(this, TvActivity::class.java)
-            startActivity(tvIntent)
-            finish()
-            return
+    if (Build.VERSION.SDK_INT >= 21) {
+      val jobDispatcher = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+      if (jobDispatcher.allPendingJobs.none {
+            it.id == FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID
+          }) {
+        jobDispatcher.schedule(JobInfo.Builder(
+            FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
+            ComponentName(this, FileDownloadsMaintenanceService::class.java))
+            .setPeriodic(TimeUnit.DAYS.toMillis(2))
+            .setPersisted(true)
+            .setRequiresDeviceIdle(true)
+            .build())
+      }
+
+      jobDispatcher.schedule(JobInfo.Builder(
+          FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
+          ComponentName(this, FileDownloadsMaintenanceService::class.java))
+          .setOverrideDeadline(5000)
+          .setPersisted(true)
+          .setRequiresDeviceIdle(true)
+          .build())
+    }
+  }
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+
+    handleIntent(intent)
+  }
+
+  private fun handleIntent(intent: Intent) {
+    if (init) {
+      val goToTab = intent.getIntExtra(EXTRA_GO_TO_TAB, -1)
+      intent.removeExtra(EXTRA_GO_TO_TAB)
+      if (goToTab != -1) {
+        selectTab(goToTab, true)
+      }
+
+      if (intent.action != null) {
+        if (intent.action == Intent.ACTION_SEARCH && filesFragment != null) {
+          val query = intent.getStringExtra(SearchManager.QUERY)
+          filesFragment!!.addSearch(query)
         }
-
-        val application = application as PutioApplication
-        if (application.isLoggedIn) {
-            init(savedInstanceState)
-        } else {
-            val setupIntent = Intent(this, LoginActivity::class.java)
-            startActivity(setupIntent)
-
-            finish()
-            return
-        }
-
-        intent?.let { handleIntent(it) }
-
-        val noNetworkIntentFilter = IntentFilter(
-                PutioActivity.noNetworkIntent)
-
-        registerReceiver(noNetworkReceiver, noNetworkIntentFilter)
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            val jobDispatcher = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-            if (jobDispatcher.allPendingJobs.none {
-                it.id == FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID
-            }) {
-                jobDispatcher.schedule(JobInfo.Builder(
-                        FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
-                        ComponentName(this, FileDownloadsMaintenanceService::class.java))
-                        .setPeriodic(TimeUnit.DAYS.toMillis(2))
-                        .setPersisted(true)
-                        .setRequiresDeviceIdle(true)
-                        .build())
-            }
-
-            jobDispatcher.schedule(JobInfo.Builder(
-                    FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
-                    ComponentName(this, FileDownloadsMaintenanceService::class.java))
-                    .setOverrideDeadline(5000)
-                    .setPersisted(true)
-                    .setRequiresDeviceIdle(true)
-                    .build())
-        }
+      }
     }
+  }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
 
-        handleIntent(intent)
-    }
+    outState.putInt(STATE_CURRENT_TAB, bottomNavView.currentItem)
+  }
 
-    private fun handleIntent(intent: Intent) {
-        if (init) {
-            val goToTab = intent.getIntExtra(EXTRA_GO_TO_TAB, -1)
-            intent.removeExtra(EXTRA_GO_TO_TAB)
-            if (goToTab != -1) {
-                selectTab(goToTab, true)
-            }
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    super.onCreateOptionsMenu(menu)
+    menuInflater.inflate(R.menu.menu_putio, menu)
 
-            if (intent.action != null) {
-                if (intent.action == Intent.ACTION_SEARCH && filesFragment != null) {
-                    val query = intent.getStringExtra(SearchManager.QUERY)
-                    filesFragment!!.addSearch(query)
-                }
-            }
-        }
-    }
+    return true
+  }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putInt(STATE_CURRENT_TAB, bottomNavView.currentItem)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu_putio, menu)
-
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.menu_logout -> {
+        logOut()
         return true
+      }
+      R.id.menu_about -> {
+        val aboutIntent = Intent(this@PutioActivity, AboutActivity::class.java)
+        startActivity(aboutIntent)
+        return true
+      }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_logout -> {
-                logOut()
-                return true
+    return super.onOptionsItemSelected(item)
+  }
+
+  private fun init(savedInstanceState: Bundle?) {
+    init = true
+
+    setContentView(R.layout.main)
+
+    if (savedInstanceState == null) {
+      val accountFragment = Fragment.instantiate(this, AccountFragment::class.java.name) as AccountFragment
+      val filesFragment = FilesFragment.newInstance(this, null)
+      val transfersFragment = Fragment.instantiate(this, TransfersFragment::class.java.name) as TransfersFragment
+      supportFragmentManager.beginTransaction()
+          .add(R.id.main_content_holder, accountFragment, FRAGTAG_ACCOUNT)
+          .detach(accountFragment)
+          .add(R.id.main_content_holder, filesFragment, FRAGTAG_FILES)
+          .detach(filesFragment)
+          .add(R.id.main_content_holder, transfersFragment, FRAGTAG_TRANSFERS)
+          .detach(transfersFragment)
+          .commitNow()
+    }
+
+    setupLayout()
+
+    val navItem = savedInstanceState?.getInt(STATE_CURRENT_TAB, TAB_FILES) ?: TAB_FILES
+    selectTab(navItem, false)
+
+    addTransferView = findViewById(R.id.main_addtransfer)
+    addTransferView.setOnClickListener {
+      var destinationFolder: PutioFile? = null
+      if (bottomNavView.currentItem == TAB_FILES) {
+        destinationFolder = (filesFragment!!.currentPage as FilesFragment.Page.File).file
+      }
+      val addTransferIntent = Intent(this@PutioActivity, AddTransferActivity::class.java)
+      if (destinationFolder != null) {
+        addTransferIntent.putExtra(AddTransferActivity.EXTRA_PRECHOSEN_DESTINATION_FOLDER, destinationFolder)
+      }
+      startActivity(addTransferIntent)
+    }
+    updateAddTransferFab(false)
+  }
+
+  override fun onAttachFragment(fragment: Fragment?) {
+    super.onAttachFragment(fragment)
+    if (fragment!!.tag != null) {
+      when (fragment.tag) {
+        FRAGTAG_FILES -> (fragment as FilesFragment).callbacks = object : FilesFragment.Callbacks {
+          override fun onSelectionStarted() {
+            if (init) {
+              updateAddTransferFab(true)
             }
-            R.id.menu_about -> {
-                val aboutIntent = Intent(this@PutioActivity, AboutActivity::class.java)
-                startActivity(aboutIntent)
-                return true
-            }
+          }
+
+          override fun onSelectionEnded() {
+            updateAddTransferFab(true)
+          }
+
+          override fun onCurrentFileChanged() {
+            updateAddTransferFab(true)
+          }
         }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun init(savedInstanceState: Bundle?) {
-        init = true
-
-        setContentView(R.layout.main)
-
-        if (savedInstanceState == null) {
-            val accountFragment = Fragment.instantiate(this, AccountFragment::class.java.name) as AccountFragment
-            val filesFragment = FilesFragment.newInstance(this, null)
-            val transfersFragment = Fragment.instantiate(this, TransfersFragment::class.java.name) as TransfersFragment
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.main_content_holder, accountFragment, FRAGTAG_ACCOUNT)
-                    .detach(accountFragment)
-                    .add(R.id.main_content_holder, filesFragment, FRAGTAG_FILES)
-                    .detach(filesFragment)
-                    .add(R.id.main_content_holder, transfersFragment, FRAGTAG_TRANSFERS)
-                    .detach(transfersFragment)
-                    .commitNow()
+        FRAGTAG_TRANSFERS -> {
+          (fragment as TransfersFragment).callbacks = object : TransfersFragment.Callbacks {
+            override fun onTransferSelected(transfer: PutioTransfer) {
+              showFilesAndGoToFile(transfer.saveParentId, transfer.fileId)
+            }
+          }
         }
-
-        setupLayout()
-
-        val navItem = savedInstanceState?.getInt(STATE_CURRENT_TAB, TAB_FILES) ?: TAB_FILES
-        selectTab(navItem, false)
-
-        addTransferView = findViewById(R.id.main_addtransfer)
-        addTransferView.setOnClickListener {
-            var destinationFolder: PutioFile? = null
-            if (bottomNavView.currentItem == TAB_FILES) {
-                destinationFolder = (filesFragment!!.currentPage as FilesFragment.Page.File).file
-            }
-            val addTransferIntent = Intent(this@PutioActivity, AddTransferActivity::class.java)
-            if (destinationFolder != null) {
-                addTransferIntent.putExtra(AddTransferActivity.EXTRA_PRECHOSEN_DESTINATION_FOLDER, destinationFolder)
-            }
-            startActivity(addTransferIntent)
-        }
-        updateAddTransferFab(false)
+      }
     }
+  }
 
-    override fun onAttachFragment(fragment: Fragment?) {
-        super.onAttachFragment(fragment)
-        if (fragment!!.tag != null) {
-            when (fragment.tag) {
-                FRAGTAG_FILES -> (fragment as FilesFragment).callbacks = object : FilesFragment.Callbacks {
-                    override fun onSelectionStarted() {
-                        if (init) {
-                            updateAddTransferFab(true)
-                        }
-                    }
-
-                    override fun onSelectionEnded() {
-                        updateAddTransferFab(true)
-                    }
-
-                    override fun onCurrentFileChanged() {
-                        updateAddTransferFab(true)
-                    }
-                }
-                FRAGTAG_TRANSFERS -> {
-                    (fragment as TransfersFragment).callbacks = object : TransfersFragment.Callbacks {
-                        override fun onTransferSelected(transfer: PutioTransfer) {
-                            showFilesAndGoToFile(transfer.saveParentId, transfer.fileId)
-                        }
-                    }
-                }
-            }
-        }
+  private fun updateAddTransferFab(animate: Boolean) {
+    val shouldShow = shouldShowAddTransferFab()
+    if (shouldShow && !showingAddTransferFab) {
+      showingAddTransferFab = true
+      if (animate) {
+        addTransferView.animate()
+            .setInterpolator(FastOutSlowInInterpolator())
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+      } else {
+        addTransferView.alpha = 1f
+        addTransferView.scaleX = 1f
+        addTransferView.scaleY = 1f
+      }
+      addTransferView.isEnabled = true
+      addTransferView.isFocusable = true
+      addTransferView.isClickable = true
+    } else if (!shouldShow && showingAddTransferFab) {
+      showingAddTransferFab = false
+      if (animate) {
+        addTransferView.animate()
+            .setInterpolator(FastOutSlowInInterpolator())
+            .alpha(0f)
+            .scaleX(0f)
+            .scaleY(0f)
+      } else {
+        addTransferView.alpha = 0f
+        addTransferView.scaleX = 0f
+        addTransferView.scaleY = 0f
+      }
+      addTransferView.isEnabled = false
+      addTransferView.isFocusable = false
+      addTransferView.isClickable = false
     }
+  }
 
-    private fun updateAddTransferFab(animate: Boolean) {
-        val shouldShow = shouldShowAddTransferFab()
-        if (shouldShow && !showingAddTransferFab) {
-            showingAddTransferFab = true
-            if (animate) {
-                addTransferView.animate()
-                        .setInterpolator(FastOutSlowInInterpolator())
-                        .alpha(1f)
-                        .scaleX(1f)
-                        .scaleY(1f)
-            } else {
-                addTransferView.alpha = 1f
-                addTransferView.scaleX = 1f
-                addTransferView.scaleY = 1f
-            }
-            addTransferView.isEnabled = true
-            addTransferView.isFocusable = true
-            addTransferView.isClickable = true
-        } else if (!shouldShow && showingAddTransferFab) {
-            showingAddTransferFab = false
-            if (animate) {
-                addTransferView.animate()
-                        .setInterpolator(FastOutSlowInInterpolator())
-                        .alpha(0f)
-                        .scaleX(0f)
-                        .scaleY(0f)
-            } else {
-                addTransferView.alpha = 0f
-                addTransferView.scaleX = 0f
-                addTransferView.scaleY = 0f
-            }
-            addTransferView.isEnabled = false
-            addTransferView.isFocusable = false
-            addTransferView.isClickable = false
-        }
-    }
-
-    private fun shouldShowAddTransferFab(): Boolean {
-        return when (bottomNavView.currentItem) {
-            TAB_ACCOUNT -> false
-            TAB_FILES -> {
-                val filesFragment = filesFragment
-                if (filesFragment!!.isSelecting) {
-                    false
-                } else {
-                    val currentPage = filesFragment.currentPage
-                    when (currentPage) {
-                        null -> true
-                        is FilesFragment.Page.Search -> false
-                        is FilesFragment.Page.File -> currentPage.file.isFolder
-                    }
-                }
-            }
-            TAB_TRANSFERS -> true
-            else -> true
-        }
-    }
-
-    fun logOut() {
-        sharedPrefs!!.edit().remove("token").apply()
-        FolderLoader.DiskCache(this).deleteCache()
-        finish()
-        startActivity(intent)
-    }
-
-    private fun setupLayout() {
-        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
-        setSupportActionBar(toolbar)
-
-        bottomNavView = findViewById(R.id.main_bottom_nav)
-        bottomNavView.defaultBackgroundColor = Color.parseColor("#F8F8F8")
-        bottomNavView.accentColor = Color.BLACK
-        bottomNavView.inactiveColor = Color.parseColor("#80000000")
-        bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.account), R.drawable.ic_nav_account))
-        bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.files), R.drawable.ic_nav_files))
-        bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.transfers), R.drawable.ic_nav_transfers))
-        bottomNavView.setOnTabSelectedListener(AHBottomNavigation.OnTabSelectedListener { position, wasSelected ->
-            bottomNavView.post { updateAddTransferFab(true) }
-            when (position) {
-                TAB_ACCOUNT, TAB_FILES, TAB_TRANSFERS -> {
-                    showFragment(position, true)
-                    if (position == TAB_FILES && wasSelected) {
-                        filesFragment?.goBackToRoot()
-                    }
-                    return@OnTabSelectedListener true
-                }
-            }
-            false
-        })
-    }
-
-    fun showFilesAndGoToFile(parentId: Long, id: Long) {
-        selectTab(TAB_FILES, true)
-        filesFragment!!.goToFile(parentId, id);
-    }
-
-    private val accountFragment: AccountFragment
-        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_ACCOUNT) as AccountFragment
-
-    private val filesFragment: FilesFragment?
-        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_FILES) as FilesFragment
-
-    private val transfersFragment: TransfersFragment
-        get() = supportFragmentManager.findFragmentByTag(FRAGTAG_TRANSFERS) as TransfersFragment
-
-    private val noNetworkReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            transfersFragment.setHasNetwork(false)
-        }
-    }
-
-    override fun onBackPressed() {
-        if (bottomNavView.currentItem == TAB_FILES) {
-            if (!filesFragment!!.goBack(true)) {
-                super.onBackPressed()
-            }
+  private fun shouldShowAddTransferFab(): Boolean {
+    return when (bottomNavView.currentItem) {
+      TAB_ACCOUNT -> false
+      TAB_FILES -> {
+        val filesFragment = filesFragment
+        if (filesFragment!!.isSelecting) {
+          false
         } else {
-            super.onBackPressed()
+          val currentPage = filesFragment.currentPage
+          when (currentPage) {
+            null -> true
+            is FilesFragment.Page.Search -> false
+            is FilesFragment.Page.File -> currentPage.file.isFolder
+          }
         }
+      }
+      TAB_TRANSFERS -> true
+      else -> true
+    }
+  }
+
+  fun logOut() {
+    sharedPrefs!!.edit().remove("token").apply()
+    FolderLoader.DiskCache(this).deleteCache()
+    finish()
+    startActivity(intent)
+  }
+
+  private fun setupLayout() {
+    val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
+    setSupportActionBar(toolbar)
+
+    bottomNavView = findViewById(R.id.main_bottom_nav)
+    bottomNavView.defaultBackgroundColor = Color.parseColor("#F8F8F8")
+    bottomNavView.accentColor = Color.BLACK
+    bottomNavView.inactiveColor = Color.parseColor("#80000000")
+    bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.account), R.drawable.ic_nav_account))
+    bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.files), R.drawable.ic_nav_files))
+    bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.transfers), R.drawable.ic_nav_transfers))
+    bottomNavView.setOnTabSelectedListener(AHBottomNavigation.OnTabSelectedListener { position, wasSelected ->
+      bottomNavView.post { updateAddTransferFab(true) }
+      when (position) {
+        TAB_ACCOUNT, TAB_FILES, TAB_TRANSFERS -> {
+          showFragment(position, true)
+          if (position == TAB_FILES && wasSelected) {
+            filesFragment?.goBackToRoot()
+          }
+          return@OnTabSelectedListener true
+        }
+      }
+      false
+    })
+  }
+
+  fun showFilesAndGoToFile(parentId: Long, id: Long) {
+    selectTab(TAB_FILES, true)
+    filesFragment!!.goToFile(parentId, id);
+  }
+
+  private val accountFragment: AccountFragment
+    get() = supportFragmentManager.findFragmentByTag(FRAGTAG_ACCOUNT) as AccountFragment
+
+  private val filesFragment: FilesFragment?
+    get() = supportFragmentManager.findFragmentByTag(FRAGTAG_FILES) as FilesFragment
+
+  private val transfersFragment: TransfersFragment
+    get() = supportFragmentManager.findFragmentByTag(FRAGTAG_TRANSFERS) as TransfersFragment
+
+  private val noNetworkReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+      transfersFragment.setHasNetwork(false)
+    }
+  }
+
+  override fun onBackPressed() {
+    if (bottomNavView.currentItem == TAB_FILES) {
+      if (!filesFragment!!.goBack(true)) {
+        super.onBackPressed()
+      }
+    } else {
+      super.onBackPressed()
+    }
+  }
+
+  private fun showFragment(position: Int, animate: Boolean) {
+    val transaction = supportFragmentManager.beginTransaction()
+    if (animate) {
+      transaction.setCustomAnimations(R.anim.bottomnav_enter, R.anim.bottomnav_exit)
+    }
+    when (position) {
+      TAB_ACCOUNT -> {
+        transaction.attach(accountFragment)
+        transaction.detach(filesFragment)
+        transaction.detach(transfersFragment)
+      }
+      TAB_FILES -> {
+        transaction.detach(accountFragment)
+        transaction.attach(filesFragment)
+        transaction.detach(transfersFragment)
+      }
+      TAB_TRANSFERS -> {
+        transaction.detach(accountFragment)
+        transaction.detach(filesFragment)
+        transaction.attach(transfersFragment)
+      }
+    }
+    transaction.commitNow()
+  }
+
+  private fun selectTab(position: Int, animate: Boolean) {
+    if (bottomNavView.currentItem != position) {
+      bottomNavView.setCurrentItem(position, false)
+      showFragment(position, animate)
+    }
+  }
+
+  override fun onDestroy() {
+    if (init) {
+      unregisterReceiver(noNetworkReceiver)
     }
 
-    private fun showFragment(position: Int, animate: Boolean) {
-        val transaction = supportFragmentManager.beginTransaction()
-        if (animate) {
-            transaction.setCustomAnimations(R.anim.bottomnav_enter, R.anim.bottomnav_exit)
-        }
-        when (position) {
-            TAB_ACCOUNT -> {
-                transaction.attach(accountFragment)
-                transaction.detach(filesFragment)
-                transaction.detach(transfersFragment)
-            }
-            TAB_FILES -> {
-                transaction.detach(accountFragment)
-                transaction.attach(filesFragment)
-                transaction.detach(transfersFragment)
-            }
-            TAB_TRANSFERS -> {
-                transaction.detach(accountFragment)
-                transaction.detach(filesFragment)
-                transaction.attach(transfersFragment)
-            }
-        }
-        transaction.commitNow()
-    }
+    super.onDestroy()
+  }
 
-    private fun selectTab(position: Int, animate: Boolean) {
-        if (bottomNavView.currentItem != position) {
-            bottomNavView.setCurrentItem(position, false)
-            showFragment(position, animate)
-        }
-    }
-
-    override fun onDestroy() {
-        if (init) {
-            unregisterReceiver(noNetworkReceiver)
-        }
-
-        super.onDestroy()
-    }
-
-    override val castMiniControllerContainerId = R.id.holder_castbar
+  override val castMiniControllerContainerId = R.id.holder_castbar
 }

@@ -21,65 +21,65 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PutioRestInterface {
-	@GET("files/list")
-	Single<FilesListResponse> files(@Query("parent_id") long parentId);
+  @GET("files/list")
+  Single<FilesListResponse> files(@Query("parent_id") long parentId);
 
-	@GET("files/search/{query}/page/-1")
-	Single<FilesSearchResponse> searchFiles(@Path("query") String query);
+  @GET("files/search/{query}/page/-1")
+  Single<FilesSearchResponse> searchFiles(@Path("query") String query);
 
-	@GET("files/{id}")
-	Single<FileResponse> file(@Path("id") long id);
+  @GET("files/{id}")
+  Single<FileResponse> file(@Path("id") long id);
 
-	@GET("files/{id}/subtitles")
-	Single<SubtitlesListResponse> subtitles(@Path("id") long id);
+  @GET("files/{id}/subtitles")
+  Single<SubtitlesListResponse> subtitles(@Path("id") long id);
 
-	@GET("files/{id}/mp4")
-	Single<Mp4StatusResponse> mp4Status(@Path("id") long id);
+  @GET("files/{id}/mp4")
+  Single<Mp4StatusResponse> mp4Status(@Path("id") long id);
 
-	@POST("files/{id}/mp4")
-	Single<ResponseOrError.BasePutioResponse> convertToMp4(@Path("id") long id);
+  @POST("files/{id}/mp4")
+  Single<ResponseOrError.BasePutioResponse> convertToMp4(@Path("id") long id);
 
-    @FormUrlEncoded
-    @POST("files/create-folder")
-    Single<ResponseOrError.BasePutioResponse.FileChangingResponse> createFolder(@Field("name") String name, @Field("parent_id") long parentId);
+  @FormUrlEncoded
+  @POST("files/create-folder")
+  Single<ResponseOrError.BasePutioResponse.FileChangingResponse> createFolder(@Field("name") String name, @Field("parent_id") long parentId);
 
-    @FormUrlEncoded
-	@POST("files/rename")
-	Single<ResponseOrError.BasePutioResponse.FileChangingResponse> renameFile(@Field("file_id") long id, @Field("name") String name);
+  @FormUrlEncoded
+  @POST("files/rename")
+  Single<ResponseOrError.BasePutioResponse.FileChangingResponse> renameFile(@Field("file_id") long id, @Field("name") String name);
 
-	@FormUrlEncoded
-	@POST("files/delete")
-	Single<ResponseOrError.BasePutioResponse.FileChangingResponse> deleteFile(@Field("file_ids") String ids);
+  @FormUrlEncoded
+  @POST("files/delete")
+  Single<ResponseOrError.BasePutioResponse.FileChangingResponse> deleteFile(@Field("file_ids") String ids);
 
-    @FormUrlEncoded
-    @POST("files/move")
-    Single<ResponseOrError.BasePutioResponse.FileChangingResponse> moveFile(@Field("file_ids") String ids, @Field("parent_id") long newParentId);
+  @FormUrlEncoded
+  @POST("files/move")
+  Single<ResponseOrError.BasePutioResponse.FileChangingResponse> moveFile(@Field("file_ids") String ids, @Field("parent_id") long newParentId);
 
-	@FormUrlEncoded
-	@POST("zips/create")
-	Single<CreateZipResponse> createZip(@Field("file_ids") String ids);
+  @FormUrlEncoded
+  @POST("zips/create")
+  Single<CreateZipResponse> createZip(@Field("file_ids") String ids);
 
-	@GET("zips/{zip_id}")
-	Single<ZipResponse> getZip(@Path("zip_id") long zipId);
+  @GET("zips/{zip_id}")
+  Single<ZipResponse> getZip(@Path("zip_id") long zipId);
 
-	@GET("transfers/list")
-	Single<TransfersListResponse> transfers();
+  @GET("transfers/list")
+  Single<TransfersListResponse> transfers();
 
-	@FormUrlEncoded
-	@POST("transfers/add")
-	Single<PutioTransfer> addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, @Field("save_parent_id") long saveParentId);
+  @FormUrlEncoded
+  @POST("transfers/add")
+  Single<PutioTransfer> addTransferUrl(@Field("url") String url, @Field("extract") boolean extract, @Field("save_parent_id") long saveParentId);
 
-    @FormUrlEncoded
-    @POST("transfers/retry")
-    Single<ResponseOrError.BasePutioResponse> retryTransfer(@Field("id") long id);
+  @FormUrlEncoded
+  @POST("transfers/retry")
+  Single<ResponseOrError.BasePutioResponse> retryTransfer(@Field("id") long id);
 
-	@FormUrlEncoded
-	@POST("transfers/cancel")
-	Single<ResponseOrError.BasePutioResponse> cancelTransfer(@Field("transfer_ids") String ids);
+  @FormUrlEncoded
+  @POST("transfers/cancel")
+  Single<ResponseOrError.BasePutioResponse> cancelTransfer(@Field("transfer_ids") String ids);
 
-	@POST("transfers/clean")
-	Single<ResponseOrError.BasePutioResponse> cleanTransfers(@Body String nothing);
+  @POST("transfers/clean")
+  Single<ResponseOrError.BasePutioResponse> cleanTransfers(@Body String nothing);
 
-	@GET("account/info")
-	Single<AccountInfoResponse> account();
+  @GET("account/info")
+  Single<AccountInfoResponse> account();
 }

@@ -6,5 +6,5 @@ import com.stevenschoen.putionew.model.files.PutioFile;
 import java.util.List;
 
 public class FilesSearchResponse extends ResponseOrError.BasePutioResponse {
-	public List<PutioFile> files;
+  public List<PutioFile> files;
 }

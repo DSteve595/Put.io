@@ -15,33 +15,33 @@ import io.reactivex.subjects.BehaviorSubject
 
 class SearchLoader(context: Context, private val parentFolder: PutioFile, val query: String) : PutioBaseLoader(context) {
 
-    private val searchSubject = BehaviorSubject.create<ResponseOrError>()
-    fun search() = searchSubject.observeOn(AndroidSchedulers.mainThread())
+  private val searchSubject = BehaviorSubject.create<ResponseOrError>()
+  fun search() = searchSubject.observeOn(AndroidSchedulers.mainThread())
 
-    var searchSubscription: Disposable? = null
-    fun refreshSearch(onlyIfEmpty: Boolean = false) {
-        if (onlyIfEmpty && (searchSubject.value is FilesSearchResponse || isRefreshing())) return
-        searchSubscription?.dispose()
-        // TODO: Annoy put.io about adding parent folder as a param for searches
-        searchSubscription = api.searchFiles(query).subscribe({ response ->
-            searchSubscription = null
-            searchSubject.onNext(response)
-        }, { error ->
-            searchSubscription = null
-            searchSubject.onNext(ResponseOrError.NetworkError(error))
-        })
-    }
+  var searchSubscription: Disposable? = null
+  fun refreshSearch(onlyIfEmpty: Boolean = false) {
+    if (onlyIfEmpty && (searchSubject.value is FilesSearchResponse || isRefreshing())) return
+    searchSubscription?.dispose()
+    // TODO: Annoy put.io about adding parent folder as a param for searches
+    searchSubscription = api.searchFiles(query).subscribe({ response ->
+      searchSubscription = null
+      searchSubject.onNext(response)
+    }, { error ->
+      searchSubscription = null
+      searchSubject.onNext(ResponseOrError.NetworkError(error))
+    })
+  }
 
-    fun isRefreshing() = searchSubscription != null && !searchSubscription!!.isDisposed
+  fun isRefreshing() = searchSubscription != null && !searchSubscription!!.isDisposed
 
-    companion object {
-        fun get(loaderManager: LoaderManager, context: Context, parentFolder: PutioFile, query: String): SearchLoader {
-            return loaderManager.initLoader(
-                    getUniqueLoaderId(SearchLoader::class.java), null, object : Callbacks(context) {
-                override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
-                    return SearchLoader(context, parentFolder, query)
-                }
-            }) as SearchLoader
+  companion object {
+    fun get(loaderManager: LoaderManager, context: Context, parentFolder: PutioFile, query: String): SearchLoader {
+      return loaderManager.initLoader(
+          getUniqueLoaderId(SearchLoader::class.java), null, object : Callbacks(context) {
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<Any> {
+          return SearchLoader(context, parentFolder, query)
         }
+      }) as SearchLoader
     }
+  }
 }

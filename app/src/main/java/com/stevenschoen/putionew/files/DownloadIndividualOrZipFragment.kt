@@ -11,37 +11,37 @@ import com.stevenschoen.putionew.R
 
 class DownloadIndividualOrZipFragment : AutoExpandingBottomSheetDialogFragment() {
 
-    var callbacks: Callbacks? = null
+  var callbacks: Callbacks? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.download_individualorzip, container, false).apply {
-            val individualView = findViewById<View>(R.id.download_individualorzip_individual)
-            individualView.setOnClickListener {
-                callbacks?.onIndividualSelected()
-                dismiss()
-            }
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return inflater.inflate(R.layout.download_individualorzip, container, false).apply {
+      val individualView = findViewById<View>(R.id.download_individualorzip_individual)
+      individualView.setOnClickListener {
+        callbacks?.onIndividualSelected()
+        dismiss()
+      }
 
-            val zipView = findViewById<View>(R.id.download_individualorzip_zip)
-            zipView.setOnClickListener {
-                callbacks?.onZipSelected()
-                dismiss()
-            }
+      val zipView = findViewById<View>(R.id.download_individualorzip_zip)
+      zipView.setOnClickListener {
+        callbacks?.onZipSelected()
+        dismiss()
+      }
 
-            val toolbarView = findViewById<Toolbar>(R.id.download_individualorzip_toolbar)
-            toolbarView.setNavigationOnClickListener {
-                dialog.cancel()
-            }
-        }
+      val toolbarView = findViewById<Toolbar>(R.id.download_individualorzip_toolbar)
+      toolbarView.setNavigationOnClickListener {
+        dialog.cancel()
+      }
     }
+  }
 
-    override fun onCancel(dialog: DialogInterface) {
-        callbacks?.onCanceled()
-        super.onCancel(dialog)
-    }
+  override fun onCancel(dialog: DialogInterface) {
+    callbacks?.onCanceled()
+    super.onCancel(dialog)
+  }
 
-    interface Callbacks {
-        fun onIndividualSelected()
-        fun onZipSelected()
-        fun onCanceled()
-    }
+  interface Callbacks {
+    fun onIndividualSelected()
+    fun onZipSelected()
+    fun onCanceled()
+  }
 }

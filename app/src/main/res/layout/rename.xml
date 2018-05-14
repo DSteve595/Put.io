@@ -1,28 +1,30 @@
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/rename_root"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rename_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
 
-	<EditText
-		android:id="@+id/rename_name"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_toStartOf="@+id/rename_undo"
-		android:hint="File name"
-		android:inputType="textMultiLine|textNoSuggestions"
-		android:maxLines="3"/>
+  <EditText
+      android:id="@+id/rename_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_toStartOf="@+id/rename_undo"
+      android:hint="File name"
+      android:inputType="textMultiLine|textNoSuggestions"
+      android:maxLines="3"
+      />
 
-	<ImageButton
-		android:id="@+id/rename_undo"
-		android:layout_width="48dp"
-		android:layout_height="48dp"
-		android:layout_alignParentEnd="true"
-		android:layout_centerVertical="true"
-		android:layout_marginStart="4dp"
-		android:background="?attr/selectableItemBackgroundBorderless"
-		android:contentDescription="@string/undo"
-		android:padding="10dp"
-		android:scaleType="fitCenter"
-		android:src="@drawable/ic_undo"/>
+  <ImageButton
+      android:id="@+id/rename_undo"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="4dp"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:contentDescription="@string/undo"
+      android:padding="10dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_undo"
+      />
 </RelativeLayout>

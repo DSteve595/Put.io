@@ -25,44 +25,44 @@ import com.stevenschoen.putionew.model.files.PutioFile
 
 class TvPutioFileCardPresenter : Presenter() {
 
-    companion object {
-        private const val CARD_WIDTH = 500
-        private const val CARD_HEIGHT = 176
+  companion object {
+    private const val CARD_WIDTH = 500
+    private const val CARD_HEIGHT = 176
+  }
+
+  override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
+    val cardView = ImageCardView(parent.context)
+    cardView.isFocusable = true
+    cardView.isFocusableInTouchMode = true
+    return Presenter.ViewHolder(cardView)
+  }
+
+  override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
+    val file = item as PutioFile
+    val cardView = viewHolder.view as ImageCardView
+
+    cardView.titleText = file.name
+    //cardView.setContentText(PutioUtils.humanReadableByteCount(file.size, false));
+    cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT)
+    val mainImageView = cardView.mainImageView
+    if (file.isFolder) {
+      cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
+      Picasso.get().cancelRequest(mainImageView)
+      mainImageView.setImageResource(R.drawable.ic_putio_folder_accent)
+    } else {
+      cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_CROP)
+      Picasso.get().load(file.screenshot).into(mainImageView)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
-        val cardView = ImageCardView(parent.context)
-        cardView.isFocusable = true
-        cardView.isFocusableInTouchMode = true
-        return Presenter.ViewHolder(cardView)
+    if (file.isAccessed) {
+      cardView.badgeImage = ContextCompat.getDrawable(cardView.context, R.drawable.ic_fileinfo_accessed)
     }
+  }
 
-    override fun onBindViewHolder(viewHolder: Presenter.ViewHolder, item: Any) {
-        val file = item as PutioFile
-        val cardView = viewHolder.view as ImageCardView
-
-        cardView.titleText = file.name
-        //cardView.setContentText(PutioUtils.humanReadableByteCount(file.size, false));
-        cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT)
-        val mainImageView = cardView.mainImageView
-        if (file.isFolder) {
-            cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
-            Picasso.get().cancelRequest(mainImageView)
-            mainImageView.setImageResource(R.drawable.ic_putio_folder_accent)
-        } else {
-            cardView.setMainImageScaleType(ImageView.ScaleType.CENTER_CROP)
-            Picasso.get().load(file.screenshot).into(mainImageView)
-        }
-
-        if (file.isAccessed) {
-            cardView.badgeImage = ContextCompat.getDrawable(cardView.context, R.drawable.ic_fileinfo_accessed)
-        }
-    }
-
-    override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
-        val cardView = viewHolder.view as ImageCardView
-        // Remove references to images so that the garbage collector can free up memory
-        cardView.badgeImage = null
-        cardView.mainImage = null
-    }
+  override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
+    val cardView = viewHolder.view as ImageCardView
+    // Remove references to images so that the garbage collector can free up memory
+    cardView.badgeImage = null
+    cardView.mainImage = null
+  }
 }

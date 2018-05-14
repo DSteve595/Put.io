@@ -1,61 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	tools:parentTag="FrameLayout">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="FrameLayout"
+    >
 
-	<ImageButton
-		android:id="@+id/file_title_bar_back"
-		android:layout_width="48dp"
-		android:layout_height="match_parent"
-		android:background="?selectableItemBackgroundBorderless"
-		android:scaleType="centerInside"
-		android:src="@drawable/ic_back"/>
+  <ImageButton
+      android:id="@+id/file_title_bar_back"
+      android:layout_width="48dp"
+      android:layout_height="match_parent"
+      android:background="?selectableItemBackgroundBorderless"
+      android:scaleType="centerInside"
+      android:src="@drawable/ic_back"
+      />
 
-	<android.support.v7.widget.AppCompatTextView
-		android:id="@+id/file_title_bar_name"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_marginStart="48dp"
-		android:ellipsize="end"
-		android:gravity="center_vertical"
-		android:maxLines="2"
-		android:paddingEnd="8dp"
-		android:paddingStart="8dp"
-		android:textAppearance="@style/TextAppearance.AppCompat.Title"
-		app:autoSizeMaxTextSize="20sp"
-		app:autoSizeMinTextSize="16sp"
-		app:autoSizeTextType="uniform"
-		tools:text="Folder name"/>
+  <android.support.v7.widget.AppCompatTextView
+      android:id="@+id/file_title_bar_name"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginStart="48dp"
+      android:ellipsize="end"
+      android:gravity="center_vertical"
+      android:maxLines="2"
+      android:paddingEnd="8dp"
+      android:paddingStart="8dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Title"
+      app:autoSizeMaxTextSize="20sp"
+      app:autoSizeMinTextSize="16sp"
+      app:autoSizeTextType="uniform"
+      tools:text="Folder name"
+      />
 
-	<LinearLayout
-		android:id="@+id/file_title_bar_search_holder"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		tools:visibility="gone">
+  <LinearLayout
+      android:id="@+id/file_title_bar_search_holder"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      tools:visibility="gone"
+      >
 
-		<TextView
-			android:id="@+id/file_title_bar_search_query"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="52dp"
-			android:layout_marginTop="12dp"
-			android:paddingEnd="8dp"
-			android:paddingStart="8dp"
-			android:textAppearance="@style/TextAppearance.AppCompat.Title"
-			tools:text="&quot;Search query&quot;"/>
+    <TextView
+        android:id="@+id/file_title_bar_search_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="12dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="&quot;Search query&quot;"
+        />
 
-		<TextView
-			android:id="@+id/file_title_bar_search_parent"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="52dp"
-			android:paddingEnd="8dp"
-			android:paddingStart="8dp"
-			android:textAppearance="@style/TextAppearance.AppCompat"
-			android:textSize="14sp"
-			tools:text="in Folder name"/>
-	</LinearLayout>
+    <TextView
+        android:id="@+id/file_title_bar_search_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="14sp"
+        tools:text="in Folder name"
+        />
+  </LinearLayout>
 </merge>

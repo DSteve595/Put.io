@@ -7,15 +7,15 @@ import com.stevenschoen.putionew.model.files.PutioSubtitle;
 import java.util.List;
 
 public class SubtitlesListResponse extends ResponseOrError.BasePutioResponse {
-	private List<PutioSubtitle> subtitles;
-    @SerializedName("default")
-    private String defaultSubtitleKey;
+  private List<PutioSubtitle> subtitles;
+  @SerializedName("default")
+  private String defaultSubtitleKey;
 
-	public List<PutioSubtitle> getSubtitles() {
-		return subtitles;
-	}
+  public List<PutioSubtitle> getSubtitles() {
+    return subtitles;
+  }
 
-    public String getDefaultSubtitleKey() {
-        return defaultSubtitleKey;
-    }
+  public String getDefaultSubtitleKey() {
+    return defaultSubtitleKey;
+  }
 }

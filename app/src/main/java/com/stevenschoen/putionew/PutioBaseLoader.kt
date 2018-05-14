@@ -7,13 +7,13 @@ import com.stevenschoen.putionew.model.PutioRestInterface
 
 abstract class PutioBaseLoader(context: Context) : Loader<Any>(context) {
 
-    protected val api: PutioRestInterface
-        get() = (context.applicationContext as PutioApplication).putioUtils!!.restInterface
+  protected val api: PutioRestInterface
+    get() = (context.applicationContext as PutioApplication).putioUtils!!.restInterface
 
-    abstract class Callbacks(protected val context: Context) : LoaderManager.LoaderCallbacks<Any> {
+  abstract class Callbacks(protected val context: Context) : LoaderManager.LoaderCallbacks<Any> {
 
-        override fun onLoadFinished(loader: Loader<Any>, data: Any) { }
+    override fun onLoadFinished(loader: Loader<Any>, data: Any) {}
 
-        override fun onLoaderReset(loader: Loader<Any>) { }
-    }
+    override fun onLoaderReset(loader: Loader<Any>) {}
+  }
 }
