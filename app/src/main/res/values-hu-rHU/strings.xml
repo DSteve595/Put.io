@@ -18,7 +18,6 @@
   <string name="log_in">Bejelentkezés</string>
   <string name="log_out">Kijelentkezés</string>
   <string name="about">Rólunk</string>
-  <string name="apply">Alkalmazás</string>
   <string name="download">Letöltés</string>
   <string name="redownload">Letöltés újra</string>
   <string name="open">Megnyitás</string>
@@ -40,17 +39,10 @@
     <item quantity="other">Törli ezeket a fájlokat?</item>
   </plurals>
   <string name="removetransferbody">A letöltés le lesz állítva.</string>
-  <string name="downloadfinishedopentitle">Fájl megnyitása?</string>
-  <string name="downloadfinishedbody">%1$s befejezte a letöltést.</string>
-  <string name="downloadpreparing">Felkészülés a letöltésre</string>
   <string name="downloadstarted">Letöltés megkezdődött.</string>
-  <string name="redownloadtitle">Fájl újra-letöltése?</string>
-  <string name="redownloadfordlbody">Úgy tűnik, mintha ez már le lenne töltve. Mindenképp letölti?</string>
-  <string name="redownloadforopenbody">Úgy tűnik, mintha ez már le lenne töltve. Meg akarja nyitni ezt a másolatot vagy le akarja tölteni újból?</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">Nincs olyan alkalmazása, ami képes megnyitni ezt a fájltípust.</string>
   <string name="transferfailed">Nem sikerült letölteni ezt a transzfert.</string>
-  <string name="filetoobig">Ez a fájl túl nagy! Biztos abban, hogy ez egy torrent?</string>
   <string name="streamerror">Sajnáljuk, hiba történt a videója streamelése közben.</string>
   <string name="couldntconnect">Nem lehet csatlakozni a Put.io-hoz. Ön online?</string>
   <string name="notatorrent">Ez nem tűnik torrent fájlnak!</string>
@@ -69,24 +61,20 @@
   <string name="extractwhenfinished">Kicsomagolás ha kész</string>
   <string name="searchyourfiles">Keresd meg a fájljaid</string>
   <string name="nofilesfound">Nem találhatóak fájlok.</string>
-  <string name="filedeleted">Fájl törölve!</string>
   <string name="filemoved">Fájl áthelyezve!</string>
   <string name="transferremoved">Transzfer eltávolítva!</string>
   <string name="ratio_is">Arány: %s</string>
-  <string name="hey">Hé!</string>
   <string name="readytopaste">A letöltési link készen áll a beillesztésre.</string>
   <string name="addtransfer_type_file">Torrent-fájl</string>
   <string name="download_files">Fájlok letöltése</string>
   <string name="individual_or_zip">Ezeket a fájlokat különálló letöltésekként vagy ZIP-archívumban kívánja letölteni?</string>
   <string name="individually">Külön-külön</string>
   <string name="copy_dl_link">Letöltési link másolása</string>
-  <string name="copyingdownloadlink">Letöltés link másolása</string>
   <string name="convert_mp4">Konvertálás MP4-be</string>
   <string name="converting_mp4">Konvertálás MP4-be&#8230;</string>
   <string name="mp4_available">MP4 elérhető</string>
   <string name="use_mp4">MP4 használata</string>
   <string name="dont_use_mp4">Ne használjon MP4-et</string>
-  <string name="destination_is">Hely:</string>
   <string name="choose_folder">Mappa kiválasztása</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Torrent feltöltése</string>
