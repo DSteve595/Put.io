@@ -16,7 +16,6 @@
   <string name="log_in">Entrar</string>
   <string name="log_out">Sair</string>
   <string name="about">Acerca</string>
-  <string name="apply">Aplicar</string>
   <string name="redownload">Download novamente</string>
   <string name="open">Abrir</string>
   <string name="delete">Apagar</string>
@@ -39,8 +38,6 @@
   </plurals>
   <string name="removetransfertitle">Remover esta transferência?</string>
   <string name="removetransferbody">O download será cancelado.</string>
-  <string name="downloadwillopen">O ficheiro será aberto assim que terminar o download.</string>
-  <string name="downloadfinishedopentitle">Abrir arquivo?</string>
   <!-- Errors (for users) -->
   <!-- Other stuff -->
   <!-- Notification stuff -->
