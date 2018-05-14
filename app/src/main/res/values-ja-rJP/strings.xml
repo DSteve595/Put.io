@@ -22,7 +22,6 @@
   <string name="log_in">ログイン</string>
   <string name="log_out">ログアウト</string>
   <string name="about">アプリについて</string>
-  <string name="apply">適用</string>
   <string name="download">ダウンロード</string>
   <string name="redownload">再ダウンロード</string>
   <string name="download_original">オリジナルをダウンロード</string>
@@ -51,23 +50,13 @@
   </plurals>
   <string name="removetransfertitle">この転送を削除しますか?</string>
   <string name="removetransferbody">ダウンロードはキャンセルされます。</string>
-  <string name="downloadwillopen">ダウンロードが終了するとすぐにファイルを開きます。</string>
-  <string name="downloadfinishedopentitle">ファイルを開きますか?</string>
-  <string name="downloadfinishedbody">%1$s がダウンロード完了しました。</string>
-  <string name="downloadpreparing">ダウンロードの準備中</string>
   <string name="downloadstarted">ダウンロードを開始します。</string>
-  <string name="redownloadtitle">再度ファイルをダウンロードしますか?</string>
-  <string name="redownloadfordlbody">これは既にダウンロードされているようです。ダウンロードしますか?</string>
-  <string name="redownloadforopenbody">これは既にダウンロードされているようです。このコピーを開きますか、または再度ダウンロードしますか?</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">この種類のファイルを開くアプリがありません。</string>
   <string name="transferfailed">この転送は、ダウンロードに失敗しました。</string>
-  <string name="nothingenteredtofetch">最初に取得するものを入力してください!</string>
-  <string name="filetoobig">このファイルは大きすぎます! 本当にトレントですか?</string>
   <string name="streamerror">申し訳ありませんが、ビデオのストリーミング中にエラーが発生しました。</string>
   <string name="couldntconnect">Put.io に接続できませんでした。オンラインですか?</string>
   <string name="notatorrent">これはトレント ファイルではないようです!</string>
-  <string name="couldntgetdownloadlink">ダウンロード リンクの取得中に問題があました。</string>
   <string name="noactivityfound">これを開くアプリがインストールされていません。</string>
   <string name="network_error">ネットワーク エラー!</string>
   <!-- Other stuff -->
@@ -82,16 +71,13 @@
   <string name="created_on_x_at_x">%1$s %2$s に作成</string>
   <string name="accessed_on_x_at_x">%1$s %2$s にアクセス</string>
   <string name="never_accessed">アクセスしていません</string>
-  <string name="applychanges">%1$s に未保存の変更があります.\n適用しますか?</string>
   <string name="pasteurls">ここに URL を貼り付け</string>
   <string name="extractwhenfinished">完了した時に抽出</string>
   <string name="searchyourfiles">ファイルを検索</string>
   <string name="nofilesfound">ファイルが見つかりませんでした。</string>
-  <string name="filedeleted">ファイルが削除されました!</string>
   <string name="filemoved">ファイルを移動しました!</string>
   <string name="transferremoved">転送を削除しました!</string>
   <string name="ratio_is">割合: %s</string>
-  <string name="hey">やあ!</string>
   <string name="readytopaste">ダウンロードのリンクを貼り付ける準備ができました。</string>
   <string name="addtransfer_type_url">マグネットリンク</string>
   <string name="addtransfer_type_file">トレント ファイル</string>
@@ -103,7 +89,6 @@
   <string name="individually">個別</string>
   <string name="zip">ZIP</string>
   <string name="copy_dl_link">ダウンロード リンクをコピー</string>
-  <string name="copyingdownloadlink">ダウンロード リンクのコピー中</string>
   <string name="downloading_zip">ZIP をダウンロード中…</string>
   <string name="filenotfound">ファイルが見つかりませんでした。削除されていますか?</string>
   <string name="clear_finished_transfers">完了した転送をクリア</string>
@@ -114,7 +99,6 @@
   <string name="mp4_available">MP4 が利用可能</string>
   <string name="use_mp4">MP4 を使用する</string>
   <string name="dont_use_mp4">MP4 を使用しない</string>
-  <string name="destination_is">宛先：</string>
   <string name="choose_a_file">ファイルを選択</string>
   <string name="choose_folder">フォルダーを選択</string>
   <string name="x_per_sec">%s/秒</string>
