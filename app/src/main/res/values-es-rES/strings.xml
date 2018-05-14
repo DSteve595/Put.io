@@ -16,7 +16,6 @@
   <string name="log_in">Entrar</string>
   <string name="log_out">Salir</string>
   <string name="about">Acerca de</string>
-  <string name="apply">Aplicar</string>
   <string name="download">Descargar</string>
   <string name="redownload">Descargar de nuevo</string>
   <string name="open">Abrir</string>
@@ -37,10 +36,7 @@
     <item quantity="other">¿Eliminar estos archivos?</item>
   </plurals>
   <string name="removetransferbody">Se cancelará la descarga.</string>
-  <string name="downloadfinishedopentitle">¿Abrir archivo?</string>
-  <string name="downloadpreparing">Preparando la descarga</string>
   <string name="downloadstarted">Descarga iniciada.</string>
-  <string name="redownloadfordlbody">Parece que este archivo ya ha sido descargado. ¿Descargarlo de todas formas?</string>
   <!-- Errors (for users) -->
   <!-- Other stuff -->
   <string name="account">Cuenta</string>

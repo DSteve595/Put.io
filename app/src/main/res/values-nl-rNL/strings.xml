@@ -18,7 +18,6 @@
   <string name="log_in">Inloggen</string>
   <string name="log_out">Uitloggen</string>
   <string name="about">Over</string>
-  <string name="apply">Toepassen</string>
   <string name="download">Downloaden</string>
   <string name="redownload">Opnieuw downloaden</string>
   <string name="open">Open</string>
@@ -45,23 +44,13 @@
   </plurals>
   <string name="removetransfertitle">Deze overdracht verwijderen?</string>
   <string name="removetransferbody">De download zal worden geannuleerd.</string>
-  <string name="downloadwillopen">Uw bestand wordt geopend, zodra het klaar is met downloaden.</string>
-  <string name="downloadfinishedopentitle">Bestand openen?</string>
-  <string name="downloadfinishedbody">De download van %1$s klaar.</string>
-  <string name="downloadpreparing">Download voorbereiden</string>
   <string name="downloadstarted">Het downloaden is gestart.</string>
-  <string name="redownloadtitle">Bestand opnieuw downloaden?</string>
-  <string name="redownloadfordlbody">Het lijkt erop dat dit al is gedownload. Wilt u het toch downloaden?</string>
-  <string name="redownloadforopenbody">Het lijkt erop dat dit al is gedownload. Wilt u het bestaande bestand openen of het bestand opnieuw downloaden?</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">U heeft geen app die dit soort bestanden kan openen.</string>
   <string name="transferfailed">De download van deze overdracht is mislukt.</string>
-  <string name="nothingenteredtofetch">Voeg eerst iets toe om op te halen!</string>
-  <string name="filetoobig">Dit bestand is te groot! Weet u zeker dat het een torrent is?</string>
   <string name="streamerror">Sorry, er is een fout opgetreden bij het streamen van uw video.</string>
   <string name="couldntconnect">Kon niet verbinden met Put.io. Bent u online?</string>
   <string name="notatorrent">Dit lijkt geen torrent-bestand te zijn!</string>
-  <string name="couldntgetdownloadlink">Er was een probleem om de downloadlink op te halen.</string>
   <string name="noactivityfound">Er is geen app geïnstalleerd die dit kan openen.</string>
   <!-- Other stuff -->
   <string name="files">Bestanden</string>
@@ -74,12 +63,10 @@
   <string name="created_on_x_at_x">Gemaakt op %1$s om %2$s</string>
   <string name="accessed_on_x_at_x">Geraadpleegd op %1$s om %2$s</string>
   <string name="never_accessed">Nooit geopend</string>
-  <string name="applychanges">U hebt niet opgeslagen wijzigingen in %1$s.\nWilt u deze opslaan?</string>
   <string name="pasteurls">URLs hier plakken</string>
   <string name="extractwhenfinished">Uitpakken wanneer gereed</string>
   <string name="searchyourfiles">Zoeken je bestanden</string>
   <string name="nofilesfound">Er zijn geen bestanden gevonden.</string>
-  <string name="filedeleted">Bestand verwijderd!</string>
   <string name="filemoved">Bestand verplaatst!</string>
   <string name="transferremoved">Overdracht verwijderd!</string>
   <string name="ratio_is">Verhouding: %s</string>
@@ -89,7 +76,6 @@
   <string name="individual_or_zip">Wilt u deze bestanden als afzonderlijke downloads of als een ZIP-archief downloaden?</string>
   <string name="individually">Individueel</string>
   <string name="copy_dl_link">Kopieer downloadlink</string>
-  <string name="copyingdownloadlink">Downloadlink kopiëren</string>
   <string name="filenotfound">Het bestand kon niet worden gevonden. Was het verwijderd?</string>
   <string name="clear_finished_transfers">Afgeronde overdrachten opruimen</string>
   <string name="convert_mp4">Converteren naar MP4</string>
@@ -97,7 +83,6 @@
   <string name="mp4_available">MP4 beschikbaar</string>
   <string name="use_mp4">Gebruik MP4</string>
   <string name="dont_use_mp4">Gebruik geen MP4</string>
-  <string name="destination_is">Doel:</string>
   <string name="choose_folder">Map kiezen</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Torrent uploaden</string>

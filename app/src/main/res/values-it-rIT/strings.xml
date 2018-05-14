@@ -17,7 +17,6 @@
   <string name="log_in">Login</string>
   <string name="log_out">Logout</string>
   <string name="about">A proposito</string>
-  <string name="apply">Applica</string>
   <string name="download">Scarica</string>
   <string name="redownload">Ri-scarica</string>
   <string name="open">Apri</string>
@@ -44,23 +43,13 @@
   </plurals>
   <string name="removetransfertitle">Eliminare questo trasferimento?</string>
   <string name="removetransferbody">Il download sarà annullato.</string>
-  <string name="downloadwillopen">Il file verrà aperto appena è finito il download.</string>
-  <string name="downloadfinishedopentitle">Aprire il file?</string>
-  <string name="downloadfinishedbody">%1$s è scaricato.</string>
-  <string name="downloadpreparing">In preparazione per il download</string>
   <string name="downloadstarted">Download iniziato.</string>
-  <string name="redownloadtitle">Scaricare nuovamente il file?</string>
-  <string name="redownloadfordlbody">Sembra che questo file sia già stato scaricato. Scaricare comunque?</string>
-  <string name="redownloadforopenbody">Sembra che questo file sia già stato scaricato. Vuoi aprire questa copia o scaricarlo di nuovo?</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">Nessuna delle tue applicazioni può aprire questo tipo di file.</string>
   <string name="transferfailed">Il download di questo trasferimento è fallito.</string>
-  <string name="nothingenteredtofetch">Inserisci qualcosa da scaricare prima!</string>
-  <string name="filetoobig">Il file è troppo grande! Sei sicuro che sia un torrent?</string>
   <string name="streamerror">Siamo spiacenti, c\'è stato un errore nello streaming del tuo video.</string>
   <string name="couldntconnect">Impossibile connettersi a Put.io. Sei online?</string>
   <string name="notatorrent">Questo non sembra essere un file torrent!</string>
-  <string name="couldntgetdownloadlink">C\'è stato un problema nel recuperare il collegamento per il download.</string>
   <string name="noactivityfound">Nessuna applicazione installata può aprire questo file.</string>
   <!-- Other stuff -->
   <string name="files">File</string>
@@ -73,23 +62,19 @@
   <string name="created_on_x_at_x">Creato il  %1$s alle %2$s</string>
   <string name="accessed_on_x_at_x">Accesso a %1$s alle %2$s</string>
   <string name="never_accessed">Mai letto</string>
-  <string name="applychanges">Hai delle modifiche non salvate a %1$s\nSalva ora?</string>
   <string name="pasteurls">Incolla URL qui</string>
   <string name="extractwhenfinished">Estrarre quando completato</string>
   <string name="searchyourfiles">Cerca i tuoi file</string>
   <string name="nofilesfound">Nessun file trovato.</string>
-  <string name="filedeleted">File cancellato!</string>
   <string name="filemoved">File spostato!</string>
   <string name="transferremoved">Trasferimento eliminato!</string>
   <string name="ratio_is">Rapporto: %s</string>
-  <string name="hey">Ehi!</string>
   <string name="readytopaste">Il link per il download è pronto per essere incollato.</string>
   <string name="addtransfer_type_file">File torrent</string>
   <string name="download_files">Scarica file</string>
   <string name="individual_or_zip">Vuoi scaricare questi file come download singoli o come un archivio ZIP?</string>
   <string name="individually">Singolarmente</string>
   <string name="copy_dl_link">Copia il link per il download</string>
-  <string name="copyingdownloadlink">Copia il link per il download in corso</string>
   <string name="filenotfound">Il file non è stato trovato. È stato per caso eliminato?</string>
   <string name="clear_finished_transfers">Elimina trasferimenti completati</string>
   <string name="convert_mp4">Converti in MP4</string>
@@ -97,7 +82,6 @@
   <string name="mp4_available">MP4 disponibile</string>
   <string name="use_mp4">Usa MP4</string>
   <string name="dont_use_mp4">Non usa MP4</string>
-  <string name="destination_is">Destinazione:</string>
   <string name="choose_folder">Scegli la cartella</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Caricando il torrent</string>
