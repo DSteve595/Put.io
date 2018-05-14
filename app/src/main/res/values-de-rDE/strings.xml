@@ -16,7 +16,6 @@
   <string name="log_in">Einloggen</string>
   <string name="log_out">Ausloggen</string>
   <string name="about">Über</string>
-  <string name="apply">Bestätigen</string>
   <string name="download">Download</string>
   <string name="redownload">Erneut herunterladen</string>
   <string name="open">Öffnen</string>
@@ -41,23 +40,13 @@
   </plurals>
   <string name="removetransfertitle">Diese Übertragung entfernen?</string>
   <string name="removetransferbody">Der Download wird abgebrochen.</string>
-  <string name="downloadwillopen">Deine Datei wird geöffnet, sobald der Download abgeschlossen ist.</string>
-  <string name="downloadfinishedopentitle">Datei öffnen?</string>
-  <string name="downloadfinishedbody">%1$s wurde erfolgreich heruntergeladen.</string>
-  <string name="downloadpreparing">Bereite Download vor</string>
   <string name="downloadstarted">Download hat begonnen.</string>
-  <string name="redownloadtitle">Datei nochmals herunterladen?</string>
-  <string name="redownloadfordlbody">Die Datei wurde bereits heruntergeladen. Download trotzdem starten?</string>
-  <string name="redownloadforopenbody">Die Datei wurde bereits heruntergeladen. Möchtest du die Datei öffnen oder erneut herunterladen?</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">Keine deiner Apps können diesen Dateitypen öffnen.</string>
   <string name="transferfailed">Dieser Transfer konnte nicht heruntergeladen werden.</string>
-  <string name="nothingenteredtofetch">Gib etwas zum herunterladen ein!</string>
-  <string name="filetoobig">Diese Datei ist zu groß. Bist du sicher, dass es sich um einen Torrent handelt?</string>
   <string name="streamerror">Entschuldigung, es gab einen Fehler beim Streamen deines Videos.</string>
   <string name="couldntconnect">Konnte nicht mit put.io verbinden. Bist du sicher, dass du online bist?</string>
   <string name="notatorrent">Dies scheint keine Torrent-Datei zu sein!</string>
-  <string name="couldntgetdownloadlink">Es gab ein Problem beim Abrufen des Downloadlinks.</string>
   <string name="noactivityfound">Keine deiner installierten Apps können diese Datei öffnen.</string>
   <!-- Other stuff -->
   <string name="account">Konto</string>
@@ -66,25 +55,21 @@
   <string name="loginsuccess">Erfolgreich eingeloggt!</string>
   <string name="total_is">Gesamt: %s</string>
   <string name="loading">Wird geladen&#8230;</string>
-  <string name="applychanges">Du hast nicht gespeicherte Änderungen in %1$s.\nBestätigen?</string>
   <string name="pasteurls">Paste URLs hier</string>
   <string name="extractwhenfinished">Extrahieren, wenn heruntergeladen</string>
   <string name="searchyourfiles">Dateien suchen</string>
   <string name="nofilesfound">Es wurden keine Dateien gefunden.</string>
-  <string name="filedeleted">Dateien gelöscht!</string>
   <string name="filemoved">Dateien verschoben!</string>
   <string name="transferremoved">Transfer entfernt!</string>
   <string name="ratio_is">Verhältnis: %s</string>
   <string name="readytopaste">Der Download-Link kann eingefügt werden.</string>
   <string name="addtransfer_type_file">Torrent-Datei</string>
   <string name="copy_dl_link">Download-Link kopieren</string>
-  <string name="copyingdownloadlink">Kopiere Download-Link</string>
   <string name="filenotfound">Die Datei konnte nicht gefunden werden. Wurde sie gelöscht?</string>
   <string name="clear_finished_transfers">Abgeschlossene Downloads entfernen</string>
   <string name="convert_mp4">In MP4 konvertieren</string>
   <string name="converting_mp4">Konvertiere in MP4&#8230;</string>
   <string name="mp4_available">MP4 verfügbar</string>
-  <string name="destination_is">Ziel:</string>
   <string name="choose_folder">Ordner wählen</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Lade Torrent hoch</string>
