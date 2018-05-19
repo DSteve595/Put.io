@@ -5,7 +5,7 @@
     android:orientation="vertical"
     >
 
-  <android.support.v4.view.ViewPager
+  <com.duolingo.open.rtlviewpager.RtlViewPager
       android:id="@+id/files_pager"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

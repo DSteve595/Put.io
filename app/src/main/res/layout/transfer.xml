@@ -24,14 +24,12 @@
         android:id="@+id/img_transfer_icon"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_small"
         android:adjustViewBounds="true"
         android:padding="6dp"
         android:scaleType="centerInside"
-        tools:src="@drawable/ic_launcher"
         />
 
     <ProgressBar
@@ -39,10 +37,9 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_small"
         android:padding="4dp"
         />
 
@@ -51,11 +48,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="12dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="12dp"
         android:layout_marginStart="2dp"
         >
 
@@ -72,7 +66,7 @@
           style="@style/Putio.Button.TransferView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="View"
+          android:text="@string/view"
           />
     </FrameLayout>
 
@@ -80,9 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_toLeftOf="@id/transfer_right_item"
-        android:layout_toRightOf="@id/img_transfer_icon"
+        android:layout_toEndOf="@id/img_transfer_icon"
+        android:layout_toStartOf="@id/transfer_right_item"
         android:orientation="vertical"
         >
 
@@ -90,7 +83,7 @@
           android:id="@+id/text_transfer_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="4dp"
+          android:layout_marginStart="4dp"
           android:layout_marginTop="14dp"
           android:ellipsize="end"
           android:maxLines="1"
@@ -104,7 +97,7 @@
           android:id="@+id/text_transfer_message"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="4dp"
+          android:layout_marginStart="4dp"
           android:layout_marginTop="2dp"
           android:textAppearance="?android:attr/textAppearanceSmall"
           android:visibility="gone"
@@ -114,7 +107,7 @@
       <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="4dp"
+          android:layout_marginStart="4dp"
           android:layout_marginTop="2dp"
           android:orientation="horizontal"
           >
@@ -130,7 +123,6 @@
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:adjustViewBounds="true"
-              android:alpha="0.9"
               android:padding="1dp"
               android:scaleType="fitCenter"
               android:src="@drawable/ic_transfer_download"
@@ -141,11 +133,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginEnd="8dp"
-              android:layout_marginLeft="2sp"
-              android:layout_marginRight="8dp"
               android:layout_marginStart="2sp"
               android:ellipsize="none"
-              android:maxLines="1"
               android:singleLine="true"
               android:textAppearance="?android:attr/textAppearanceSmall"
               tools:text="100 KB/sec"
@@ -163,7 +152,6 @@
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:adjustViewBounds="true"
-              android:alpha="0.9"
               android:padding="1dp"
               android:scaleType="fitCenter"
               android:src="@drawable/ic_transfer_upload"
@@ -174,11 +162,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginEnd="8dp"
-              android:layout_marginLeft="2sp"
-              android:layout_marginRight="8dp"
               android:layout_marginStart="2sp"
               android:ellipsize="none"
-              android:maxLines="1"
               android:singleLine="true"
               android:textAppearance="?android:attr/textAppearanceSmall"
               tools:text="100 KB/sec"

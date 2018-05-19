@@ -103,6 +103,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
+    implementation 'com.duolingo.open:rtl-viewpager:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

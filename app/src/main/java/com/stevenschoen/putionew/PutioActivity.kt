@@ -77,7 +77,7 @@ class PutioActivity : BaseCastActivity() {
       return
     }
 
-    intent?.let { handleIntent(it) }
+    intent?.let(::handleIntent)
 
     val noNetworkIntentFilter = IntentFilter(
         PutioActivity.noNetworkIntent)

@@ -39,6 +39,7 @@
   <string name="send">Send</string>
   <string name="send_x">Send %s</string>
   <string name="go_back">Go back</string>
+  <string name="view">View</string>
 
   <!-- Dialog text -->
   <string name="gettingstreamurltitle">Preparing to stream</string>
