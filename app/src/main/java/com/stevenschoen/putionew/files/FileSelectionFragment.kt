@@ -129,6 +129,6 @@ class FileSelectionFragment : RxFragment() {
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    outState.putInt(STATE_AMOUNT_SELECTED, amountSelected.value)
+    outState.putInt(STATE_AMOUNT_SELECTED, amountSelected.value!!)
   }
 }

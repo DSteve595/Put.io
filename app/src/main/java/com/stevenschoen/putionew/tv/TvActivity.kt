@@ -74,7 +74,7 @@ class TvActivity : FragmentActivity() {
     super.onAttachFragment(fragment)
     if (fragment is TvFolderFragment) {
       fragment.onFolderSelected = { folder ->
-        folders.onNext(folders.value.plus(folder))
+        folders.onNext(folders.value!! + folder)
       }
     }
   }
@@ -85,7 +85,7 @@ class TvActivity : FragmentActivity() {
     if (displayedFolders.size > 1) {
       val lastFolderFragment = supportFragmentManager.findFragmentByTag(makeFolderFragTag(displayedFolders.last()))
       if (lastFolderFragment != null && lastFolderFragment is TvFolderFragment) {
-        folders.onNext(folders.value.dropLast(1))
+        folders.onNext(folders.value!!.dropLast(1))
       }
     } else {
       super.onBackPressed()

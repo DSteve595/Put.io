@@ -20,7 +20,7 @@ class DestinationPickerFragment : RxFragment() {
   private lateinit var destinationSubject: BehaviorSubject<PutioFile>
 
   val destination: PutioFile
-    get() = destinationSubject.value
+    get() = destinationSubject.value!!
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
