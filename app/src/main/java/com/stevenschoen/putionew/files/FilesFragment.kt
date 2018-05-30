@@ -63,15 +63,19 @@ open class FilesFragment : RxFragment() {
 
     setHasOptionsMenu(true)
 
-    if (savedInstanceState != null) {
-      pages.addAll(savedInstanceState.getParcelableArrayList(STATE_PAGES))
-      if (savedInstanceState.containsKey(STATE_CURRENT_PAGE)) {
-        currentPage = savedInstanceState.getParcelable(STATE_CURRENT_PAGE)
+    when {
+      savedInstanceState != null -> {
+        pages.addAll(savedInstanceState.getParcelableArrayList(STATE_PAGES))
+        if (savedInstanceState.containsKey(STATE_CURRENT_PAGE)) {
+          currentPage = savedInstanceState.getParcelable(STATE_CURRENT_PAGE)
+        }
       }
-    } else if (arguments!!.containsKey(EXTRA_FOLDER)) {
-      pages.add(Page.File(arguments!!.getParcelable(EXTRA_FOLDER)))
-    } else {
-      pages.add(Page.File(PutioFile.makeRootFolder(resources)))
+      arguments?.containsKey(EXTRA_FOLDER) == true -> {
+        pages.add(Page.File(arguments!!.getParcelable(EXTRA_FOLDER)))
+      }
+      else -> {
+        pages.add(Page.File(PutioFile.makeRootFolder(resources)))
+      }
     }
     fileListFragmentsAdapter.notifyDataSetChanged()
   }
