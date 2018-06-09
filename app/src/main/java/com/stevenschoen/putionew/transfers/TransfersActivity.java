@@ -38,7 +38,7 @@ public class TransfersActivity extends AppCompatActivity {
     } else {
       setContentView(R.layout.transfersactivity);
 
-      Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_transfersdialog);
+      Toolbar toolbar = findViewById(R.id.toolbar_transfersdialog);
       toolbar.inflateMenu(R.menu.menu_transfersdialog);
       toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
         @Override

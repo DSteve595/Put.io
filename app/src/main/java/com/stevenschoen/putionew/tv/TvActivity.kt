@@ -14,7 +14,7 @@ import java.util.*
 class TvActivity : FragmentActivity() {
 
   private val displayedFolders = ArrayList<PutioFile>()
-  private val folders by lazy { BehaviorSubject.createDefault<List<PutioFile>>(listOf(PutioFile.makeRootFolder(resources)))!! }
+  private val folders by lazy { BehaviorSubject.createDefault<List<PutioFile>>(listOf(PutioFile.makeRootFolder(resources))) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

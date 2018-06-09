@@ -144,7 +144,7 @@ class FileDetailsFragment : RxFragment() {
         lifecycle()
             .filter { it == FragmentEvent.DESTROY_VIEW }
             .first(FragmentEvent.DESTROY_VIEW)
-            .toCompletable()
+            .ignoreElement()
             .subscribe {
               Picasso.get().cancelRequest(screenshotTarget)
             }

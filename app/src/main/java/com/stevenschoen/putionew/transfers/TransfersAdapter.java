@@ -217,17 +217,17 @@ public class TransfersAdapter extends RecyclerView.Adapter<TransfersAdapter.Tran
       super(itemView);
 
       root = itemView;
-      textName = (TextView) itemView.findViewById(R.id.text_transfer_name);
-      textDown = (TextView) itemView.findViewById(R.id.text_transfer_down);
-      textUp = (TextView) itemView.findViewById(R.id.text_transfer_up);
-      textRatio = (TextView) itemView.findViewById(R.id.text_transfer_ratio);
-      textRemaining = (TextView) itemView.findViewById(R.id.text_transfer_remaining);
-      imgStatusIcon = (ImageView) itemView.findViewById(R.id.img_transfer_icon);
-      statusLoading = (ProgressBar) itemView.findViewById(R.id.transfer_statusLoading);
-      buttonView = (Button) itemView.findViewById(R.id.transfer_view_button);
+      textName = itemView.findViewById(R.id.text_transfer_name);
+      textDown = itemView.findViewById(R.id.text_transfer_down);
+      textUp = itemView.findViewById(R.id.text_transfer_up);
+      textRatio = itemView.findViewById(R.id.text_transfer_ratio);
+      textRemaining = itemView.findViewById(R.id.text_transfer_remaining);
+      imgStatusIcon = itemView.findViewById(R.id.img_transfer_icon);
+      statusLoading = itemView.findViewById(R.id.transfer_statusLoading);
+      buttonView = itemView.findViewById(R.id.transfer_view_button);
 
-      progressBar = (TransferProgressBarView) itemView.findViewById(R.id.transfer_progressbar);
-      textMessage = (TextView) itemView.findViewById(R.id.text_transfer_message);
+      progressBar = itemView.findViewById(R.id.transfer_progressbar);
+      textMessage = itemView.findViewById(R.id.text_transfer_message);
       downHolder = itemView.findViewById(R.id.holder_transfer_down);
       upHolder = itemView.findViewById(R.id.holder_transfer_up);
       ratioHolder = itemView.findViewById(R.id.holder_transfer_ratio);

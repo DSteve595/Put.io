@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
@@ -47,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
     StrictMode.setThreadPolicy(new ThreadPolicy.Builder().permitNetwork().build());
 
-    loginWebView = (WebView) findViewById(R.id.webview_setup);
+    loginWebView = findViewById(R.id.webview_setup);
     loginWebView.setVisibility(View.INVISIBLE);
     loginWebView.getSettings().setJavaScriptEnabled(true);
     loginWebView.setWebViewClient(new LoginWebViewClient());
@@ -139,11 +140,11 @@ public class LoginActivity extends AppCompatActivity {
   }
 
   private void saveToken(String token) {
-    sharedPrefs.edit().putString("token", token).commit();
+    sharedPrefs.edit().putString("token", token).apply();
     Toast.makeText(this, R.string.loginsuccess, Toast.LENGTH_SHORT).show();
 
     CookieManager cookieManager = CookieManager.getInstance();
-    cookieManager.removeAllCookie();
+    cookieManager.removeAllCookies(null);
 
     startActivity(new Intent(this, PutioActivity.class));
     finish();
@@ -185,17 +186,22 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onLoadResource(WebView view, String url) {
-      if (url.contains("code=")) {
-        String[] strings = url.split("code=");
-        String code = strings[1];
-
+      Uri uri = Uri.parse(url);
+      if (!uri.getHost().contains("put.io")) {
+        return;
+      }
+      String code = uri.getQueryParameter("code");
+      if (code != null) {
         final String finalUrl = "https://api.put.io/v2/oauth2/access_token?client_id=" +
             getString(R.string.putio_client_id) + "&client_secret=" +
             getString(R.string.putio_api_key) + "&grant_type=authorization_code&redirect_uri=http://stevenschoen.com/callback.php&code="
             + code;
         saveTokenFromWeb(finalUrl);
-      } else if (url.contains("token=")) {
-        saveToken(url.substring(url.indexOf("token=") + 6));
+      } else {
+        String token = uri.getQueryParameter("token");
+        if (token != null) {
+          saveToken(token);
+        }
       }
     }
   }

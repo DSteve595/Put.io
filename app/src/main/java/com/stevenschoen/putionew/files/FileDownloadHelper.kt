@@ -83,7 +83,7 @@ class FileDownloadHelper(context: Context) {
   fun copyZipLink(vararg fileIds: Long): Completable {
     return getZipUrl(*fileIds)
         .doOnSuccess { PutioUtils.copy(appContext, "Download link", it) }
-        .toCompletable()
+        .ignoreElement()
   }
 
   fun getZipUrl(vararg fileIds: Long): Single<String> {

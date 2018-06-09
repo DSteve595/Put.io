@@ -355,7 +355,7 @@ public class PutioUtils {
       final long... idsToDelete) {
     final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
 
-    Button removeRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_remove);
+    Button removeRemove = removeDialog.findViewById(R.id.button_removetransfer_remove);
     removeRemove.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -372,7 +372,7 @@ public class PutioUtils {
       }
     });
 
-    Button cancelRemove = (Button) removeDialog.findViewById(R.id.button_removetransfer_cancel);
+    Button cancelRemove = removeDialog.findViewById(R.id.button_removetransfer_cancel);
     cancelRemove.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
