@@ -16,8 +16,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 132
-        versionName '4.3.3'
+        versionCode 133
+        versionName '4.3.4'
         multiDexEnabled true
 
         kapt {

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
+import com.stevenschoen.putionew.PutioActivity
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.ResponseOrError
@@ -16,6 +17,7 @@ import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
+import retrofit2.HttpException
 
 class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
 
@@ -122,6 +124,9 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
             is ResponseOrError.NetworkError -> {
               PutioUtils.getRxJavaThrowable(response.error).printStackTrace()
               Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
+              if (response.error is HttpException && response.error?.code() == 401) {
+                (activity as? PutioActivity)?.logOut()
+              }
             }
           }
           updateViewState()

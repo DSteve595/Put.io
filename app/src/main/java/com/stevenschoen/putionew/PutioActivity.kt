@@ -84,28 +84,26 @@ class PutioActivity : BaseCastActivity() {
 
     registerReceiver(noNetworkReceiver, noNetworkIntentFilter)
 
-    if (Build.VERSION.SDK_INT >= 21) {
-      val jobDispatcher = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-      if (jobDispatcher.allPendingJobs.none {
-            it.id == FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID
-          }) {
-        jobDispatcher.schedule(JobInfo.Builder(
-            FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
-            ComponentName(this, FileDownloadsMaintenanceService::class.java))
-            .setPeriodic(TimeUnit.DAYS.toMillis(2))
-            .setPersisted(true)
-            .setRequiresDeviceIdle(true)
-            .build())
-      }
-
+    val jobDispatcher = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+    if (jobDispatcher.allPendingJobs.none {
+          it.id == FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID
+        }) {
       jobDispatcher.schedule(JobInfo.Builder(
           FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
           ComponentName(this, FileDownloadsMaintenanceService::class.java))
-          .setOverrideDeadline(5000)
+          .setPeriodic(TimeUnit.DAYS.toMillis(2))
           .setPersisted(true)
           .setRequiresDeviceIdle(true)
           .build())
     }
+
+    jobDispatcher.schedule(JobInfo.Builder(
+        FileDownloadsMaintenanceService.FILE_DOWNLOADS_MAINTENANCE_JOB_ID,
+        ComponentName(this, FileDownloadsMaintenanceService::class.java))
+        .setOverrideDeadline(5000)
+        .setPersisted(true)
+        .setRequiresDeviceIdle(true)
+        .build())
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -288,6 +286,7 @@ class PutioActivity : BaseCastActivity() {
   }
 
   fun logOut() {
+    (application as PutioApplication).putioUtils = null
     sharedPrefs!!.edit().remove("token").apply()
     FolderLoader.DiskCache(this).deleteCache()
     finish()
