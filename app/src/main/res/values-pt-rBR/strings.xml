@@ -11,6 +11,10 @@
   <string name="rename">Renomear</string>
   <string name="add">Adicionar</string>
   <string name="play">Reproduzir</string>
+  <string name="play_original">Exibir original</string>
+  <string name="stream">Transmitir</string>
+  <string name="stream_original">Transmitir o original</string>
+  <string name="add_transfer">Adicionar transferência</string>
   <string name="add_transfers">Adicionar transferências</string>
   <string name="create_folder">Criar pasta</string>
   <string name="create">Criar</string>
@@ -20,7 +24,9 @@
   <string name="about">Sobre</string>
   <string name="download">Baixar</string>
   <string name="redownload">Baixar novamente</string>
+  <string name="download_original">Baixar o original</string>
   <string name="open">Abrir</string>
+  <string name="ok">OK</string>
   <string name="delete">Excluir</string>
   <string name="search">Pesquisar</string>
   <string name="retry">Tente novamente</string>
@@ -29,6 +35,10 @@
   <string name="move">Mover</string>
   <string name="more">Mais</string>
   <string name="maximize">Maximizar</string>
+  <string name="send">Enviar</string>
+  <string name="send_x">Enviar %s</string>
+  <string name="go_back">Voltar</string>
+  <string name="view">Ver</string>
   <!-- Dialog text -->
   <string name="gettingstreamurltitle">Preparando para transmitir</string>
   <string name="gettingstreamurlbody">Só um segundo&#8230;</string>
@@ -51,6 +61,7 @@
   <string name="couldntconnect">Não pude conectar ao Put.io. Você está online?</string>
   <string name="notatorrent">Isto não parece ser um arquivo torrent!</string>
   <string name="noactivityfound">Nenhum app instalado pode abrir este arquivo.</string>
+  <string name="network_error">Erro de rede!</string>
   <!-- Other stuff -->
   <string name="account">Conta</string>
   <string name="files">Arquivos</string>
@@ -58,6 +69,7 @@
   <string name="loginsuccess">Conectado com sucesso!</string>
   <string name="folder_name">Nome da pasta</string>
   <string name="x_selected">%d selecionado/os</string>
+  <string name="total_is">Total: %s</string>
   <string name="loading">Carregando&#8230;</string>
   <string name="created_on_x_at_x">Criado em %1$s às %2$s</string>
   <string name="accessed_on_x_at_x">Acessado em %1$s às %2$s</string>
@@ -68,20 +80,35 @@
   <string name="nofilesfound">Não foram encontrados arquivos.</string>
   <string name="filemoved">Arquivo movido!</string>
   <string name="transferremoved">Transferência removida!</string>
+  <string name="ratio_is">Razão: %s</string>
   <string name="readytopaste">O link para download está pronto para ser colado.</string>
+  <string name="addtransfer_type_url">Link magnético</string>
   <string name="addtransfer_type_file">Arquivo torrent</string>
+  <string name="add_transfer_add_type_url">Adicionar link magnético</string>
+  <string name="add_transfer_add_type_file">Adicionar arquivo torrent</string>
   <string name="download_files">Baixar arquivos</string>
+  <string name="downloaded">Baixado</string>
   <string name="individual_or_zip">Você quer baixar esses arquivos como downloads individuais ou como um arquivo ZIP?</string>
   <string name="individually">Individualmente</string>
+  <string name="zip">ZIP</string>
   <string name="copy_dl_link">Copie o link para download</string>
+  <string name="downloading_zip">Baixando zip…</string>
   <string name="filenotfound">O arquivo não pôde ser encontrado. Ele foi excluído?</string>
   <string name="clear_finished_transfers">Apagar transferências terminadas</string>
   <string name="convert_mp4">Converter para MP4</string>
+  <string name="checking_for_mp4">Checando por MP4…</string>
   <string name="converting_mp4">Convertendo para MP4&#8230;</string>
+  <string name="converting_mp4_x">Convertendo para MP4 (%d%%)</string>
   <string name="mp4_available">MP4 disponível</string>
   <string name="use_mp4">Usar MP4</string>
   <string name="dont_use_mp4">Não usar MP4</string>
+  <string name="choose_a_file">Escolha um arquivo</string>
   <string name="choose_folder">Escolha a pasta</string>
+  <string name="x_per_sec">%s/sec</string>
+  <string name="in_x">em %s</string>
+  <string name="you_dont_have_any_transfers">Você não tem nenhuma transferência</string>
+  <string name="add_stuff_by_clicking_add">Inclua alguma coisa usando o botão \"adicionar\" abaixo!</string>
+  <string name="downloading">Baixando</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Enviando Torrent</string>
   <string name="notification_ticker_uploading_torrent">Enviando torrent&#8230;</string>
@@ -97,6 +124,11 @@
   <string name="available_storage">Espaço Disponível</string>
   <!-- About screen -->
   <string name="version_x">Versão %s</string>
+  <string name="this_app_is_open_source">Este aplicativo é de código aberto!</string>
+  <string name="email_the_developer">Enviar e-mail ao desenvolvedor</string>
+  <string name="help_translate_this_app">Ajude a traduzir este app</string>
+  <string name="visit_putio_on_the_web">Visite put.io na web</string>
   <string name="appbysteven">Android app por Steven Schoen.</string>
   <string name="codedwithlove">Codificado com amor, carinho e cafeína.</string>
+  <string name="notaffiliated">Não afiliado com put.io.</string>
 </resources>
