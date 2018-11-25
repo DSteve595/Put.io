@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="56dp"
     android:animateLayoutChanges="true"
-    android:background="@android:color/white"
+    android:background="@drawable/rounded_surface"
     android:clickable="true"
     android:elevation="6dp"
     android:focusableInTouchMode="true"

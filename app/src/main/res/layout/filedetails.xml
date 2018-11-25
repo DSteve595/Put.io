@@ -119,32 +119,20 @@
 
     <Button
         android:id="@+id/filedetails_play"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.Putio.Button.Outlined"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:drawablePadding="32dp"
-        android:gravity="center_vertical"
         android:paddingStart="20dp"
         android:paddingEnd="32dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:icon="@drawable/ic_filedetails_play"
+        app:iconPadding="16dp"
         app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_title"
-        tools:drawableStart="@drawable/ic_filedetails_play"
         tools:text="@string/stream"
-        />
-
-    <ProgressBar
-        android:id="@+id/filedetails_play_progressbar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="@+id/filedetails_play"
-        app:layout_constraintStart_toStartOf="@+id/filedetails_play"
-        app:layout_constraintTop_toTopOf="@+id/filedetails_play"
         />
 
     <ImageButton
@@ -161,32 +149,20 @@
 
     <Button
         android:id="@+id/filedetails_download"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.Putio.Button.Outlined"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
-        android:drawablePadding="32dp"
-        android:gravity="center_vertical"
+        android:layout_marginStart="16dp"
         android:paddingStart="20dp"
         android:paddingEnd="32dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:iconPadding="16dp"
         app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_play"
         app:layout_goneMarginTop="16dp"
-        tools:drawableStart="@drawable/ic_filedetails_download"
+        tools:icon="@drawable/ic_filedetails_download"
         tools:text="@string/download"
-        />
-
-    <ProgressBar
-        android:id="@+id/filedetails_download_progressbar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="@+id/filedetails_download"
-        app:layout_constraintStart_toStartOf="@+id/filedetails_download"
-        app:layout_constraintTop_toTopOf="@+id/filedetails_download"
         />
 
     <ImageButton

@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.stevenschoen.putionew.AutoExpandingBottomSheetDialogFragment
+import com.stevenschoen.putionew.PutioBottomSheetDialogFragment
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
 
-class TransferOptionsFragment : AutoExpandingBottomSheetDialogFragment() {
+class TransferOptionsFragment : PutioBottomSheetDialogFragment() {
 
   companion object {
     const val EXTRA_TRANSFER = "transfer"

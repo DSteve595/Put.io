@@ -21,17 +21,16 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePaddingRelative
 import androidx.core.widget.ImageViewCompat
-import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.stevenschoen.putionew.PutioApplication
@@ -109,15 +108,13 @@ class FileDetailsFragment : RxFragment() {
         onBackPressed?.invoke()
       }
 
-      titleView.setPadding(
-          titleView.paddingLeft,
-          resources.getDimensionPixelSize(
+      titleView.updatePaddingRelative(
+          top = resources.getDimensionPixelSize(
               if (useVideoTitleBackground)
                 R.dimen.filedetails_title_top_padding_video
               else
                 R.dimen.filedetails_title_top_padding_notvideo
-          ),
-          titleView.paddingRight, titleView.paddingBottom
+          )
       )
       if (useVideoTitleBackground) {
         ImageViewCompat.setImageTintList(
@@ -194,24 +191,7 @@ class FileDetailsFragment : RxFragment() {
       val crcView: TextView = findViewById(R.id.filedetails_crc32)
       crcView.text = file.crc32
 
-      fun setActionDrawable(actionView: Button, drawable: Drawable?) {
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            actionView,
-            drawable, null, null, null
-        )
-      }
-
-      fun setActionDrawable(actionView: Button, @DrawableRes drawableRes: Int) {
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            actionView,
-            drawableRes, 0, 0, 0
-        )
-      }
-
-      val blankActionDrawable = ContextCompat.getDrawable(context, R.drawable.blank_24)
-
-      val playActionView: Button = findViewById(R.id.filedetails_play)
-      val playProgressBarView: View = findViewById(R.id.filedetails_play_progressbar)
+      val playActionView: MaterialButton = findViewById(R.id.filedetails_play)
       val playMoreView: View = findViewById(R.id.filedetails_play_more)
       val playMorePopup = PopupMenu(context, playMoreView)
       playMoreView.setOnTouchListener(playMorePopup.dragToOpenListener)
@@ -236,8 +216,7 @@ class FileDetailsFragment : RxFragment() {
         true
       }
 
-      val downloadActionView: Button = findViewById(R.id.filedetails_download)
-      val downloadProgressBarView: View = findViewById(R.id.filedetails_download_progressbar)
+      val downloadActionView: MaterialButton = findViewById(R.id.filedetails_download)
       val downloadMoreView: View = findViewById(R.id.filedetails_download_more)
       val downloadMorePopup = PopupMenu(context, downloadMoreView)
       downloadMoreView.setOnTouchListener(downloadMorePopup.dragToOpenListener)
@@ -313,7 +292,6 @@ class FileDetailsFragment : RxFragment() {
         }
         else -> {
           playActionView.visibility = View.GONE
-          playProgressBarView.visibility = View.GONE
           playMoreView.visibility = View.GONE
           Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.NotVideo })
         }
@@ -331,8 +309,7 @@ class FileDetailsFragment : RxFragment() {
           PutioMp4Status.Status.AlreadyMp4 -> {
             playActionView.text = getString(playMp4String)
             playActionView.setOnClickListener { play(false, downloadDone) }
-            setActionDrawable(playActionView, R.drawable.ic_filedetails_play)
-            playProgressBarView.visibility = View.INVISIBLE
+            playActionView.setIconResource(R.drawable.ic_filedetails_play)
             playMoreView.visibility = View.GONE
             playOriginalItem.isVisible = false
           }
@@ -340,8 +317,7 @@ class FileDetailsFragment : RxFragment() {
           PutioMp4Status.Status.Error -> {
             playActionView.text = getString(R.string.convert_mp4)
             playActionView.setOnClickListener { mp4Loader!!.startConversion() }
-            setActionDrawable(playActionView, R.drawable.ic_filedetails_convert)
-            playProgressBarView.visibility = View.INVISIBLE
+            playActionView.setIconResource(R.drawable.ic_filedetails_convert)
             playMoreView.visibility = View.VISIBLE
             playOriginalItem.isVisible = true
           }
@@ -358,16 +334,14 @@ class FileDetailsFragment : RxFragment() {
             }
             playActionView.text = text
             playActionView.setOnClickListener(null)
-            setActionDrawable(playActionView, blankActionDrawable)
-            playProgressBarView.visibility = View.VISIBLE
+            playActionView.setIconResource(android.R.drawable.progress_indeterminate_horizontal) // TODO
             playMoreView.visibility = View.VISIBLE
             playOriginalItem.isVisible = true
           }
           PutioMp4Status.Status.Completed -> {
             playActionView.text = getString(playMp4String)
             playActionView.setOnClickListener { play(true, downloadDone && downloadedMp4) }
-            setActionDrawable(playActionView, R.drawable.ic_filedetails_play)
-            playProgressBarView.visibility = View.INVISIBLE
+            playActionView.setIconResource(R.drawable.ic_filedetails_play)
             playMoreView.visibility = View.VISIBLE
             playOriginalItem.isVisible = true
           }
@@ -378,13 +352,12 @@ class FileDetailsFragment : RxFragment() {
 
         when (newDownload.status) {
           FileDownload.Status.Downloaded -> {
-            downloadProgressBarView.visibility = View.INVISIBLE
             if (useVideoTitleBackground) {
-              setActionDrawable(downloadActionView, R.drawable.ic_filedetails_check)
+              downloadActionView.setIconResource(R.drawable.ic_filedetails_check)
               downloadActionView.text = getString(R.string.downloaded)
               downloadActionView.setOnClickListener(null)
             } else {
-              setActionDrawable(downloadActionView, R.drawable.ic_filedetails_open)
+              downloadActionView.setIconResource(R.drawable.ic_filedetails_open)
               downloadActionView.text = getString(R.string.open)
               downloadActionView.setOnClickListener {
                 open()
@@ -397,8 +370,7 @@ class FileDetailsFragment : RxFragment() {
             cancelItem.isVisible = false
           }
           FileDownload.Status.InProgress -> {
-            downloadProgressBarView.visibility = View.VISIBLE
-            setActionDrawable(downloadActionView, blankActionDrawable)
+            downloadActionView.setIconResource(android.R.drawable.progress_indeterminate_horizontal) // TODO
             downloadActionView.text = getString(R.string.downloading)
             downloadActionView.setOnClickListener(null)
             downloadMoreView.visibility = View.VISIBLE
@@ -408,8 +380,7 @@ class FileDetailsFragment : RxFragment() {
             cancelItem.isVisible = true
           }
           FileDownload.Status.NotDownloaded -> {
-            downloadProgressBarView.visibility = View.INVISIBLE
-            setActionDrawable(downloadActionView, R.drawable.ic_filedetails_download)
+            downloadActionView.setIconResource(R.drawable.ic_filedetails_download)
             val mp4Ready = newMp4Status.status == PutioMp4Status.Status.Completed
             downloadActionView.text = getString(
                 if (mp4Ready || file.isMp4 || !useVideoTitleBackground)

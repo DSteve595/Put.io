@@ -29,7 +29,7 @@
 
       <Button
           android:id="@+id/button_removetransfer_cancel"
-          style="@style/ButtonBar.Button"
+          style="@style/Widget.MaterialComponents.Button.TextButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/cancel"
@@ -37,7 +37,7 @@
 
       <Button
           android:id="@+id/button_removetransfer_remove"
-          style="@style/ButtonBar.Button"
+          style="@style/Widget.Putio.Button.Destructive"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/remove"

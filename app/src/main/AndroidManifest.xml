@@ -86,7 +86,7 @@
         android:excludeFromRecents="true"
         android:label="@string/add_transfer"
         android:taskAffinity="com.stevenschoen.putionew.addtransfertask"
-        android:theme="@style/Theme.Putio.Translucent"
+        android:theme="@style/Theme.Putio.AddTransferActivity"
         >
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
@@ -218,7 +218,6 @@
         android:name=".transfers.TransfersActivity"
         android:excludeFromRecents="true"
         android:taskAffinity="com.stevenschoen.putio.transfersdialog"
-        android:theme="@style/Putio.Dialog.NoTitle"
         />
 
     <activity

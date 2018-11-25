@@ -30,7 +30,7 @@
 
     <Button
         android:id="@+id/destination_cancel"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
@@ -38,7 +38,7 @@
 
     <Button
         android:id="@+id/destination_choose"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/choose_folder"

@@ -69,7 +69,7 @@
 
     <Button
         android:id="@+id/addtransfer_link_cancel"
-        style="@style/ButtonBar.Button"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -78,7 +78,7 @@
 
     <Button
         android:id="@+id/addtransfer_link_add"
-        style="@style/ButtonBar.Button"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="48dp"

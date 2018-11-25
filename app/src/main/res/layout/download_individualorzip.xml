@@ -11,6 +11,7 @@
       android:layout_height="wrap_content"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       app:navigationIcon="@drawable/ic_toolbar_nav_close_black"
       app:title="@string/download_files"
       />
@@ -25,15 +26,17 @@
       android:text="@string/individual_or_zip"
       android:textAppearance="@style/TextAppearance.AppCompat"
       android:textSize="16sp"
+      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/download_individualorzip_toolbar"
       />
 
   <Button
       android:id="@+id/download_individualorzip_zip"
-      style="@style/Widget.AppCompat.Button.Borderless"
+      style="@style/Widget.Putio.Button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="32dp"
+      android:layout_marginEnd="16dp"
       android:layout_marginBottom="16dp"
       android:text="@string/zip"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -43,9 +46,10 @@
 
   <Button
       android:id="@+id/download_individualorzip_individual"
-      style="@style/Widget.AppCompat.Button.Borderless"
+      style="@style/Widget.Putio.Button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
       android:text="@string/individually"
       app:layout_constraintBaseline_toBaselineOf="@+id/download_individualorzip_zip"
       app:layout_constraintEnd_toStartOf="@+id/download_individualorzip_zip"

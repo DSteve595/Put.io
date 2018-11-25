@@ -63,9 +63,9 @@
 
       <Button
           android:id="@+id/transfer_view_button"
-          style="@style/Putio.Button.TransferView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:backgroundTint="#1FAE7D"
           android:text="@string/view"
           />
     </FrameLayout>

@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import com.stevenschoen.putionew.AutoExpandingBottomSheetDialogFragment
+import com.stevenschoen.putionew.PutioBottomSheetDialogFragment
 import com.stevenschoen.putionew.R
 
-class DownloadIndividualOrZipFragment : AutoExpandingBottomSheetDialogFragment() {
+class DownloadIndividualOrZipFragment : PutioBottomSheetDialogFragment() {
 
   var callbacks: Callbacks? = null
 

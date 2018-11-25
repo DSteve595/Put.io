@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.stevenschoen.putionew.AutoExpandingBottomSheetDialogFragment
+import com.stevenschoen.putionew.PutioBottomSheetDialogFragment
 import com.stevenschoen.putionew.R
 
-class PickTypeFragment : AutoExpandingBottomSheetDialogFragment() {
+class PickTypeFragment : PutioBottomSheetDialogFragment() {
 
   var callbacks: Callbacks? = null
 
