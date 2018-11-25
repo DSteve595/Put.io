@@ -2,11 +2,11 @@ package com.stevenschoen.putionew.tv
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -53,8 +53,10 @@ class TvPlayerActivity : FragmentActivity() {
     playerView = findViewById(R.id.tv_player_exoplayer)
     playerView.player = player
 
-    val dataSourceFactory = DefaultDataSourceFactory(this,
-        Util.getUserAgent(this, "Put.io-for-Android"), bandwidthMeter)
+    val dataSourceFactory = DefaultDataSourceFactory(
+        this,
+        Util.getUserAgent(this, "Put.io-for-Android"), bandwidthMeter
+    )
     val url = video.getStreamUrl(putioApp.putioUtils!!, useMp4)
     val videoSource = ExtractorMediaSource.Factory(dataSourceFactory::createDataSource).createMediaSource(Uri.parse(url))
 

@@ -7,7 +7,7 @@
     tools:context=".AboutActivity"
     >
 
-  <android.support.constraint.ConstraintLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
@@ -54,7 +54,7 @@
         tools:text="Version 1.0"
         />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/about_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,8 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="?selectableItemBackground"
-        android:drawablePadding="24dp"
         android:drawableStart="@drawable/ic_about_github"
+        android:drawablePadding="24dp"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:paddingStart="24dp"
@@ -91,8 +91,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawablePadding="24dp"
         android:drawableStart="@drawable/ic_about_email"
+        android:drawablePadding="24dp"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:paddingStart="24dp"
@@ -108,8 +108,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawablePadding="24dp"
         android:drawableStart="@drawable/ic_about_translate"
+        android:drawablePadding="24dp"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:paddingStart="24dp"
@@ -125,8 +125,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawablePadding="24dp"
         android:drawableStart="@drawable/ic_about_visit"
+        android:drawablePadding="24dp"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:paddingStart="24dp"
@@ -176,5 +176,5 @@
         app:layout_constraintTop_toBottomOf="@+id/about_codedwithlove"
         />
 
-  </android.support.constraint.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

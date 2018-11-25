@@ -2,11 +2,11 @@ package com.stevenschoen.putionew.files
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.ResponseOrError
@@ -20,16 +20,20 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
     const val EXTRA_QUERY = "query"
     const val EXTRA_PARENT_FOLDER = "parent_folder"
 
-    fun newInstance(context: Context, query: String, parentFolder: PutioFile,
-                    canSelect: Boolean): SearchFragment {
+    fun newInstance(
+        context: Context, query: String, parentFolder: PutioFile,
+        canSelect: Boolean
+    ): SearchFragment {
       if (!parentFolder.isFolder) {
         throw IllegalStateException("SearchFragment created with parent as a file, not a folder: ${parentFolder.name} (ID ${parentFolder.id})")
       }
       val args = Bundle()
       args.putString(EXTRA_QUERY, query)
       args.putParcelable(EXTRA_PARENT_FOLDER, parentFolder)
-      return addArguments(Fragment.instantiate(context, SearchFragment::class.java.name, args) as SearchFragment,
-          canSelect)
+      return addArguments(
+          Fragment.instantiate(context, SearchFragment::class.java.name, args) as SearchFragment,
+          canSelect
+      )
     }
   }
 

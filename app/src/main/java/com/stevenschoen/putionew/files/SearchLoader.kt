@@ -2,8 +2,8 @@ package com.stevenschoen.putionew.files
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.getUniqueLoaderId
 import com.stevenschoen.putionew.model.ResponseOrError

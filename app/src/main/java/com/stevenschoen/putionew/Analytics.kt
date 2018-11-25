@@ -2,7 +2,7 @@ package com.stevenschoen.putionew
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.stevenschoen.putionew.model.files.PutioFile
 

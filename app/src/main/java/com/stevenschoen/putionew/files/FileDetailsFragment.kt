@@ -17,21 +17,31 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.ImageViewCompat
-import android.support.v4.widget.TextViewCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
+import androidx.core.widget.TextViewCompat
+import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import com.stevenschoen.putionew.*
+import com.stevenschoen.putionew.PutioApplication
+import com.stevenschoen.putionew.PutioUtils
+import com.stevenschoen.putionew.R
+import com.stevenschoen.putionew.ScrimUtil
+import com.stevenschoen.putionew.analytics
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.files.PutioMp4Status
+import com.stevenschoen.putionew.putioApp
 import com.trello.rxlifecycle2.android.FragmentEvent
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
@@ -75,7 +85,8 @@ class FileDetailsFragment : RxFragment() {
         if (animate && Build.VERSION.SDK_INT >= 21) {
           val startingColor = lastTitleBackgroundColor ?: color
           titleBackgroundColorAnimator = ObjectAnimator.ofArgb(
-              titleView, "backgroundColor", startingColor, color).apply {
+              titleView, "backgroundColor", startingColor, color
+          ).apply {
             start()
           }
         } else {
@@ -98,15 +109,21 @@ class FileDetailsFragment : RxFragment() {
         onBackPressed?.invoke()
       }
 
-      titleView.setPadding(titleView.paddingLeft,
-          resources.getDimensionPixelSize(if (useVideoTitleBackground)
-            R.dimen.filedetails_title_top_padding_video
-          else
-            R.dimen.filedetails_title_top_padding_notvideo),
-          titleView.paddingRight, titleView.paddingBottom)
+      titleView.setPadding(
+          titleView.paddingLeft,
+          resources.getDimensionPixelSize(
+              if (useVideoTitleBackground)
+                R.dimen.filedetails_title_top_padding_video
+              else
+                R.dimen.filedetails_title_top_padding_notvideo
+          ),
+          titleView.paddingRight, titleView.paddingBottom
+      )
       if (useVideoTitleBackground) {
-        ImageViewCompat.setImageTintList(backView,
-            ColorStateList.valueOf(Color.WHITE))
+        ImageViewCompat.setImageTintList(
+            backView,
+            ColorStateList.valueOf(Color.WHITE)
+        )
         titleView.setTextColor(Color.WHITE)
         titleView.background = null
         titleView.setShadowLayer(6f, 0f, 2f, Color.BLACK)
@@ -118,9 +135,11 @@ class FileDetailsFragment : RxFragment() {
           override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
             val scrimColor = Color.parseColor("#80000000")
             screenshotTopScrimView.background = ScrimUtil.makeCubicGradientScrimDrawable(
-                scrimColor, 6, Gravity.TOP)
+                scrimColor, 6, Gravity.TOP
+            )
             screenshotTitleScrimView.background = ScrimUtil.makeCubicGradientScrimDrawable(
-                scrimColor, 8, Gravity.BOTTOM)
+                scrimColor, 8, Gravity.BOTTOM
+            )
 
             screenshotView.setImageBitmap(bitmap)
             if (from == Picasso.LoadedFrom.NETWORK) {
@@ -176,13 +195,17 @@ class FileDetailsFragment : RxFragment() {
       crcView.text = file.crc32
 
       fun setActionDrawable(actionView: Button, drawable: Drawable?) {
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(actionView,
-            drawable, null, null, null)
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            actionView,
+            drawable, null, null, null
+        )
       }
 
       fun setActionDrawable(actionView: Button, @DrawableRes drawableRes: Int) {
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(actionView,
-            drawableRes, 0, 0, 0)
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            actionView,
+            drawableRes, 0, 0, 0
+        )
       }
 
       val blankActionDrawable = ContextCompat.getDrawable(context, R.drawable.blank_24)
@@ -201,8 +224,10 @@ class FileDetailsFragment : RxFragment() {
             .bindToLifecycle(this@FileDetailsFragment)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ fileDownload ->
-              play(false, fileDownload.status == FileDownload.Status.Downloaded
-                  && fileDownload.downloadedMp4 != true)
+              play(
+                  false, fileDownload.status == FileDownload.Status.Downloaded
+                  && fileDownload.downloadedMp4 != true
+              )
             }, { error ->
               PutioUtils.getRxJavaThrowable(error).printStackTrace()
             }, {
@@ -230,11 +255,15 @@ class FileDetailsFragment : RxFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
               val uri = Uri.parse(it.uri)
-              startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND)
-                  .setType("application/octet-stream")
-                  .putExtra(Intent.EXTRA_STREAM, uri)
-                  .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
-                  getString(R.string.send_x, file.name)))
+              startActivity(
+                  Intent.createChooser(
+                      Intent(Intent.ACTION_SEND)
+                          .setType("application/octet-stream")
+                          .putExtra(Intent.EXTRA_STREAM, uri)
+                          .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                      getString(R.string.send_x, file.name)
+                  )
+              )
             }, { error ->
               PutioUtils.getRxJavaThrowable(error).printStackTrace()
               Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show()
@@ -255,34 +284,39 @@ class FileDetailsFragment : RxFragment() {
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .toObservable()
-      val fileDownloadWithDefault = fileDownload.startWith(FileDownload(file.id,
-          null, FileDownload.Status.NotDownloaded, null, null))
+      val fileDownloadWithDefault = fileDownload.startWith(
+          FileDownload(
+              file.id,
+              null, FileDownload.Status.NotDownloaded, null, null
+          )
+      )
       val downloadStatus = fileDownload
           .map { it.status }
       var lastDownloadStatus: FileDownload.Status? = null
       var lastMp4PercentDone = 0
 
       data class DownloadAndMp4Status(
-          val download: FileDownload, val mp4Status: PutioMp4Status)
+          val download: FileDownload, val mp4Status: PutioMp4Status
+      )
 
       val mp4Status = when {
-          showMp4Options -> {
-            mp4Loader!!.mp4Status()
-                .startWith(PutioMp4Status().apply {
-                          // Assume it's completed, most common case
-                          status = PutioMp4Status.Status.Completed
-                })
-                .bindToLifecycle(this@FileDetailsFragment)
-          }
-          useVideoTitleBackground -> {
-            Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
-          }
-          else -> {
-            playActionView.visibility = View.GONE
-            playProgressBarView.visibility = View.GONE
-            playMoreView.visibility = View.GONE
-            Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.NotVideo })
-          }
+        showMp4Options -> {
+          mp4Loader!!.mp4Status()
+              .startWith(PutioMp4Status().apply {
+                // Assume it's completed, most common case
+                status = PutioMp4Status.Status.Completed
+              })
+              .bindToLifecycle(this@FileDetailsFragment)
+        }
+        useVideoTitleBackground -> {
+          Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.AlreadyMp4 })
+        }
+        else -> {
+          playActionView.visibility = View.GONE
+          playProgressBarView.visibility = View.GONE
+          playMoreView.visibility = View.GONE
+          Observable.just(PutioMp4Status().apply { status = PutioMp4Status.Status.NotVideo })
+        }
       }
       val downloadAndMp4Status: Observable<DownloadAndMp4Status> = Observable.combineLatest(
           fileDownloadWithDefault, mp4Status, BiFunction { newDownload, newMp4Status ->
@@ -377,10 +411,12 @@ class FileDetailsFragment : RxFragment() {
             downloadProgressBarView.visibility = View.INVISIBLE
             setActionDrawable(downloadActionView, R.drawable.ic_filedetails_download)
             val mp4Ready = newMp4Status.status == PutioMp4Status.Status.Completed
-            downloadActionView.text = getString(if (mp4Ready || file.isMp4 || !useVideoTitleBackground)
-              R.string.download
-            else
-              R.string.download_original)
+            downloadActionView.text = getString(
+                if (mp4Ready || file.isMp4 || !useVideoTitleBackground)
+                  R.string.download
+                else
+                  R.string.download_original
+            )
             downloadActionView.setOnClickListener {
               if (mp4Ready) {
                 download(true)
@@ -409,8 +445,11 @@ class FileDetailsFragment : RxFragment() {
             FileDownload.Status.InProgress -> R.color.putio_filedetails_inprogress
             FileDownload.Status.NotDownloaded -> R.color.putio_filedetails_notdownloaded
           }
-          setTitleBackgroundColor(ContextCompat.getColor(
-              context, backgroundColorRes), animate)
+          setTitleBackgroundColor(
+              ContextCompat.getColor(
+                  context, backgroundColorRes
+              ), animate
+          )
         }, { error ->
           PutioUtils.getRxJavaThrowable(error).printStackTrace()
         })
@@ -441,8 +480,10 @@ class FileDetailsFragment : RxFragment() {
         }
       }.subscribe()
     } else {
-      requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-          if (mp4) REQUEST_DOWNLOAD_MP4 else REQUEST_DOWNLOAD)
+      requestPermissions(
+          arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+          if (mp4) REQUEST_DOWNLOAD_MP4 else REQUEST_DOWNLOAD
+      )
     }
   }
 
@@ -453,9 +494,11 @@ class FileDetailsFragment : RxFragment() {
         .map { Uri.parse(it.uri) }
         .subscribe({ fileUri ->
           try {
-            startActivity(Intent(Intent.ACTION_VIEW)
-                .setDataAndType(fileUri, file.contentType)
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+            startActivity(
+                Intent(Intent.ACTION_VIEW)
+                    .setDataAndType(fileUri, file.contentType)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            )
           } catch (e: ActivityNotFoundException) {
             Toast.makeText(context, R.string.noactivityfound, Toast.LENGTH_SHORT).show()
           }
@@ -488,8 +531,10 @@ class FileDetailsFragment : RxFragment() {
     loader.checkDownload()
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                          grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+      requestCode: Int, permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
     when (requestCode) {
       REQUEST_DOWNLOAD -> {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -512,8 +557,10 @@ class FileDetailsFragment : RxFragment() {
 
     fun newInstance(context: Context, file: PutioFile): FileDetailsFragment {
       if (file.isFolder) {
-        throw IllegalStateException("FileDetailsFragment created for the wrong kind of file: " +
-            "${file.name} (ID ${file.id}), type ${file.contentType}")
+        throw IllegalStateException(
+            "FileDetailsFragment created for the wrong kind of file: " +
+                "${file.name} (ID ${file.id}), type ${file.contentType}"
+        )
       }
       val args = Bundle()
       args.putParcelable(EXTRA_FILE, file)

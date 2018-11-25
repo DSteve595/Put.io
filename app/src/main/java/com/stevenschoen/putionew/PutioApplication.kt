@@ -1,11 +1,11 @@
 package com.stevenschoen.putionew
 
 import android.app.Application
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Build
 import android.preference.PreferenceManager
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
+import androidx.room.Room
 import com.stevenschoen.putionew.files.FileDownloadDatabase
 import com.stevenschoen.putionew.model.files.PutioFile
 import net.danlew.android.joda.JodaTimeAndroid

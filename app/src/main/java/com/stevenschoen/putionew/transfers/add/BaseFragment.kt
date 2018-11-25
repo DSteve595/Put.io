@@ -1,9 +1,9 @@
 package com.stevenschoen.putionew.transfers.add
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatDialogFragment
 import android.view.View
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
 
 abstract class BaseFragment(val destinationPickerContainerId: Int) : AppCompatDialogFragment() {
 

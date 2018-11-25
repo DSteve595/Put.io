@@ -4,12 +4,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.NavUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.NavUtils
+import androidx.fragment.app.Fragment
 import com.stevenschoen.putionew.R
 
 class AboutFragment : Fragment() {
@@ -32,8 +32,10 @@ class AboutFragment : Fragment() {
 
     val githubView: View = view.findViewById(R.id.about_github)
     githubView.setOnClickListener {
-      startActivity(Intent(Intent.ACTION_VIEW)
-          .setData(Uri.parse("https://github.com/DSteve595/Put.io")))
+      startActivity(
+          Intent(Intent.ACTION_VIEW)
+              .setData(Uri.parse("https://github.com/DSteve595/Put.io"))
+      )
     }
 
     val emailView: View = view.findViewById(R.id.about_email)
@@ -46,14 +48,18 @@ class AboutFragment : Fragment() {
 
     val translateView: View = view.findViewById(R.id.about_translate)
     translateView.setOnClickListener {
-      startActivity(Intent(Intent.ACTION_VIEW)
-          .setData(Uri.parse("https://crowdin.com/project/putio-for-android")))
+      startActivity(
+          Intent(Intent.ACTION_VIEW)
+              .setData(Uri.parse("https://crowdin.com/project/putio-for-android"))
+      )
     }
 
     val visitView: View = view.findViewById(R.id.about_visit)
     visitView.setOnClickListener {
-      startActivity(Intent(Intent.ACTION_VIEW)
-          .setData(Uri.parse("https://put.io/")))
+      startActivity(
+          Intent(Intent.ACTION_VIEW)
+              .setData(Uri.parse("https://put.io/"))
+      )
     }
 
     return view

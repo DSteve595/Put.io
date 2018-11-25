@@ -3,7 +3,7 @@ package com.stevenschoen.putionew
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 
 const val NOTIFICATION_CHANNEL_ID_TRANSFERS = "transfers"
 
@@ -11,9 +11,11 @@ const val NOTIFICATION_CHANNEL_ID_TRANSFERS = "transfers"
 fun createNotificationChannels(context: Context) {
   val notificationManager = context.applicationContext.getSystemService(NotificationManager::class.java)
 
-  val transfersChannel = NotificationChannel(NOTIFICATION_CHANNEL_ID_TRANSFERS,
+  val transfersChannel = NotificationChannel(
+      NOTIFICATION_CHANNEL_ID_TRANSFERS,
       context.getString(R.string.transfers),
-      NotificationManager.IMPORTANCE_LOW)
+      NotificationManager.IMPORTANCE_LOW
+  )
   transfersChannel.enableVibration(false)
   notificationManager.createNotificationChannel(transfersChannel)
 }

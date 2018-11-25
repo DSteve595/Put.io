@@ -6,21 +6,21 @@
     android:background="@android:color/white"
     >
 
-  <android.support.v4.widget.SwipeRefreshLayout
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
       android:id="@+id/folder_swiperefresh"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@+id/files_currentview_holder"
       >
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/folder_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingTop="8dp"
         />
-  </android.support.v4.widget.SwipeRefreshLayout>
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
   <FrameLayout
       android:id="@+id/files_currentview_holder"
@@ -49,8 +49,8 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:paddingEnd="8dp"
         android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="Folder name"
         />
@@ -69,8 +69,8 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="52dp"
           android:layout_marginTop="12dp"
-          android:paddingEnd="8dp"
           android:paddingStart="8dp"
+          android:paddingEnd="8dp"
           android:textAppearance="@style/TextAppearance.AppCompat.Title"
           tools:text="&quot;Search query&quot;"
           />
@@ -80,8 +80,8 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="52dp"
-          android:paddingEnd="8dp"
           android:paddingStart="8dp"
+          android:paddingEnd="8dp"
           android:textAppearance="@style/TextAppearance.AppCompat"
           android:textSize="14sp"
           tools:text="in Folder name"

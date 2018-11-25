@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Environment
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
@@ -29,18 +29,26 @@ class FileDownloadHelper(context: Context) {
   val fileDownloads = putioApp(appContext).fileDownloadDatabase.fileDownloadsDao()
   val utils = putioApp(appContext).putioUtils!!
 
-  fun hasPermission() = ContextCompat.checkSelfPermission(appContext,
-      Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+  fun hasPermission() = ContextCompat.checkSelfPermission(
+      appContext,
+      Manifest.permission.WRITE_EXTERNAL_STORAGE
+  ) == PackageManager.PERMISSION_GRANTED
 
   fun downloadFile(file: PutioFile): Single<Long> {
     return Single.fromCallable {
-      download(file.getDownloadUrl(utils),
-          file.name + if (file.isFolder) ".zip" else "")
+      download(
+          file.getDownloadUrl(utils),
+          file.name + if (file.isFolder) ".zip" else ""
+      )
     }
         .subscribeOn(Schedulers.io())
         .doOnSuccess { downloadId ->
-          fileDownloads.insert(FileDownload(file.id, downloadId,
-              FileDownload.Status.InProgress, null, false))
+          fileDownloads.insert(
+              FileDownload(
+                  file.id, downloadId,
+                  FileDownload.Status.InProgress, null, false
+              )
+          )
         }
         .observeOn(AndroidSchedulers.mainThread())
   }
@@ -53,8 +61,12 @@ class FileDownloadHelper(context: Context) {
     }
         .subscribeOn(Schedulers.io())
         .doOnSuccess { downloadId ->
-          fileDownloads.insert(FileDownload(video.id, downloadId,
-              FileDownload.Status.InProgress, null, mp4))
+          fileDownloads.insert(
+              FileDownload(
+                  video.id, downloadId,
+                  FileDownload.Status.InProgress, null, mp4
+              )
+          )
         }
         .observeOn(AndroidSchedulers.mainThread())
   }
@@ -65,8 +77,10 @@ class FileDownloadHelper(context: Context) {
     }
 
     val subPath = "put.io$slash$filename"
-    val file = File("${Environment
-        .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}$slash$subPath")
+    val file = File(
+        "${Environment
+            .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}$slash$subPath"
+    )
     file.parentFile.mkdirs()
 
     val manager = appContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -101,5 +115,6 @@ class FileDownloadHelper(context: Context) {
   }
 
   class PermissionNotGrantedException : SecurityException(
-      "External storage write permission not granted")
+      "External storage write permission not granted"
+  )
 }

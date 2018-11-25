@@ -5,7 +5,7 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.JobIntentService
+import androidx.core.app.JobIntentService
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.analytics
 import com.stevenschoen.putionew.putioApp
@@ -19,9 +19,11 @@ class DownloadFinishedService : JobIntentService() {
     private const val DOWNLOAD_FINISHED_JOB_ID = 1
 
     fun receiveDownloadFinished(context: Context, downloadId: Long) {
-      enqueueWork(context, DownloadFinishedService::class.java, DOWNLOAD_FINISHED_JOB_ID,
+      enqueueWork(
+          context, DownloadFinishedService::class.java, DOWNLOAD_FINISHED_JOB_ID,
           Intent(context, DownloadFinishedService::class.java)
-              .putExtra(EXTRA_DOWNLOAD_ID, downloadId))
+              .putExtra(EXTRA_DOWNLOAD_ID, downloadId)
+      )
     }
   }
 

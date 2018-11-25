@@ -1,8 +1,8 @@
 package com.stevenschoen.putionew;
 
 import android.content.Context
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import com.stevenschoen.putionew.model.PutioRestInterface
 
 abstract class PutioBaseLoader(context: Context) : Loader<Any>(context) {

@@ -14,7 +14,7 @@
       android:src="@drawable/ic_back"
       />
 
-  <android.support.v7.widget.AppCompatTextView
+  <androidx.appcompat.widget.AppCompatTextView
       android:id="@+id/file_title_bar_name"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -22,8 +22,8 @@
       android:ellipsize="end"
       android:gravity="center_vertical"
       android:maxLines="2"
-      android:paddingEnd="8dp"
       android:paddingStart="8dp"
+      android:paddingEnd="8dp"
       android:textAppearance="@style/TextAppearance.AppCompat.Title"
       app:autoSizeMaxTextSize="20sp"
       app:autoSizeMinTextSize="16sp"
@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"
         android:layout_marginTop="12dp"
-        android:paddingEnd="8dp"
         android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="&quot;Search query&quot;"
         />
@@ -56,8 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"
-        android:paddingEnd="8dp"
         android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textSize="14sp"
         tools:text="in Folder name"

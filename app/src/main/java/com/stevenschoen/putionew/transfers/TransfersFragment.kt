@@ -7,11 +7,16 @@ import android.content.ServiceConnection
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioTransfersService
 import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder
@@ -59,13 +64,16 @@ class TransfersFragment : RxFragment() {
     utils = (activity!!.application as PutioApplication).putioUtils
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                            savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+      inflater: LayoutInflater, container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
     val view = inflater.inflate(R.layout.transfers, container, false)
 
     transfersListView = view.findViewById(R.id.transferslist)
     transfersListView!!.layoutManager = LinearLayoutManager(
-        context, LinearLayoutManager.VERTICAL, false)
+        context, LinearLayoutManager.VERTICAL, false
+    )
     val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)
     transfersListView!!.addItemDecoration(object : RecyclerView.ItemDecoration() {
       override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {

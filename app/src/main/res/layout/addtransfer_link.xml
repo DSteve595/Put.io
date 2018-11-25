@@ -10,9 +10,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentTop="true"
-      android:layout_marginEnd="56dp"
       android:layout_marginStart="24dp"
       android:layout_marginTop="8dp"
+      android:layout_marginEnd="56dp"
       android:hint="@string/pasteurls"
       android:importantForAutofill="no"
       android:inputType="textMultiLine|textUri"
@@ -23,15 +23,15 @@
       android:id="@+id/addtransfer_link_clear"
       android:layout_width="48dp"
       android:layout_height="match_parent"
+      android:layout_alignTop="@id/addtransfer_link_url"
       android:layout_alignBottom="@id/addtransfer_link_url"
       android:layout_alignParentEnd="true"
-      android:layout_alignTop="@id/addtransfer_link_url"
       android:layout_gravity="center_vertical"
       android:layout_marginEnd="4dp"
       android:background="?selectableItemBackgroundBorderless"
       android:contentDescription="@string/cancel"
-      android:paddingEnd="8dp"
       android:paddingStart="8dp"
+      android:paddingEnd="8dp"
       android:src="@drawable/ic_close"
       />
 
@@ -40,9 +40,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/addtransfer_link_url"
-      android:layout_marginBottom="8dp"
       android:layout_marginStart="20dp"
       android:layout_marginTop="12dp"
+      android:layout_marginBottom="8dp"
       android:text="@string/extractwhenfinished"
       />
 
@@ -51,9 +51,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/addtransfer_link_extract"
-      android:layout_marginEnd="16dp"
       android:layout_marginStart="24dp"
       android:layout_marginTop="12dp"
+      android:layout_marginEnd="16dp"
       />
 
   <LinearLayout
@@ -63,8 +63,8 @@
       android:layout_marginTop="8dp"
       android:gravity="end"
       android:orientation="horizontal"
-      android:paddingBottom="8dp"
       android:paddingEnd="12dp"
+      android:paddingBottom="8dp"
       >
 
     <Button

@@ -15,13 +15,13 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Title"
       />
 
-  <android.support.v7.widget.AppCompatButton
+  <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/addtransfer_picktype_link"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackground"
-      android:drawablePadding="24dp"
       android:drawableStart="@drawable/ic_addtransfer_link_16"
+      android:drawablePadding="24dp"
       android:drawableTint="?android:textColorPrimary"
       android:gravity="start|center_vertical"
       android:paddingStart="24dp"
@@ -29,13 +29,13 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Body1"
       />
 
-  <android.support.v7.widget.AppCompatButton
+  <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/addtransfer_picktype_file"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackground"
-      android:drawablePadding="24dp"
       android:drawableStart="@drawable/ic_addtransfer_file_16"
+      android:drawablePadding="24dp"
       android:drawableTint="?android:textColorPrimary"
       android:gravity="start|center_vertical"
       android:paddingStart="24dp"

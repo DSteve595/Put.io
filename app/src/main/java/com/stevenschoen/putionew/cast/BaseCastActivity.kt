@@ -3,9 +3,9 @@ package com.stevenschoen.putionew.cast
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaLoadOptions
 import com.google.android.gms.cast.MediaMetadata
@@ -61,7 +61,8 @@ abstract class BaseCastActivity : AppCompatActivity(), PutioApplication.CastCall
             if (file.isVideo)
               MediaMetadata.MEDIA_TYPE_MOVIE
             else
-              MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
+              MediaMetadata.MEDIA_TYPE_MUSIC_TRACK
+        )
         val title = FilenameUtils.removeExtension(file.name).take(18)
         metaData.putString(MediaMetadata.KEY_TITLE, title)
         file.screenshot?.let { metaData.addImage(WebImage(Uri.parse(it))) }

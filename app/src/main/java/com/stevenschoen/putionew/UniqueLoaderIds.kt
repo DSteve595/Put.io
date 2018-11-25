@@ -1,6 +1,10 @@
 package com.stevenschoen.putionew
 
-import com.stevenschoen.putionew.files.*
+import com.stevenschoen.putionew.files.FileDetailsLoader
+import com.stevenschoen.putionew.files.FileScreenshotLoader
+import com.stevenschoen.putionew.files.FolderLoader
+import com.stevenschoen.putionew.files.Mp4StatusLoader
+import com.stevenschoen.putionew.files.SearchLoader
 
 fun getUniqueLoaderId(loaderClass: Class<out PutioBaseLoader>): Int {
   return when (loaderClass) {

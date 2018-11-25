@@ -1,15 +1,12 @@
 package com.stevenschoen.putionew.model.files
 
 import android.content.res.Resources
-import android.os.Parcel
 import android.os.Parcelable
-
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
+import kotlinx.android.parcel.Parcelize
 
-import paperparcel.PaperParcel
-
-@PaperParcel
+@Parcelize
 data class PutioFile(
     val name: String,
     val id: Long,
@@ -22,38 +19,30 @@ data class PutioFile(
     val isMp4Available: Boolean? = null,
     val contentType: String,
     val size: Long? = null,
-    val crc32: String? = null)
-  : Parcelable {
+    val crc32: String? = null
+) : Parcelable {
 
-  val isFolder: Boolean
-    get() = (contentType == CONTENT_TYPE_FOLDER)
+  val isFolder: Boolean get() = (contentType == CONTENT_TYPE_FOLDER)
 
   val isMedia: Boolean
     get() {
-      for (i in PutioUtils.streamingMediaTypes.indices) {
-        if (contentType.startsWith(PutioUtils.streamingMediaTypes[i])) {
-          return true
-        }
+      return PutioUtils.streamingMediaTypes.any {
+        contentType.startsWith(it)
       }
-      return false
     }
 
-  val isVideo: Boolean
-    get() = (contentType.startsWith("video"))
+  val isVideo: Boolean get() = (contentType.startsWith("video"))
 
-  val isMp4: Boolean
-    get() = (contentType == "video/mp4")
+  val isMp4: Boolean get() = (contentType == "video/mp4")
 
-  val isAccessed: Boolean
-    get() = (!firstAccessedAt.isNullOrEmpty())
+  val isAccessed: Boolean get() = (!firstAccessedAt.isNullOrEmpty())
 
   fun getStreamUrl(utils: PutioUtils, mp4: Boolean): String {
     val base = PutioUtils.baseUrl + "files/" + id
-    val streamOrStreamMp4: String
-    if (mp4 && !isMp4) {
-      streamOrStreamMp4 = "/mp4/stream"
+    val streamOrStreamMp4 = if (mp4 && !isMp4) {
+      "/mp4/stream"
     } else {
-      streamOrStreamMp4 = "/stream"
+      "/stream"
     }
 
     return base + streamOrStreamMp4 + utils.tokenWithStuff
@@ -61,21 +50,14 @@ data class PutioFile(
 
   fun getDownloadUrl(utils: PutioUtils, mp4: Boolean = false): String {
     val base = PutioUtils.baseUrl + "files/" + id
-    val downloadOrDownloadMp4: String
-    if (mp4 && !isMp4) {
-      downloadOrDownloadMp4 = "/mp4/download"
+    val downloadOrDownloadMp4 = if (mp4 && !isMp4) {
+      "/mp4/download"
     } else {
-      downloadOrDownloadMp4 = "/download"
+      "/download"
     }
 
     return base + downloadOrDownloadMp4 + utils.tokenWithStuff
   }
-
-  override fun writeToParcel(dest: Parcel, flags: Int) {
-    PaperParcelPutioFile.writeToParcel(this, dest, flags)
-  }
-
-  override fun describeContents() = 0
 
   companion object {
     const val CONTENT_TYPE_FOLDER = "application/x-directory"
@@ -84,10 +66,9 @@ data class PutioFile(
       return PutioFile(
           id = 0,
           name = resources.getString(R.string.files),
-          contentType = CONTENT_TYPE_FOLDER)
+          contentType = CONTENT_TYPE_FOLDER
+      )
     }
 
-    @JvmField
-    val CREATOR = PaperParcelPutioFile.CREATOR
   }
 }

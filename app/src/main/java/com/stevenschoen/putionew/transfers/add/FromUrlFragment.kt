@@ -3,12 +3,12 @@ package com.stevenschoen.putionew.transfers.add
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.stevenschoen.putionew.R
 import io.reactivex.android.schedulers.AndroidSchedulers

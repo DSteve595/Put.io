@@ -14,11 +14,11 @@
 
 package com.stevenschoen.putionew.tv
 
-import android.support.v17.leanback.widget.ImageCardView
-import android.support.v17.leanback.widget.Presenter
-import android.support.v4.content.ContextCompat
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.leanback.widget.ImageCardView
+import androidx.leanback.widget.Presenter
 import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile

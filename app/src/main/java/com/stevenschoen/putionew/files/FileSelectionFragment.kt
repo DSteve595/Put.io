@@ -1,12 +1,12 @@
 package com.stevenschoen.putionew.files
 
 import android.os.Bundle
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.TooltipCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.TooltipCompat
 import com.stevenschoen.putionew.R
 import com.trello.rxlifecycle2.components.support.RxFragment
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle

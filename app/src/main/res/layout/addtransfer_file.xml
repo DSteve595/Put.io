@@ -14,8 +14,8 @@
       android:layout_marginTop="8dp"
       android:layout_toStartOf="@+id/addtransfer_file_clear"
       android:background="?selectableItemBackground"
-      android:drawablePadding="16dp"
       android:drawableStart="@drawable/ic_addtransfer_file_24"
+      android:drawablePadding="16dp"
       android:ellipsize="middle"
       android:fontFamily="sans-serif-condensed"
       android:gravity="center_vertical"
@@ -30,15 +30,15 @@
       android:id="@+id/addtransfer_file_clear"
       android:layout_width="48dp"
       android:layout_height="match_parent"
+      android:layout_alignTop="@id/addtransfer_file_file"
       android:layout_alignBottom="@id/addtransfer_file_file"
       android:layout_alignParentEnd="true"
-      android:layout_alignTop="@id/addtransfer_file_file"
-      android:layout_marginEnd="4dp"
       android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
       android:background="?selectableItemBackgroundBorderless"
       android:contentDescription="@string/cancel"
-      android:paddingEnd="8dp"
       android:paddingStart="8dp"
+      android:paddingEnd="8dp"
       android:src="@drawable/ic_close"
       />
 
@@ -47,8 +47,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/addtransfer_file_file"
-      android:layout_marginBottom="12dp"
       android:layout_marginTop="4dp"
+      android:layout_marginBottom="12dp"
       android:paddingStart="16dp"
       android:text="@string/notatorrent"
       android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -60,9 +60,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/addtransfer_file_notatorrent"
-      android:layout_marginEnd="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="8dp"
+      android:layout_marginEnd="16dp"
       />
 
   <LinearLayout
@@ -72,8 +72,8 @@
       android:layout_marginTop="8dp"
       android:gravity="end"
       android:orientation="horizontal"
-      android:paddingBottom="8dp"
       android:paddingEnd="12dp"
+      android:paddingBottom="8dp"
       >
 
     <Button

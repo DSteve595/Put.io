@@ -8,7 +8,7 @@
     android:fillViewport="true"
     >
 
-  <android.support.constraint.ConstraintLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingBottom="8dp"
@@ -65,7 +65,7 @@
         app:layout_constraintVertical_bias="1"
         />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/filedetails_title"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -73,9 +73,9 @@
         android:ellipsize="end"
         android:gravity="bottom"
         android:maxLines="2"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
         android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
         android:textColor="?android:textColorPrimary"
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="@id/filedetails_screenshot"
@@ -125,8 +125,8 @@
         android:layout_marginTop="16dp"
         android:drawablePadding="32dp"
         android:gravity="center_vertical"
-        android:paddingEnd="32dp"
         android:paddingStart="20dp"
+        android:paddingEnd="32dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
         app:layout_constraintHorizontal_bias="0"
@@ -166,8 +166,8 @@
         android:layout_height="64dp"
         android:drawablePadding="32dp"
         android:gravity="center_vertical"
-        android:paddingEnd="32dp"
         android:paddingStart="20dp"
+        android:paddingEnd="32dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
         app:layout_constraintHorizontal_bias="0"
@@ -207,8 +207,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_fileinfo_crc32"
-        android:paddingEnd="16dp"
         android:paddingStart="20dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_filesize"
@@ -221,8 +221,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_fileinfo_created"
-        android:paddingEnd="16dp"
         android:paddingStart="20dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_accessed"
@@ -236,8 +236,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_fileinfo_accessed"
-        android:paddingEnd="16dp"
         android:paddingStart="20dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_download"
@@ -250,13 +250,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_fileinfo_size"
-        android:paddingEnd="16dp"
         android:paddingStart="20dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_created"
         tools:text="100 MB"
         />
 
-  </android.support.constraint.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

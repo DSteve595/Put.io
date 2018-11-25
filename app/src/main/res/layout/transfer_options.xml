@@ -17,13 +17,13 @@
       android:textSize="16sp"
       />
 
-  <android.support.v7.widget.AppCompatButton
+  <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/transfer_options_retry"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackground"
-      android:drawablePadding="24dp"
       android:drawableStart="@drawable/transfer_options_retry"
+      android:drawablePadding="24dp"
       android:drawableTint="?android:textColorPrimary"
       android:gravity="start|center_vertical"
       android:paddingStart="24dp"
@@ -31,13 +31,13 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Body1"
       />
 
-  <android.support.v7.widget.AppCompatButton
+  <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/transfer_options_remove"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackground"
-      android:drawablePadding="24dp"
       android:drawableStart="@drawable/transfer_options_remove"
+      android:drawablePadding="24dp"
       android:drawableTint="?android:textColorPrimary"
       android:gravity="start|center_vertical"
       android:paddingStart="24dp"

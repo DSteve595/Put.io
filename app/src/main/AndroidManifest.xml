@@ -32,8 +32,8 @@
       android:banner="@drawable/tv_banner"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/putio"
-      android:theme="@style/Theme.Putio"
       android:supportsRtl="true"
+      android:theme="@style/Theme.Putio"
       >
 
     <meta-data

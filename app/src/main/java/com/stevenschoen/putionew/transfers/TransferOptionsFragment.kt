@@ -2,11 +2,11 @@ package com.stevenschoen.putionew.transfers
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.stevenschoen.putionew.AutoExpandingBottomSheetDialogFragment
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.transfers.PutioTransfer

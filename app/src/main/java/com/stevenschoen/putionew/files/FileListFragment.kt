@@ -4,18 +4,18 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.TooltipCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.TooltipCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
@@ -167,8 +167,10 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
       } else if (checkedFiles.size == 1) {
         fileDownloadHelper.downloadFile(checkedFiles.first()).subscribe()
         filesAdapter!!.clearChecked()
-        Toast.makeText(context, getString(R.string.downloadstarted),
-            Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context, getString(R.string.downloadstarted),
+            Toast.LENGTH_SHORT
+        ).show()
       } else {
         throw IllegalStateException("Download started with no file IDs!")
       }
@@ -188,14 +190,18 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
               if (isVisible) {
-                Toast.makeText(context, getString(R.string.readytopaste),
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context, getString(R.string.readytopaste),
+                    Toast.LENGTH_SHORT
+                ).show()
               }
             }
       } else {
         PutioUtils.copy(context, "Download link", file.getDownloadUrl(utils))
-        Toast.makeText(context, getString(R.string.readytopaste),
-            Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context, getString(R.string.readytopaste),
+            Toast.LENGTH_SHORT
+        ).show()
       }
     } else if (checkedFiles.isNotEmpty()) {
       fileDownloadHelper.copyZipLink(*checkedFiles.map { it.id }.toLongArray())
@@ -203,8 +209,10 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe {
             if (isVisible) {
-              Toast.makeText(context, getString(R.string.readytopaste),
-                  Toast.LENGTH_SHORT).show()
+              Toast.makeText(
+                  context, getString(R.string.readytopaste),
+                  Toast.LENGTH_SHORT
+              ).show()
             }
           }
     }
@@ -272,8 +280,10 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
             getCheckedFiles().forEach {
               fileDownloadHelper.downloadFile(it).subscribe()
             }
-            Toast.makeText(context, getString(R.string.downloadstarted),
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context, getString(R.string.downloadstarted),
+                Toast.LENGTH_SHORT
+            ).show()
             filesAdapter!!.clearChecked()
           }
 
@@ -340,8 +350,10 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
     outState.putLongArray(STATE_CHECKED_IDS, filesAdapter!!.checkedIds.toLongArray())
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                          grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+      requestCode: Int, permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
     when (requestCode) {
       REQUEST_DOWNLOAD_SELECTED -> {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

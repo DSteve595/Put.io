@@ -1,22 +1,23 @@
 package com.stevenschoen.putionew.files
 
-import android.support.v4.util.ArraySet
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.collection.ArraySet
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 
-class FileListAdapter(private val data: List<PutioFile>,
-                      val onFileClicked: (file: PutioFile, holder: FileHolder) -> Unit,
-                      val onFileLongClicked: (file: PutioFile, holder: FileHolder) -> Unit)
-  : RecyclerView.Adapter<FileListAdapter.FileHolder>() {
+class FileListAdapter(
+    private val data: List<PutioFile>,
+    val onFileClicked: (file: PutioFile, holder: FileHolder) -> Unit,
+    val onFileLongClicked: (file: PutioFile, holder: FileHolder) -> Unit
+) : RecyclerView.Adapter<FileListAdapter.FileHolder>() {
 
   private var itemsCheckedChangedListener: OnItemsCheckedChangedListener? = null
 

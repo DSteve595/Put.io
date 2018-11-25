@@ -8,13 +8,17 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.NotificationCompat
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.stevenschoen.putionew.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.fragment.app.Fragment
+import com.stevenschoen.putionew.NOTIFICATION_CHANNEL_ID_TRANSFERS
+import com.stevenschoen.putionew.PutioActivity
+import com.stevenschoen.putionew.PutioUtils
+import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.PutioUploadInterface
 import com.stevenschoen.putionew.model.files.PutioFile
+import com.stevenschoen.putionew.putioApp
 import com.stevenschoen.putionew.transfers.TransfersActivity
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -189,8 +193,11 @@ class AddTransferActivity : AppCompatActivity() {
         notifManager.notify(1, notif)
       } catch (e: IllegalArgumentException) {
         notifBuilder
-            .setContentIntent(PendingIntent.getActivity(
-                this@AddTransferActivity, 0, Intent(this@AddTransferActivity, PutioActivity::class.java), 0))
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this@AddTransferActivity, 0, Intent(this@AddTransferActivity, PutioActivity::class.java), 0
+                )
+            )
         notif = notifBuilder.build()
         notif.ledARGB = Color.parseColor("#FFFFFF00")
         notifManager.notify(1, notif)
@@ -212,8 +219,11 @@ class AddTransferActivity : AppCompatActivity() {
       val viewTransfersIntent = Intent(this@AddTransferActivity, TransfersActivity::class.java)
       viewTransfersIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       notifBuilder
-          .setContentIntent(PendingIntent.getActivity(
-              this@AddTransferActivity, 0, viewTransfersIntent, PendingIntent.FLAG_CANCEL_CURRENT))
+          .setContentIntent(
+              PendingIntent.getActivity(
+                  this@AddTransferActivity, 0, viewTransfersIntent, PendingIntent.FLAG_CANCEL_CURRENT
+              )
+          )
       //				notifBuilder.addAction(R.drawable.ic_notif_watch, "Watch", null) TODO
       notifBuilder
           .setTicker(getString(R.string.notification_ticker_uploaded_torrent))
@@ -235,12 +245,14 @@ class AddTransferActivity : AppCompatActivity() {
           .setContentText(getString(R.string.notification_body_error))
           .setSmallIcon(R.drawable.ic_notificon_transfer)
       val retryNotifIntent = PendingIntent.getActivity(
-          this@AddTransferActivity, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+          this@AddTransferActivity, 0, intent, PendingIntent.FLAG_ONE_SHOT
+      )
       notifBuilder
           .addAction(
               R.drawable.ic_notif_retry,
               getString(R.string.notification_button_retry),
-              retryNotifIntent)
+              retryNotifIntent
+          )
           .setContentIntent(retryNotifIntent)
           .setTicker(getString(R.string.notification_ticker_error))
       val notif = notifBuilder.build()

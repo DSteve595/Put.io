@@ -5,10 +5,15 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.SearchView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import com.stevenschoen.putionew.PutioActivity
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
@@ -179,9 +184,11 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
     const val FRAGTAG_DELETE = "delete"
     const val FRAGTAG_CREATE_FOLDER = "create_folder"
 
-    fun newInstance(context: Context, folder: PutioFile,
-                    canSelect: Boolean,
-                    padForFab: Boolean, showSearch: Boolean, showCreateFolder: Boolean): FolderFragment {
+    fun newInstance(
+        context: Context, folder: PutioFile,
+        canSelect: Boolean,
+        padForFab: Boolean, showSearch: Boolean, showCreateFolder: Boolean
+    ): FolderFragment {
       if (!folder.isFolder) {
         throw IllegalStateException("FolderFragment created on a file, not a folder: ${folder.name} (ID ${folder.id})")
       }
@@ -190,8 +197,10 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
       args.putBoolean(EXTRA_PAD_FOR_FAB, padForFab)
       args.putBoolean(EXTRA_SHOW_SEARCH, showSearch)
       args.putBoolean(EXTRA_SHOW_CREATEFOLDER, showCreateFolder)
-      return addArguments(Fragment.instantiate(context, FolderFragment::class.java.name, args) as FolderFragment,
-          canSelect)
+      return addArguments(
+          Fragment.instantiate(context, FolderFragment::class.java.name, args) as FolderFragment,
+          canSelect
+      )
     }
   }
 }

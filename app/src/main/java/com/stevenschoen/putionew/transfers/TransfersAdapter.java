@@ -1,7 +1,6 @@
 package com.stevenschoen.putionew.transfers;
 
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TransfersAdapter extends RecyclerView.Adapter<TransfersAdapter.TransferHolder> {
 

@@ -5,12 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -106,7 +106,8 @@ class FromFileFragment : BaseFragment(R.id.addtransfer_file_destination_holder) 
     var mimetype = context!!.contentResolver.getType(uri)
     if (mimetype == null) {
       mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-          MimeTypeMap.getFileExtensionFromUrl(uri.path))
+          MimeTypeMap.getFileExtensionFromUrl(uri.path)
+      )
     }
     return (mimetype != null && mimetype == "application/x-bittorrent"
         || PutioUtils.getNameFromUri(context, uri).endsWith("torrent"))

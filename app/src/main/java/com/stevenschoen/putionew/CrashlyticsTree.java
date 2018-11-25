@@ -1,10 +1,10 @@
 package com.stevenschoen.putionew;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import androidx.annotation.Nullable;
 import timber.log.Timber;
 
 public class CrashlyticsTree extends Timber.Tree {

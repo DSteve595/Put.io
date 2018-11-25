@@ -6,8 +6,8 @@
     android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingEnd="8dp"
     android:paddingStart="@dimen/files_row_padding"
+    android:paddingEnd="8dp"
     >
 
   <ImageView

@@ -6,7 +6,7 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.os.AsyncTask
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.stevenschoen.putionew.putioApp
 
 class FileDownloadsMaintenanceService : JobService() {
@@ -62,8 +62,10 @@ fun isFileDownloadedOrDownloading(context: Context, fileDownload: FileDownload):
 
 private fun queryDownloadStatus(context: Context, fileDownload: FileDownload): Int {
   val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
-  downloadManager.query(DownloadManager.Query()
-      .setFilterById(fileDownload.downloadId!!)).use { query ->
+  downloadManager.query(
+      DownloadManager.Query()
+          .setFilterById(fileDownload.downloadId!!)
+  ).use { query ->
     if (query.moveToFirst()) {
       return query.getInt(query.getColumnIndex(DownloadManager.COLUMN_STATUS))
     } else {

@@ -1,6 +1,17 @@
 package com.stevenschoen.putionew.files
 
-import android.arch.persistence.room.*
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Delete
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import androidx.room.Update
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 

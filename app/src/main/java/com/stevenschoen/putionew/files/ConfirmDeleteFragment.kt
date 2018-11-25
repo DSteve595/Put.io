@@ -3,9 +3,9 @@ package com.stevenschoen.putionew.files
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
 import com.stevenschoen.putionew.R
 
 class ConfirmDeleteFragment : AppCompatDialogFragment() {
