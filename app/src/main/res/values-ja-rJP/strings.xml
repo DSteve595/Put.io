@@ -38,6 +38,7 @@
   <string name="send">送信</string>
   <string name="send_x">%s を送信</string>
   <string name="go_back">戻る</string>
+  <string name="view">表示</string>
   <!-- Dialog text -->
   <string name="gettingstreamurltitle">ストリームの準備中</string>
   <string name="gettingstreamurlbody">お待ちください&#8230;</string>
