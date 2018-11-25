@@ -363,7 +363,7 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
       if (count == 0) {
         childFragmentManager.beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-            .remove(getSelectionFragment())
+            .remove(getSelectionFragment()!!)
             .commitNow()
         callbacks?.onSelectionEnded()
       } else {

@@ -45,7 +45,7 @@ class TvActivity : FragmentActivity() {
     fun removeLastFolder() {
       val lastFolder = displayedFolders.last()
       supportFragmentManager.beginTransaction()
-          .remove(supportFragmentManager.findFragmentByTag(makeFolderFragTag(lastFolder)))
+          .remove(supportFragmentManager.findFragmentByTag(makeFolderFragTag(lastFolder))!!)
           .commitNow()
       displayedFolders.removeAt(displayedFolders.lastIndex)
     }

@@ -68,9 +68,9 @@ class TransfersFragment : RxFragment() {
         context, LinearLayoutManager.VERTICAL, false)
     val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)
     transfersListView!!.addItemDecoration(object : RecyclerView.ItemDecoration() {
-      override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+      override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
-        if (parent.getChildAdapterPosition(view) != parent.adapter.itemCount - 1) {
+        if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1) {
           outRect.bottom = padding
         }
       }

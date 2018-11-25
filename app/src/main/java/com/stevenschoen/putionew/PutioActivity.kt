@@ -327,7 +327,7 @@ class PutioActivity : BaseCastActivity() {
   private val accountFragment: AccountFragment
     get() = supportFragmentManager.findFragmentByTag(FRAGTAG_ACCOUNT) as AccountFragment
 
-  private val filesFragment: FilesFragment?
+  private val filesFragment: FilesFragment
     get() = supportFragmentManager.findFragmentByTag(FRAGTAG_FILES) as FilesFragment
 
   private val transfersFragment: TransfersFragment
