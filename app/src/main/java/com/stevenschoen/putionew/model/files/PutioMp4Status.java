@@ -3,7 +3,7 @@ package com.stevenschoen.putionew.model.files;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 public class PutioMp4Status implements Parcelable {
   public static final Creator CREATOR = new Creator() {
@@ -16,7 +16,7 @@ public class PutioMp4Status implements Parcelable {
     }
   };
   public Status status;
-  @SerializedName("percent_done")
+  @Json(name = "percent_done")
   public int percentDone;
   public long size;
 
@@ -46,19 +46,19 @@ public class PutioMp4Status implements Parcelable {
   }
 
   public enum Status {
-    @SerializedName("NOT_AVAILABLE")
+    @Json(name = "NOT_AVAILABLE")
     NotAvailable,
-    @SerializedName("IN_QUEUE")
+    @Json(name = "IN_QUEUE")
     InQueue,
-    @SerializedName("PREPARING")
+    @Json(name = "PREPARING")
     Preparing,
-    @SerializedName("CONVERTING")
+    @Json(name = "CONVERTING")
     Converting,
-    @SerializedName("FINISHING")
+    @Json(name = "FINISHING")
     Finishing,
-    @SerializedName("COMPLETED")
+    @Json(name = "COMPLETED")
     Completed,
-    @SerializedName("ERROR")
+    @Json(name = "ERROR")
     Error,
     AlreadyMp4, // Not from the server, just used to clarify
     NotVideo // Not from the server, just used to clarify

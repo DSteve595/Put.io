@@ -29,9 +29,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
 import com.stevenschoen.putionew.model.ResponseOrError;
@@ -58,7 +55,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class PutioUtils {
   public static final int TYPE_AUDIO = 1;
@@ -200,10 +197,6 @@ public class PutioUtils {
   }
 
   public Retrofit makePutioRestInterface(String baseUrl) {
-    Gson gson = new GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .create();
-
     OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
         .addInterceptor(new Interceptor() {
           @Override
@@ -225,7 +218,7 @@ public class PutioUtils {
         .baseUrl(baseUrl)
         .client(clientBuilder.build())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addConverterFactory(MoshiConverterFactory.create())
         .build();
   }
 

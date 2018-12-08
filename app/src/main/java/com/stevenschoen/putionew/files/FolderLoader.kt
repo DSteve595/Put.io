@@ -4,8 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
 import com.stevenschoen.putionew.PutioBaseLoader
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.getUniqueLoaderId
@@ -17,11 +16,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import org.apache.commons.io.FileUtils
+import okio.Okio
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.nio.charset.Charset
 
 class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseLoader(context) {
 
@@ -37,10 +35,13 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
         if (diskCache.isCached(folder.id)) {
           diskCache.getCached(folder.id)?.let {
             if (isNeeded()) {
-              folderSubject.onNext(FolderResponse(false).apply {
-                parent = it.parent
-                files = it.files
-              })
+              folderSubject.onNext(
+                  FolderResponse(
+                      fresh = false,
+                      parent = it.parent,
+                      files = it.files
+                  )
+              )
             }
           }
         }
@@ -61,10 +62,13 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     refreshSubscription = api.files(folder.id).subscribe({ response ->
       refreshSubscription = null
       if (cache) diskCache.cache(response)
-      folderSubject.onNext(FolderResponse(true).apply {
-        parent = response.parent
-        files = response.files
-      })
+      folderSubject.onNext(
+          FolderResponse(
+              fresh = true,
+              parent = response.parent,
+              files = response.files
+          )
+      )
     }, { error ->
       refreshSubscription = null
       folderSubject.onNext(ResponseOrError.NetworkError(error))
@@ -75,12 +79,17 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
 
   fun hasFresh() = folderSubject.value.let { (it is FolderResponse && it.fresh) }
 
-  class FolderResponse(val fresh: Boolean) : FilesListResponse()
+  class FolderResponse(
+      val fresh: Boolean,
+      files: List<PutioFile>,
+      parent: PutioFile
+  ) : FilesListResponse(files = files, parent = parent)
 
+  // TODO make a db
   class DiskCache(val context: Context) {
     private val filesCacheDir = File("${context.cacheDir}${File.separator}filesCache")
 
-    private var gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+    private val moshi = Moshi.Builder().build()
 
     init {
       filesCacheDir.mkdirs()
@@ -89,7 +98,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     fun cache(response: FilesListResponse) {
       val file = getFile(response.parent.id)
       try {
-        FileUtils.writeStringToFile(file, gson.toJson(response), Charset.defaultCharset())
+        moshi.adapter(FilesListResponse::class.java).toJson(Okio.buffer(Okio.sink(file)), response)
       } catch (e: IOException) {
         e.printStackTrace()
       }
@@ -100,7 +109,7 @@ class FolderLoader(context: Context, private val folder: PutioFile) : PutioBaseL
     fun getCached(parentId: Long): FilesListResponse? {
       val file = getFile(parentId)
       try {
-        return gson.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), FilesListResponse::class.java)
+        return moshi.adapter(FilesListResponse::class.java).fromJson(Okio.buffer(Okio.source(file)))
       } catch (e: FileNotFoundException) {
         // Not cached yet, no problem
       } catch (e: IOException) {

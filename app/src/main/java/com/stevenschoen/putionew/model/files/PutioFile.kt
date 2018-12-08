@@ -2,21 +2,30 @@ package com.stevenschoen.putionew.model.files
 
 import android.content.res.Resources
 import android.os.Parcelable
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@JsonClass(generateAdapter = true)
 data class PutioFile(
     val name: String,
     val id: Long,
+    @Json(name = "is_shared")
     val isShared: Boolean? = false,
     val icon: String? = null,
     val screenshot: String? = null,
+    @Json(name = "created_at")
     val createdAt: String? = null,
+    @Json(name = "first_accessed_at")
     val firstAccessedAt: String? = null,
+    @Json(name = "parent_id")
     val parentId: Long? = null,
+    @Json(name = "is_mp4_available")
     val isMp4Available: Boolean? = null,
+    @Json(name = "content_type")
     val contentType: String,
     val size: Long? = null,
     val crc32: String? = null
