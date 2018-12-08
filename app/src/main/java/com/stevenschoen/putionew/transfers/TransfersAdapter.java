@@ -106,16 +106,16 @@ public class TransfersAdapter extends RecyclerView.Adapter<TransfersAdapter.Tran
 
     holder.buttonView.setOnClickListener(onClickListener);
 
-    holder.progressBar.setProgress(transfer.percentDone);
+    holder.progressBar.setProgress(transfer.getPercentDone());
 
-    holder.textName.setText(transfer.name);
+    holder.textName.setText(transfer.getName());
 
-    String downString = PutioUtils.humanReadableByteCount(transfer.downSpeed, false);
+    String downString = PutioUtils.humanReadableByteCount(transfer.getDownSpeed(), false);
     holder.textDown.setText(holder.textDown.getResources().getString(R.string.x_per_sec, downString));
-    String upString = PutioUtils.humanReadableByteCount(transfer.upSpeed, false);
+    String upString = PutioUtils.humanReadableByteCount(transfer.getUpSpeed(), false);
     holder.textUp.setText(holder.textUp.getResources().getString(R.string.x_per_sec, upString));
 
-    switch (transfer.status) {
+    switch (transfer.getStatus()) {
       case "COMPLETED":
       case "SEEDING":
         holder.progressBar.setError(false);
@@ -126,8 +126,8 @@ public class TransfersAdapter extends RecyclerView.Adapter<TransfersAdapter.Tran
         holder.buttonView.setVisibility(View.VISIBLE);
         holder.downHolder.setVisibility(View.GONE);
         holder.upHolder.setVisibility(View.VISIBLE);
-        if (transfer.currentRatio != 0) {
-          holder.textRatio.setText(holder.textRatio.getContext().getString(R.string.ratio_is, transfer.currentRatio));
+        if (transfer.getCurrentRatio() != 0) {
+          holder.textRatio.setText(holder.textRatio.getContext().getString(R.string.ratio_is, transfer.getCurrentRatio()));
           holder.ratioHolder.setVisibility(View.VISIBLE);
         } else {
           holder.ratioHolder.setVisibility(View.GONE);
@@ -160,7 +160,7 @@ public class TransfersAdapter extends RecyclerView.Adapter<TransfersAdapter.Tran
         holder.upHolder.setVisibility(View.VISIBLE);
         holder.ratioHolder.setVisibility(View.GONE);
         String remainingString = "";
-        long remainingSeconds = transfer.estimatedTime;
+        long remainingSeconds = transfer.getEstimatedTime();
         if (remainingSeconds > 0) {
           remainingString = formatRemainingTime(remainingSeconds);
         }
@@ -177,7 +177,7 @@ public class TransfersAdapter extends RecyclerView.Adapter<TransfersAdapter.Tran
 
   @Override
   public long getItemId(int position) {
-    return data.get(position).id;
+    return data.get(position).getId();
   }
 
   public void setOnItemClickListener(OnItemClickListener itemClickListener) {
