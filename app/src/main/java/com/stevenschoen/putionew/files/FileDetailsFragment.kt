@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
@@ -27,6 +28,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.use
 import androidx.core.view.updatePaddingRelative
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
@@ -278,6 +280,24 @@ class FileDetailsFragment : RxFragment() {
           val download: FileDownload, val mp4Status: PutioMp4Status
       )
 
+      fun createLoadingDrawable(): Drawable? {
+        return context.obtainStyledAttributes(
+            intArrayOf(android.R.attr.progressBarStyleSmall)
+        ).use {
+          val progressBarStyleResId = it.getResourceId(0, -1)
+          context.obtainStyledAttributes(
+              progressBarStyleResId,
+              intArrayOf(android.R.attr.indeterminateDrawable)
+          ).use {
+            it.getDrawable(0)
+          }
+        }.apply {
+          if (this is Animatable) {
+            start()
+          }
+        }
+      }
+
       val mp4Status = when {
         showMp4Options -> {
           mp4Loader!!.mp4Status()
@@ -334,7 +354,7 @@ class FileDetailsFragment : RxFragment() {
             }
             playActionView.text = text
             playActionView.setOnClickListener(null)
-            playActionView.setIconResource(android.R.drawable.progress_indeterminate_horizontal) // TODO
+            playActionView.icon = createLoadingDrawable()
             playMoreView.visibility = View.VISIBLE
             playOriginalItem.isVisible = true
           }
@@ -370,7 +390,7 @@ class FileDetailsFragment : RxFragment() {
             cancelItem.isVisible = false
           }
           FileDownload.Status.InProgress -> {
-            downloadActionView.setIconResource(android.R.drawable.progress_indeterminate_horizontal) // TODO
+            downloadActionView.icon = createLoadingDrawable()
             downloadActionView.text = getString(R.string.downloading)
             downloadActionView.setOnClickListener(null)
             downloadMoreView.visibility = View.VISIBLE

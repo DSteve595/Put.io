@@ -117,7 +117,7 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/filedetails_play"
         style="@style/Widget.Putio.Button.Outlined"
         android:layout_width="wrap_content"
@@ -128,6 +128,7 @@
         android:paddingEnd="32dp"
         app:icon="@drawable/ic_filedetails_play"
         app:iconPadding="16dp"
+        app:iconSize="24dp"
         app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +148,7 @@
         app:layout_constraintTop_toTopOf="@+id/filedetails_play"
         />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/filedetails_download"
         style="@style/Widget.Putio.Button.Outlined"
         android:layout_width="wrap_content"
@@ -156,6 +157,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="32dp"
         app:iconPadding="16dp"
+        app:iconSize="24dp"
         app:layout_constraintEnd_toStartOf="@+id/filedetails_download_more"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
