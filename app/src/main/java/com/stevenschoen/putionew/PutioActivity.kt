@@ -24,7 +24,7 @@ import com.stevenschoen.putionew.cast.BaseCastActivity
 import com.stevenschoen.putionew.files.FileDownloadsMaintenanceService
 import com.stevenschoen.putionew.files.FilesFragment
 import com.stevenschoen.putionew.files.FolderLoader
-import com.stevenschoen.putionew.fragments.AccountFragment
+import com.stevenschoen.putionew.account.AccountFragment
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
 import com.stevenschoen.putionew.transfers.TransfersFragment

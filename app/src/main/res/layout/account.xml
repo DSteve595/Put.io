@@ -1,55 +1,73 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/padding_large"
-    android:paddingRight="@dimen/padding_large"
     >
 
-  <FrameLayout
-      android:id="@+id/holder_storage"
+  <TextView
+      android:id="@+id/account_loggedinas"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentStart="true"
-      android:layout_centerVertical="true"
-      >
+      android:layout_marginTop="24dp"
+      android:text="@string/logged_in_as"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+      app:layout_constraintStart_toStartOf="@+id/account_diskusage"
+      app:layout_constraintTop_toTopOf="parent"
+      />
 
-    <include layout="@layout/account_storage" />
-  </FrameLayout>
-
-  <LinearLayout
+  <TextView
+      android:id="@+id/account_username"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_centerVertical="true"
-      android:layout_toEndOf="@id/holder_storage"
-      android:gravity="end"
-      android:orientation="vertical"
-      >
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+      app:layout_constraintStart_toStartOf="@+id/account_loggedinas"
+      app:layout_constraintTop_toBottomOf="@+id/account_loggedinas"
+      tools:text="Account Username"
+      />
 
-    <TextView
-        android:id="@+id/text_behind_loggedinas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logged_in_as"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        />
+  <TextView
+      android:id="@+id/account_email"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+      app:layout_constraintStart_toStartOf="@+id/account_loggedinas"
+      app:layout_constraintTop_toBottomOf="@+id/account_username"
+      tools:text="account@email.com"
+      />
 
-    <TextView
-        android:id="@+id/text_behind_accountname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
-        tools:text="Account Name"
-        />
+  <TextView
+      android:id="@+id/account_diskusage"
+      android:layout_width="0dp"
+      android:layout_height="56dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="24dp"
+      android:layout_marginEnd="32dp"
+      android:gravity="center"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/account_email"
+      app:layout_constraintWidth_max="360dp"
+      tools:background="@color/putio_accent"
+      tools:text="50 GB of 100 GB free"
+      />
 
-    <TextView
-        android:id="@+id/text_behind_accountemail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="account_email.com"
-        />
-  </LinearLayout>
-</RelativeLayout>
+  <com.google.android.material.button.MaterialButton
+      android:id="@+id/account_manageonweb"
+      style="@style/Widget.MaterialComponents.Button.TextButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="Manage account on web"
+      android:textColor="?android:textColorPrimary"
+      app:icon="@drawable/ic_open"
+      app:iconPadding="8dp"
+      app:iconTint="?colorOnBackground"
+      app:layout_constraintStart_toStartOf="@+id/account_diskusage"
+      app:layout_constraintTop_toBottomOf="@+id/account_diskusage"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

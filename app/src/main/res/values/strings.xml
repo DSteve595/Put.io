@@ -73,7 +73,6 @@
   <string name="loginsuccess">Successfully logged in!</string>
   <string name="folder_name">Folder name</string>
   <string name="x_selected">%d selected</string>
-  <string name="total_is">Total: %s</string>
   <string name="loading">Loading…</string>
   <string name="created_on_x_at_x">Created on %1$s at %2$s</string>
   <string name="accessed_on_x_at_x">Accessed on %1$s at %2$s</string>
@@ -113,6 +112,7 @@
   <string name="you_dont_have_any_transfers">You don\'t have any transfers</string>
   <string name="add_stuff_by_clicking_add">Add some stuff by clicking the \'add\' button below!</string>
   <string name="downloading">Downloading</string>
+  <string name="x_of_x_free">%1$s of %2$s free</string>
 
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Uploading torrent</string>

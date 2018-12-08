@@ -6,7 +6,7 @@
     >
 
   <fragment
-      android:name="com.stevenschoen.putionew.fragments.AboutFragment"
+      android:name="com.stevenschoen.putionew.AboutFragment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:tag="about"

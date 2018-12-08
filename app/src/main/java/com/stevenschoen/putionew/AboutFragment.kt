@@ -1,4 +1,4 @@
-package com.stevenschoen.putionew.fragments
+package com.stevenschoen.putionew
 
 import android.content.Intent
 import android.content.pm.PackageManager
