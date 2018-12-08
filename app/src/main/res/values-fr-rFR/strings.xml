@@ -64,7 +64,6 @@
   <string name="loginsuccess">Vous vous êtes connecté avec succès !</string>
   <string name="folder_name">Nom du dossier</string>
   <string name="x_selected">%d sélectionné</string>
-  <string name="total_is">Total : %s</string>
   <string name="loading">Chargement&#8230;</string>
   <string name="created_on_x_at_x">Créé le %1$s à %2$s</string>
   <string name="accessed_on_x_at_x">Consulté le %1$s à %2$s</string>
@@ -93,9 +92,6 @@
   <string name="convert_mp4">Convertir en MP4</string>
   <string name="converting_mp4">Convertion en MP4&#8230;</string>
   <string name="converting_mp4_x">Convertir en MP4 (%d%%)</string>
-  <string name="mp4_available">MP4 disponible</string>
-  <string name="use_mp4">Utilise le MP4</string>
-  <string name="dont_use_mp4">N\'utilise pas le MP4</string>
   <string name="choose_a_file">Choisissez un fichier</string>
   <string name="choose_folder">Choisir le dossier</string>
   <string name="x_per_sec">%s/sec</string>
@@ -115,7 +111,6 @@
   <string name="notification_button_retry">Réessayer</string>
   <!-- Account screen -->
   <string name="logged_in_as">Connecté comme</string>
-  <string name="available_storage">Stockage disponible</string>
   <!-- About screen -->
   <string name="version_x">Version %s</string>
   <string name="this_app_is_open_source">Cette appli est open-source !</string>
