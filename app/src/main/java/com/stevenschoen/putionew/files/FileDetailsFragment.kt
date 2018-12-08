@@ -1,8 +1,6 @@
 package com.stevenschoen.putionew.files
 
 import android.Manifest
-import android.animation.Animator
-import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.ActivityNotFoundException
@@ -16,7 +14,6 @@ import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -27,7 +24,6 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.view.updatePaddingRelative
 import androidx.core.widget.ImageViewCompat
@@ -79,31 +75,11 @@ class FileDetailsFragment : RxFragment() {
 
       val titleView: TextView = findViewById(R.id.filedetails_title)
       titleView.text = file.name
-      var titleBackgroundColorAnimator: Animator? = null
-      var lastTitleBackgroundColor: Int? = null
-      fun setTitleBackgroundColor(color: Int, animate: Boolean) {
-        if (color == lastTitleBackgroundColor) return
-        if (animate && Build.VERSION.SDK_INT >= 21) {
-          val startingColor = lastTitleBackgroundColor ?: color
-          titleBackgroundColorAnimator = ObjectAnimator.ofArgb(
-              titleView, "backgroundColor", startingColor, color
-          ).apply {
-            start()
-          }
-        } else {
-          titleBackgroundColorAnimator?.cancel()
-          titleBackgroundColorAnimator = null
-          titleView.setBackgroundColor(color)
-        }
-        lastTitleBackgroundColor = color
-      }
 
       val screenshotView: ImageView = findViewById(R.id.filedetails_screenshot)
       val screenshotBlurryView: ImageView = findViewById(R.id.filedetails_screenshot_blurry)
       val screenshotTopScrimView: View = findViewById(R.id.filedetails_screenshot_scrim_top)
       val screenshotTitleScrimView: View = findViewById(R.id.filedetails_screenshot_scrim_title)
-
-      val fileGraphicView: View = findViewById(R.id.filedetails_graphic_file)
 
       val backView: ImageButton = findViewById(R.id.filedetails_back)
       backView.setOnClickListener {
@@ -166,9 +142,7 @@ class FileDetailsFragment : RxFragment() {
             .subscribe {
               Picasso.get().cancelRequest(screenshotTarget)
             }
-        fileGraphicView.visibility = View.GONE
       } else {
-        titleView.setBackgroundColor(ContextCompat.getColor(context, R.color.putio_filedetails_notdownloaded))
         screenshotView.visibility = View.GONE
         screenshotBlurryView.visibility = View.GONE
         screenshotTopScrimView.visibility = View.GONE
@@ -427,24 +401,6 @@ class FileDetailsFragment : RxFragment() {
       }, { error ->
         PutioUtils.getRxJavaThrowable(error).printStackTrace()
       })
-
-      if (!useVideoTitleBackground) {
-        downloadStatus.subscribe({
-          val animate = (lastDownloadStatus != null)
-          val backgroundColorRes = when (it!!) {
-            FileDownload.Status.Downloaded -> R.color.putio_filedetails_downloaded
-            FileDownload.Status.InProgress -> R.color.putio_filedetails_inprogress
-            FileDownload.Status.NotDownloaded -> R.color.putio_filedetails_notdownloaded
-          }
-          setTitleBackgroundColor(
-              ContextCompat.getColor(
-                  context, backgroundColorRes
-              ), animate
-          )
-        }, { error ->
-          PutioUtils.getRxJavaThrowable(error).printStackTrace()
-        })
-      }
     }
   }
 

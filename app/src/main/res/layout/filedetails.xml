@@ -18,8 +18,6 @@
         android:id="@+id/filedetails_screenshot_blurry"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#383838"
-        android:elevation="2dp"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="@+id/filedetails_title"
@@ -31,7 +29,6 @@
         android:id="@+id/filedetails_screenshot"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="2dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/filedetails_screenshot_blurry"
         app:layout_constraintEnd_toEndOf="@+id/filedetails_screenshot_blurry"
@@ -43,7 +40,6 @@
         android:id="@+id/filedetails_screenshot_scrim_top"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/filedetails_screenshot"
         app:layout_constraintEnd_toEndOf="@+id/filedetails_screenshot"
         app:layout_constraintHeight_max="96dp"
@@ -56,7 +52,6 @@
         android:id="@+id/filedetails_screenshot_scrim_title"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/filedetails_screenshot"
         app:layout_constraintEnd_toEndOf="@+id/filedetails_screenshot"
         app:layout_constraintHeight_max="120dp"
@@ -69,7 +64,6 @@
         android:id="@+id/filedetails_title"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="2dp"
         android:ellipsize="end"
         android:gravity="bottom"
         android:maxLines="2"
@@ -85,23 +79,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1"
-        tools:background="@color/putio_filedetails_notdownloaded"
         tools:paddingTop="@dimen/filedetails_title_top_padding_video"
         tools:text="File name.rar"
-        />
-
-    <ImageView
-        android:id="@+id/filedetails_graphic_file"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/filedetails_file"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/filedetails_title"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="@+id/filedetails_title"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
         />
 
     <ImageButton
@@ -110,7 +89,6 @@
         android:layout_height="64dp"
         android:layout_marginStart="4dp"
         android:background="?selectableItemBackgroundBorderless"
-        android:elevation="2dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -179,18 +157,31 @@
         app:layout_constraintTop_toTopOf="@+id/filedetails_download"
         />
 
+    <View
+        android:id="@+id/filedetails_info_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:background="?android:listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filedetails_download"
+        />
+
     <TextView
-        android:id="@+id/filedetails_crc32"
+        android:id="@+id/filedetails_accessed"
         style="@style/Widget.Putio.TextView.FileInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_fileinfo_crc32"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_fileinfo_accessed"
         android:paddingStart="20dp"
         android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filedetails_filesize"
-        tools:text="66a1512f"
+        app:layout_constraintTop_toTopOf="@+id/filedetails_info_divider"
+        tools:text="@string/accessed_on_x_at_x"
         />
 
     <TextView
@@ -208,21 +199,6 @@
         />
 
     <TextView
-        android:id="@+id/filedetails_accessed"
-        style="@style/Widget.Putio.TextView.FileInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:drawableStart="@drawable/ic_fileinfo_accessed"
-        android:paddingStart="20dp"
-        android:paddingEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filedetails_download"
-        tools:text="@string/accessed_on_x_at_x"
-        />
-
-    <TextView
         android:id="@+id/filedetails_filesize"
         style="@style/Widget.Putio.TextView.FileInfo"
         android:layout_width="0dp"
@@ -234,6 +210,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filedetails_created"
         tools:text="100 MB"
+        />
+
+    <TextView
+        android:id="@+id/filedetails_crc32"
+        style="@style/Widget.Putio.TextView.FileInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_fileinfo_crc32"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filedetails_filesize"
+        tools:text="66a1512f"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
