@@ -51,7 +51,6 @@
   <string name="files">Filer</string>
   <string name="transfers">Overføringer</string>
   <string name="loginsuccess">Vellykket innlogging!</string>
-  <string name="total_is">Totalt: %s</string>
   <string name="loading">Laster&#8230;</string>
   <string name="created_on_x_at_x">Opprettet %1$s på %2$s</string>
   <string name="accessed_on_x_at_x">Tilkoblet %1$s på %2$s</string>
@@ -69,9 +68,6 @@
   <string name="clear_finished_transfers">Fjern fullførte overføringer</string>
   <string name="convert_mp4">Konvertere til MP4</string>
   <string name="converting_mp4">Konverterer til MP4&#8230;</string>
-  <string name="mp4_available">MP4 tilgjengelig</string>
-  <string name="use_mp4">Bruk MP4</string>
-  <string name="dont_use_mp4">Ikke bruk MP4</string>
   <string name="choose_folder">Velg mappe</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Laster opp torrent</string>
@@ -85,7 +81,6 @@
   <string name="notification_button_retry">Prøv på nytt</string>
   <!-- Account screen -->
   <string name="logged_in_as">Logget inn som</string>
-  <string name="available_storage">Tilgjengelig lagring</string>
   <!-- About screen -->
   <string name="appbysteven">Android app av Steven Schoen.</string>
   <string name="codedwithlove">Kodet med kjærlighet, omsorg og koffein.</string>

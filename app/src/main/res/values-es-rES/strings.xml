@@ -53,7 +53,6 @@
   <string name="notification_ticker_error">No se pudo subir el torrent</string>
   <string name="notification_button_retry">Reintentar</string>
   <!-- Account screen -->
-  <string name="available_storage">Espacio Disponible</string>
   <!-- About screen -->
   <string name="version_x">Versión %s</string>
   <string name="appbysteven">App para Android por Steven Schoen.</string>

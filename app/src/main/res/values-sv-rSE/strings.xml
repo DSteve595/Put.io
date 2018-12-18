@@ -52,7 +52,6 @@
   <string name="files">Filer</string>
   <string name="transfers">Överföringar</string>
   <string name="loginsuccess">Inloggning lyckades!</string>
-  <string name="total_is">Totalt: %s</string>
   <string name="loading">Laddar&#8230;</string>
   <string name="pasteurls">Klistra in webbadresser här</string>
   <string name="extractwhenfinished">Extrahera när den är färdig</string>
@@ -67,7 +66,6 @@
   <string name="clear_finished_transfers">Rensa färdiga överföringar</string>
   <string name="convert_mp4">Konvertera till MP4</string>
   <string name="converting_mp4">MP4 konvertering pågår&#8230;</string>
-  <string name="mp4_available">MP4 tillgänglig</string>
   <string name="choose_folder">Välj mapp</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Laddar upp torrent</string>
@@ -81,7 +79,6 @@
   <string name="notification_button_retry">Försök igen</string>
   <!-- Account screen -->
   <string name="logged_in_as">Inloggad som</string>
-  <string name="available_storage">Tillgängligt lagringsutrymme</string>
   <!-- About screen -->
   <string name="appbysteven">Androidapp av Steven Schoen.</string>
   <string name="codedwithlove">Programmerad med kärlek, omsorg och koffein.</string>

@@ -10,6 +10,9 @@
   <string name="rename">Yeniden Adlandır</string>
   <string name="add">Ekle</string>
   <string name="play">Oynat</string>
+  <string name="play_original">Orijinal oynat</string>
+  <string name="stream">Akış</string>
+  <string name="stream_original">Orijinal akış</string>
   <string name="add_transfer">Transfer Ekle</string>
   <string name="add_transfers">Transfer Ekle</string>
   <string name="create_folder">Klasör oluştur</string>
@@ -20,6 +23,7 @@
   <string name="about">Hakkında</string>
   <string name="download">İndir</string>
   <string name="redownload">Yeniden indir</string>
+  <string name="download_original">Orijinal indir</string>
   <string name="open">Aç</string>
   <string name="ok">Tamam</string>
   <string name="delete">Sil</string>
@@ -30,6 +34,9 @@
   <string name="move">Taşı</string>
   <string name="more">Daha fazla</string>
   <string name="maximize">Büyüt</string>
+  <string name="send">Gönder</string>
+  <string name="send_x">%s gönder</string>
+  <string name="go_back">Geri dön</string>
   <!-- Dialog text -->
   <string name="gettingstreamurltitle">Akış hazırlanıyor</string>
   <string name="gettingstreamurlbody">Az sonra…</string>
@@ -60,7 +67,6 @@
   <string name="loginsuccess">Başarıyla oturum açıldı!</string>
   <string name="folder_name">Klasör adı</string>
   <string name="x_selected">%d seçildi</string>
-  <string name="total_is">Toplam: %s</string>
   <string name="loading">Yükleniyor…</string>
   <string name="created_on_x_at_x">%1$s günü %2$s saatinde oluşturuldu</string>
   <string name="accessed_on_x_at_x">%1$s günü %2$s saatinde erişildi</string>
@@ -75,23 +81,27 @@
   <string name="readytopaste">İndirme bağlantısı yapıştırılmaya hazır.</string>
   <string name="addtransfer_type_url">Magnet link</string>
   <string name="addtransfer_type_file">Torrent dosyası</string>
+  <string name="add_transfer_add_type_url">Magnet link ekle</string>
+  <string name="add_transfer_add_type_file">Torrent dosyası ekle</string>
   <string name="download_files">Dosyaları indir</string>
+  <string name="downloaded">İndirildi</string>
   <string name="individual_or_zip">Tek tek dosyalar halinde mi indirmek istersiniz, yoksa bir ZIP arşivi halinde mi?</string>
   <string name="individually">Tek tek</string>
   <string name="zip">ZIP</string>
   <string name="copy_dl_link">İndirme bağlantısını kopyala</string>
+  <string name="downloading_zip">Zip indiriliyor…</string>
   <string name="filenotfound">Dosya bulunamadı. Silinmiş olabilir mi?</string>
   <string name="clear_finished_transfers">Tamamlananları temizle</string>
   <string name="convert_mp4">MP4\'e çevir</string>
-  <string name="checking_for_mp4">MP4 için denetleniyor…</string>
   <string name="converting_mp4">MP4\'e çevriliyor…</string>
-  <string name="mp4_available">MP4 hazır</string>
-  <string name="use_mp4">MP4 kullan</string>
-  <string name="dont_use_mp4">MP4 kullanma</string>
+  <string name="converting_mp4_x">MP4\'e çevriliyor (%d%%)</string>
   <string name="choose_a_file">Dosya seçin</string>
   <string name="choose_folder">Bu klasörü seç</string>
   <string name="x_per_sec">%s/sn</string>
   <string name="in_x">%s içinde</string>
+  <string name="you_dont_have_any_transfers">Herhangi bir transferin yok</string>
+  <string name="add_stuff_by_clicking_add">Aşağıdaki \'ekle\' butonuna tıklayarak bir şeyler ekle!</string>
+  <string name="downloading">İndiriliyor</string>
   <!-- Notification stuff -->
   <string name="notification_title_uploading_torrent">Torrent yükleniyor.</string>
   <string name="notification_ticker_uploading_torrent">Torrent yükleniyor…</string>
@@ -104,9 +114,12 @@
   <string name="notification_button_retry">Tekrar dene</string>
   <!-- Account screen -->
   <string name="logged_in_as">Açılan oturum</string>
-  <string name="available_storage">Kullanılabilir Alan</string>
   <!-- About screen -->
   <string name="version_x">Sürüm %s</string>
+  <string name="this_app_is_open_source">Bu uygulama açık kaynaktır!</string>
+  <string name="email_the_developer">Geliştiriciye e-posta at</string>
+  <string name="help_translate_this_app">Bu uygulamanın çevirisine yardımcı ol</string>
+  <string name="visit_putio_on_the_web">Put.io\'yu webte ziyaret et</string>
   <string name="appbysteven">Steven Schoen tarafından geliştirilen Android uygulaması.</string>
   <string name="codedwithlove">Sevgi, dikkat ve kafein ile kodlanmıştır.</string>
   <string name="notaffiliated">Put.io ile bağlantısı yoktur.</string>

@@ -46,8 +46,7 @@
   <string name="downloadstarted">بدأ التنزيل</string>
   <!-- Errors (for users) -->
   <string name="cantopenbecausetype">لا يمكن لأي من تطبيقاتك فتح هذا النوع من الملفات.</string>
-  <string name="transferfailed">أخفق تنزيل هذا التحويل.
-</string>
+  <string name="transferfailed">أخفق تنزيل هذا التحويل.</string>
   <string name="streamerror">عذرا، حدث خطأ أثناء بث الفيديو.</string>
   <string name="couldntconnect">تعذر الاتصال ب Put.io. هل أنت متصل؟</string>
   <string name="notatorrent">هذا لا يبدو أن يكون ملف تورنت!</string>
@@ -60,13 +59,11 @@
   <string name="loginsuccess">تم تسجيل الدخول بنجاح!</string>
   <string name="folder_name">إسم الملف</string>
   <string name="x_selected">%d المختارة</string>
-  <string name="total_is">الإجمالي: ٪ s</string>
   <string name="loading">جار التحميل…</string>
   <string name="created_on_x_at_x">تم الإنشاء على \"%1$s\" في \"%2$s\"</string>
   <string name="accessed_on_x_at_x">تم الوصول إلى \"%1$s\" في\"%2$s\"</string>
   <string name="never_accessed">لم يتم الوصول إليها مطلقا</string>
-  <string name="pasteurls">الصق عناوين ورل هنا
-</string>
+  <string name="pasteurls">الصق عناوين ورل هنا</string>
   <string name="extractwhenfinished">استخراج عند الانتهاء</string>
   <string name="searchyourfiles">البحث في الملفات الخاصة بك</string>
   <string name="nofilesfound">لم يتم العثور على أية ملفات.</string>
@@ -88,12 +85,8 @@
   <string name="filenotfound">لا يمكن العثور على الملف. هل تم حذفه؟</string>
   <string name="clear_finished_transfers">مسح التحويلات النهائية</string>
   <string name="convert_mp4">تحويل إلى MP4</string>
-  <string name="checking_for_mp4">جار البحث عن MP4…</string>
   <string name="converting_mp4">جار التحويل إلى MP4…</string>
   <string name="converting_mp4_x">التحويل إلى MP4</string>
-  <string name="mp4_available">MP4 المتاحة</string>
-  <string name="use_mp4">استخدام MP4</string>
-  <string name="dont_use_mp4">لا تستخدم MP4</string>
   <string name="choose_a_file">اختيار ملف</string>
   <string name="choose_folder">إختر ملفا أحمق</string>
   <string name="x_per_sec">%s / ثانية</string>
@@ -113,7 +106,6 @@
   <string name="notification_button_retry">إعادة المحاولة</string>
   <!-- Account screen -->
   <string name="logged_in_as">تسجيل دخولك</string>
-  <string name="available_storage">التخزين المتوفرة</string>
   <!-- About screen -->
   <string name="version_x">الإصدار %s</string>
   <string name="this_app_is_open_source">هذا التطبيق مفتوح المصدر!</string>

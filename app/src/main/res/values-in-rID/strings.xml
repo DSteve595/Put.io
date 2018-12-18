@@ -65,7 +65,6 @@
   <string name="loginsuccess">Berhasil masuk!</string>
   <string name="folder_name">Nama folder</string>
   <string name="x_selected">%d dipilih</string>
-  <string name="total_is">Total: %s</string>
   <string name="loading">Memuat…</string>
   <string name="created_on_x_at_x">Dibuat pada %1$s di %2$s</string>
   <string name="accessed_on_x_at_x">Diakses pada %1$s di %2$s</string>
@@ -92,12 +91,8 @@
   <string name="filenotfound">Berkas tidak dapat ditemukan. Ingin dihapus?</string>
   <string name="clear_finished_transfers">Bersihkan transfer yang sudah selesai</string>
   <string name="convert_mp4">Konversi ke MP4</string>
-  <string name="checking_for_mp4">Memeriksa MP4…</string>
   <string name="converting_mp4">Mengkonversi MP4…</string>
   <string name="converting_mp4_x">Mengkonversi MP4 (%d%%)</string>
-  <string name="mp4_available">MP4 tersedia</string>
-  <string name="use_mp4">Gunakan MP4</string>
-  <string name="dont_use_mp4">Jangan gunakan MP4</string>
   <string name="choose_a_file">Pilih file</string>
   <string name="choose_folder">Pilih folder</string>
   <string name="x_per_sec">%s/detik</string>
@@ -117,7 +112,6 @@
   <string name="notification_button_retry">Coba lagi</string>
   <!-- Account screen -->
   <string name="logged_in_as">Masuk sebagai</string>
-  <string name="available_storage">Penyimpanan yang tersedia</string>
   <!-- About screen -->
   <string name="version_x">Versi %s</string>
   <string name="this_app_is_open_source">Aplikasi ini bersifat open-source!</string>
