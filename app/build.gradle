@@ -93,7 +93,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.aurelhubert:ahbottomnavigation:2.2.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.8.1'
     def roomVersion = '2.0.0'
     implementation "androidx.room:room-runtime:$roomVersion"

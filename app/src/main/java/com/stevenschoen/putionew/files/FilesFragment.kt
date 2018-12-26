@@ -27,21 +27,6 @@ import java.util.*
 
 open class FilesFragment : RxFragment() {
 
-  companion object {
-    const val STATE_PAGES = "pages"
-    const val STATE_CURRENT_PAGE = "current_page"
-
-    const val EXTRA_FOLDER = "folder"
-
-    fun newInstance(context: Context, folder: PutioFile?): FilesFragment {
-      val args = Bundle()
-      if (folder != null) {
-        args.putParcelable(EXTRA_FOLDER, folder)
-      }
-      return Fragment.instantiate(context, FilesFragment::class.java.name, args) as FilesFragment
-    }
-  }
-
   open val canSelect = true
   open val choosingFolder = false
   open val showSearch = true
@@ -316,6 +301,21 @@ open class FilesFragment : RxFragment() {
     super.onSaveInstanceState(outState)
     outState.putParcelableArrayList(STATE_PAGES, pages)
     outState.putParcelable(STATE_CURRENT_PAGE, currentPage)
+  }
+
+  companion object {
+    const val STATE_PAGES = "pages"
+    const val STATE_CURRENT_PAGE = "current_page"
+
+    const val EXTRA_FOLDER = "folder"
+
+    fun newInstance(context: Context, folder: PutioFile?): FilesFragment {
+      val args = Bundle()
+      if (folder != null) {
+        args.putParcelable(EXTRA_FOLDER, folder)
+      }
+      return Fragment.instantiate(context, FilesFragment::class.java.name, args) as FilesFragment
+    }
   }
 
   inner class PageFragmentsPagerAdapter : FragmentPagerAdapter(childFragmentManager) {

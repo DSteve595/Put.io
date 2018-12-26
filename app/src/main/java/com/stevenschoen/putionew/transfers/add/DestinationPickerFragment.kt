@@ -25,12 +25,8 @@ class DestinationPickerFragment : RxFragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val defaultDestination: PutioFile =
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_DESTINATION)) {
-          savedInstanceState.getParcelable(STATE_DESTINATION)
-        } else {
-          PutioFile.makeRootFolder(resources)
-        }
+    val defaultDestination: PutioFile = savedInstanceState?.getParcelable(STATE_DESTINATION)
+        ?: PutioFile.makeRootFolder(resources)
     destinationSubject = BehaviorSubject.createDefault(defaultDestination)
   }
 

@@ -39,7 +39,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      android:background="#F8F8F8"
+      android:background="?colorSurface"
       android:elevation="@dimen/appBarElevation"
       />
 
@@ -62,7 +62,7 @@
         />
   </com.google.android.material.appbar.AppBarLayout>
 
-  <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+  <com.google.android.material.bottomnavigation.BottomNavigationView
       android:id="@+id/main_bottom_nav"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

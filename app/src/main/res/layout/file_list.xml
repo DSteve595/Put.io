@@ -27,8 +27,7 @@
       android:layout_width="match_parent"
       android:layout_height="64dp"
       android:layout_alignParentTop="true"
-      android:background="#F8F8F8"
-      android:elevation="2dp"
+      android:background="?colorSurface"
       >
 
     <ImageButton

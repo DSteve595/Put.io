@@ -8,23 +8,20 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.stevenschoen.putionew.account.AccountFragment
 import com.stevenschoen.putionew.cast.BaseCastActivity
 import com.stevenschoen.putionew.files.FileDownloadsMaintenanceService
 import com.stevenschoen.putionew.files.FilesFragment
 import com.stevenschoen.putionew.files.FolderLoader
-import com.stevenschoen.putionew.account.AccountFragment
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
 import com.stevenschoen.putionew.transfers.TransfersFragment
@@ -34,27 +31,11 @@ import java.util.concurrent.TimeUnit
 
 class PutioActivity : BaseCastActivity() {
 
-  companion object {
-    const val EXTRA_GO_TO_TAB = "go_to_tab"
-
-    const val TAB_ACCOUNT = 0
-    const val TAB_FILES = 1
-    const val TAB_TRANSFERS = 2
-
-    const val FRAGTAG_ACCOUNT = "account"
-    const val FRAGTAG_FILES = "files"
-    const val FRAGTAG_TRANSFERS = "transfers"
-
-    const val STATE_CURRENT_TAB = "current_tab"
-
-    const val noNetworkIntent = "com.stevenschoen.putionew.nonetwork"
-  }
-
   var init = false
 
-  val sharedPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
+  val sharedPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(this)!! }
 
-  lateinit var bottomNavView: AHBottomNavigation
+  lateinit var bottomNavView: BottomNavigationView
 
   lateinit var addTransferView: View
   var showingAddTransferFab = true
@@ -131,18 +112,12 @@ class PutioActivity : BaseCastActivity() {
       }
 
       if (intent.action != null) {
-        if (intent.action == Intent.ACTION_SEARCH && filesFragment != null) {
+        if (intent.action == Intent.ACTION_SEARCH) {
           val query = intent.getStringExtra(SearchManager.QUERY)
-          filesFragment!!.addSearch(query)
+          filesFragment.addSearch(query)
         }
       }
     }
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-
-    outState.putInt(STATE_CURRENT_TAB, bottomNavView.currentItem)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -173,6 +148,8 @@ class PutioActivity : BaseCastActivity() {
 
     setContentView(R.layout.main)
 
+    setupLayout()
+
     if (savedInstanceState == null) {
       val accountFragment = Fragment.instantiate(this, AccountFragment::class.java.name) as AccountFragment
       val filesFragment = FilesFragment.newInstance(this, null)
@@ -185,18 +162,15 @@ class PutioActivity : BaseCastActivity() {
           .add(R.id.main_content_holder, transfersFragment, FRAGTAG_TRANSFERS)
           .detach(transfersFragment)
           .commitNow()
+
+      selectTab(TAB_FILES, false)
     }
-
-    setupLayout()
-
-    val navItem = savedInstanceState?.getInt(STATE_CURRENT_TAB, TAB_FILES) ?: TAB_FILES
-    selectTab(navItem, false)
 
     addTransferView = findViewById(R.id.main_addtransfer)
     addTransferView.setOnClickListener {
       var destinationFolder: PutioFile? = null
-      if (bottomNavView.currentItem == TAB_FILES) {
-        destinationFolder = (filesFragment!!.currentPage as FilesFragment.Page.File).file
+      if (bottomNavView.selectedItemId == TAB_FILES) {
+        destinationFolder = (filesFragment.currentPage as FilesFragment.Page.File).file
       }
       val addTransferIntent = Intent(this@PutioActivity, AddTransferActivity::class.java)
       if (destinationFolder != null) {
@@ -275,11 +249,11 @@ class PutioActivity : BaseCastActivity() {
   }
 
   private fun shouldShowAddTransferFab(): Boolean {
-    return when (bottomNavView.currentItem) {
+    return when (bottomNavView.selectedItemId) {
       TAB_ACCOUNT -> false
       TAB_FILES -> {
         val filesFragment = filesFragment
-        if (filesFragment!!.isSelecting) {
+        if (filesFragment.isSelecting) {
           false
         } else {
           val currentPage = filesFragment.currentPage
@@ -308,30 +282,32 @@ class PutioActivity : BaseCastActivity() {
     setSupportActionBar(toolbar)
 
     bottomNavView = findViewById(R.id.main_bottom_nav)
-    bottomNavView.defaultBackgroundColor = ContextCompat.getColor(this, R.color.putio_light_canvas)
-    bottomNavView.accentColor = Color.BLACK
-    bottomNavView.inactiveColor = Color.parseColor("#80000000")
-    bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.account), R.drawable.ic_nav_account))
-    bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.files), R.drawable.ic_nav_files))
-    bottomNavView.addItem(AHBottomNavigationItem(getString(R.string.transfers), R.drawable.ic_nav_transfers))
-    bottomNavView.setOnTabSelectedListener(AHBottomNavigation.OnTabSelectedListener { position, wasSelected ->
-      bottomNavView.post { updateAddTransferFab(true) }
-      when (position) {
-        TAB_ACCOUNT, TAB_FILES, TAB_TRANSFERS -> {
-          showFragment(position, true)
-          if (position == TAB_FILES && wasSelected) {
-            filesFragment?.goBackToRoot()
-          }
-          return@OnTabSelectedListener true
+    bottomNavView.apply {
+      menu.add(0, TAB_ACCOUNT, 0, R.string.account).apply {
+        setIcon(R.drawable.ic_nav_account)
+      }
+      menu.add(0, TAB_FILES, 0, R.string.files).apply {
+        setIcon(R.drawable.ic_nav_files)
+      }
+      menu.add(0, TAB_TRANSFERS, 0, R.string.transfers).apply {
+        setIcon(R.drawable.ic_nav_transfers)
+      }
+      setOnNavigationItemSelectedListener { item ->
+        post { updateAddTransferFab(true) }
+        showFragment(item.itemId, true)
+        true
+      }
+      setOnNavigationItemReselectedListener { item ->
+        if (item.itemId == TAB_FILES) {
+          filesFragment.goBackToRoot()
         }
       }
-      false
-    })
+    }
   }
 
   fun showFilesAndGoToFile(parentId: Long, id: Long) {
     selectTab(TAB_FILES, true)
-    filesFragment!!.goToFile(parentId, id);
+    filesFragment.goToFile(parentId, id)
   }
 
   private val accountFragment: AccountFragment
@@ -350,8 +326,8 @@ class PutioActivity : BaseCastActivity() {
   }
 
   override fun onBackPressed() {
-    if (bottomNavView.currentItem == TAB_FILES) {
-      if (!filesFragment!!.goBack(true)) {
+    if (bottomNavView.selectedItemId == TAB_FILES) {
+      if (!filesFragment.goBack(true)) {
         super.onBackPressed()
       }
     } else {
@@ -362,7 +338,7 @@ class PutioActivity : BaseCastActivity() {
   private fun showFragment(position: Int, animate: Boolean) {
     val transaction = supportFragmentManager.beginTransaction()
     if (animate) {
-      transaction.setCustomAnimations(R.anim.bottomnav_enter, R.anim.bottomnav_exit)
+      transaction.setCustomAnimations(R.animator.bottomnav_enter, R.animator.bottomnav_exit)
     }
     when (position) {
       TAB_ACCOUNT -> {
@@ -385,8 +361,8 @@ class PutioActivity : BaseCastActivity() {
   }
 
   private fun selectTab(position: Int, animate: Boolean) {
-    if (bottomNavView.currentItem != position) {
-      bottomNavView.setCurrentItem(position, false)
+    if (bottomNavView.selectedItemId != position) {
+      bottomNavView.selectedItemId = position
       showFragment(position, animate)
     }
   }
@@ -400,4 +376,19 @@ class PutioActivity : BaseCastActivity() {
   }
 
   override val castMiniControllerContainerId = R.id.holder_castbar
+
+  companion object {
+    const val EXTRA_GO_TO_TAB = "go_to_tab"
+
+    const val TAB_ACCOUNT = 0
+    const val TAB_FILES = 1
+    const val TAB_TRANSFERS = 2
+
+    private const val FRAGTAG_ACCOUNT = "account"
+    private const val FRAGTAG_FILES = "files"
+    private const val FRAGTAG_TRANSFERS = "transfers"
+
+    const val noNetworkIntent = "com.stevenschoen.putionew.nonetwork"
+  }
+
 }
