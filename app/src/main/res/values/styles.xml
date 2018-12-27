@@ -9,6 +9,7 @@
     <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Putio.BottomSheetDialog</item>
     <item name="floatingActionButtonStyle">@style/Widget.Putio.FloatingActionButton</item>
     <item name="bottomNavigationStyle">@style/Widget.Putio.BottomNavigationView</item>
+    <item name="checkboxStyle">@style/Widget.Putio.CheckBox</item>
 
     <item name="android:statusBarColor">?putio_colorTopBar</item>
     <item name="android:navigationBarColor">?colorSurface</item>
@@ -111,6 +112,10 @@
   <style name="Widget.Putio.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
     <item name="itemIconTint">@color/bottom_nav_item_tint</item>
     <item name="itemTextColor">@color/bottom_nav_item_tint</item>
+  </style>
+
+  <style name="Widget.Putio.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+    <item name="useMaterialThemeColors">false</item>
   </style>
 
 </resources>

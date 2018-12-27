@@ -33,6 +33,7 @@
       android:paddingStart="8dp"
       android:paddingEnd="8dp"
       android:src="@drawable/ic_close"
+      android:tint="?colorControlNormal"
       />
 
   <CheckBox
