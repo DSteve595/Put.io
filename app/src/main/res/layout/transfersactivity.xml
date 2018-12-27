@@ -21,10 +21,10 @@
         android:background="@color/putio_accent"
         android:elevation="@dimen/appBarElevation"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Putio.Toolbar"
+        android:theme="@style/ThemeOverlay.Putio.TopBarToolbar"
         app:navigationContentDescription="@string/maximize"
         app:navigationIcon="@drawable/ic_action_maximize_black"
-        app:popupTheme="@style/ThemeOverlay.AppCompat"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents"
         app:title="@string/transfers"
         />
   </LinearLayout>

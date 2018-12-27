@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.preference.PreferenceManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.stevenschoen.putionew.files.FileDownloadDatabase
@@ -44,6 +45,8 @@ class PutioApplication : Application() {
     if (Build.VERSION.SDK_INT >= 26) {
       createNotificationChannels(this)
     }
+
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
   }
 
   val isLoggedIn: Boolean

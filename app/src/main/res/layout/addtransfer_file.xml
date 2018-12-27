@@ -42,7 +42,7 @@
       android:src="@drawable/ic_close"
       />
 
-  <de.ankri.views.AutoScaleTextView
+  <TextView
       android:id="@+id/addtransfer_file_notatorrent"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
       android:layout_marginBottom="12dp"
       android:paddingStart="16dp"
       android:text="@string/notatorrent"
-      android:textAppearance="@style/TextAppearance.AppCompat.Small"
+      android:textAppearance="?textAppearanceCaption"
       android:textColor="@color/putio_lightred"
       />
 
@@ -87,7 +87,7 @@
 
     <Button
         android:id="@+id/addtransfer_file_add"
-        style="@style/Widget.MaterialComponents.Button"
+        style="@style/Widget.Putio.Button.Unelevated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="48dp"

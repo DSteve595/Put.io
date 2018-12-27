@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,7 +39,10 @@ public class LoginActivity extends AppCompatActivity {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.login);
 
     sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);

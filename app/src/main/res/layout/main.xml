@@ -10,7 +10,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_above="@+id/main_bottom_nav"
-      android:layout_below="@+id/main_appbarlayout"
+      android:layout_below="@+id/main_toolbar"
       >
 
     <FrameLayout
@@ -43,24 +43,17 @@
       android:elevation="@dimen/appBarElevation"
       />
 
-  <com.google.android.material.appbar.AppBarLayout
-      android:id="@+id/main_appbarlayout"
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/main_toolbar"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="?actionBarSize"
       android:layout_alignParentTop="true"
-      android:background="?colorPrimary"
+      android:background="?putio_colorTopBar"
       android:elevation="@dimen/appBarElevation"
-      >
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:minHeight="?actionBarSize"
-        android:theme="@style/Putio.Toolbar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat"
-        />
-  </com.google.android.material.appbar.AppBarLayout>
+      android:minHeight="?actionBarSize"
+      android:theme="@style/ThemeOverlay.Putio.TopBarToolbar"
+      app:popupTheme="@style/ThemeOverlay.MaterialComponents"
+      />
 
   <com.google.android.material.bottomnavigation.BottomNavigationView
       android:id="@+id/main_bottom_nav"

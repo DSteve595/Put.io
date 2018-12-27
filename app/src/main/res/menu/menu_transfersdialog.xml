@@ -5,7 +5,7 @@
 
   <item
       android:id="@+id/menu_close"
-      android:icon="@drawable/ic_toolbar_nav_close_black"
+      android:icon="@drawable/ic_toolbar_nav_close"
       android:orderInCategory="1"
       android:title="@string/close"
       app:showAsAction="always"

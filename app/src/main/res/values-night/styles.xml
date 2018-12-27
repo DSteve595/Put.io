@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="Base.DayNight.Theme.Putio" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/putio_accent</item>
+    <item name="colorOnPrimary">@android:color/black</item>
+    <item name="colorSecondary">@android:color/black</item>
+    <item name="colorOnSecondary">@android:color/white</item>
+    <item name="android:colorBackground">@color/putio_dark_surface_1</item>
+    <item name="colorOnBackground">@android:color/white</item>
+    <item name="colorSurface">@color/putio_dark_surface_2</item>
+    <item name="colorOnSurface">@android:color/white</item>
+    <item name="putio_colorTopBar">?colorSurface</item>
+    <item name="putio_colorOnTopBar">?colorOnSurface</item>
+    <item name="putio_colorDivider">@color/putio_dark_divider</item>
+
+    <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+    <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    <item name="android:navigationBarDividerColor" tools:targetApi="27">#505050</item>
+  </style>
+
+</resources>

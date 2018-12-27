@@ -13,7 +13,10 @@
 
   <color name="putio_tv_background">#202020</color>
 
-  <color name="putio_light_canvas">#F8F8F8</color>
-  <color name="putio_divider">#1e000000</color>
+  <color name="putio_light_surface">#F1F3F7</color>
+  <color name="putio_dark_surface_1">#242424</color>
+  <color name="putio_dark_surface_2">#383838</color>
+  <color name="putio_light_divider">#1F000000</color>
+  <color name="putio_dark_divider">#1FFFFFFF</color>
 
 </resources>

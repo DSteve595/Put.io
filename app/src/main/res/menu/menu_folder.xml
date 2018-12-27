@@ -9,6 +9,7 @@
       android:orderInCategory="1"
       android:title="@string/search"
       app:actionViewClass="androidx.appcompat.widget.SearchView"
+      app:iconTint="?colorControlNormal"
       app:showAsAction="ifRoom"
       />
 
@@ -17,6 +18,7 @@
       android:icon="@drawable/ic_action_create_folder"
       android:orderInCategory="2"
       android:title="@string/create_folder"
+      app:iconTint="?colorControlNormal"
       app:showAsAction="never"
       />
 

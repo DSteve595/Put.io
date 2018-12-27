@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="72dp"
-    android:foreground="?attr/selectableItemBackground"
+    android:foreground="?selectableItemBackground"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Light"
     app:cardElevation="1dp"
     >
 
@@ -57,7 +58,7 @@
           android:id="@+id/text_transfer_remaining"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textAppearance="?textAppearanceBody1"
           tools:text="4h 3m"
           />
 
@@ -67,6 +68,7 @@
           android:layout_height="wrap_content"
           android:backgroundTint="#1FAE7D"
           android:text="@string/view"
+          android:textColor="@android:color/white"
           />
     </FrameLayout>
 
@@ -84,12 +86,12 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="4dp"
-          android:layout_marginTop="14dp"
+          android:layout_marginTop="16dp"
           android:ellipsize="end"
           android:maxLines="1"
           android:singleLine="true"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textSize="16sp"
+          android:textAppearance="?textAppearanceBody1"
+          android:textSize="14sp"
           tools:text="Transfer name"
           />
 
@@ -99,7 +101,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="4dp"
           android:layout_marginTop="2dp"
-          android:textAppearance="?android:attr/textAppearanceSmall"
+          android:textAppearance="?textAppearanceCaption"
           android:visibility="gone"
           tools:text="Other message"
           />
@@ -136,7 +138,7 @@
               android:layout_marginEnd="8dp"
               android:ellipsize="none"
               android:singleLine="true"
-              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:textAppearance="?textAppearanceCaption"
               tools:text="100 KB/sec"
               />
         </LinearLayout>
@@ -165,7 +167,7 @@
               android:layout_marginEnd="8dp"
               android:ellipsize="none"
               android:singleLine="true"
-              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:textAppearance="?textAppearanceCaption"
               tools:text="100 KB/sec"
               />
         </LinearLayout>
@@ -183,6 +185,7 @@
               android:layout_height="wrap_content"
               android:maxLines="1"
               android:text="@string/ratio_is"
+              android:textAppearance="?textAppearanceCaption"
               />
         </LinearLayout>
       </LinearLayout>

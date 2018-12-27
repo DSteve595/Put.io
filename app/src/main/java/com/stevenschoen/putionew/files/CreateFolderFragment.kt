@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
@@ -30,7 +30,7 @@ class CreateFolderFragment : DialogFragment() {
   lateinit var nameView: EditText
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = AlertDialog.Builder(context!!)
+    val dialog = MaterialAlertDialogBuilder(context!!)
         .setTitle(R.string.create_folder)
         .setView(R.layout.create_folder_dialog)
         .setPositiveButton(R.string.create) { _, _ ->

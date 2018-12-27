@@ -1,11 +1,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-  <style name="Base.V21.Theme.Putio" parent="Theme.MaterialComponents.Light.NoActionBar">
-    <item name="colorPrimary">@color/putio_accent</item>
-    <item name="colorOnPrimary">@android:color/black</item>
-    <item name="colorSecondary">@android:color/black</item>
-    <item name="colorOnSecondary">@android:color/white</item>
-    <item name="colorSurface">@color/putio_light_canvas</item>
+  <style name="Theme.Putio" parent="Base.DayNight.Theme.Putio">
+    <item name="colorAccent">@color/putio_accent</item>
+
     <item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
     <item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
     <item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
@@ -13,26 +10,30 @@
     <item name="floatingActionButtonStyle">@style/Widget.Putio.FloatingActionButton</item>
     <item name="bottomNavigationStyle">@style/Widget.Putio.BottomNavigationView</item>
 
-    <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
-    <item name="android:statusBarColor">?colorPrimary</item>
+    <item name="android:statusBarColor">?putio_colorTopBar</item>
+    <item name="android:navigationBarColor">?colorSurface</item>
 
+    <item name="android:listDivider">?putio_colorDivider</item>
     <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
     <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
   </style>
 
-  <style name="Theme.Putio" parent="Base.V21.Theme.Putio" />
-
-  <style name="Theme.Putio.Dark" parent="Theme.MaterialComponents.NoActionBar">
+  <style name="Base.DayNight.Theme.Putio" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <item name="colorPrimary">@color/putio_accent</item>
-    <item name="colorAccent">@color/putio_accent</item>
-    <item name="castMiniControllerStyle">@style/Putio.CastMiniController</item>
-    <item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
-    <item name="castExpandedControllerToolbarStyle">
-      @style/ThemeOverlay.MaterialComponents.Dark.ActionBar
-    </item>
+    <item name="colorOnPrimary">@android:color/black</item>
+    <item name="colorSecondary">@android:color/black</item>
+    <item name="colorOnSecondary">@android:color/white</item>
+    <item name="android:colorBackground">@android:color/white</item>
+    <item name="colorOnBackground">@android:color/black</item>
+    <item name="colorSurface">@color/putio_light_surface</item>
+    <item name="colorOnSurface">@android:color/black</item>
+    <item name="putio_colorTopBar">?colorPrimary</item>
+    <item name="putio_colorOnTopBar">?colorOnPrimary</item>
+    <item name="putio_colorDivider">@color/putio_light_divider</item>
 
-    <item name="android:listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
-    <item name="listChoiceBackgroundIndicator">@drawable/putio_clickable_list</item>
+    <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+    <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    <item name="android:navigationBarDividerColor" tools:targetApi="27">#D4D5D9</item>
   </style>
 
   <style name="Theme.Putio.AddTransferActivity">
@@ -43,19 +44,16 @@
     <item name="android:backgroundDimEnabled">true</item>
   </style>
 
-  <style name="Theme.Putio.Login" parent="Theme.Putio.Dark">
+  <style name="Theme.Putio.Login">
     <item name="android:statusBarColor">#323232</item>
   </style>
 
   <style name="Theme.Putio.DestinationFolder">
-    <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
-    <item name="android:statusBarColor">?colorSurface</item>
+    <item name="putio_colorTopBar">?colorSurface</item>
+    <item name="putio_colorOnTopBar">?colorOnSurface</item>
   </style>
 
-  <style name="Putio.Toolbar" parent="ThemeOverlay.MaterialComponents.ActionBar">
-    <item name="colorPrimary">@color/putio_accent</item>
-    <item name="colorAccent">@color/putio_accent</item>
-  </style>
+  <style name="ThemeOverlay.Putio.TopBarToolbar" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface" />
 
   <style name="ButtonBar">
     <item name="android:theme">@style/Theme.Putio</item>
@@ -71,6 +69,8 @@
   </style>
 
   <style name="Widget.Putio.Button" parent="Widget.MaterialComponents.Button" />
+
+  <style name="Widget.Putio.Button.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton" />
 
   <style name="Widget.Putio.Button.Destructive">
     <item name="android:backgroundTint">@color/putio_destructive</item>

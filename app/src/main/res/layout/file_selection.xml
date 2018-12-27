@@ -18,7 +18,7 @@
       android:layout_width="56dp"
       android:layout_height="match_parent"
       android:background="?selectableItemBackgroundBorderless"
-      android:src="@drawable/ic_toolbar_nav_close_black"
+      android:src="@drawable/ic_toolbar_nav_close"
       />
 
   <TextView
@@ -27,7 +27,7 @@
       android:layout_height="match_parent"
       android:layout_marginEnd="16dp"
       android:gravity="center_vertical"
-      android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+      android:textAppearance="?textAppearanceSubtitle1"
       tools:text="1 selected"
       />
 
@@ -37,6 +37,7 @@
       android:layout_height="match_parent"
       android:background="?selectableItemBackgroundBorderless"
       android:src="@drawable/ic_selection_download"
+      android:tint="?colorControlNormal"
       />
 
   <ImageButton
@@ -45,6 +46,7 @@
       android:layout_height="match_parent"
       android:background="?selectableItemBackgroundBorderless"
       android:src="@drawable/ic_selection_copy"
+      android:tint="?colorControlNormal"
       />
 
   <ImageButton
@@ -53,6 +55,7 @@
       android:layout_height="match_parent"
       android:background="?selectableItemBackgroundBorderless"
       android:src="@drawable/ic_selection_delete"
+      android:tint="?colorControlNormal"
       />
 
   <ImageButton
@@ -61,6 +64,7 @@
       android:layout_height="match_parent"
       android:background="?selectableItemBackgroundBorderless"
       android:src="@drawable/ic_selection_more"
+      android:tint="?colorControlNormal"
       />
 
 </LinearLayout>

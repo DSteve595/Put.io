@@ -16,8 +16,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 135
-        versionName '4.4.0'
+        versionCode 136
+        versionName '4.5 beta 1'
         multiDexEnabled true
 
         kapt {
@@ -58,7 +58,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.1'
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
     implementation 'androidx.leanback:leanback:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'

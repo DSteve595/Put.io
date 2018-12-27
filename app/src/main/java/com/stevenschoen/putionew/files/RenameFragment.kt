@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.trello.rxlifecycle2.components.support.RxAppCompatDialogFragment
@@ -30,7 +30,7 @@ class RenameFragment : RxAppCompatDialogFragment() {
   lateinit var nameView: EditText
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = AlertDialog.Builder(context!!)
+    val dialog = MaterialAlertDialogBuilder(context!!)
         .setTitle(R.string.renametitle)
         .setView(R.layout.rename_dialog)
         .setPositiveButton(R.string.rename) { _, _ ->

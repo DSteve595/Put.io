@@ -26,7 +26,7 @@ class DestinationFolderActivity : AppCompatActivity() {
 
     val toolbarView = findViewById<Toolbar>(R.id.destination_toolbar)
     setSupportActionBar(toolbarView)
-    toolbarView.setNavigationIcon(R.drawable.ic_toolbar_nav_close_black)
+    toolbarView.setNavigationIcon(R.drawable.ic_toolbar_nav_close)
     toolbarView.setNavigationOnClickListener { finish() }
 
     findViewById<View>(R.id.destination_cancel).setOnClickListener {

@@ -40,12 +40,13 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="@string/cancel"
         />
 
     <Button
         android:id="@+id/destination_choose"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.Putio.Button.Unelevated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/choose_folder"

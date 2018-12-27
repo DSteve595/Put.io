@@ -1,9 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/file_list_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="?android:colorBackground"
     >
 
   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,7 +28,7 @@
       android:layout_width="match_parent"
       android:layout_height="64dp"
       android:layout_alignParentTop="true"
-      android:background="?colorSurface"
+      android:elevation="2dp"
       >
 
     <ImageButton
@@ -38,9 +39,10 @@
         android:background="?selectableItemBackgroundBorderless"
         android:scaleType="centerInside"
         android:src="@drawable/ic_back"
+        android:tint="?colorOnBackground"
         />
 
-    <com.stevenschoen.putionew.AutoResizeTextView
+    <TextView
         android:id="@+id/file_title_bar_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,7 +52,10 @@
         android:maxLines="2"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textAppearance="?textAppearanceHeadline5"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeTextType="uniform"
         tools:text="Folder name"
         />
 
@@ -91,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="bottom"
-        android:background="?android:listDivider"
+        android:background="?putio_colorDivider"
         />
   </FrameLayout>
 

@@ -29,6 +29,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,7 +47,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.appcompat.app.AlertDialog;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -83,7 +83,7 @@ public class PutioUtils {
   }
 
   public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
-    return new AlertDialog.Builder(context)
+    return new MaterialAlertDialogBuilder(context)
         .setTitle(title)
         .setView(contentViewId)
         .show();

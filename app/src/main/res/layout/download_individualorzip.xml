@@ -12,7 +12,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:navigationIcon="@drawable/ic_toolbar_nav_close_black"
+      app:navigationIcon="@drawable/ic_toolbar_nav_close"
       app:title="@string/download_files"
       />
 
@@ -32,7 +32,7 @@
 
   <Button
       android:id="@+id/download_individualorzip_zip"
-      style="@style/Widget.Putio.Button"
+      style="@style/Widget.Putio.Button.Unelevated"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="32dp"
@@ -46,7 +46,7 @@
 
   <Button
       android:id="@+id/download_individualorzip_individual"
-      style="@style/Widget.Putio.Button"
+      style="@style/Widget.Putio.Button.Unelevated"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginEnd="16dp"
