@@ -49,6 +49,11 @@
         android:value="com.stevenschoen.putionew.cast.CastOptionsProvider"
         />
 
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="${crashlyticsEnabled}"
+        />
+
     <activity
         android:name=".PutioActivity"
         android:label="@string/putio"
