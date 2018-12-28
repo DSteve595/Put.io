@@ -4,6 +4,25 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+def secretsFilename = "secrets.gradle.kts"
+try {
+    apply from: "$rootDir/$secretsFilename"
+} catch (e) {
+    throw new GradleException(
+            "To build this project, you must make a `$secretsFilename` file that provides the " +
+                    "required secrets keys.\n" +
+                    "To get your secret keys, go here: " +
+                    "https://app.put.io/settings/account/oauth/apps" +
+                    """
+Example `$secretsFilename`:
+
+extra["secrets"] = PutioSecrets(
+  putioClientId = "your put.io Client ID",
+  putioApiKey = "your put.io API key"
+)
+""", e)
+}
+
 repositories {
     maven {
         url 'https://maven.fabric.io/public'
@@ -25,14 +44,30 @@ android {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
         }
+
+        resValue "string", "putio_client_id", secrets.putioClientId
+        resValue "string", "putio_api_key", secrets.putioApiKey
+    }
+    signingConfigs {
+        if (secrets.keystorePath != null) {
+            release {
+                storeFile file(secrets.keystorePath)
+                storePassword secrets.keystorePassword
+                keyAlias secrets.keyAlias
+                keyPassword secrets.keyPassword
+            }
+        }
     }
     buildTypes {
         debug {
             versionNameSuffix "-debug"
-            manifestPlaceholders = [crashlyticsEnabled:false]
+            manifestPlaceholders = [crashlyticsEnabled: false]
         }
         release {
-            manifestPlaceholders = [crashlyticsEnabled:true]
+            if (signingConfigs.findByName("release") != null) {
+                signingConfig signingConfigs.release
+            }
+            manifestPlaceholders = [crashlyticsEnabled: true]
         }
     }
     lintOptions {

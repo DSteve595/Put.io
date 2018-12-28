@@ -14,3 +14,6 @@
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+/secrets.gradle.kts
+/*.keystore
