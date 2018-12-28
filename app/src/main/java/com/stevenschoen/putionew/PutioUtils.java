@@ -5,15 +5,11 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -24,9 +20,6 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.text.format.DateFormat;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,7 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Transformation;
 import com.stevenschoen.putionew.model.PutioRestInterface;
-import com.stevenschoen.putionew.model.ResponseOrError;
 import com.stevenschoen.putionew.model.files.PutioFile;
 import com.stevenschoen.putionew.model.files.PutioSubtitle;
 
@@ -47,9 +39,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Locale;
 
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -80,13 +69,6 @@ public class PutioUtils {
     this.tokenWithStuff = "?oauth_token=" + token;
 
     this.putioRestInterface = makePutioRestInterface(baseUrl).create(PutioRestInterface.class);
-  }
-
-  public static Dialog showPutioDialog(Context context, String title, int contentViewId) {
-    return new MaterialAlertDialogBuilder(context)
-        .setTitle(title)
-        .setView(contentViewId)
-        .show();
   }
 
   public static String getNameFromUri(Context context, Uri uri) {
@@ -124,18 +106,6 @@ public class PutioUtils {
     }
 
     return url;
-  }
-
-  private static void open(Uri uri, Context context) {
-    String typename = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
-    String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(typename);
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(uri, type);
-    try {
-      context.startActivity(intent);
-    } catch (ActivityNotFoundException e) {
-      Toast.makeText(context, context.getString(R.string.cantopenbecausetype), Toast.LENGTH_LONG).show();
-    }
   }
 
   public static String humanReadableByteCount(long bytes, boolean si) {
@@ -278,17 +248,11 @@ public class PutioUtils {
 
       @Override
       public void onPreExecute() {
-        gettingStreamDialog = PutioUtils.showPutioDialog(context,
-            context.getString(R.string.gettingstreamurltitle),
-            R.layout.dialog_loading);
-        gettingStreamDialog.setOnCancelListener(new OnCancelListener() {
-
-          @Override
-          public void onCancel(DialogInterface dialog) {
-            GetStreamUrlAndPlay.this.cancel(true);
-          }
-        });
-        gettingStreamDialog.show();
+        gettingStreamDialog = new MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.gettingstreamurltitle)
+            .setView(R.layout.dialog_loading)
+            .setOnCancelListener(d -> GetStreamUrlAndPlay.this.cancel(true))
+            .show();
       }
 
       @Override
@@ -311,7 +275,7 @@ public class PutioUtils {
             // No subtitles, not a problem
           } else {
             e.printStackTrace();
-            if (context != null && context instanceof Activity) {
+            if (context instanceof Activity) {
               ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -348,46 +312,6 @@ public class PutioUtils {
     }
 
     new GetStreamUrlAndPlay().execute(url);
-  }
-
-  public Dialog removeTransferDialog(
-      final Context context, final SingleObserver<ResponseOrError.BasePutioResponse> observer,
-      final long... idsToDelete) {
-    final Dialog removeDialog = showPutioDialog(context, context.getString(R.string.removetransfertitle), R.layout.dialog_removetransfer);
-
-    Button removeRemove = removeDialog.findViewById(R.id.button_removetransfer_remove);
-    removeRemove.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Single<ResponseOrError.BasePutioResponse> cancelObservable = getRestInterface()
-            .cancelTransfer(PutioUtils.longsToString(idsToDelete))
-            .observeOn(AndroidSchedulers.mainThread());
-        if (observer != null) {
-          cancelObservable.subscribe(observer);
-        } else {
-          cancelObservable.subscribe();
-        }
-        Toast.makeText(context, context.getString(R.string.transferremoved), Toast.LENGTH_SHORT).show();
-        removeDialog.dismiss();
-      }
-    });
-
-    Button cancelRemove = removeDialog.findViewById(R.id.button_removetransfer_cancel);
-    cancelRemove.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        removeDialog.cancel();
-      }
-    });
-
-    return removeDialog;
-  }
-
-  public boolean isConnected(Context context) {
-    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-    return activeNetwork != null && activeNetwork.isConnected();
   }
 
   private static class GetStreamUrlAndPlayResult {

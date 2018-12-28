@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stevenschoen.putionew.PutioApplication
 import com.stevenschoen.putionew.PutioTransfersService
 import com.stevenschoen.putionew.PutioTransfersService.TransfersServiceBinder
@@ -72,7 +73,7 @@ class TransfersFragment : RxFragment() {
 
     transfersListView = view.findViewById(R.id.transferslist)
     transfersListView!!.layoutManager = LinearLayoutManager(
-        context, LinearLayoutManager.VERTICAL, false
+        context, RecyclerView.VERTICAL, false
     )
     val padding = resources.getDimensionPixelSize(R.dimen.transfers_card_padding)
     transfersListView!!.addItemDecoration(object : RecyclerView.ItemDecoration() {
@@ -209,7 +210,18 @@ class TransfersFragment : RxFragment() {
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(makeUpdateNowObserver())
     } else {
-      utils!!.removeTransferDialog(activity, makeUpdateNowObserver(), transfer.id).show()
+      MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Putio_Dialog_Alert_Destructive)
+          .setTitle(R.string.removetransfertitle)
+          .setMessage(R.string.removetransferbody)
+          .setPositiveButton(R.string.remove) { _, _ ->
+            utils!!.restInterface.cancelTransfer(transfer.id.toString())
+                .bindToLifecycle(this)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(makeUpdateNowObserver())
+            Toast.makeText(context, R.string.transferremoved, Toast.LENGTH_SHORT).show()
+          }
+          .setNegativeButton(R.string.cancel, null)
+          .show()
     }
     hideOptionsIfShowing()
   }

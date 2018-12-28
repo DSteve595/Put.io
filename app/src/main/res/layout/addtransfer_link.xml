@@ -57,15 +57,10 @@
       android:layout_marginEnd="16dp"
       />
 
-  <LinearLayout
+  <com.stevenschoen.putionew.ButtonBarLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/addtransfer_link_destination_holder"
-      android:layout_marginTop="8dp"
-      android:gravity="end"
-      android:orientation="horizontal"
-      android:paddingEnd="12dp"
-      android:paddingBottom="8dp"
       >
 
     <Button
@@ -73,7 +68,6 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="@string/cancel"
         />
 
@@ -82,8 +76,7 @@
         style="@style/Widget.Putio.Button.Unelevated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="48dp"
         android:text="@string/add"
         />
-  </LinearLayout>
+  </com.stevenschoen.putionew.ButtonBarLayout>
 </RelativeLayout>

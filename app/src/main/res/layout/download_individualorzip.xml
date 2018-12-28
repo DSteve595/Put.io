@@ -1,6 +1,5 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/download_individualorzip_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -30,28 +29,31 @@
       app:layout_constraintTop_toBottomOf="@+id/download_individualorzip_toolbar"
       />
 
-  <Button
-      android:id="@+id/download_individualorzip_zip"
-      style="@style/Widget.Putio.Button.Unelevated"
-      android:layout_width="wrap_content"
+  <com.stevenschoen.putionew.ButtonBarLayout
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="32dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginBottom="16dp"
-      android:text="@string/zip"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="@+id/download_individualorzip_root"
+      android:layout_marginTop="8dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/download_individualorzip_body"
-      />
+      >
 
-  <Button
-      android:id="@+id/download_individualorzip_individual"
-      style="@style/Widget.Putio.Button.Unelevated"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="16dp"
-      android:text="@string/individually"
-      app:layout_constraintBaseline_toBaselineOf="@+id/download_individualorzip_zip"
-      app:layout_constraintEnd_toStartOf="@+id/download_individualorzip_zip"
-      />
+    <Button
+        android:id="@+id/download_individualorzip_zip"
+        style="@style/Widget.Putio.Button.Unelevated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zip"
+        />
+
+    <Button
+        android:id="@+id/download_individualorzip_individual"
+        style="@style/Widget.Putio.Button.Unelevated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/individually"
+        />
+
+  </com.stevenschoen.putionew.ButtonBarLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

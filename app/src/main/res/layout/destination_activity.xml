@@ -24,15 +24,11 @@
       android:layout_weight="1"
       />
 
-  <LinearLayout
+  <com.stevenschoen.putionew.ButtonBarLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?colorSurface"
       android:elevation="@dimen/appBarElevation"
-      android:gravity="end"
-      android:orientation="horizontal"
-      android:paddingVertical="8dp"
-      android:paddingEnd="16dp"
       >
 
     <Button
@@ -40,7 +36,6 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="@string/cancel"
         />
 
@@ -51,5 +46,5 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_folder"
         />
-  </LinearLayout>
+  </com.stevenschoen.putionew.ButtonBarLayout>
 </LinearLayout>

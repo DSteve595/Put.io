@@ -7,6 +7,7 @@
     <item name="castExpandedControllerStyle">@style/Putio.CastExpandedController</item>
     <item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Putio.BottomSheetDialog</item>
+    <item name="alertDialogTheme">@style/ThemeOverlay.Putio.Dialog.Alert</item>
     <item name="floatingActionButtonStyle">@style/Widget.Putio.FloatingActionButton</item>
     <item name="bottomNavigationStyle">@style/Widget.Putio.BottomNavigationView</item>
     <item name="checkboxStyle">@style/Widget.Putio.CheckBox</item>
@@ -56,26 +57,26 @@
 
   <style name="ThemeOverlay.Putio.TopBarToolbar" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface" />
 
-  <style name="ButtonBar">
-    <item name="android:theme">@style/Theme.Putio</item>
-    <item name="android:layout_marginLeft">16dp</item>
-    <item name="android:layout_marginRight">16dp</item>
-    <item name="android:layout_marginTop">16dp</item>
-    <item name="android:layout_marginBottom">8dp</item>
-    <item name="android:layout_gravity">bottom|end</item>
-    <item name="android:layout_alignParentRight">true</item>
-    <item name="android:layout_alignParentEnd">true</item>
-    <item name="android:orientation">horizontal</item>
-    <item name="android:gravity">end</item>
-  </style>
-
   <style name="Widget.Putio.Button" parent="Widget.MaterialComponents.Button" />
 
   <style name="Widget.Putio.Button.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton" />
 
+  <style name="Widget.Putio.AlertDialog.ButtonBarButton" parent="Widget.Putio.Button.Unelevated">
+    <item name="android:layout_marginStart">8dp</item>
+  </style>
+
   <style name="Widget.Putio.Button.Destructive">
     <item name="android:backgroundTint">@color/putio_destructive</item>
     <item name="android:textColor">?android:textColorPrimaryInverse</item>
+  </style>
+
+  <style name="Widget.Putio.Button.Unelevated.Destructive">
+    <item name="android:backgroundTint">@color/putio_destructive</item>
+    <item name="android:textColor">?android:textColorPrimaryInverse</item>
+  </style>
+
+  <style name="Widget.Putio.AlertDialog.ButtonBarButton.Destructive" parent="Widget.Putio.Button.Unelevated.Destructive">
+    <item name="android:layout_marginStart">8dp</item>
   </style>
 
   <style name="Widget.Putio.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -86,6 +87,14 @@
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
     <item name="bottomSheetStyle">@style/Widget.MaterialComponents.BottomSheet.Modal</item>
+  </style>
+
+  <style name="ThemeOverlay.Putio.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+    <item name="buttonBarPositiveButtonStyle">@style/Widget.Putio.AlertDialog.ButtonBarButton</item>
+  </style>
+
+  <style name="ThemeOverlay.Putio.Dialog.Alert.Destructive">
+    <item name="buttonBarPositiveButtonStyle">@style/Widget.Putio.AlertDialog.ButtonBarButton.Destructive</item>
   </style>
 
   <style name="Putio.CastMiniController" parent="CastMiniController">
@@ -116,6 +125,14 @@
 
   <style name="Widget.Putio.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
     <item name="useMaterialThemeColors">false</item>
+  </style>
+
+  <style name="Widget.Putio.ButtonBarLayout" parent="">
+    <item name="android:paddingStart">8dp</item>
+    <item name="android:paddingEnd">16dp</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="buttonPadding">8dp</item>
   </style>
 
 </resources>
