@@ -20,7 +20,7 @@ import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
-import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import com.trello.rxlifecycle3.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.HttpException
 

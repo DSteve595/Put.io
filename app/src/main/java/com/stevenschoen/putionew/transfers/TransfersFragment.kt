@@ -25,8 +25,8 @@ import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.transfers.PutioTransfer
-import com.trello.rxlifecycle2.components.support.RxFragment
-import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import com.trello.rxlifecycle3.components.support.RxFragment
+import com.trello.rxlifecycle3.kotlin.bindToLifecycle
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

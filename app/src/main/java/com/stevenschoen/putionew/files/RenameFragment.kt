@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
-import com.trello.rxlifecycle2.components.support.RxAppCompatDialogFragment
+import com.trello.rxlifecycle3.components.support.RxAppCompatDialogFragment
 
 class RenameFragment : RxAppCompatDialogFragment() {
 

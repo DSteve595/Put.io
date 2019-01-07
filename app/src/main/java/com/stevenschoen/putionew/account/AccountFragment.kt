@@ -10,8 +10,8 @@ import androidx.core.net.toUri
 import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.putioApp
-import com.trello.rxlifecycle2.components.support.RxFragment
-import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import com.trello.rxlifecycle3.components.support.RxFragment
+import com.trello.rxlifecycle3.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class AccountFragment : RxFragment() {

@@ -35,8 +35,8 @@ android {
         applicationId 'com.stevenschoen.putionew'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 136
-        versionName '4.5 beta 1'
+        versionCode 137
+        versionName '4.5.0'
         multiDexEnabled true
 
         kapt {
@@ -111,30 +111,29 @@ dependencies {
     def playServicesVersion = "16.1.2"
     implementation "com.google.android.gms:play-services-cast-framework:$playServicesVersion"
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
-    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'commons-io:commons-io:2.6'
-    implementation 'net.danlew:android.joda:2.9.9.4'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
-    def rxLifecycleVersion = "2.2.1"
-    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycleVersion"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxLifecycleVersion"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycleVersion"
-    def rxBindingVersion = "2.1.1"
+    implementation 'net.danlew:android.joda:2.10.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+    def rxLifecycleVersion = "3.0.0"
+    implementation "com.trello.rxlifecycle3:rxlifecycle-components:$rxLifecycleVersion"
+    implementation "com.trello.rxlifecycle3:rxlifecycle-kotlin:$rxLifecycleVersion"
+    implementation "com.trello.rxlifecycle3:rxlifecycle:$rxLifecycleVersion"
+    def rxBindingVersion = "2.2.0"
     implementation "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-design:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxBindingVersion"
     implementation "com.jakewharton.rxbinding2:rxbinding-leanback-v17:$rxBindingVersion"
-    def okHttpVersion = "3.10.0"
+    def okHttpVersion = "3.12.1"
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
-    def retrofitVersion = "2.4.0"
+    def retrofitVersion = "2.5.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.exoplayer:exoplayer:2.9.3'
     def roomVersion = '2.0.0'

@@ -20,8 +20,8 @@ import com.stevenschoen.putionew.PutioUtils
 import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.putioApp
-import com.trello.rxlifecycle2.components.support.RxFragment
-import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import com.trello.rxlifecycle3.components.support.RxFragment
+import com.trello.rxlifecycle3.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*

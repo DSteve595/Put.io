@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import com.stevenschoen.putionew.R
-import com.trello.rxlifecycle2.components.support.RxFragment
-import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import com.trello.rxlifecycle3.components.support.RxFragment
+import com.trello.rxlifecycle3.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 

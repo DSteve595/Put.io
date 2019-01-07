@@ -12,7 +12,7 @@ import com.stevenschoen.putionew.R
 import com.stevenschoen.putionew.model.ResponseOrError
 import com.stevenschoen.putionew.model.files.PutioFile
 import com.stevenschoen.putionew.model.responses.FilesSearchResponse
-import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import com.trello.rxlifecycle3.kotlin.bindToLifecycle
 
 class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
 
