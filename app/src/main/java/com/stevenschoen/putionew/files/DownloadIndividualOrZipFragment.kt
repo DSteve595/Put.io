@@ -29,7 +29,7 @@ class DownloadIndividualOrZipFragment : PutioBottomSheetDialogFragment() {
 
       val toolbarView = findViewById<Toolbar>(R.id.download_individualorzip_toolbar)
       toolbarView.setNavigationOnClickListener {
-        dialog.cancel()
+        dialog?.cancel()
       }
     }
   }

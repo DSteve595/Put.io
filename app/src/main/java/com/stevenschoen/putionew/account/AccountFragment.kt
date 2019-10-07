@@ -62,10 +62,10 @@ class AccountFragment : RxFragment() {
           val account = accountInfoResponse.info
           val disk = account.disk
 
-          usernameView!!.text = account.username
-          emailView!!.text = account.mail
+          usernameView.text = account.username
+          emailView.text = account.mail
           diskUsageDrawable.usedFraction = disk.used.toFloat() / disk.size
-          diskUsageView!!.text = getString(
+          diskUsageView.text = getString(
               R.string.x_of_x_free,
               PutioUtils.humanReadableByteCount(disk.avail, false),
               PutioUtils.humanReadableByteCount(disk.size, false)

@@ -173,13 +173,13 @@ class TransfersFragment : RxFragment() {
     }
   }
 
-  override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
     super.onCreateOptionsMenu(menu, inflater)
-    inflater!!.inflate(R.menu.menu_transfers, menu)
+    inflater.inflate(R.menu.menu_transfers, menu)
   }
 
-  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-    when (item!!.itemId) {
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
       R.id.menu_clearfinished -> {
         utils!!.restInterface
             .cleanTransfers("")

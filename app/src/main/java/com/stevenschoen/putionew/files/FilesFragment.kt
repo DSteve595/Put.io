@@ -54,13 +54,13 @@ open class FilesFragment : RxFragment() {
 
     when {
       savedInstanceState != null -> {
-        pages.addAll(savedInstanceState.getParcelableArrayList(STATE_PAGES))
+        pages.addAll(savedInstanceState.getParcelableArrayList(STATE_PAGES)!!)
         if (savedInstanceState.containsKey(STATE_CURRENT_PAGE)) {
           currentPage = savedInstanceState.getParcelable(STATE_CURRENT_PAGE)
         }
       }
       arguments?.containsKey(EXTRA_FOLDER) == true -> {
-        pages.add(Page.File(arguments!!.getParcelable(EXTRA_FOLDER)))
+        pages.add(Page.File(arguments!!.getParcelable(EXTRA_FOLDER)!!))
       }
       else -> {
         pages.add(Page.File(PutioFile.makeRootFolder(resources)))
@@ -318,7 +318,10 @@ open class FilesFragment : RxFragment() {
     }
   }
 
-  inner class PageFragmentsPagerAdapter : FragmentPagerAdapter(childFragmentManager) {
+  inner class PageFragmentsPagerAdapter : FragmentPagerAdapter(
+      childFragmentManager,
+      BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+  ) {
 
     private val fragments = SparseArray<Fragment>()
 

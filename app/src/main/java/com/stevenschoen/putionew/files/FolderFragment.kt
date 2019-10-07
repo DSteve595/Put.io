@@ -30,9 +30,9 @@ class FolderFragment : FileListFragment<FileListFragment.Callbacks>() {
     get() = folderLoader!!.isRefreshing()
 
   val folder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_FOLDER)!! }
-  val padForFab by lazy { arguments!!.getBoolean(EXTRA_PAD_FOR_FAB)!! }
-  val showSearch by lazy { arguments!!.getBoolean(EXTRA_SHOW_SEARCH)!! }
-  val showCreateFolder by lazy { arguments!!.getBoolean(EXTRA_SHOW_CREATEFOLDER)!! }
+  val padForFab by lazy { arguments!!.getBoolean(EXTRA_PAD_FOR_FAB) }
+  val showSearch by lazy { arguments!!.getBoolean(EXTRA_SHOW_SEARCH) }
+  val showCreateFolder by lazy { arguments!!.getBoolean(EXTRA_SHOW_CREATEFOLDER) }
 
   var folderLoader: FolderLoader? = null
 

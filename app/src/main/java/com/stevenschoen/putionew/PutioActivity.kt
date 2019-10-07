@@ -182,9 +182,9 @@ class PutioActivity : BaseCastActivity() {
     updateAddTransferFab(false)
   }
 
-  override fun onAttachFragment(fragment: Fragment?) {
+  override fun onAttachFragment(fragment: Fragment) {
     super.onAttachFragment(fragment)
-    if (fragment!!.tag != null) {
+    if (fragment.tag != null) {
       when (fragment.tag) {
         FRAGTAG_FILES -> (fragment as FilesFragment).callbacks = object : FilesFragment.Callbacks {
           override fun onSelectionStarted() {
@@ -272,7 +272,7 @@ class PutioActivity : BaseCastActivity() {
 
   fun logOut() {
     (application as PutioApplication).putioUtils = null
-    sharedPrefs!!.edit().remove("token").apply()
+    sharedPrefs.edit().remove("token").apply()
     FolderLoader.DiskCache(this).deleteCache()
     finish()
     startActivity(intent)

@@ -96,8 +96,8 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
     })
 
     if (savedInstanceState != null) {
-      files.addAll(savedInstanceState.getParcelableArrayList(STATE_FILES))
-      filesAdapter!!.addCheckedIds(*savedInstanceState.getLongArray(STATE_CHECKED_IDS))
+      files.addAll(savedInstanceState.getParcelableArrayList(STATE_FILES)!!)
+      filesAdapter!!.addCheckedIds(*savedInstanceState.getLongArray(STATE_CHECKED_IDS)!!)
     }
     getSelectionFragment()?.amountSelected?.onNext(filesAdapter!!.checkedCount())
     if (filesAdapter!!.isInCheckMode()) {
@@ -162,7 +162,7 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
     if (fileDownloadHelper.hasPermission()) {
       val checkedFiles = getCheckedFiles()
       if (checkedFiles.size > 1) {
-        val downloadFragment = Fragment.instantiate(context, DownloadIndividualOrZipFragment::class.java.name) as DownloadIndividualOrZipFragment
+        val downloadFragment = Fragment.instantiate(context!!, DownloadIndividualOrZipFragment::class.java.name) as DownloadIndividualOrZipFragment
         downloadFragment.show(childFragmentManager, FolderFragment.FRAGTAG_DOWNLOAD_INDIVIDUALORZIP)
       } else if (checkedFiles.size == 1) {
         fileDownloadHelper.downloadFile(checkedFiles.first()).subscribe()
@@ -385,7 +385,7 @@ abstract class FileListFragment<CallbacksClass : FileListFragment.Callbacks> : R
 
     fun show() {
       callbacks?.onSelectionStarted()
-      val selectionFragment = Fragment.instantiate(context, FileSelectionFragment::class.java.name) as FileSelectionFragment
+      val selectionFragment = Fragment.instantiate(context!!, FileSelectionFragment::class.java.name) as FileSelectionFragment
       childFragmentManager.beginTransaction()
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
           .add(R.id.file_list_root, selectionFragment, FolderFragment.FRAGTAG_SELECTION)

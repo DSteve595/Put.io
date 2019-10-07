@@ -40,8 +40,8 @@ class SearchFragment : FileListFragment<FileListFragment.Callbacks>() {
   override val isRefreshing
     get() = searchLoader!!.isRefreshing()
 
-  val query by lazy { arguments!!.getString(EXTRA_QUERY) }
-  val parentFolder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER) }
+  val query by lazy { arguments!!.getString(EXTRA_QUERY)!! }
+  val parentFolder by lazy { arguments!!.getParcelable<PutioFile>(EXTRA_PARENT_FOLDER)!! }
 
   var searchLoader: SearchLoader? = null
 

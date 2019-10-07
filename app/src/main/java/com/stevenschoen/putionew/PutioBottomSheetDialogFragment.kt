@@ -30,7 +30,7 @@ abstract class PutioBottomSheetDialogFragment : BottomSheetDialogFragment() {
             if (showNavBarColor) {
               val container = peekDecorView().findViewById<ViewGroup>(com.google.android.material.R.id.container)!!
               container.fitsSystemWindows = false
-              val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)!!
+              val bottomSheet = findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)!!
               bottomSheet.setOnApplyWindowInsetsListener { v, insets ->
                 v.updatePadding(bottom = insets.systemWindowInsetBottom)
                 insets.consumeSystemWindowInsets()
