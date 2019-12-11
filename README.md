@@ -13,6 +13,6 @@ More languages (please [contribute translations](https://crowdin.com/project/put
 
 ## Build instructions:
 
-- Register an API key with [put.io](https://put.io/v2/docs/gettingstarted.html).
+- Register an API key with [put.io](https://app.put.io/settings/account/oauth/apps).
 - Place your API key and client ID into `app/src/main/res/secrets.xml`.
 - Build project via gradle.
