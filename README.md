@@ -15,4 +15,7 @@ More languages (please [contribute translations](https://crowdin.com/project/put
 
 - Register an API key with [put.io](https://app.put.io/settings/account/oauth/apps).
 - Place your API key and client ID into `app/src/main/res/secrets.xml`.
+- Comment out these 2 lines in `app/build.gradle` (don't commit these changes):
+    - `apply plugin: 'io.fabric'`
+    - `apply plugin: 'com.google.gms.google-services'`
 - Build project via gradle.
